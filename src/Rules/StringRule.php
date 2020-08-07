@@ -1,0 +1,115 @@
+<?php declare(strict_types = 1);
+
+namespace Orisai\ObjectMapper\Rules;
+
+use Orisai\ObjectMapper\Context\FieldContext;
+use Orisai\ObjectMapper\Context\RuleArgsContext;
+use Orisai\ObjectMapper\Context\TypeContext;
+use Orisai\ObjectMapper\Exception\ValueDoesNotMatch;
+use Orisai\ObjectMapper\Meta\Args;
+use Orisai\ObjectMapper\Meta\ArgsChecker;
+use Orisai\ObjectMapper\Types\SimpleValueType;
+use function is_string;
+use function mb_strlen;
+use function preg_match;
+
+/**
+ * @implements Rule<StringArgs>
+ */
+final class StringRule implements Rule
+{
+
+	public const PATTERN = 'pattern';
+	public const MIN_LENGTH = 'minLength';
+	public const MAX_LENGTH = 'maxLength';
+	public const NOT_EMPTY = 'notEmpty';
+
+	/**
+	 * @param array<mixed> $args
+	 * @return array<mixed>
+	 */
+	public function resolveArgs(array $args, RuleArgsContext $context): array
+	{
+		$checker = new ArgsChecker($args, self::class);
+
+		$checker->checkAllowedArgs([self::PATTERN, self::MIN_LENGTH, self::MAX_LENGTH, self::NOT_EMPTY]);
+
+		if ($checker->hasArg(self::PATTERN)) {
+			$checker->checkNullableString(self::PATTERN);
+		}
+
+		if ($checker->hasArg(self::MIN_LENGTH)) {
+			$checker->checkNullableInt(self::MIN_LENGTH);
+		}
+
+		if ($checker->hasArg(self::MAX_LENGTH)) {
+			$checker->checkNullableInt(self::MAX_LENGTH);
+		}
+
+		if ($checker->hasArg(self::NOT_EMPTY)) {
+			$checker->checkBool(self::NOT_EMPTY);
+		}
+
+		return $args;
+	}
+
+	public function getArgsType(): string
+	{
+		return StringArgs::class;
+	}
+
+	/**
+	 * @param mixed $value
+	 * @param StringArgs $args
+	 * @throws ValueDoesNotMatch
+	 */
+	public function processValue($value, Args $args, FieldContext $context): string
+	{
+		if (!is_string($value)) {
+			throw ValueDoesNotMatch::create($this->createType($args, $context));
+		}
+
+		$invalidParameters = [];
+
+		if ($args->notEmpty && preg_match('/\S/', $value) !== 1) {
+			$invalidParameters[] = self::NOT_EMPTY;
+		}
+
+		if ($args->minLength !== null && $args->minLength > mb_strlen($value)) {
+			$invalidParameters[] = self::MIN_LENGTH;
+		}
+
+		if ($args->maxLength !== null && $args->maxLength < mb_strlen($value)) {
+			$invalidParameters[] = self::MAX_LENGTH;
+		}
+
+		if ($args->pattern !== null && preg_match($args->pattern, $value) !== 1) {
+			$invalidParameters[] = self::PATTERN;
+		}
+
+		if ($invalidParameters !== []) {
+			$type = $this->createType($args, $context);
+			$type->markParametersInvalid($invalidParameters);
+
+			throw ValueDoesNotMatch::create($type);
+		}
+
+		return $value;
+	}
+
+	/**
+	 * @param StringArgs $args
+	 */
+	public function createType(Args $args, TypeContext $context): SimpleValueType
+	{
+		$parameters = [
+			'notEmpty' => $args->notEmpty,
+			'minLength' => $args->minLength,
+			'maxLength' => $args->maxLength,
+			'pattern' => $args->pattern,
+		];
+
+		return new SimpleValueType('string', $parameters);
+	}
+
+}
