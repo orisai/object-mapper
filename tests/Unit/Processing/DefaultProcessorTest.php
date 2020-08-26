@@ -16,8 +16,10 @@ use Tests\Orisai\ObjectMapper\Fixtures\AfterClassCallbackRuleExceptionVO;
 use Tests\Orisai\ObjectMapper\Fixtures\BeforeClassCallbackRuleExceptionVO;
 use Tests\Orisai\ObjectMapper\Fixtures\CallbacksVO;
 use Tests\Orisai\ObjectMapper\Fixtures\DefaultsVO;
+use Tests\Orisai\ObjectMapper\Fixtures\EmptyVO;
 use Tests\Orisai\ObjectMapper\Fixtures\InitializingVO;
 use Tests\Orisai\ObjectMapper\Fixtures\NoDefaultsVO;
+use Tests\Orisai\ObjectMapper\Fixtures\PropertiesInitVO;
 use Tests\Orisai\ObjectMapper\Fixtures\PropertyCallbacksFailureVO;
 use Tests\Orisai\ObjectMapper\Fixtures\StructuresVO;
 use Tests\Orisai\ObjectMapper\Fixtures\TransformingVO;
@@ -526,10 +528,48 @@ validationFailed: string',
 		);
 	}
 
-	public function testRequireDefaultsOption(): void
+	public function testRequiredNonDefaultFields(): void
 	{
 		$options = new Options();
-		$options->setRequireDefaultValues();
+		$options->setRequiredFields($options::REQUIRE_NON_DEFAULT);
+
+		$vo = $this->processor->process([
+			'required' => null,
+		], PropertiesInitVO::class, $options);
+
+		self::assertTrue(isset($vo->required));
+		self::assertTrue(isset($vo->optional));
+		self::assertTrue(isset($vo->structure));
+
+		self::assertNull($vo->required);
+		self::assertNull($vo->optional);
+		self::assertInstanceOf(EmptyVO::class, $vo->structure);
+	}
+
+	public function testRequireAllFields(): void
+	{
+		$options = new Options();
+		$options->setRequiredFields($options::REQUIRE_ALL);
+
+		$vo = $this->processor->process([
+			'required' => null,
+			'optional' => null,
+			'structure' => [],
+		], PropertiesInitVO::class, $options);
+
+		self::assertTrue(isset($vo->required));
+		self::assertTrue(isset($vo->optional));
+		self::assertTrue(isset($vo->structure));
+
+		self::assertNull($vo->required);
+		self::assertNull($vo->optional);
+		self::assertInstanceOf(EmptyVO::class, $vo->structure);
+	}
+
+	public function testRequireAllFieldsError(): void
+	{
+		$options = new Options();
+		$options->setRequiredFields($options::REQUIRE_ALL);
 
 		$vo = null;
 		$exception = null;
@@ -553,6 +593,32 @@ untypedNull: null
 arrayOfMixed: array<mixed>',
 			$this->formatter->formatError($exception),
 		);
+	}
+
+	public function testRequireNoneFields(): void
+	{
+		$options = new Options();
+		$options->setRequiredFields($options::REQUIRE_NONE);
+
+		$vo = $this->processor->process([], PropertiesInitVO::class, $options);
+
+		self::assertFalse(isset($vo->required));
+		self::assertFalse(isset($vo->optional));
+		self::assertFalse(isset($vo->structure));
+
+		$vo = $this->processor->process([
+			'required' => null,
+			'optional' => null,
+			'structure' => [],
+		], PropertiesInitVO::class, $options);
+
+		self::assertTrue(isset($vo->required));
+		self::assertTrue(isset($vo->optional));
+		self::assertTrue(isset($vo->structure));
+
+		self::assertNull($vo->required);
+		self::assertNull($vo->optional);
+		self::assertInstanceOf(EmptyVO::class, $vo->structure);
 	}
 
 	public function testNotAClass(): void
