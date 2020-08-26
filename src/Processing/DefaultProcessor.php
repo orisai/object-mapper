@@ -75,7 +75,7 @@ class DefaultProcessor implements Processor
 		$fieldSetContext = $this->createFieldSetContext($options, $type, true);
 		$runContext = $this->createProcessorRunContext($class, $holder);
 
-		$processedData = $this->processDataInternal($data, $fieldSetContext, $runContext);
+		$processedData = $this->processData($data, $fieldSetContext, $runContext);
 
 		$object = $holder->getInstance();
 		$this->fillObject($object, $processedData, $data, $fieldSetContext, $runContext);
@@ -98,7 +98,7 @@ class DefaultProcessor implements Processor
 		$fieldSetContext = $this->createFieldSetContext($options, $type, false);
 		$runContext = $this->createProcessorRunContext($class, $holder);
 
-		return $this->processDataInternal($data, $fieldSetContext, $runContext);
+		return $this->processData($data, $fieldSetContext, $runContext);
 	}
 
 	protected function getTypeContext(): TypeContext
@@ -119,7 +119,7 @@ class DefaultProcessor implements Processor
 	 * @return array<int|string, mixed>
 	 * @throws InvalidData
 	 */
-	protected function processDataInternal(
+	protected function processData(
 		$data,
 		FieldSetContext $fieldSetContext,
 		ProcessorRunContext $runContext
@@ -252,9 +252,6 @@ class DefaultProcessor implements Processor
 		/** @var array<string> $propertyNames */
 		$propertyNames = array_keys($propertiesMeta);
 
-		// Processed data added to new variable to filter-out unexpected values
-		$processedData = [];
-
 		foreach ($data as $fieldName => $value) {
 			// Skip invalid field
 			if ($type->isFieldInvalid($fieldName)) {
@@ -263,13 +260,20 @@ class DefaultProcessor implements Processor
 
 			$propertyName = $this->fieldNameToPropertyName($fieldName);
 
+			// Unknown field
 			if (!isset($propertiesMeta[$propertyName])) {
+				// Remove field from data
+				unset($data[$fieldName]);
+
+				// Add error to type
 				$hintedPropertyName = ObjectHelpers::getSuggestion($propertyNames, $propertyName);
 				$type->overwriteInvalidField(
 					$fieldName,
 					new MessageType(sprintf(
 						'Field is unknown%s',
-						($hintedPropertyName !== null ? sprintf(', did you mean `%s`?', $this->propertyNameToFieldName($hintedPropertyName)) : '.'),
+						($hintedPropertyName !== null
+							? sprintf(', did you mean `%s`?', $this->propertyNameToFieldName($hintedPropertyName))
+							: '.'),
 					)),
 				);
 
@@ -279,8 +283,9 @@ class DefaultProcessor implements Processor
 			$propertyMeta = $propertiesMeta[$propertyName];
 			$fieldContext = $this->createFieldContext($fieldSetContext, $propertyMeta, $fieldName, $propertyName);
 
+			// Process field value with property rules
 			try {
-				$processedData[$fieldName] = $this->processProperty(
+				$data[$fieldName] = $this->processProperty(
 					$value,
 					$fieldContext,
 					$runContext,
@@ -291,7 +296,7 @@ class DefaultProcessor implements Processor
 			}
 		}
 
-		return $processedData;
+		return $data;
 	}
 
 	/**
@@ -302,7 +307,10 @@ class DefaultProcessor implements Processor
 	{
 		return array_diff(
 			array_keys($runContext->getMeta()->getProperties()),
-			array_map(fn ($fieldName): string => $this->fieldNameToPropertyName($fieldName), array_keys($data)),
+			array_map(
+				fn ($fieldName): string => $this->fieldNameToPropertyName($fieldName),
+				array_keys($data),
+			),
 		);
 	}
 
@@ -331,12 +339,13 @@ class DefaultProcessor implements Processor
 		$propertiesMeta = $runContext->getMeta()->getProperties();
 
 		$missingProperties = $this->findMissingProperties($data, $runContext);
-		$requireDefaultValues = $options->isRequireDefaultValues();
+		$requiredFields = $options->getRequiredFields();
 		$fillDefaultValues = $initializeObjects || $options->isPreFillDefaultValues();
 
 		$skippedProperties = $this->getSkippedProperties($runContext);
 
 		foreach ($missingProperties as $missingProperty) {
+			// Skipped properties are not considered missing, they are just processed later
 			if (in_array($missingProperty, $skippedProperties, true)) {
 				continue;
 			}
@@ -345,23 +354,28 @@ class DefaultProcessor implements Processor
 			$defaultMeta = $propertyMeta->getDefault();
 			$missingField = $this->propertyNameToFieldName($missingProperty);
 
-			if (!$requireDefaultValues && $defaultMeta->hasValue()) {
+			if ($requiredFields === $options::REQUIRE_NON_DEFAULT && $defaultMeta->hasValue()) {
 				// Add default value if defaults are not required and should be used
+				// If VOs are initialized then values are always prefilled - user can work with them in after callback and they are defined by VO anyway
 				if ($fillDefaultValues) {
 					$data[$missingField] = $defaultMeta->getValue();
 				}
-			} elseif (is_a($propertyMeta->getRule()->getType(), StructureRule::class, true)) {
+			} elseif (
+				$requiredFields === $options::REQUIRE_NON_DEFAULT
+				&& is_a($propertyMeta->getRule()->getType(), StructureRule::class, true)
+			) {
 				// Try initialize structure from empty array when no data given
-				// Structure in compound type is not supported
+				// Structure in compound type is not supported (allOf, anyOf)
+				// Used only in default mode - if all or none values are required then we need differentiate whether user sent value or not
+				$structureArgs = StructureArgs::fromArray($propertyMeta->getRule()->getArgs());
 				try {
-					$structureArgs = StructureArgs::fromArray($propertyMeta->getRule()->getArgs());
 					$data[$missingField] = $initializeObjects
 						? $this->process([], $structureArgs->type, $options)
 						: $this->processWithoutInitialization([], $structureArgs->type, $options);
 				} catch (InvalidData $exception) {
 					$type->overwriteInvalidField($missingField, $exception->getInvalidType());
 				}
-			} elseif (!$type->isFieldInvalid($missingField)) {
+			} elseif ($requiredFields !== $options::REQUIRE_NONE && !$type->isFieldInvalid($missingField)) {
 				// Field is missing and have no default value, mark as invalid
 				$propertyRuleMeta = $propertyMeta->getRule();
 				$propertyRule = $this->ruleManager->getRule($propertyRuleMeta->getType());
@@ -530,17 +544,25 @@ class DefaultProcessor implements Processor
 		$type = $fieldSetContext->getType();
 		$options = $fieldSetContext->getOptions();
 
+		// Set raw data
 		if ($options->isFillRawValues()) {
 			$object->setRawValues($rawData);
 		}
 
+		// Reset mapped properties state
+		$propertiesMeta = $runContext->getMeta()->getProperties();
+		foreach ($propertiesMeta as $propertyName => $propertyMeta) {
+			unset($object->$propertyName);
+		}
+
+		// Set processed data
 		foreach ($data as $fieldName => $value) {
 			$propertyName = $this->fieldNameToPropertyName($fieldName);
 			$object->$propertyName = $value;
 		}
 
+		// Set skipped properties
 		$skippedProperties = $runContext->getSkippedProperties();
-
 		if ($skippedProperties !== []) {
 			$partial = new PartiallyInitializedObjectContext($type, $options);
 			$object->setPartialContext($partial);
@@ -575,6 +597,7 @@ class DefaultProcessor implements Processor
 	{
 		$class = get_class($object);
 
+		// Object has no skipped properties
 		if (!$object->hasPartialContext()) {
 			throw InvalidState::create()
 				->withMessage(sprintf(
@@ -596,6 +619,7 @@ class DefaultProcessor implements Processor
 		$propertiesMeta = $this->metaLoader->load($class)->getProperties();
 
 		foreach ($properties as $propertyName) {
+			// Property is initialized or does not exist
 			if (!array_key_exists($propertyName, $uninitialized)) {
 				throw InvalidArgument::create()
 					->withMessage(sprintf(
@@ -611,6 +635,7 @@ class DefaultProcessor implements Processor
 			$fieldName = $uninitializedPropertyContext->getFieldName();
 			$fieldContext = $this->createFieldContext($fieldSetContext, $propertyMeta, $fieldName, $propertyName);
 
+			// Process field value with property rules
 			try {
 				$object->$propertyName = $this->processProperty(
 					$uninitializedPropertyContext->getValue(),
@@ -624,6 +649,7 @@ class DefaultProcessor implements Processor
 			}
 		}
 
+		// If any of fields is invalid, throw error
 		if ($type->hasInvalidFields()) {
 			throw InvalidData::create($type);
 		}
