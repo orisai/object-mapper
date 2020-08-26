@@ -30,10 +30,6 @@ parameters:
 		- message: '#^Anonymous function should return (int|string) but returns (int|string)\|false\.$#'
 		  path: %currentWorkingDirectory%/src/Meta/ClassModificationsChecker.php
 		  count: 2
-		# It's checked whether variable is int
-		- message: '#Binary operation "\+" between int\|string and int results in an error\.#'
-		  path: %currentWorkingDirectory%/src/Formatting/Dumper.php
-		  count: 1
 		# Not sure, possible bug
 		- message: '#PHPDoc tag \@return with type mixed is not subtype of native type Orisai\\ObjectMapper\\Rules\\Rule\.#'
 		  path: %currentWorkingDirectory%/src
