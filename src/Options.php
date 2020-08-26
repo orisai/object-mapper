@@ -8,7 +8,12 @@ use function sprintf;
 class Options
 {
 
-	private bool $requireDefaultValues = false;
+	public const REQUIRE_NON_DEFAULT = 1;
+	public const REQUIRE_ALL = 2;
+	public const REQUIRE_NONE = 3;
+
+	/** @phpstan-var self::REQUIRE_* */
+	private int $requiredFields = self::REQUIRE_NON_DEFAULT;
 	private bool $preFillDefaultValues = false;
 	private bool $fillRawValues = false;
 
@@ -19,22 +24,36 @@ class Options
 	private array $dynamicContexts = [];
 
 	/**
-	 * Require default values to be sent
+	 * REQUIRE_NON_DEFAULT
+	 * 		- default option, only fields without default value are required
+	 * REQUIRE_ALL
+	 * 		- all fields are required
+	 * 		- defaults are used only by rules which merge them
+	 * 		- useful for PUT request (full entity replace) - user must sent all fields to prevent accidental override by default value
+	 * REQUIRE_NONE
+	 * 		- no fields are required
+	 * 		- fields which are not sent are unset so isset could be used to check if they were sent
+	 * 		- useful for PATCH request (partial entity update) - only fields sent by user are isset to prevent accidental override by default value
+	 *
+	 * @phpstan-param self::REQUIRE_* $fields
 	 */
-	final public function setRequireDefaultValues(bool $requireDefaultValues = true): void
+	final public function setRequiredFields(int $fields): void
 	{
-		$this->requireDefaultValues = $requireDefaultValues;
-	}
-
-	final public function isRequireDefaultValues(): bool
-	{
-		return $this->requireDefaultValues;
+		$this->requiredFields = $fields;
 	}
 
 	/**
-	 * Fill default value if none was given
-	 * Note: used only if objects are not initialized
-	 * Mote: used only if default values are not required to be sent
+	 * @phpstan-return self::REQUIRE_*
+	 */
+	final public function getRequiredFields(): int
+	{
+		return $this->requiredFields;
+	}
+
+	/**
+	 * Add default field value to returned array if none was given
+	 * Note: affect behavior only if objects are not initialized (array is returned, not VO)
+	 * Mote: used only if default values are not required to be sent (REQUIRE_ALL)
 	 */
 	final public function setPreFillDefaultValues(bool $preFillDefaultValues = true): void
 	{

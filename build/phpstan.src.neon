@@ -11,7 +11,7 @@ parameters:
 		# Values mapping to object
 		- message: '#^Variable property access on Orisai\\ObjectMapper\\ValueObject\.$#'
 		  path: %currentWorkingDirectory%/src/Processing/DefaultProcessor.php
-		  count: 2
+		  count: 3
 		# Values mapping to object
 		- message: '#^Unused \@throws Orisai\\ObjectMapper\\Exception\\(InvalidData|ValueDoesNotMatch) annotation$#'
 		  path: %currentWorkingDirectory%/src/Processing/DefaultProcessor.php
