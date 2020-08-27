@@ -2,26 +2,31 @@
 
 namespace Tests\Orisai\ObjectMapper\Fixtures;
 
-use Orisai\ObjectMapper\Annotation\Expect;
+use Orisai\ObjectMapper\Annotation\Expect\AnyOf;
+use Orisai\ObjectMapper\Annotation\Expect\BoolValue;
+use Orisai\ObjectMapper\Annotation\Expect\FloatValue;
+use Orisai\ObjectMapper\Annotation\Expect\InstanceValue;
+use Orisai\ObjectMapper\Annotation\Expect\IntValue;
+use Orisai\ObjectMapper\Annotation\Expect\NullValue;
 use Orisai\ObjectMapper\ValueObject;
 use stdClass;
 
 final class TransformingVO extends ValueObject
 {
 
-	/** @Expect\BoolValue(castBoolLike=true) */
+	/** @BoolValue(castBoolLike=true) */
 	public bool $bool;
 
-	/** @Expect\IntValue(castIntLike=true) */
+	/** @IntValue(castIntLike=true) */
 	public int $int;
 
-	/** @Expect\FloatValue(castFloatLike=true) */
+	/** @FloatValue(castFloatLike=true) */
 	public float $float;
 
 	/**
-	 * @Expect\AnyOf(
-	 *     @Expect\InstanceValue(stdClass::class),
-	 *     @Expect\NullValue(castEmptyString=true)
+	 * @AnyOf(
+	 *     @InstanceValue(stdClass::class),
+	 *     @NullValue(castEmptyString=true)
 	 * )
 	 */
 	public ?stdClass $stdClassOrNull;

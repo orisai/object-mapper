@@ -3,28 +3,29 @@
 namespace Tests\Orisai\ObjectMapper\Fixtures;
 
 use Orisai\Exceptions\Logic\InvalidState;
-use Orisai\ObjectMapper\Annotation\Callback;
-use Orisai\ObjectMapper\Annotation\Expect;
+use Orisai\ObjectMapper\Annotation\Callback\After;
+use Orisai\ObjectMapper\Annotation\Callback\Before;
+use Orisai\ObjectMapper\Annotation\Expect\StringValue;
 use Orisai\ObjectMapper\Callbacks\CallbackRuntime;
 use Orisai\ObjectMapper\Exception\ValueDoesNotMatch;
 use Orisai\ObjectMapper\ValueObject;
 
 /**
- * @Callback\Before(method="beforeClass", runtime=CallbackRuntime::ALWAYS)
- * @Callback\After(method="afterClass", runtime=CallbackRuntime::ALWAYS)
+ * @Before(method="beforeClass", runtime=CallbackRuntime::ALWAYS)
+ * @After(method="afterClass", runtime=CallbackRuntime::ALWAYS)
  */
 final class PropertyCallbacksFailureVO extends ValueObject
 {
 
 	/**
-	 * @Expect\StringValue()
-	 * @Callback\Before(method="beforeNeverValidated", runtime=CallbackRuntime::ALWAYS)
+	 * @StringValue()
+	 * @Before(method="beforeNeverValidated", runtime=CallbackRuntime::ALWAYS)
 	 */
 	public string $neverValidated;
 
 	/**
-	 * @Expect\StringValue()
-	 * @Callback\After(method="afterValidationFailed", runtime=CallbackRuntime::ALWAYS)
+	 * @StringValue()
+	 * @After(method="afterValidationFailed", runtime=CallbackRuntime::ALWAYS)
 	 */
 	public string $validationFailed;
 
