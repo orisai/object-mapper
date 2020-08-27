@@ -11,7 +11,7 @@ use function sprintf;
 class MultiValueArgs implements Args
 {
 
-	public RuleMeta $itemType;
+	public RuleMeta $itemRuleMeta;
 	public ?int $minItems = null;
 	public ?int $maxItems = null;
 	public bool $mergeDefaults = false;
@@ -28,11 +28,11 @@ class MultiValueArgs implements Args
 	{
 		$self = new static();
 
-		if (array_key_exists(MultiValueRule::ITEM_TYPE, $args)) {
-			$self->itemType = RuleMeta::fromArray($args[MultiValueRule::ITEM_TYPE]);
+		if (array_key_exists(MultiValueRule::ITEM_RULE, $args)) {
+			$self->itemRuleMeta = RuleMeta::fromArray($args[MultiValueRule::ITEM_RULE]);
 		} else {
 			throw InvalidArgument::create()
-				->withMessage(sprintf('Key "%s" is required', MultiValueRule::ITEM_TYPE));
+				->withMessage(sprintf('Key "%s" is required', MultiValueRule::ITEM_RULE));
 		}
 
 		if (array_key_exists(MultiValueRule::MIN_ITEMS, $args)) {
