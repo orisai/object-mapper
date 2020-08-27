@@ -3,21 +3,20 @@
 namespace Orisai\ObjectMapper\Annotation\Modifiers;
 
 use Orisai\ObjectMapper\Annotation\AutoMappedAnnotation;
-use Orisai\ObjectMapper\Modifiers\LateProcessedModifier;
+use Orisai\ObjectMapper\Modifiers\SkippedModifier;
 
 /**
  * @Annotation
  * @Target({"PROPERTY"})
- * @property-write array<mixed> $context
  */
-final class LateProcessed implements ModifierAnnotation
+final class Skipped implements ModifierAnnotation
 {
 
 	use AutoMappedAnnotation;
 
 	public function getType(): string
 	{
-		return LateProcessedModifier::class;
+		return SkippedModifier::class;
 	}
 
 }

@@ -15,7 +15,7 @@ class ProcessorRunContext
 	/** @phpstan-var class-string<ValueObject> */
 	private string $class;
 
-	/** @var array<string, UninitializedPropertyContext> */
+	/** @var array<string, SkippedPropertyContext> */
 	private array $skippedProperties = [];
 
 	/**
@@ -48,14 +48,14 @@ class ProcessorRunContext
 
 	public function addSkippedProperty(
 		string $propertyName,
-		UninitializedPropertyContext $uninitializedPropertyContext
+		SkippedPropertyContext $uninitializedPropertyContext
 	): void
 	{
 		$this->skippedProperties[$propertyName] = $uninitializedPropertyContext;
 	}
 
 	/**
-	 * @return array<string, UninitializedPropertyContext>
+	 * @return array<string, SkippedPropertyContext>
 	 */
 	public function getSkippedProperties(): array
 	{
