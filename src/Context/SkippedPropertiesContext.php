@@ -5,14 +5,14 @@ namespace Orisai\ObjectMapper\Context;
 use Orisai\ObjectMapper\Options;
 use Orisai\ObjectMapper\Types\StructureType;
 
-class PartiallyInitializedObjectContext
+class SkippedPropertiesContext
 {
 
 	private StructureType $type;
 	private Options $options;
 
-	/** @var array<string, UninitializedPropertyContext> */
-	private array $uninitializedProperties = [];
+	/** @var array<string, SkippedPropertyContext> */
+	private array $skippedProperties = [];
 
 	public function __construct(StructureType $type, Options $options)
 	{
@@ -30,22 +30,22 @@ class PartiallyInitializedObjectContext
 		return $this->options;
 	}
 
-	public function addUninitializedProperty(string $propertyName, UninitializedPropertyContext $context): void
+	public function addSkippedProperty(string $propertyName, SkippedPropertyContext $context): void
 	{
-		$this->uninitializedProperties[$propertyName] = $context;
+		$this->skippedProperties[$propertyName] = $context;
 	}
 
 	public function removeInitializedProperty(string $propertyName): void
 	{
-		unset($this->uninitializedProperties[$propertyName]);
+		unset($this->skippedProperties[$propertyName]);
 	}
 
 	/**
-	 * @return array<UninitializedPropertyContext>
+	 * @return array<SkippedPropertyContext>
 	 */
-	public function getUninitializedProperties(): array
+	public function getSkippedProperties(): array
 	{
-		return $this->uninitializedProperties;
+		return $this->skippedProperties;
 	}
 
 }
