@@ -20,7 +20,7 @@ use function is_array;
 final class ArrayOfRule extends MultiValueRule
 {
 
-	public const KEY_TYPE = 'keyType';
+	public const KEY_RULE = 'keyRule';
 
 	/**
 	 * @param array<mixed> $args
@@ -29,19 +29,19 @@ final class ArrayOfRule extends MultiValueRule
 	public function resolveArgs(array $args, RuleArgsContext $context): array
 	{
 		$checker = new ArgsChecker($args, self::class);
-		$checker->checkAllowedArgs([self::KEY_TYPE, self::ITEM_TYPE, self::MIN_ITEMS, self::MAX_ITEMS, self::MERGE_DEFAULTS]);
+		$checker->checkAllowedArgs([self::KEY_RULE, self::ITEM_RULE, self::MIN_ITEMS, self::MAX_ITEMS, self::MERGE_DEFAULTS]);
 
 		$resolver = $context->getMetaResolver();
 
-		$checker->checkRequiredArg(self::ITEM_TYPE);
-		$item = $checker->checkArray(self::ITEM_TYPE);
-		$args[self::ITEM_TYPE] = $resolver->resolveRuleMeta($item, $context);
+		$checker->checkRequiredArg(self::ITEM_RULE);
+		$item = $checker->checkArray(self::ITEM_RULE);
+		$args[self::ITEM_RULE] = $resolver->resolveRuleMeta($item, $context);
 
-		if ($checker->hasArg(self::KEY_TYPE)) {
-			$key = $checker->checkNullableArray(self::KEY_TYPE);
+		if ($checker->hasArg(self::KEY_RULE)) {
+			$key = $checker->checkNullableArray(self::KEY_RULE);
 
 			if ($key !== null) {
-				$args[self::KEY_TYPE] = $resolver->resolveRuleMeta($key, $context);
+				$args[self::KEY_RULE] = $resolver->resolveRuleMeta($key, $context);
 			}
 		}
 
@@ -91,11 +91,11 @@ final class ArrayOfRule extends MultiValueRule
 			throw ValueDoesNotMatch::create($type);
 		}
 
-		$itemMeta = $args->itemType;
+		$itemMeta = $args->itemRuleMeta;
 		$itemRule = $context->getRule($itemMeta->getType());
 		$itemArgs = $this->createRuleArgsInst($itemRule, $itemMeta);
 
-		$keyMeta = $args->keyType;
+		$keyMeta = $args->keyRuleMeta;
 		if ($keyMeta !== null) {
 			$keyRule = $context->getRule($keyMeta->getType());
 			$keyArgs = $this->createRuleArgsInst($keyRule, $keyMeta);
@@ -155,11 +155,11 @@ final class ArrayOfRule extends MultiValueRule
 	 */
 	public function createType(Args $args, TypeContext $context): ArrayType
 	{
-		$itemMeta = $args->itemType;
+		$itemMeta = $args->itemRuleMeta;
 		$itemRule = $context->getRule($itemMeta->getType());
 		$itemArgs = $this->createRuleArgsInst($itemRule, $itemMeta);
 
-		$keyMeta = $args->keyType;
+		$keyMeta = $args->keyRuleMeta;
 		if ($keyMeta !== null) {
 			$keyRule = $context->getRule($keyMeta->getType());
 			$keyArgs = $this->createRuleArgsInst($keyRule, $keyMeta);

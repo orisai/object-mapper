@@ -35,7 +35,7 @@ final class ArrayOfRuleTest extends RuleTestCase
 		$processed = $this->rule->processValue(
 			$value,
 			ArrayOfArgs::fromArray($this->rule->resolveArgs([
-				ArrayOfRule::ITEM_TYPE => [MetaSource::OPTION_TYPE => MixedRule::class],
+				ArrayOfRule::ITEM_RULE => [MetaSource::OPTION_TYPE => MixedRule::class],
 			], $this->ruleArgsContext())),
 			$this->fieldContext(DefaultValueMeta::fromValueOrNothing($defaults)),
 		);
@@ -50,8 +50,8 @@ final class ArrayOfRuleTest extends RuleTestCase
 		$processed = $this->rule->processValue(
 			$value,
 			ArrayOfArgs::fromArray($this->rule->resolveArgs([
-				ArrayOfRule::KEY_TYPE => [MetaSource::OPTION_TYPE => StringRule::class],
-				ArrayOfRule::ITEM_TYPE => [MetaSource::OPTION_TYPE => MixedRule::class],
+				ArrayOfRule::KEY_RULE => [MetaSource::OPTION_TYPE => StringRule::class],
+				ArrayOfRule::ITEM_RULE => [MetaSource::OPTION_TYPE => MixedRule::class],
 			], $this->ruleArgsContext())),
 			$this->fieldContext(),
 		);
@@ -67,7 +67,7 @@ final class ArrayOfRuleTest extends RuleTestCase
 		$processed = $this->rule->processValue(
 			$value,
 			ArrayOfArgs::fromArray($this->rule->resolveArgs([
-				ArrayOfRule::ITEM_TYPE => [MetaSource::OPTION_TYPE => MixedRule::class],
+				ArrayOfRule::ITEM_RULE => [MetaSource::OPTION_TYPE => MixedRule::class],
 				ArrayOfRule::MAX_ITEMS => 5,
 				ArrayOfRule::MERGE_DEFAULTS => true,
 			], $this->ruleArgsContext())),
@@ -85,7 +85,7 @@ final class ArrayOfRuleTest extends RuleTestCase
 			$this->rule->processValue(
 				null,
 				ArrayOfArgs::fromArray($this->rule->resolveArgs([
-					ArrayOfRule::ITEM_TYPE => [MetaSource::OPTION_TYPE => MixedRule::class],
+					ArrayOfRule::ITEM_RULE => [MetaSource::OPTION_TYPE => MixedRule::class],
 				], $this->ruleArgsContext())),
 				$this->fieldContext(),
 			);
@@ -107,8 +107,8 @@ final class ArrayOfRuleTest extends RuleTestCase
 			$this->rule->processValue(
 				['foo' => 'bar', 'baz' => 123, 10 => 456, 11 => 'test'],
 				ArrayOfArgs::fromArray($this->rule->resolveArgs([
-					ArrayOfRule::KEY_TYPE => [MetaSource::OPTION_TYPE => StringRule::class],
-					ArrayOfRule::ITEM_TYPE => [MetaSource::OPTION_TYPE => StringRule::class],
+					ArrayOfRule::KEY_RULE => [MetaSource::OPTION_TYPE => StringRule::class],
+					ArrayOfRule::ITEM_RULE => [MetaSource::OPTION_TYPE => StringRule::class],
 					ArrayOfRule::MIN_ITEMS => 10,
 				], $this->ruleArgsContext())),
 				$this->fieldContext(),
@@ -148,7 +148,7 @@ final class ArrayOfRuleTest extends RuleTestCase
 			$this->rule->processValue(
 				['foo', 3 => 'bar', 'baz', 123, 456],
 				ArrayOfArgs::fromArray($this->rule->resolveArgs([
-					ArrayOfRule::ITEM_TYPE => [MetaSource::OPTION_TYPE => StringRule::class],
+					ArrayOfRule::ITEM_RULE => [MetaSource::OPTION_TYPE => StringRule::class],
 					ArrayOfRule::MAX_ITEMS => 2,
 				], $this->ruleArgsContext())),
 				$this->fieldContext(),
@@ -169,7 +169,7 @@ final class ArrayOfRuleTest extends RuleTestCase
 	public function testType(): void
 	{
 		$args = ArrayOfArgs::fromArray($this->rule->resolveArgs([
-			ArrayOfRule::ITEM_TYPE => [
+			ArrayOfRule::ITEM_RULE => [
 				MetaSource::OPTION_TYPE => MixedRule::class,
 			],
 		], $this->ruleArgsContext()));

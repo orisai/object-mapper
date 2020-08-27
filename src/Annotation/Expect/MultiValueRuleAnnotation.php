@@ -8,7 +8,7 @@ use Orisai\ObjectMapper\Annotation\BaseAnnotation;
 use function array_key_exists;
 
 /**
- * @property-write RuleAnnotation $itemType
+ * @property-write RuleAnnotation $itemRule
  * @property-write int|null $minItems
  * @property-write int|null $maxItems
  * @property-write bool $mergeDefaults
@@ -20,7 +20,7 @@ abstract class MultiValueRuleAnnotation implements RuleAnnotation
 
 	protected function getMainProperty(): ?string
 	{
-		return 'itemType';
+		return 'itemRule';
 	}
 
 	/**
@@ -29,8 +29,8 @@ abstract class MultiValueRuleAnnotation implements RuleAnnotation
 	 */
 	protected function processArgs(array $args): array
 	{
-		if (array_key_exists('itemType', $args) && $args['itemType'] instanceof BaseAnnotation) {
-			$args['itemType'] = AnnotationMetaExtractor::extract($args['itemType']);
+		if (array_key_exists('itemRule', $args) && $args['itemRule'] instanceof BaseAnnotation) {
+			$args['itemRule'] = AnnotationMetaExtractor::extract($args['itemRule']);
 		}
 
 		return $args;
