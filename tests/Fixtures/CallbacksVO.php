@@ -3,8 +3,11 @@
 namespace Tests\Orisai\ObjectMapper\Fixtures;
 
 use Orisai\Exceptions\Logic\InvalidState;
-use Orisai\ObjectMapper\Annotation\Callback;
-use Orisai\ObjectMapper\Annotation\Expect;
+use Orisai\ObjectMapper\Annotation\Callback\After;
+use Orisai\ObjectMapper\Annotation\Callback\Before;
+use Orisai\ObjectMapper\Annotation\Expect\ArrayOf;
+use Orisai\ObjectMapper\Annotation\Expect\MixedValue;
+use Orisai\ObjectMapper\Annotation\Expect\StringValue;
 use Orisai\ObjectMapper\Callbacks\CallbackRuntime;
 use Orisai\ObjectMapper\Context\FieldContext;
 use Orisai\ObjectMapper\Context\FieldSetContext;
@@ -13,8 +16,8 @@ use Orisai\ObjectMapper\ValueObject;
 use function array_key_exists;
 
 /**
- * @Callback\Before(method="beforeClass", runtime=CallbackRuntime::ALWAYS)
- * @Callback\After(method="afterClass", runtime=CallbackRuntime::ALWAYS)
+ * @Before(method="beforeClass", runtime=CallbackRuntime::ALWAYS)
+ * @After(method="afterClass", runtime=CallbackRuntime::ALWAYS)
  */
 final class CallbacksVO extends ValueObject
 {
@@ -25,42 +28,42 @@ final class CallbacksVO extends ValueObject
 
 	/**
 	 * @var array<string, array<mixed>>
-	 * @Expect\ArrayOf(
-	 *     keyRule=@Expect\StringValue(),
-	 *     itemRule=@Expect\ArrayOf(
-	 *         @Expect\MixedValue(),
+	 * @ArrayOf(
+	 *     keyRule=@StringValue(),
+	 *     itemRule=@ArrayOf(
+	 *         @MixedValue(),
 	 *     ),
 	 * )
-	 * @Callback\After(method="afterArrayInitialization", runtime=CallbackRuntime::INITIALIZATION)
-	 * @Callback\After(method="afterArrayProcessing", runtime=CallbackRuntime::PROCESSING)
+	 * @After(method="afterArrayInitialization", runtime=CallbackRuntime::INITIALIZATION)
+	 * @After(method="afterArrayProcessing", runtime=CallbackRuntime::PROCESSING)
 	 */
 	public array $array;
 
 	/**
-	 * @Expect\ArrayOf(
-	 *     @Expect\MixedValue()
+	 * @ArrayOf(
+	 *     @MixedValue()
 	 * )
-	 * @Callback\After(method="afterStructure", runtime=CallbackRuntime::ALWAYS)
+	 * @After(method="afterStructure", runtime=CallbackRuntime::ALWAYS)
 	 */
 	public ValueObject $structure;
 
-	/** @Expect\StringValue() */
+	/** @StringValue() */
 	public string $overridenDefaultValue = 'defaultValue_before_override';
 
 	/**
-	 * @Expect\StringValue()
-	 * @Callback\Before(method="beforeImmutableDefaultValue", runtime=CallbackRuntime::ALWAYS)
-	 * @Callback\Before(method="afterImmutableDefaultValue", runtime=CallbackRuntime::ALWAYS)
+	 * @StringValue()
+	 * @Before(method="beforeImmutableDefaultValue", runtime=CallbackRuntime::ALWAYS)
+	 * @Before(method="afterImmutableDefaultValue", runtime=CallbackRuntime::ALWAYS)
 	 */
 	public string $immutableDefaultValue = 'defaultValue_immutable';
 
-	/** @Expect\StringValue() */
+	/** @StringValue() */
 	public string $requiredValue;
 
 	/**
-	 * @Expect\StringValue()
-	 * @Callback\Before(method="beforeCallbackSetValue", runtime=CallbackRuntime::ALWAYS)
-	 * @Callback\After(method="afterCallbackSetValue", runtime=CallbackRuntime::ALWAYS)
+	 * @StringValue()
+	 * @Before(method="beforeCallbackSetValue", runtime=CallbackRuntime::ALWAYS)
+	 * @After(method="afterCallbackSetValue", runtime=CallbackRuntime::ALWAYS)
 	 */
 	public string $callbackSetValue;
 

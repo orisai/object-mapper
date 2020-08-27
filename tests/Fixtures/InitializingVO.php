@@ -3,20 +3,22 @@
 namespace Tests\Orisai\ObjectMapper\Fixtures;
 
 use DateTimeImmutable;
-use Orisai\ObjectMapper\Annotation\Expect;
+use Orisai\ObjectMapper\Annotation\Expect\DateTime;
+use Orisai\ObjectMapper\Annotation\Expect\InstanceValue;
+use Orisai\ObjectMapper\Annotation\Expect\Structure;
 use Orisai\ObjectMapper\ValueObject;
 use stdClass;
 
 final class InitializingVO extends ValueObject
 {
 
-	/** @Expect\DateTime() */
+	/** @DateTime() */
 	public DateTimeImmutable $datetime;
 
-	/** @Expect\InstanceValue(type=stdClass::class) */
+	/** @InstanceValue(type=stdClass::class) */
 	public stdClass $instance;
 
-	/** @Expect\Structure(DefaultsVO::class) */
+	/** @Structure(DefaultsVO::class) */
 	public DefaultsVO $structure;
 
 }
