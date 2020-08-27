@@ -12,7 +12,7 @@ use Orisai\ObjectMapper\ValueObject;
 /**
  * @After(method="after", runtime=CallbackRuntime::ALWAYS)
  */
-final class AfterClassCallbackCurrentTypeValidationExceptionVO extends ValueObject
+final class AfterClassCallbackCurrentTypeInvalidDataVO extends ValueObject
 {
 
 	/** @StringValue() */
