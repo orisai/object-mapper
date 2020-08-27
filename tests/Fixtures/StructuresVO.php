@@ -2,21 +2,24 @@
 
 namespace Tests\Orisai\ObjectMapper\Fixtures;
 
-use Orisai\ObjectMapper\Annotation\Expect;
+use Orisai\ObjectMapper\Annotation\Expect\AnyOf;
+use Orisai\ObjectMapper\Annotation\Expect\ArrayOf;
+use Orisai\ObjectMapper\Annotation\Expect\MixedValue;
+use Orisai\ObjectMapper\Annotation\Expect\Structure;
 use Orisai\ObjectMapper\ValueObject;
 
 final class StructuresVO extends ValueObject
 {
 
-	/** @Expect\Structure(DefaultsVO::class) */
+	/** @Structure(DefaultsVO::class) */
 	public DefaultsVO $structure;
 
 	/**
 	 * @var DefaultsVO|array<mixed>
-	 * @Expect\AnyOf(
-	 *     @Expect\Structure(DefaultsVO::class),
-	 *     @Expect\ArrayOf(
-	 *          @Expect\MixedValue()
+	 * @AnyOf(
+	 *     @Structure(DefaultsVO::class),
+	 *     @ArrayOf(
+	 *          @MixedValue()
 	 *     )
 	 * )
 	 */
@@ -24,10 +27,10 @@ final class StructuresVO extends ValueObject
 
 	/**
 	 * @var DefaultsVO|array<mixed>
-	 * @Expect\AnyOf(
-	 *     @Expect\Structure(DefaultsVO::class),
-	 *     @Expect\ArrayOf(
-	 *          @Expect\MixedValue()
+	 * @AnyOf(
+	 *     @Structure(DefaultsVO::class),
+	 *     @ArrayOf(
+	 *          @MixedValue()
 	 *     )
 	 * )
 	 */
@@ -35,10 +38,10 @@ final class StructuresVO extends ValueObject
 
 	/**
 	 * @var array<DefaultsVO|NoDefaultsVO>
-	 * @Expect\ArrayOf(
-	 *     @Expect\AnyOf(
-	 *     	   @Expect\Structure(NoDefaultsVO::class),
-	 *         @Expect\Structure(DefaultsVO::class),
+	 * @ArrayOf(
+	 *     @AnyOf(
+	 *     	   @Structure(NoDefaultsVO::class),
+	 *         @Structure(DefaultsVO::class),
 	 *     )
 	 * )
 	 */

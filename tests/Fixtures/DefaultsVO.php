@@ -2,19 +2,23 @@
 
 namespace Tests\Orisai\ObjectMapper\Fixtures;
 
-use Orisai\ObjectMapper\Annotation\Expect;
+use Orisai\ObjectMapper\Annotation\Expect\AnyOf;
+use Orisai\ObjectMapper\Annotation\Expect\ArrayOf;
+use Orisai\ObjectMapper\Annotation\Expect\MixedValue;
+use Orisai\ObjectMapper\Annotation\Expect\NullValue;
+use Orisai\ObjectMapper\Annotation\Expect\StringValue;
 use Orisai\ObjectMapper\ValueObject;
 
 final class DefaultsVO extends ValueObject
 {
 
-	/** @Expect\StringValue() */
+	/** @StringValue() */
 	public string $string = 'foo';
 
 	/**
-	 * @Expect\AnyOf(
-	 *     @Expect\StringValue(),
-	 *     @Expect\NullValue(),
+	 * @AnyOf(
+	 *     @StringValue(),
+	 *     @NullValue(),
 	 * )
 	 */
 	public ?string $nullableString = null;
@@ -22,9 +26,9 @@ final class DefaultsVO extends ValueObject
 	/**
 	 * Is optional because without type there's no difference between uninitialized and null value ($foo; and $foo = null; are the same)
 	 *
-	 * @Expect\AnyOf(
-	 *     @Expect\StringValue(),
-	 *     @Expect\NullValue(),
+	 * @AnyOf(
+	 *     @StringValue(),
+	 *     @NullValue(),
 	 * )
 	 */
 	public ?string $untypedNullableString = null;
@@ -33,15 +37,15 @@ final class DefaultsVO extends ValueObject
 	 * Is optional because without type there's no difference between uninitialized and null value ($foo; and $foo = null; are the same)
 	 *
 	 * @var null
-	 * @Expect\NullValue()
+	 * @NullValue()
 	 */
 	public $untypedNull;
 
 	/**
 	 * phpcs:disable Squiz.Arrays.ArrayDeclaration.KeySpecified
 	 * @var array<string>
-	 * @Expect\ArrayOf(
-	 *     @Expect\MixedValue()
+	 * @ArrayOf(
+	 *     @MixedValue()
 	 * )
 	 */
 	public array $arrayOfMixed = [

@@ -2,42 +2,48 @@
 
 namespace Tests\Orisai\ObjectMapper\Fixtures;
 
-use Orisai\ObjectMapper\Annotation\Expect;
+use Orisai\ObjectMapper\Annotation\Expect\AnyOf;
+use Orisai\ObjectMapper\Annotation\Expect\ArrayOf;
+use Orisai\ObjectMapper\Annotation\Expect\IntValue;
+use Orisai\ObjectMapper\Annotation\Expect\MixedValue;
+use Orisai\ObjectMapper\Annotation\Expect\NullValue;
+use Orisai\ObjectMapper\Annotation\Expect\StringValue;
+use Orisai\ObjectMapper\Annotation\Expect\Structure;
 use Orisai\ObjectMapper\ValueObject;
 
 final class NoDefaultsVO extends ValueObject
 {
 
-	/** @Expect\StringValue() */
+	/** @StringValue() */
 	public string $string;
 
 	/**
-	 * @Expect\AnyOf(
-	 *     @Expect\StringValue(),
-	 *     @Expect\NullValue(),
+	 * @AnyOf(
+	 *     @StringValue(),
+	 *     @NullValue(),
 	 * )
 	 */
 	public ?string $nullableString;
 
-	/** @Expect\StringValue() */
+	/** @StringValue() */
 	public string $untypedString;
 
 	/**
 	 * @var array<mixed>
-	 * @Expect\ArrayOf(
-	 *     @Expect\MixedValue()
+	 * @ArrayOf(
+	 *     @MixedValue()
 	 * )
 	 */
 	public array $arrayOfMixed;
 
-	/** @Expect\Structure(DefaultsVO::class) */
+	/** @Structure(DefaultsVO::class) */
 	public DefaultsVO $structure;
 
 	/**
 	 * @var array<int, DefaultsVO>
-	 * @Expect\ArrayOf(
-	 *     keyRule=@Expect\IntValue(),
-	 *     itemRule=@Expect\Structure(DefaultsVO::class),
+	 * @ArrayOf(
+	 *     keyRule=@IntValue(),
+	 *     itemRule=@Structure(DefaultsVO::class),
 	 * )
 	 */
 	public array $manyStructures;
