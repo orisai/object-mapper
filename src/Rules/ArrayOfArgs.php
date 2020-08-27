@@ -8,7 +8,7 @@ use function array_key_exists;
 final class ArrayOfArgs extends MultiValueArgs
 {
 
-	public ?RuleMeta $keyType = null;
+	public ?RuleMeta $keyRuleMeta = null;
 
 	/**
 	 * @param array<mixed> $args
@@ -18,8 +18,8 @@ final class ArrayOfArgs extends MultiValueArgs
 	{
 		$self = parent::fromArray($args);
 
-		if (array_key_exists(ArrayOfRule::KEY_TYPE, $args) && $args[ArrayOfRule::KEY_TYPE] !== null) {
-			$self->keyType = RuleMeta::fromArray($args[ArrayOfRule::KEY_TYPE]);
+		if (array_key_exists(ArrayOfRule::KEY_RULE, $args) && $args[ArrayOfRule::KEY_RULE] !== null) {
+			$self->keyRuleMeta = RuleMeta::fromArray($args[ArrayOfRule::KEY_RULE]);
 		}
 
 		return $self;

@@ -29,13 +29,13 @@ final class ListOfRule extends MultiValueRule
 	public function resolveArgs(array $args, RuleArgsContext $context): array
 	{
 		$checker = new ArgsChecker($args, self::class);
-		$checker->checkAllowedArgs([self::ITEM_TYPE, self::MIN_ITEMS, self::MAX_ITEMS, self::MERGE_DEFAULTS]);
+		$checker->checkAllowedArgs([self::ITEM_RULE, self::MIN_ITEMS, self::MAX_ITEMS, self::MERGE_DEFAULTS]);
 
 		$resolver = $context->getMetaResolver();
 
-		$checker->checkRequiredArg(self::ITEM_TYPE);
-		$item = $checker->checkArray(self::ITEM_TYPE);
-		$args[self::ITEM_TYPE] = $resolver->resolveRuleMeta($item, $context);
+		$checker->checkRequiredArg(self::ITEM_RULE);
+		$item = $checker->checkArray(self::ITEM_RULE);
+		$args[self::ITEM_RULE] = $resolver->resolveRuleMeta($item, $context);
 
 		if ($checker->hasArg(self::MIN_ITEMS)) {
 			$checker->checkNullableInt(self::MIN_ITEMS);
@@ -87,7 +87,7 @@ final class ListOfRule extends MultiValueRule
 			$type->markKeysInvalid();
 		}
 
-		$itemMeta = $args->itemType;
+		$itemMeta = $args->itemRuleMeta;
 		$itemRule = $context->getRule($itemMeta->getType());
 		$itemArgs = $this->createRuleArgsInst($itemRule, $itemMeta);
 
@@ -120,7 +120,7 @@ final class ListOfRule extends MultiValueRule
 	 */
 	public function createType(Args $args, TypeContext $context): ListType
 	{
-		$itemMeta = $args->itemType;
+		$itemMeta = $args->itemRuleMeta;
 		$itemRule = $context->getRule($itemMeta->getType());
 		$itemArgs = $this->createRuleArgsInst($itemRule, $itemMeta);
 

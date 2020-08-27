@@ -36,8 +36,8 @@ final class NoDefaultsVO extends ValueObject
 	/**
 	 * @var array<int, DefaultsVO>
 	 * @Expect\ArrayOf(
-	 *     keyType=@Expect\IntValue(),
-	 *     itemType=@Expect\Structure(DefaultsVO::class),
+	 *     keyRule=@Expect\IntValue(),
+	 *     itemRule=@Expect\Structure(DefaultsVO::class),
 	 * )
 	 */
 	public array $manyStructures;

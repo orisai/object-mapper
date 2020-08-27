@@ -35,7 +35,7 @@ final class ListOfRuleTest extends RuleTestCase
 		$processed = $this->rule->processValue(
 			$value,
 			MultiValueArgs::fromArray($this->rule->resolveArgs([
-				ListOfRule::ITEM_TYPE => [MetaSource::OPTION_TYPE => MixedRule::class],
+				ListOfRule::ITEM_RULE => [MetaSource::OPTION_TYPE => MixedRule::class],
 			], $this->ruleArgsContext())),
 			$this->fieldContext(DefaultValueMeta::fromValueOrNothing($defaults)),
 		);
@@ -51,7 +51,7 @@ final class ListOfRuleTest extends RuleTestCase
 		$processed = $this->rule->processValue(
 			$value,
 			MultiValueArgs::fromArray($this->rule->resolveArgs([
-				ListOfRule::ITEM_TYPE => [MetaSource::OPTION_TYPE => MixedRule::class],
+				ListOfRule::ITEM_RULE => [MetaSource::OPTION_TYPE => MixedRule::class],
 				ListOfRule::MAX_ITEMS => 5,
 				ListOfRule::MERGE_DEFAULTS => true,
 			], $this->ruleArgsContext())),
@@ -69,7 +69,7 @@ final class ListOfRuleTest extends RuleTestCase
 			$this->rule->processValue(
 				null,
 				MultiValueArgs::fromArray($this->rule->resolveArgs([
-					ListOfRule::ITEM_TYPE => [MetaSource::OPTION_TYPE => MixedRule::class],
+					ListOfRule::ITEM_RULE => [MetaSource::OPTION_TYPE => MixedRule::class],
 				], $this->ruleArgsContext())),
 				$this->fieldContext(),
 			);
@@ -91,7 +91,7 @@ final class ListOfRuleTest extends RuleTestCase
 			$this->rule->processValue(
 				['foo', 3 => 'bar', 'baz', 123, 456],
 				MultiValueArgs::fromArray($this->rule->resolveArgs([
-					ListOfRule::ITEM_TYPE => [MetaSource::OPTION_TYPE => StringRule::class],
+					ListOfRule::ITEM_RULE => [MetaSource::OPTION_TYPE => StringRule::class],
 					ListOfRule::MIN_ITEMS => 10,
 				], $this->ruleArgsContext())),
 				$this->fieldContext(),
@@ -119,7 +119,7 @@ final class ListOfRuleTest extends RuleTestCase
 			$this->rule->processValue(
 				['foo', 3 => 'bar', 'baz', 123, 456],
 				MultiValueArgs::fromArray($this->rule->resolveArgs([
-					ListOfRule::ITEM_TYPE => [MetaSource::OPTION_TYPE => StringRule::class],
+					ListOfRule::ITEM_RULE => [MetaSource::OPTION_TYPE => StringRule::class],
 					ListOfRule::MAX_ITEMS => 2,
 				], $this->ruleArgsContext())),
 				$this->fieldContext(),
@@ -141,7 +141,7 @@ final class ListOfRuleTest extends RuleTestCase
 	public function testType(): void
 	{
 		$args = MultiValueArgs::fromArray($this->rule->resolveArgs([
-			ListOfRule::ITEM_TYPE => [
+			ListOfRule::ITEM_RULE => [
 				MetaSource::OPTION_TYPE => MixedRule::class,
 			],
 		], $this->ruleArgsContext()));
