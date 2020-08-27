@@ -36,7 +36,7 @@ interface Processor
 	 * @param array<string> $properties
 	 * @throws InvalidData
 	 */
-	public function processUninitializedProperties(
+	public function processSkippedProperties(
 		array $properties,
 		ValueObject $object,
 		?Options $options = null

@@ -2,7 +2,7 @@
 
 namespace Orisai\ObjectMapper\Context;
 
-class UninitializedPropertyContext
+class SkippedPropertyContext
 {
 
 	/** @var int|string */
@@ -11,14 +11,17 @@ class UninitializedPropertyContext
 	/** @var mixed */
 	private $value;
 
+	private bool $isDefault;
+
 	/**
 	 * @param int|string $fieldName
 	 * @param mixed $value
 	 */
-	public function __construct($fieldName, $value)
+	public function __construct($fieldName, $value, bool $isDefault)
 	{
 		$this->fieldName = $fieldName;
 		$this->value = $value;
+		$this->isDefault = $isDefault;
 	}
 
 	/**
@@ -35,6 +38,11 @@ class UninitializedPropertyContext
 	public function getValue()
 	{
 		return $this->value;
+	}
+
+	public function isDefault(): bool
+	{
+		return $this->isDefault;
 	}
 
 }

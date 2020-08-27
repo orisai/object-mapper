@@ -5,7 +5,7 @@ namespace Orisai\ObjectMapper;
 use Nette\Utils\ObjectHelpers;
 use Orisai\Exceptions\Logic\InvalidState;
 use Orisai\Exceptions\Logic\MemberInaccessible;
-use Orisai\ObjectMapper\Context\PartiallyInitializedObjectContext;
+use Orisai\ObjectMapper\Context\SkippedPropertiesContext;
 use ReflectionClass;
 use ReflectionProperty;
 use function array_filter;
@@ -19,7 +19,7 @@ use function sprintf;
 abstract class ValueObject
 {
 
-	private ?PartiallyInitializedObjectContext $partialContext = null;
+	private ?SkippedPropertiesContext $skippedPropertiesContext = null;
 
 	/** @var array<mixed> */
 	private array $processedValues = [];
@@ -27,24 +27,24 @@ abstract class ValueObject
 	/** @var array<mixed> */
 	private array $rawValues;
 
-	public function setPartialContext(?PartiallyInitializedObjectContext $partialContext): void
+	public function setSkippedPropertiesContext(?SkippedPropertiesContext $partialContext): void
 	{
-		$this->partialContext = $partialContext;
+		$this->skippedPropertiesContext = $partialContext;
 	}
 
-	public function hasPartialContext(): bool
+	public function hasSkippedPropertiesContext(): bool
 	{
-		return $this->partialContext !== null;
+		return $this->skippedPropertiesContext !== null;
 	}
 
-	public function getPartialContext(): PartiallyInitializedObjectContext
+	public function getSkippedPropertiesContext(): SkippedPropertiesContext
 	{
-		if ($this->partialContext === null) {
+		if ($this->skippedPropertiesContext === null) {
 			throw InvalidState::create()
-				->withMessage('Check partial object existence with hasPartialContext()');
+				->withMessage('Check partial object existence with hasSkippedPropertiesContext()');
 		}
 
-		return $this->partialContext;
+		return $this->skippedPropertiesContext;
 	}
 
 	/**
