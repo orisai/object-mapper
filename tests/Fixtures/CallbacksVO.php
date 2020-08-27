@@ -26,8 +26,8 @@ final class CallbacksVO extends ValueObject
 	/**
 	 * @var array<string, array<mixed>>
 	 * @Expect\ArrayOf(
-	 *     keyType=@Expect\StringValue(),
-	 *     itemType=@Expect\ArrayOf(
+	 *     keyRule=@Expect\StringValue(),
+	 *     itemRule=@Expect\ArrayOf(
 	 *         @Expect\MixedValue(),
 	 *     ),
 	 * )

@@ -12,7 +12,7 @@ use function array_key_exists;
 /**
  * @Annotation
  * @Target({"PROPERTY", "ANNOTATION"})
- * @property-write RuleAnnotation|null $keyType
+ * @property-write RuleAnnotation|null $keyRule
  */
 final class ArrayOf extends MultiValueRuleAnnotation
 {
@@ -33,8 +33,8 @@ final class ArrayOf extends MultiValueRuleAnnotation
 	{
 		$args = parent::processArgs($args);
 
-		if (array_key_exists('keyType', $args) && $args['keyType'] instanceof BaseAnnotation) {
-			$args['keyType'] = AnnotationMetaExtractor::extract($args['keyType']);
+		if (array_key_exists('keyRule', $args) && $args['keyRule'] instanceof BaseAnnotation) {
+			$args['keyRule'] = AnnotationMetaExtractor::extract($args['keyRule']);
 		}
 
 		return $args;
