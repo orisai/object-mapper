@@ -10,10 +10,10 @@ use Orisai\ObjectMapper\Formatting\VisualErrorFormatter;
 use Orisai\ObjectMapper\Options;
 use Orisai\ObjectMapper\ValueObject;
 use stdClass;
-use Tests\Orisai\ObjectMapper\Fixtures\AfterClassCallbackCurrentTypeValidationExceptionVO;
-use Tests\Orisai\ObjectMapper\Fixtures\AfterClassCallbackNewTypeValidationExceptionVO;
-use Tests\Orisai\ObjectMapper\Fixtures\AfterClassCallbackRuleExceptionVO;
-use Tests\Orisai\ObjectMapper\Fixtures\BeforeClassCallbackRuleExceptionVO;
+use Tests\Orisai\ObjectMapper\Fixtures\AfterClassCallbackCurrentTypeInvalidDataVO;
+use Tests\Orisai\ObjectMapper\Fixtures\AfterClassCallbackNewTypeInvalidDataVO;
+use Tests\Orisai\ObjectMapper\Fixtures\AfterClassCallbackValueDoesNotMatchVO;
+use Tests\Orisai\ObjectMapper\Fixtures\BeforeClassCallbackValueDoesNotMatchVO;
 use Tests\Orisai\ObjectMapper\Fixtures\CallbacksVO;
 use Tests\Orisai\ObjectMapper\Fixtures\DefaultsVO;
 use Tests\Orisai\ObjectMapper\Fixtures\EmptyVO;
@@ -443,7 +443,7 @@ validationFailed: string',
 		$data = [];
 
 		try {
-			$vo = $this->processor->process($data, BeforeClassCallbackRuleExceptionVO::class);
+			$vo = $this->processor->process($data, BeforeClassCallbackValueDoesNotMatchVO::class);
 		} catch (InvalidData $exception) {
 			// Checked bellow
 		}
@@ -466,7 +466,7 @@ validationFailed: string',
 		];
 
 		try {
-			$vo = $this->processor->process($data, AfterClassCallbackRuleExceptionVO::class);
+			$vo = $this->processor->process($data, AfterClassCallbackValueDoesNotMatchVO::class);
 		} catch (InvalidData $exception) {
 			// Checked bellow
 		}
@@ -489,7 +489,7 @@ validationFailed: string',
 		];
 
 		try {
-			$vo = $this->processor->process($data, AfterClassCallbackCurrentTypeValidationExceptionVO::class);
+			$vo = $this->processor->process($data, AfterClassCallbackCurrentTypeInvalidDataVO::class);
 		} catch (InvalidData $exception) {
 			// Checked bellow
 		}
@@ -512,7 +512,7 @@ validationFailed: string',
 		];
 
 		try {
-			$vo = $this->processor->process($data, AfterClassCallbackNewTypeValidationExceptionVO::class);
+			$vo = $this->processor->process($data, AfterClassCallbackNewTypeInvalidDataVO::class);
 		} catch (InvalidData $exception) {
 			// Checked bellow
 		}
