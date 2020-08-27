@@ -25,8 +25,11 @@ final class NoDefaultsVO extends ValueObject
 	 */
 	public ?string $nullableString;
 
-	/** @StringValue() */
-	public string $untypedString;
+	/**
+	 * @StringValue()
+	 * @phpcsSuppress SlevomatCodingStandard.TypeHints.PropertyTypeHint.MissingAnyTypeHint
+	 */
+	public $untypedString;
 
 	/**
 	 * @var array<mixed>

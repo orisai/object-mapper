@@ -30,14 +30,16 @@ final class DefaultsVO extends ValueObject
 	 *     @StringValue(),
 	 *     @NullValue(),
 	 * )
+	 * @phpcsSuppress SlevomatCodingStandard.TypeHints.PropertyTypeHint.MissingAnyTypeHint
 	 */
-	public ?string $untypedNullableString = null;
+	public $untypedNullableString;
 
 	/**
 	 * Is optional because without type there's no difference between uninitialized and null value ($foo; and $foo = null; are the same)
 	 *
 	 * @var null
 	 * @NullValue()
+	 * @phpcsSuppress SlevomatCodingStandard.TypeHints.PropertyTypeHint.MissingAnyTypeHint
 	 */
 	public $untypedNull;
 
