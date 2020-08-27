@@ -10,7 +10,7 @@ use Orisai\ObjectMapper\ValueObject;
 /**
  * @Before(method="before", runtime=CallbackRuntime::ALWAYS)
  */
-final class BeforeClassCallbackRuleExceptionVO extends ValueObject
+final class BeforeClassCallbackValueDoesNotMatchVO extends ValueObject
 {
 
 	/**
