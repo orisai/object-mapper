@@ -29,7 +29,7 @@ final class Examples implements DocumentationAnnotation
 	 * @param array<mixed> $args
 	 * @return array<mixed>
 	 */
-	protected function processArgs(array $args): array
+	protected function resolveArgs(array $args): array
 	{
 		$examples = $args['examples'] ?? null;
 
