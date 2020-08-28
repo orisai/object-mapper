@@ -11,7 +11,7 @@ interface Doc
 	 * @param array<mixed> $args
 	 * @return array<mixed>
 	 */
-	public static function processArgs(array $args, ArgsContext $context): array;
+	public static function resolveArgs(array $args, ArgsContext $context): array;
 
 	public static function getUniqueName(): string;
 

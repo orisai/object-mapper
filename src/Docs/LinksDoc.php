@@ -14,7 +14,7 @@ final class LinksDoc implements Doc
 	 * @param array<mixed> $args
 	 * @return array<mixed>
 	 */
-	public static function processArgs(array $args, ArgsContext $context): array
+	public static function resolveArgs(array $args, ArgsContext $context): array
 	{
 		$checker = new ArgsChecker($args, self::class);
 		$checker->checkAllowedArgs([self::LINKS]);

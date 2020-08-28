@@ -30,7 +30,7 @@ final class Links implements DocumentationAnnotation
 	 * @param array<mixed> $args
 	 * @return array<mixed>
 	 */
-	protected function processArgs(array $args): array
+	protected function resolveArgs(array $args): array
 	{
 		$links = $args['links'] ?? null;
 

@@ -28,7 +28,7 @@ final class Summary implements DocumentationAnnotation
 	 * @param array<mixed> $args
 	 * @return array<mixed>
 	 */
-	protected function processArgs(array $args): array
+	protected function resolveArgs(array $args): array
 	{
 		if (array_key_exists('message', $args) && is_string($args['message'])) {
 			$args['message'] = AnnotationFilter::filterMultilineDocblock($args['message']);
