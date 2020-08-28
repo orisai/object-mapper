@@ -78,7 +78,7 @@ class MetaLoader
 		foreach ($this->sourceManager->getAll() as $source) {
 			$sourceMeta = $source->load($classRef);
 			// TODO - merge source parts individually - default value, rule, callbacks, ... have different merging rules
-			//		- each source should be valid structurally (MetaResolver without processArgs calls)
+			//		- each source should be valid structurally (MetaResolver without resolveArgs calls)
 			//		- then be merged with previous source
 			//		- and validated that rule/modifier/callback/doc args in merged form are valid
 			$meta = Merger::merge($meta, $sourceMeta);

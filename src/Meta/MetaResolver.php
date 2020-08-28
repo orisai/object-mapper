@@ -238,7 +238,7 @@ final class MetaResolver
 			$args = [];
 		}
 
-		$meta[MetaSource::OPTION_ARGS] = $type::processArgs($args, $context);
+		$meta[MetaSource::OPTION_ARGS] = $type::resolveArgs($args, $context);
 
 		return $meta;
 	}
@@ -288,7 +288,7 @@ final class MetaResolver
 		}
 
 		$name = $type::getUniqueName();
-		$args = $type::processArgs($args, $context);
+		$args = $type::resolveArgs($args, $context);
 
 		return [$type, $name, $args];
 	}
@@ -337,7 +337,7 @@ final class MetaResolver
 			$args = [];
 		}
 
-		$args = $type::processArgs($args, $context);
+		$args = $type::resolveArgs($args, $context);
 
 		return [$type, $args];
 	}

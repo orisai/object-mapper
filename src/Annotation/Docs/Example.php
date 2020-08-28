@@ -29,7 +29,7 @@ final class Example implements DocumentationAnnotation
 	 * @param array<mixed> $args
 	 * @return array<mixed>
 	 */
-	protected function processArgs(array $args): array
+	protected function resolveArgs(array $args): array
 	{
 		if (array_key_exists('content', $args) && is_string($args['content'])) {
 			$args['content'] = AnnotationFilter::filterMultilineDocblock($args['content']);

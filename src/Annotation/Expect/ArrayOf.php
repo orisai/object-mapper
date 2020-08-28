@@ -29,9 +29,9 @@ final class ArrayOf extends MultiValueRuleAnnotation
 	 * @param array<mixed> $args
 	 * @return array<mixed>
 	 */
-	protected function processArgs(array $args): array
+	protected function resolveArgs(array $args): array
 	{
-		$args = parent::processArgs($args);
+		$args = parent::resolveArgs($args);
 
 		if (array_key_exists('keyRule', $args) && $args['keyRule'] instanceof BaseAnnotation) {
 			$args['keyRule'] = AnnotationMetaExtractor::extract($args['keyRule']);

@@ -27,7 +27,7 @@ abstract class CompoundRulesAnnotation implements RuleAnnotation
 	 * @param array<mixed> $args
 	 * @return array<mixed>
 	 */
-	protected function processArgs(array $args): array
+	protected function resolveArgs(array $args): array
 	{
 		$rules = $args['rules'] ?? null;
 

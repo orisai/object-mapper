@@ -27,7 +27,7 @@ abstract class MultiValueRuleAnnotation implements RuleAnnotation
 	 * @param array<mixed> $args
 	 * @return array<mixed>
 	 */
-	protected function processArgs(array $args): array
+	protected function resolveArgs(array $args): array
 	{
 		if (array_key_exists('itemRule', $args) && $args['itemRule'] instanceof BaseAnnotation) {
 			$args['itemRule'] = AnnotationMetaExtractor::extract($args['itemRule']);

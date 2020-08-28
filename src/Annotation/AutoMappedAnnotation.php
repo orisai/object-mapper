@@ -22,7 +22,7 @@ trait AutoMappedAnnotation
 			unset($values['value']);
 		}
 
-		$this->args = $this->processArgs($values);
+		$this->args = $this->resolveArgs($values);
 	}
 
 	/**
@@ -42,7 +42,7 @@ trait AutoMappedAnnotation
 	 * @param array<mixed> $args
 	 * @return array<mixed>
 	 */
-	protected function processArgs(array $args): array
+	protected function resolveArgs(array $args): array
 	{
 		return $args;
 	}
