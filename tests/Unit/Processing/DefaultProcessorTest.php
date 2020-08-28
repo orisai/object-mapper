@@ -18,6 +18,7 @@ use Tests\Orisai\ObjectMapper\Fixtures\BeforeClassCallbackValueDoesNotMatchVO;
 use Tests\Orisai\ObjectMapper\Fixtures\CallbacksVO;
 use Tests\Orisai\ObjectMapper\Fixtures\DefaultsVO;
 use Tests\Orisai\ObjectMapper\Fixtures\EmptyVO;
+use Tests\Orisai\ObjectMapper\Fixtures\FieldNamesVO;
 use Tests\Orisai\ObjectMapper\Fixtures\InitializingVO;
 use Tests\Orisai\ObjectMapper\Fixtures\NoDefaultsVO;
 use Tests\Orisai\ObjectMapper\Fixtures\PropertiesInitVO;
@@ -438,7 +439,7 @@ validationFailed: string',
 		);
 	}
 
-	public function testBeforeClassCallbackRuleExceptiom(): void
+	public function testBeforeClassCallbackRuleException(): void
 	{
 		$vo = null;
 		$exception = null;
@@ -621,6 +622,23 @@ arrayOfMixed: array<mixed>',
 		self::assertNull($vo->required);
 		self::assertNull($vo->optional);
 		self::assertInstanceOf(EmptyVO::class, $vo->structure);
+	}
+
+	public function testMappedFieldNames(): void
+	{
+		$vo = $this->processor->process([
+			'original' => 'original',
+			'field' => 'property',
+			123 => 'integer',
+			'swap1' => 'swap2',
+			'swap2' => 'swap1',
+		], FieldNamesVO::class);
+
+		self::assertSame('original', $vo->original);
+		self::assertSame('property', $vo->property);
+		self::assertSame('integer', $vo->integer);
+		self::assertSame('swap1', $vo->swap1);
+		self::assertSame('swap2', $vo->swap2);
 	}
 
 	public function testSkipped(): void

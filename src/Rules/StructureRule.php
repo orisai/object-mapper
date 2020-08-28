@@ -9,6 +9,7 @@ use Orisai\ObjectMapper\Exception\InvalidData;
 use Orisai\ObjectMapper\Meta\Args;
 use Orisai\ObjectMapper\Meta\ArgsChecker;
 use Orisai\ObjectMapper\Meta\ArgsCreator;
+use Orisai\ObjectMapper\Modifiers\FieldNameModifier;
 use Orisai\ObjectMapper\Types\StructureType;
 use Orisai\ObjectMapper\ValueObject;
 use function array_keys;
@@ -75,12 +76,15 @@ final class StructureRule implements Rule
 		$type = new StructureType($args->type);
 
 		foreach ($propertyNames as $propertyName) {
-			$fieldName = $propertyName; //TODO - map property and field names
-
 			$propertyMeta = $propertiesMeta[$propertyName];
 			$propertyRuleMeta = $propertyMeta->getRule();
 			$propertyRule = $context->getRule($propertyRuleMeta->getType());
 			$propertyArgs = $this->createRuleArgsInst($propertyRule, $propertyRuleMeta);
+
+			$fieldNameMeta = $propertyMeta->getModifier(FieldNameModifier::class);
+			$fieldName = $fieldNameMeta !== null
+				? $fieldNameMeta->getArgs()[FieldNameModifier::NAME]
+				: $propertyName;
 
 			$type->addField(
 				$fieldName,

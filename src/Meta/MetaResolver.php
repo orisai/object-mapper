@@ -3,11 +3,14 @@
 namespace Orisai\ObjectMapper\Meta;
 
 use Orisai\Exceptions\Logic\InvalidArgument;
+use Orisai\Exceptions\Logic\InvalidState;
+use Orisai\Exceptions\Message;
 use Orisai\ObjectMapper\Callbacks\Callback;
 use Orisai\ObjectMapper\Context\ArgsContext;
 use Orisai\ObjectMapper\Context\RuleArgsContext;
 use Orisai\ObjectMapper\Docs\Doc;
 use Orisai\ObjectMapper\Exception\InvalidMeta;
+use Orisai\ObjectMapper\Modifiers\FieldNameModifier;
 use Orisai\ObjectMapper\Modifiers\Modifier;
 use Orisai\ObjectMapper\Rules\MixedRule;
 use Orisai\ObjectMapper\Rules\NullRule;
@@ -19,6 +22,8 @@ use ReflectionProperty;
 use function array_key_exists;
 use function class_exists;
 use function get_class;
+use function implode;
+use function in_array;
 use function is_array;
 use function is_string;
 use function is_subclass_of;
@@ -30,8 +35,9 @@ use function sprintf;
 final class MetaResolver
 {
 
-	private MetaLoader $loader;
+	public const FIELDS_PROPERTIES_MAP = 'fields_properties_map';
 
+	private MetaLoader $loader;
 	private RuleManager $ruleManager;
 
 	public function __construct(MetaLoader $loader, RuleManager $ruleManager)
@@ -74,6 +80,8 @@ final class MetaResolver
 			}
 
 			$meta[MetaSource::LOCATION_PROPERTIES] = $this->resolvePropertiesMeta($meta[MetaSource::LOCATION_PROPERTIES], $class);
+
+			$meta[self::FIELDS_PROPERTIES_MAP] = $this->resolveFieldsPropertiesMap($meta[MetaSource::LOCATION_PROPERTIES], $class);
 		}
 
 		return $meta;
@@ -412,6 +420,69 @@ final class MetaResolver
 		}
 
 		return $meta;
+	}
+
+	/**
+	 * @param array<mixed> $properties
+	 * @phpstan-param ReflectionClass<ValueObject> $class
+	 * @return array<int|string, string>
+	 */
+	private function resolveFieldsPropertiesMap(array $properties, ReflectionClass $class): array
+	{
+		$map = [];
+		foreach ($properties as $propertyName => $property) {
+			$propertyMeta = PropertyMeta::fromArray($property);
+			$fieldNameMeta = $propertyMeta->getModifier(FieldNameModifier::class);
+
+			if ($fieldNameMeta !== null) {
+				$fieldName = $fieldNameMeta->getArgs()[FieldNameModifier::NAME];
+
+				if (isset($map[$fieldName])) {
+					$message = Message::create()
+						->withContext(sprintf(
+							'Trying to define field name for mapped property of `%s`.',
+							$class->getName(),
+						))
+						->withProblem(sprintf(
+							'Field name `%s` is identical for properties `%s`.',
+							$fieldName,
+							implode(', ', [$map[$fieldName], $propertyName]),
+						))
+						->withSolution('Define unique field name for each mapped property.');
+
+					throw InvalidState::create()
+						->withMessage((string) $message);
+				}
+
+				$map[$fieldName] = $propertyName;
+			}
+		}
+
+		foreach ($map as $fieldName => $propertyName) {
+			if (array_key_exists($fieldName, $properties) && !in_array($fieldName, $map, true)) {
+				$message = Message::create()
+					->withContext(sprintf(
+						'Trying to define field name for mapped property of `%s`.',
+						$class->getName(),
+					))
+					->withProblem(sprintf(
+						'Field name `%s` defined by property `%s` collides with property `%s` which does not have a field name.',
+						$fieldName,
+						$propertyName,
+						$fieldName,
+					))
+					->withSolution(sprintf(
+						'Rename field of property `%s` or rename property `%s` or give it a unique field name.',
+						$propertyName,
+						$fieldName,
+					));
+
+				throw InvalidState::create()
+					->withMessage((string) $message);
+			}
+		}
+
+		return $map;
 	}
 
 	/**
