@@ -19,6 +19,9 @@ final class Meta
 	/** @var array<PropertyMeta>|null */
 	private ?array $instProperties = null;
 
+	/** @var array<int|string, string> */
+	private array $fieldsPropertiesMap;
+
 	private function __construct()
 	{
 	}
@@ -31,6 +34,7 @@ final class Meta
 		$self = new self();
 		$self->class = $meta[MetaSource::LOCATION_CLASS] ?? [];
 		$self->properties = $meta[MetaSource::LOCATION_PROPERTIES] ?? [];
+		$self->fieldsPropertiesMap = $meta[MetaResolver::FIELDS_PROPERTIES_MAP] ?? [];
 
 		return $self;
 	}
@@ -60,6 +64,14 @@ final class Meta
 		}
 
 		return $this->instProperties = $processed;
+	}
+
+	/**
+	 * @return array<int|string, string>
+	 */
+	public function getFieldsPropertiesMap(): array
+	{
+		return $this->fieldsPropertiesMap;
 	}
 
 }

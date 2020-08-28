@@ -3,7 +3,6 @@
 namespace Orisai\ObjectMapper\Processing;
 
 use Nette\Utils\ObjectHelpers;
-use Nette\Utils\Validators;
 use Orisai\Exceptions\Logic\InvalidState;
 use Orisai\ObjectMapper\Callbacks\AfterCallback;
 use Orisai\ObjectMapper\Callbacks\BeforeCallback;
@@ -20,9 +19,11 @@ use Orisai\ObjectMapper\Exception\InvalidData;
 use Orisai\ObjectMapper\Exception\ValueDoesNotMatch;
 use Orisai\ObjectMapper\Meta\ArgsCreator;
 use Orisai\ObjectMapper\Meta\ClassMeta;
+use Orisai\ObjectMapper\Meta\Meta;
 use Orisai\ObjectMapper\Meta\MetaLoader;
 use Orisai\ObjectMapper\Meta\PropertyMeta;
 use Orisai\ObjectMapper\Meta\SharedMeta;
+use Orisai\ObjectMapper\Modifiers\FieldNameModifier;
 use Orisai\ObjectMapper\Modifiers\SkippedModifier;
 use Orisai\ObjectMapper\Options;
 use Orisai\ObjectMapper\Rules\RuleManager;
@@ -189,21 +190,22 @@ class DefaultProcessor implements Processor
 
 	/**
 	 * @param int|string $fieldName
-	 * @todo field->property name metadata
 	 */
-	protected function fieldNameToPropertyName($fieldName): string
+	protected function fieldNameToPropertyName($fieldName, Meta $meta): string
 	{
-		return (string) $fieldName;
+		$map = $meta->getFieldsPropertiesMap();
+
+		return $map[$fieldName] ?? (string) $fieldName;
 	}
 
 	/**
 	 * @return int|string
-	 * @todo property->field name metadata
 	 */
-	protected function propertyNameToFieldName(string $propertyName)
+	protected function propertyNameToFieldName(string $propertyName, PropertyMeta $meta)
 	{
-		if (Validators::isNumericInt($propertyName)) {
-			return (int) $propertyName;
+		$fieldNameMeta = $meta->getModifier(FieldNameModifier::class);
+		if ($fieldNameMeta !== null) {
+			return $fieldNameMeta->getArgs()[FieldNameModifier::NAME];
 		}
 
 		return $propertyName;
@@ -248,7 +250,8 @@ class DefaultProcessor implements Processor
 	{
 		$type = $fieldSetContext->getType();
 
-		$propertiesMeta = $runContext->getMeta()->getProperties();
+		$meta = $runContext->getMeta();
+		$propertiesMeta = $meta->getProperties();
 		/** @var array<string> $propertyNames */
 		$propertyNames = array_keys($propertiesMeta);
 
@@ -258,7 +261,7 @@ class DefaultProcessor implements Processor
 				continue;
 			}
 
-			$propertyName = $this->fieldNameToPropertyName($fieldName);
+			$propertyName = $this->fieldNameToPropertyName($fieldName, $meta);
 
 			// Unknown field
 			if (!isset($propertiesMeta[$propertyName])) {
@@ -267,14 +270,16 @@ class DefaultProcessor implements Processor
 
 				// Add error to type
 				$hintedPropertyName = ObjectHelpers::getSuggestion($propertyNames, $propertyName);
+				$hintedFieldName = $hintedPropertyName !== null ?
+					$this->propertyNameToFieldName(
+						$hintedPropertyName,
+						$propertiesMeta[$hintedPropertyName],
+					)
+					: null;
+				$hint = ($hintedFieldName !== null ? sprintf(', did you mean `%s`?', $hintedFieldName) : '.');
 				$type->overwriteInvalidField(
 					$fieldName,
-					new MessageType(sprintf(
-						'Field is unknown%s',
-						($hintedPropertyName !== null
-							? sprintf(', did you mean `%s`?', $this->propertyNameToFieldName($hintedPropertyName))
-							: '.'),
-					)),
+					new MessageType(sprintf('Field is unknown%s', $hint)),
 				);
 
 				continue;
@@ -319,10 +324,12 @@ class DefaultProcessor implements Processor
 	 */
 	protected function findMissingProperties(array $data, ProcessorRunContext $runContext): array
 	{
+		$meta = $runContext->getMeta();
+
 		return array_diff(
-			array_keys($runContext->getMeta()->getProperties()),
+			array_keys($meta->getProperties()),
 			array_map(
-				fn ($fieldName): string => $this->fieldNameToPropertyName($fieldName),
+				fn ($fieldName): string => $this->fieldNameToPropertyName($fieldName, $meta),
 				array_keys($data),
 			),
 		);
@@ -366,7 +373,7 @@ class DefaultProcessor implements Processor
 
 			$propertyMeta = $propertiesMeta[$missingProperty];
 			$defaultMeta = $propertyMeta->getDefault();
-			$missingField = $this->propertyNameToFieldName($missingProperty);
+			$missingField = $this->propertyNameToFieldName($missingProperty, $propertyMeta);
 
 			if ($requiredFields === $options::REQUIRE_NON_DEFAULT && $defaultMeta->hasValue()) {
 				// Add default value if defaults are not required and should be used
@@ -572,6 +579,7 @@ class DefaultProcessor implements Processor
 	{
 		$type = $fieldSetContext->getType();
 		$options = $fieldSetContext->getOptions();
+		$meta = $runContext->getMeta();
 
 		// Set raw data
 		if ($options->isFillRawValues()) {
@@ -586,7 +594,7 @@ class DefaultProcessor implements Processor
 
 		// Set processed data
 		foreach ($data as $fieldName => $value) {
-			$propertyName = $this->fieldNameToPropertyName($fieldName);
+			$propertyName = $this->fieldNameToPropertyName($fieldName, $meta);
 			$object->$propertyName = $value;
 		}
 
