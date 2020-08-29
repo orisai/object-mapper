@@ -9,7 +9,10 @@ final class ArrayType extends MultiValueType
 
 	private ?Type $keyType;
 
-	/** @var array<array<Type|null>> */
+	/**
+	 * @var array<array<Type|null>>
+	 * @phpstan-var array<array{?Type, ?Type}>
+	 */
 	private array $invalidPairs = [];
 
 	/**
@@ -46,6 +49,7 @@ final class ArrayType extends MultiValueType
 
 	/**
 	 * @return array<array<Type|null>>
+	 * @phpstan-return array<array{?Type, ?Type}>
 	 */
 	public function getInvalidPairs(): array
 	{
