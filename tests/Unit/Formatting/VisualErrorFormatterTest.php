@@ -46,25 +46,20 @@ final class VisualErrorFormatterTest extends TestCase
 			$this->formatter->formatType($type1),
 		);
 
-		$type2 = new SimpleValueType('int', [
-			'first' => 'value',
-			'second' => true,
-			'third' => false,
-		]);
+		$type2 = new SimpleValueType('int');
+		$type2->addKeyValueParameter('first', 'value');
+		$type2->addKeyParameter('second');
 
 		self::assertSame(
 			'int',
 			$this->formatter->formatType($type2),
 		);
 
-		$type3 = new SimpleValueType('int', [
-			'first' => 'value',
-			'second' => true,
-			'third' => false,
-		]);
+		$type3 = new SimpleValueType('int');
+		$type3->addKeyValueParameter('first', 'value');
+		$type3->addKeyParameter('second');
 		$type3->markParameterInvalid('first');
 		$type3->markParameterInvalid('second');
-		$type3->markParameterInvalid('third');
 
 		self::assertSame(
 			"int(first: 'value', second)",
@@ -92,9 +87,6 @@ final class VisualErrorFormatterTest extends TestCase
 
 	public function testArray(): void
 	{
-		//TODO - it's possible to add parameters without displayable index (only string), but it should be still possible make parameter invalid (e.g. add message during validation)
-		//		- allow only string as key? 'parameter' => true
-		//		- also apostrophes usage should be normalized (matter probably only for enum)
 		$type1 = new ArrayType(new SimpleValueType('string'), new SimpleValueType('test'));
 
 		self::assertSame(
@@ -102,7 +94,9 @@ final class VisualErrorFormatterTest extends TestCase
 			$this->formatter->formatType($type1),
 		);
 
-		$type2 = new ArrayType(null, new SimpleValueType('test', ['parameter']));
+		$type2Value = new SimpleValueType('test');
+		$type2Value->addKeyParameter('parameter');
+		$type2 = new ArrayType(null, $type2Value);
 		$type2->markInvalid();
 
 		self::assertSame(
@@ -118,7 +112,9 @@ final class VisualErrorFormatterTest extends TestCase
 			$this->formatter->formatType($type3),
 		);
 
-		$type4 = new ArrayType(new SimpleValueType('string'), new SimpleValueType('test'), ['foo' => 'bar', 'baz' => 123]);
+		$type4 = new ArrayType(new SimpleValueType('string'), new SimpleValueType('test'));
+		$type4->addKeyValueParameter('foo', 'bar');
+		$type4->addKeyValueParameter('baz', 123);
 		$type4->markInvalid();
 
 		self::assertSame(
@@ -150,12 +146,10 @@ final class VisualErrorFormatterTest extends TestCase
 			$this->formatter->formatType($type5Key),
 		);
 
-		$type6 = new ArrayType(new SimpleValueType('string'), new SimpleValueType('int'), [
-			'first' => 'value',
-			'second' => true,
-			'third' => false,
-			'fourth' => true,
-		]);
+		$type6 = new ArrayType(new SimpleValueType('string'), new SimpleValueType('int'));
+		$type6->addKeyValueParameter('first', 'value');
+		$type6->addKeyParameter('second');
+		$type6->addKeyParameter('third');
 		$type6->markParameterInvalid('first');
 		$type6->markParameterInvalid('second');
 
@@ -164,24 +158,21 @@ final class VisualErrorFormatterTest extends TestCase
 			$this->formatter->formatType($type6),
 		);
 
-		$type7 = new ArrayType(new SimpleValueType('string'), new SimpleValueType('int', [
-			'first' => 'value',
-			'second' => true,
-			'third' => false,
-		]));
+		$type7 = new ArrayType(new SimpleValueType('string'), new SimpleValueType('int'));
+		$type7->addKeyValueParameter('first', 'value');
+		$type7->addKeyParameter('second');
+		$type7->addKeyParameter('third');
 		$type7->addInvalidPair('test', new SimpleValueType('string'), null);
-		$type7invalidValue2 = new SimpleValueType('int', [
-			'first' => 'value',
-			'second' => true,
-			'third' => false,
-		]);
+		$type7invalidValue2 = new SimpleValueType('int');
+		$type7invalidValue2->addKeyValueParameter('first', 'value');
+		$type7invalidValue2->addKeyParameter('second');
+		$type7invalidValue2->addKeyParameter('third');
 		$type7invalidValue2->markParameterInvalid('second');
 		$type7->addInvalidPair(0, null, $type7invalidValue2);
-		$type7invalidValue3 = new SimpleValueType('int', [
-			'first' => 'value',
-			'second' => true,
-			'third' => false,
-		]);
+		$type7invalidValue3 = new SimpleValueType('int');
+		$type7invalidValue3->addKeyValueParameter('first', 'value');
+		$type7invalidValue3->addKeyParameter('second');
+		$type7invalidValue3->addKeyParameter('third');
 		$type7invalidValue3->markParameterInvalid('first');
 		$type7->addInvalidPair(123, new SimpleValueType('string'), $type7invalidValue3);
 
@@ -212,7 +203,8 @@ final class VisualErrorFormatterTest extends TestCase
 			$this->formatter->formatType($type2),
 		);
 
-		$type3 = new ListType(new SimpleValueType('string'), ['foo' => 'bar']);
+		$type3 = new ListType(new SimpleValueType('string'));
+		$type3->addKeyValueParameter('foo', 'bar');
 		$type3->markInvalid();
 
 		self::assertSame(
@@ -220,7 +212,8 @@ final class VisualErrorFormatterTest extends TestCase
 			$this->formatter->formatType($type3),
 		);
 
-		$type4 = new ListType(new SimpleValueType('string'), ['foo' => 'bar']);
+		$type4 = new ListType(new SimpleValueType('string'));
+		$type4->addKeyValueParameter('foo', 'bar');
 		$type4->markParameterInvalid('foo');
 
 		self::assertSame(

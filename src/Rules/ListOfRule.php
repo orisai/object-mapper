@@ -124,15 +124,19 @@ final class ListOfRule extends MultiValueRule
 		$itemRule = $context->getRule($itemMeta->getType());
 		$itemArgs = $this->createRuleArgsInst($itemRule, $itemMeta);
 
-		$parameters = [
-			'minItems' => $args->minItems,
-			'maxItems' => $args->maxItems,
-		];
-
-		return new ListType(
+		$type = new ListType(
 			$itemRule->createType($itemArgs, $context),
-			$parameters,
 		);
+
+		if ($args->minItems !== null) {
+			$type->addKeyValueParameter('minItems', $args->minItems);
+		}
+
+		if ($args->maxItems !== null) {
+			$type->addKeyValueParameter('maxItems', $args->maxItems);
+		}
+
+		return $type;
 	}
 
 }

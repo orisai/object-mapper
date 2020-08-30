@@ -45,11 +45,9 @@ final class VisualTypeFormatterTest extends TestCase
 			$this->formatter->formatType($type1),
 		);
 
-		$type2 = new SimpleValueType('int', [
-			'first' => 'value',
-			'second' => true,
-			'third' => false,
-		]);
+		$type2 = new SimpleValueType('int');
+		$type2->addKeyValueParameter('first', 'value');
+		$type2->addKeyParameter('second');
 
 		self::assertSame(
 			"int(first: 'value', second)",
@@ -77,10 +75,9 @@ final class VisualTypeFormatterTest extends TestCase
 
 	public function testArray(): void
 	{
-		//TODO - it's possible to add parameters without displayable index (only string), but it should be still possible make parameter invalid (e.g. add message during validation)
-		//		- allow only string as key? 'parameter' => true
-		//		- also apostrophes usage should be normalized (matter probably only for enum)
-		$type1 = new ArrayType(null, new SimpleValueType('test', ['parameter']));
+		$type1Value = new SimpleValueType('test');
+		$type1Value->addKeyParameter('parameter');
+		$type1 = new ArrayType(null, $type1Value);
 
 		self::assertSame(
 			'array<test(parameter)>',
@@ -94,7 +91,9 @@ final class VisualTypeFormatterTest extends TestCase
 			$this->formatter->formatType($type2),
 		);
 
-		$type3 = new ArrayType(new SimpleValueType('string'), new SimpleValueType('test'), ['foo' => 'bar', 'baz' => 123]);
+		$type3 = new ArrayType(new SimpleValueType('string'), new SimpleValueType('test'));
+		$type3->addKeyValueParameter('foo', 'bar');
+		$type3->addKeyValueParameter('baz', 123);
 
 		self::assertSame(
 			"array(foo: 'bar', baz: 123)<string, test>",
@@ -128,7 +127,8 @@ final class VisualTypeFormatterTest extends TestCase
 			$this->formatter->formatType($type1),
 		);
 
-		$type2 = new ListType(new SimpleValueType('string'), ['foo' => 'bar']);
+		$type2 = new ListType(new SimpleValueType('string'));
+		$type2->addKeyValueParameter('foo', 'bar');
 
 		self::assertSame(
 			"list(foo: 'bar')<string>",

@@ -114,12 +114,27 @@ final class NullRuleTest extends RuleTestCase
 		);
 
 		self::assertSame('null', $type->getType());
-		self::assertSame(
-			[
-				'acceptsEmptyString' => false,
-			],
-			$type->getParameters(),
+		self::assertCount(0, $type->getParameters());
+	}
+
+	public function testTypeWithArgs(): void
+	{
+		$args = NullArgs::fromArray($this->rule->resolveArgs([
+			NullRule::CAST_EMPTY_STRING => true,
+		], $this->ruleArgsContext()));
+
+		$type = $this->rule->createType($args, $this->typeContext);
+
+		self::assertEquals(
+			$this->rule->createType($args, $this->fieldContext()),
+			$type,
 		);
+
+		self::assertSame('null', $type->getType());
+
+		self::assertCount(1, $type->getParameters());
+		self::assertTrue($type->hasParameter('acceptsEmptyString'));
+		self::assertFalse($type->getParameter('acceptsEmptyString')->hasValue());
 	}
 
 }
