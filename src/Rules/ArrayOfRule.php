@@ -166,16 +166,20 @@ final class ArrayOfRule extends MultiValueRule
 			$keyType = $keyRule->createType($keyArgs, $context);
 		}
 
-		$parameters = [
-			'minItems' => $args->minItems,
-			'maxItems' => $args->maxItems,
-		];
-
-		return new ArrayType(
+		$type = new ArrayType(
 			$keyType ?? null,
 			$itemRule->createType($itemArgs, $context),
-			$parameters,
 		);
+
+		if ($args->minItems !== null) {
+			$type->addKeyValueParameter('minItems', $args->minItems);
+		}
+
+		if ($args->maxItems !== null) {
+			$type->addKeyValueParameter('maxItems', $args->maxItems);
+		}
+
+		return $type;
 	}
 
 }

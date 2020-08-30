@@ -130,11 +130,13 @@ final class DateTimeRule implements Rule
 			return new SimpleValueType('timestamp');
 		}
 
-		$parameters = [
-			'format' => $args->format,
-		];
+		$type = new SimpleValueType('datetime');
 
-		return new SimpleValueType('datetime', $parameters);
+		if ($args->format !== null) {
+			$type->addKeyValueParameter('format', $args->format);
+		}
+
+		return $type;
 	}
 
 }
