@@ -4,20 +4,16 @@ namespace Orisai\ObjectMapper\Types;
 
 use Orisai\Exceptions\Logic\InvalidState;
 use function array_key_exists;
-use function in_array;
 use function sprintf;
 
 abstract class ParametrizedType implements Type
 {
 
-	/** @var array<mixed> */
-	protected array $parameters;
-
-	/** @var array<int|string> */
-	protected array $invalidParameters = [];
+	/** @var array<int|string, TypeParameter> */
+	protected array $parameters = [];
 
 	/**
-	 * @return array<mixed>
+	 * @return array<int|string, TypeParameter>
 	 */
 	public function getParameters(): array
 	{
@@ -25,19 +21,52 @@ abstract class ParametrizedType implements Type
 	}
 
 	/**
-	 * @param string|int $key
+	 * @param int|string $key
 	 */
-	public function markParameterInvalid($key): void
+	public function getParameter($key): TypeParameter
 	{
-		if (!array_key_exists($key, $this->parameters)) {
+		if (!$this->hasParameter($key)) {
 			throw InvalidState::create()
 				->withMessage(sprintf(
-					'Cannot mark parameter %s invalid because it was never set',
+					'Cannot get parameter `%s` because it was never set',
 					$key,
 				));
 		}
 
-		$this->invalidParameters[] = $key;
+		return $this->parameters[$key];
+	}
+
+	/**
+	 * @param int|string $key
+	 */
+	public function hasParameter($key): bool
+	{
+		return array_key_exists($key, $this->parameters);
+	}
+
+	/**
+	 * @param int|string $key
+	 * @param mixed $value
+	 */
+	public function addKeyValueParameter($key, $value): void
+	{
+		$this->parameters[$key] = TypeParameter::fromKeyAndValue($key, $value);
+	}
+
+	/**
+	 * @param int|string $key
+	 */
+	public function addKeyParameter($key): void
+	{
+		$this->parameters[$key] = TypeParameter::fromKey($key);
+	}
+
+	/**
+	 * @param int|string $key
+	 */
+	public function markParameterInvalid($key): void
+	{
+		$this->getParameter($key)->markInvalid();
 	}
 
 	/**
@@ -52,15 +81,13 @@ abstract class ParametrizedType implements Type
 
 	public function hasInvalidParameters(): bool
 	{
-		return $this->invalidParameters !== [];
-	}
+		foreach ($this->parameters as $parameter) {
+			if ($parameter->isInvalid()) {
+				return true;
+			}
+		}
 
-	/**
-	 * @param string|int $key
-	 */
-	public function isParameterInvalid($key): bool
-	{
-		return in_array($key, $this->invalidParameters, true);
+		return false;
 	}
 
 }

@@ -148,14 +148,25 @@ final class FloatRule implements Rule
 	 */
 	public function createType(Args $args, TypeContext $context): SimpleValueType
 	{
-		$parameters = [
-			'unsigned' => $args->unsigned,
-			'min' => $args->min,
-			'max' => $args->max,
-			'acceptsFloatLike' => $args->castFloatLike,
-		];
+		$type = new SimpleValueType('float');
 
-		return new SimpleValueType('float', $parameters);
+		if ($args->unsigned) {
+			$type->addKeyParameter('unsigned');
+		}
+
+		if ($args->min !== null) {
+			$type->addKeyValueParameter('min', $args->min);
+		}
+
+		if ($args->max !== null) {
+			$type->addKeyValueParameter('max', $args->max);
+		}
+
+		if ($args->castFloatLike) {
+			$type->addKeyParameter('acceptsFloatLike');
+		}
+
+		return $type;
 	}
 
 	/**

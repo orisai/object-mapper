@@ -73,11 +73,13 @@ final class BoolRule implements Rule
 	 */
 	public function createType(Args $args, TypeContext $context): SimpleValueType
 	{
-		$parameters = [
-			'acceptsBoolLike' => $args->castBoolLike,
-		];
+		$type = new SimpleValueType('bool');
 
-		return new SimpleValueType('bool', $parameters);
+		if ($args->castBoolLike) {
+			$type->addKeyParameter('acceptsBoolLike');
+		}
+
+		return $type;
 	}
 
 	/**

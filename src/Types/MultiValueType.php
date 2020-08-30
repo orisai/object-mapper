@@ -8,13 +8,9 @@ abstract class MultiValueType extends ParametrizedType
 	protected Type $itemType;
 	protected bool $isInvalid = false;
 
-	/**
-	 * @param array<mixed> $parameters
-	 */
-	public function __construct(Type $itemType, array $parameters = [])
+	public function __construct(Type $itemType)
 	{
 		$this->itemType = $itemType;
-		$this->parameters = $parameters;
 	}
 
 	public function getItemType(): Type

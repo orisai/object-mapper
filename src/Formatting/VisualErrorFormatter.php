@@ -16,7 +16,6 @@ use Orisai\ObjectMapper\Types\Type;
 use function array_key_last;
 use function get_class;
 use function implode;
-use function is_string;
 use function sprintf;
 use function str_repeat;
 use function str_replace;
@@ -63,11 +62,6 @@ class VisualErrorFormatter implements ErrorFormatter, TypeFormatter
 	 * Indentation between items (structures fields, invalid array and list keys)
 	 */
 	public string $itemsIndentation = "\t";
-
-	/**
-	 * Don't print parameters which values are false or null and keep only keys of parameters which value is true
-	 */
-	public bool $filterUselessParameters = true;
 
 	/**
 	 * Replace special characters like & or | with words
@@ -405,18 +399,14 @@ class VisualErrorFormatter implements ErrorFormatter, TypeFormatter
 	{
 		$parameters = $type->getParameters();
 
-		foreach ($parameters as $name => $value) {
+		foreach ($parameters as $parameter) {
 			if ($this->scopes->shouldRenderValid()) {
 				continue;
 			}
 
-			if (!$type->isParameterInvalid($name)) {
-				unset($parameters[$name]);
+			if (!$parameter->isInvalid()) {
+				unset($parameters[$parameter->getKey()]);
 			}
-		}
-
-		if ($this->filterUselessParameters) {
-			$parameters = $this->filterParameters($parameters);
 		}
 
 		if ($parameters === []) {
@@ -426,11 +416,12 @@ class VisualErrorFormatter implements ErrorFormatter, TypeFormatter
 		$inlineParameters = '';
 		$lastKey = array_key_last($parameters);
 
-		foreach ($parameters as $key => $value) {
+		foreach ($parameters as $parameter) {
+			$key = $parameter->getKey();
 			$separator = $key === $lastKey ? '' : $this->parameterSeparator;
-			$inlineParameters .= is_string($key)
-				? sprintf('%s%s%s%s', $this->valueToString($key, false), $this->parameterKeyValueSeparator, $this->valueToString($value, true, $level), $separator)
-				: sprintf('%s%s', $this->valueToString($value, false), $separator);
+			$inlineParameters .= $parameter->hasValue()
+				? sprintf('%s%s%s%s', $this->valueToString($key, false), $this->parameterKeyValueSeparator, $this->valueToString($parameter->getValue(), true, $level), $separator)
+				: sprintf('%s%s', $this->valueToString($key, false), $separator);
 		}
 
 		return sprintf('%s(%s)', $this->typeAndParametersSeparator, $inlineParameters);
@@ -446,25 +437,6 @@ class VisualErrorFormatter implements ErrorFormatter, TypeFormatter
 			Dumper::OPT_LEVEL => $level,
 			Dumper::OPT_INDENT_CHAR => $this->itemsSeparator,
 		]);
-	}
-
-	/**
-	 * @param array<mixed> $parameters
-	 * @return array<mixed>
-	 */
-	protected function filterParameters(array $parameters): array
-	{
-		$filtered = [];
-
-		foreach ($parameters as $key => $value) {
-			if ($value === true) {
-				$filtered[] = $key;
-			} elseif ($value !== false && $value !== null) {
-				$filtered[$key] = $value;
-			}
-		}
-
-		return $filtered;
 	}
 
 	protected function formatComplexTypeInnerLine(string $inner, ?int $level, bool $isLast): string

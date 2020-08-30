@@ -118,7 +118,7 @@ final class ArrayOfRuleTest extends RuleTestCase
 			assert($type instanceof ArrayType);
 
 			self::assertFalse($type->isInvalid());
-			self::assertTrue($type->isParameterInvalid(ArrayOfRule::MIN_ITEMS));
+			self::assertTrue($type->getParameter(ArrayOfRule::MIN_ITEMS)->isInvalid());
 
 			self::assertTrue($type->hasInvalidPairs());
 			$invalidPairs = $type->getInvalidPairs();
@@ -158,8 +158,8 @@ final class ArrayOfRuleTest extends RuleTestCase
 			assert($type instanceof ArrayType);
 
 			self::assertFalse($type->isInvalid());
-			self::assertFalse($type->isParameterInvalid(ArrayOfRule::MIN_ITEMS));
-			self::assertTrue($type->isParameterInvalid(ArrayOfRule::MAX_ITEMS));
+			self::assertFalse($type->hasParameter(ArrayOfRule::MIN_ITEMS));
+			self::assertTrue($type->getParameter(ArrayOfRule::MAX_ITEMS)->isInvalid());
 			self::assertFalse($type->hasInvalidPairs());
 		}
 
@@ -183,13 +183,37 @@ final class ArrayOfRuleTest extends RuleTestCase
 
 		self::assertInstanceOf(SimpleValueType::class, $type->getItemType());
 		self::assertNull($type->getKeyType());
-		self::assertSame(
-			[
-				'minItems' => null,
-				'maxItems' => null,
+		self::assertCount(0, $type->getParameters());
+	}
+
+	public function testTypeWithArgs(): void
+	{
+		$args = ArrayOfArgs::fromArray($this->rule->resolveArgs([
+			ArrayOfRule::ITEM_RULE => [
+				MetaSource::OPTION_TYPE => MixedRule::class,
 			],
-			$type->getParameters(),
+			ArrayOfRule::KEY_RULE => [
+				MetaSource::OPTION_TYPE => StringRule::class,
+			],
+			ArrayOfRule::MIN_ITEMS => 10,
+			ArrayOfRule::MAX_ITEMS => 100,
+		], $this->ruleArgsContext()));
+
+		$type = $this->rule->createType($args, $this->typeContext);
+
+		self::assertEquals(
+			$this->rule->createType($args, $this->fieldContext()),
+			$type,
 		);
+
+		self::assertInstanceOf(SimpleValueType::class, $type->getItemType());
+		self::assertInstanceOf(SimpleValueType::class, $type->getKeyType());
+
+		self::assertCount(2, $type->getParameters());
+		self::assertTrue($type->hasParameter(ArrayOfRule::MIN_ITEMS));
+		self::assertSame(10, $type->getParameter(ArrayOfRule::MIN_ITEMS)->getValue());
+		self::assertTrue($type->hasParameter(ArrayOfRule::MAX_ITEMS));
+		self::assertSame(100, $type->getParameter(ArrayOfRule::MAX_ITEMS)->getValue());
 	}
 
 }
