@@ -3,6 +3,7 @@
 namespace Tests\Orisai\ObjectMapper\Unit\Rules;
 
 use DateTimeImmutable;
+use DateTimeInterface;
 use Generator;
 use Orisai\ObjectMapper\Exception\ValueDoesNotMatch;
 use Orisai\ObjectMapper\Rules\DateTimeArgs;
@@ -114,12 +115,43 @@ final class DateTimeRuleTest extends RuleTestCase
 		);
 
 		self::assertSame('datetime', $type->getType());
-		self::assertSame(
-			[
-				'format' => null,
-			],
-			$type->getParameters(),
+		self::assertCount(0, $type->getParameters());
+	}
+
+	public function testTypeWithTimestamp(): void
+	{
+		$args = DateTimeArgs::fromArray($this->rule->resolveArgs([
+			DateTimeRule::FORMAT => DateTimeRule::FORMAT_TIMESTAMP,
+		], $this->ruleArgsContext()));
+
+		$type = $this->rule->createType($args, $this->typeContext);
+
+		self::assertEquals(
+			$this->rule->createType($args, $this->fieldContext()),
+			$type,
 		);
+
+		self::assertSame('timestamp', $type->getType());
+		self::assertCount(0, $type->getParameters());
+	}
+
+	public function testTypeWithArgs(): void
+	{
+		$args = DateTimeArgs::fromArray($this->rule->resolveArgs([
+			DateTimeRule::FORMAT => DateTimeInterface::ATOM,
+		], $this->ruleArgsContext()));
+
+		$type = $this->rule->createType($args, $this->typeContext);
+
+		self::assertEquals(
+			$this->rule->createType($args, $this->fieldContext()),
+			$type,
+		);
+
+		self::assertSame('datetime', $type->getType());
+		self::assertCount(1, $type->getParameters());
+		self::assertTrue($type->hasParameter(DateTimeRule::FORMAT));
+		self::assertSame(DateTimeInterface::ATOM, $type->getParameter(DateTimeRule::FORMAT)->getValue());
 	}
 
 }

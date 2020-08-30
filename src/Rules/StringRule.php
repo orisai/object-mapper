@@ -102,14 +102,25 @@ final class StringRule implements Rule
 	 */
 	public function createType(Args $args, TypeContext $context): SimpleValueType
 	{
-		$parameters = [
-			'notEmpty' => $args->notEmpty,
-			'minLength' => $args->minLength,
-			'maxLength' => $args->maxLength,
-			'pattern' => $args->pattern,
-		];
+		$type = new SimpleValueType('string');
 
-		return new SimpleValueType('string', $parameters);
+		if ($args->notEmpty) {
+			$type->addKeyParameter('notEmpty');
+		}
+
+		if ($args->minLength !== null) {
+			$type->addKeyValueParameter('minLength', $args->minLength);
+		}
+
+		if ($args->maxLength !== null) {
+			$type->addKeyValueParameter('maxLength', $args->maxLength);
+		}
+
+		if ($args->pattern !== null) {
+			$type->addKeyValueParameter('pattern', $args->pattern);
+		}
+
+		return $type;
 	}
 
 }

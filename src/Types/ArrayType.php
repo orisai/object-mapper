@@ -15,12 +15,9 @@ final class ArrayType extends MultiValueType
 	 */
 	private array $invalidPairs = [];
 
-	/**
-	 * @param array<mixed> $parameters
-	 */
-	public function __construct(?Type $keyType, Type $itemType, array $parameters = [])
+	public function __construct(?Type $keyType, Type $itemType)
 	{
-		parent::__construct($itemType, $parameters);
+		parent::__construct($itemType);
 		$this->keyType = $keyType;
 	}
 

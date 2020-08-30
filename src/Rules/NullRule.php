@@ -65,11 +65,13 @@ final class NullRule implements Rule
 	 */
 	public function createType(Args $args, TypeContext $context): SimpleValueType
 	{
-		$parameters = [
-			'acceptsEmptyString' => $args->castEmptyString,
-		];
+		$type = new SimpleValueType('null');
 
-		return new SimpleValueType('null', $parameters);
+		if ($args->castEmptyString) {
+			$type->addKeyParameter('acceptsEmptyString');
+		}
+
+		return $type;
 	}
 
 	/**

@@ -179,7 +179,7 @@ final class FloatRuleTest extends RuleTestCase
 
 			self::assertSame('float', $type->getType());
 			self::assertTrue($type->hasInvalidParameters());
-			self::assertTrue($type->isParameterInvalid(FloatRule::MAX));
+			self::assertTrue($type->getParameter(FloatRule::MAX)->isInvalid());
 		}
 
 		self::assertNotNull($exception);
@@ -205,8 +205,8 @@ final class FloatRuleTest extends RuleTestCase
 
 			self::assertSame('float', $type->getType());
 			self::assertTrue($type->hasInvalidParameters());
-			self::assertTrue($type->isParameterInvalid(FloatRule::MIN));
-			self::assertTrue($type->isParameterInvalid(FloatRule::UNSIGNED));
+			self::assertTrue($type->getParameter(FloatRule::MIN)->isInvalid());
+			self::assertTrue($type->getParameter(FloatRule::UNSIGNED)->isInvalid());
 		}
 
 		self::assertNotNull($exception);
@@ -224,15 +224,36 @@ final class FloatRuleTest extends RuleTestCase
 		);
 
 		self::assertSame('float', $type->getType());
-		self::assertSame(
-			[
-				'unsigned' => true,
-				'min' => null,
-				'max' => null,
-				'acceptsFloatLike' => false,
-			],
-			$type->getParameters(),
+		self::assertCount(1, $type->getParameters());
+		self::assertTrue($type->hasParameter('unsigned'));
+		self::assertFalse($type->getParameter('unsigned')->hasValue());
+	}
+
+	public function testTypeWithArgs(): void
+	{
+		$args = FloatArgs::fromArray($this->rule->resolveArgs([
+			FloatRule::UNSIGNED => false,
+			FloatRule::MIN => 10,
+			FloatRule::MAX => 100,
+			FloatRule::CAST_FLOAT_LIKE => true,
+		], $this->ruleArgsContext()));
+
+		$type = $this->rule->createType($args, $this->typeContext);
+
+		self::assertEquals(
+			$this->rule->createType($args, $this->fieldContext()),
+			$type,
 		);
+
+		self::assertSame('float', $type->getType());
+
+		self::assertCount(3, $type->getParameters());
+		self::assertTrue($type->hasParameter(FloatRule::MIN));
+		self::assertSame(10.0, $type->getParameter(FloatRule::MIN)->getValue());
+		self::assertTrue($type->hasParameter(FloatRule::MAX));
+		self::assertSame(100.0, $type->getParameter(FloatRule::MAX)->getValue());
+		self::assertTrue($type->hasParameter('acceptsFloatLike'));
+		self::assertFalse($type->getParameter('acceptsFloatLike')->hasValue());
 	}
 
 }

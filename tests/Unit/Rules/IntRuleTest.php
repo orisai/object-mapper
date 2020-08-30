@@ -151,7 +151,7 @@ final class IntRuleTest extends RuleTestCase
 
 			self::assertSame('int', $type->getType());
 			self::assertTrue($type->hasInvalidParameters());
-			self::assertTrue($type->isParameterInvalid(IntRule::MAX));
+			self::assertTrue($type->getParameter(IntRule::MAX)->isInvalid());
 		}
 
 		self::assertNotNull($exception);
@@ -177,8 +177,8 @@ final class IntRuleTest extends RuleTestCase
 
 			self::assertSame('int', $type->getType());
 			self::assertTrue($type->hasInvalidParameters());
-			self::assertTrue($type->isParameterInvalid(IntRule::MIN));
-			self::assertTrue($type->isParameterInvalid(IntRule::UNSIGNED));
+			self::assertTrue($type->getParameter(IntRule::MIN)->isInvalid());
+			self::assertTrue($type->getParameter(IntRule::UNSIGNED)->isInvalid());
 		}
 
 		self::assertNotNull($exception);
@@ -196,15 +196,35 @@ final class IntRuleTest extends RuleTestCase
 		);
 
 		self::assertSame('int', $type->getType());
-		self::assertSame(
-			[
-				'unsigned' => true,
-				'min' => null,
-				'max' => null,
-				'acceptsIntLike' => false,
-			],
-			$type->getParameters(),
+		self::assertCount(1, $type->getParameters());
+		self::assertTrue($type->hasParameter('unsigned'));
+	}
+
+	public function testTypeWithArgs(): void
+	{
+		$args = IntArgs::fromArray($this->rule->resolveArgs([
+			IntRule::UNSIGNED => false,
+			IntRule::MIN => 10,
+			IntRule::MAX => 100,
+			IntRule::CAST_INT_LIKE => true,
+		], $this->ruleArgsContext()));
+
+		$type = $this->rule->createType($args, $this->typeContext);
+
+		self::assertEquals(
+			$this->rule->createType($args, $this->fieldContext()),
+			$type,
 		);
+
+		self::assertSame('int', $type->getType());
+
+		self::assertCount(3, $type->getParameters());
+		self::assertTrue($type->hasParameter(IntRule::MIN));
+		self::assertSame(10, $type->getParameter(IntRule::MIN)->getValue());
+		self::assertTrue($type->hasParameter(IntRule::MAX));
+		self::assertSame(100, $type->getParameter(IntRule::MAX)->getValue());
+		self::assertTrue($type->hasParameter('acceptsIntLike'));
+		self::assertFalse($type->getParameter('acceptsIntLike')->hasValue());
 	}
 
 }

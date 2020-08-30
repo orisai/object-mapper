@@ -132,12 +132,27 @@ final class BoolRuleTest extends RuleTestCase
 		);
 
 		self::assertSame('bool', $type->getType());
-		self::assertSame(
-			[
-				'acceptsBoolLike' => false,
-			],
-			$type->getParameters(),
+		self::assertCount(0, $type->getParameters());
+	}
+
+	public function testTypeWithArgs(): void
+	{
+		$args = BoolArgs::fromArray($this->rule->resolveArgs([
+			BoolRule::CAST_BOOL_LIKE => true,
+		], $this->ruleArgsContext()));
+
+		$type = $this->rule->createType($args, $this->typeContext);
+
+		self::assertEquals(
+			$this->rule->createType($args, $this->fieldContext()),
+			$type,
 		);
+
+		self::assertSame('bool', $type->getType());
+
+		self::assertCount(1, $type->getParameters());
+		self::assertTrue($type->hasParameter('acceptsBoolLike'));
+		self::assertFalse($type->getParameter('acceptsBoolLike')->hasValue());
 	}
 
 }

@@ -7,13 +7,9 @@ final class SimpleValueType extends ParametrizedType
 
 	private string $type;
 
-	/**
-	 * @param array<mixed> $parameters
-	 */
-	public function __construct(string $type, array $parameters = [])
+	public function __construct(string $type)
 	{
 		$this->type = $type;
-		$this->parameters = $parameters;
 	}
 
 	public function getType(): string
