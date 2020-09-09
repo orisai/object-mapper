@@ -13,7 +13,7 @@ use Orisai\ObjectMapper\Rules\Rule;
  * @property-write int|null $min
  * @property-write int|null $max
  * @property-write bool $unsigned
- * @property-write bool $castIntLike
+ * @property-write bool $castNumericString
  */
 final class IntValue implements RuleAnnotation
 {

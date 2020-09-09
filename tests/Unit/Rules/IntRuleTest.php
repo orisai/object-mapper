@@ -70,7 +70,7 @@ final class IntRuleTest extends RuleTestCase
 		$processed = $this->rule->processValue(
 			$value,
 			IntArgs::fromArray($this->rule->resolveArgs([
-				IntRule::CAST_INT_LIKE => true,
+				IntRule::CAST_NUMERIC_STRING => true,
 				IntRule::UNSIGNED => false,
 			], $this->ruleArgsContext())),
 			$this->fieldContext(),
@@ -140,7 +140,7 @@ final class IntRuleTest extends RuleTestCase
 			$this->rule->processValue(
 				'100',
 				IntArgs::fromArray($this->rule->resolveArgs([
-					IntRule::CAST_INT_LIKE => true,
+					IntRule::CAST_NUMERIC_STRING => true,
 					IntRule::MAX => 10,
 				], $this->ruleArgsContext())),
 				$this->fieldContext(),
@@ -165,7 +165,7 @@ final class IntRuleTest extends RuleTestCase
 			$this->rule->processValue(
 				'-100',
 				IntArgs::fromArray($this->rule->resolveArgs([
-					IntRule::CAST_INT_LIKE => true,
+					IntRule::CAST_NUMERIC_STRING => true,
 					IntRule::MIN => 10,
 					IntRule::UNSIGNED => true,
 				], $this->ruleArgsContext())),
@@ -206,7 +206,7 @@ final class IntRuleTest extends RuleTestCase
 			IntRule::UNSIGNED => false,
 			IntRule::MIN => 10,
 			IntRule::MAX => 100,
-			IntRule::CAST_INT_LIKE => true,
+			IntRule::CAST_NUMERIC_STRING => true,
 		], $this->ruleArgsContext()));
 
 		$type = $this->rule->createType($args, $this->typeContext);
@@ -223,8 +223,8 @@ final class IntRuleTest extends RuleTestCase
 		self::assertSame(10, $type->getParameter(IntRule::MIN)->getValue());
 		self::assertTrue($type->hasParameter(IntRule::MAX));
 		self::assertSame(100, $type->getParameter(IntRule::MAX)->getValue());
-		self::assertTrue($type->hasParameter('acceptsIntLike'));
-		self::assertFalse($type->getParameter('acceptsIntLike')->hasValue());
+		self::assertTrue($type->hasParameter('acceptsNumericString'));
+		self::assertFalse($type->getParameter('acceptsNumericString')->hasValue());
 	}
 
 }

@@ -26,7 +26,7 @@ final class FloatRule implements Rule
 	public const MIN = 'min';
 	public const MAX = 'max';
 	public const UNSIGNED = 'unsigned';
-	public const CAST_FLOAT_LIKE = 'castFloatLike';
+	public const CAST_NUMERIC_STRING = 'castNumericString';
 
 	/**
 	 * @param array<mixed> $args
@@ -35,7 +35,7 @@ final class FloatRule implements Rule
 	public function resolveArgs(array $args, RuleArgsContext $context): array
 	{
 		$checker = new ArgsChecker($args, self::class);
-		$checker->checkAllowedArgs([self::MIN, self::MAX, self::UNSIGNED, self::CAST_FLOAT_LIKE]);
+		$checker->checkAllowedArgs([self::MIN, self::MAX, self::UNSIGNED, self::CAST_NUMERIC_STRING]);
 
 		$min = null;
 		if ($checker->hasArg(self::MIN)) {
@@ -52,8 +52,8 @@ final class FloatRule implements Rule
 			$unsigned = $checker->checkBool(self::UNSIGNED);
 		}
 
-		if ($checker->hasArg(self::CAST_FLOAT_LIKE)) {
-			$checker->checkBool(self::CAST_FLOAT_LIKE);
+		if ($checker->hasArg(self::CAST_NUMERIC_STRING)) {
+			$checker->checkBool(self::CAST_NUMERIC_STRING);
 		}
 
 		if ($min !== null && $max !== null && $max < $min) {
@@ -162,8 +162,8 @@ final class FloatRule implements Rule
 			$type->addKeyValueParameter('max', $args->max);
 		}
 
-		if ($args->castFloatLike) {
-			$type->addKeyParameter('acceptsFloatLike');
+		if ($args->castNumericString) {
+			$type->addKeyParameter('acceptsNumericString');
 		}
 
 		return $type;
@@ -175,7 +175,7 @@ final class FloatRule implements Rule
 	 */
 	private function tryConvert($value, FloatArgs $args)
 	{
-		if ($args->castFloatLike && is_string($value)) {
+		if ($args->castNumericString && is_string($value)) {
 			// 1. Normalize commas to dots (decimals separator)
 			// 2. Remove regular spaces
 			$value = str_replace([',', ' '], ['.', ''], $value);

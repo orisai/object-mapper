@@ -11,7 +11,7 @@ final class FloatArgs implements Args
 	public ?float $min = null;
 	public ?float $max = null;
 	public bool $unsigned = true;
-	public bool $castFloatLike = false;
+	public bool $castNumericString = false;
 
 	private function __construct()
 	{
@@ -36,8 +36,8 @@ final class FloatArgs implements Args
 			$self->unsigned = $args[FloatRule::UNSIGNED];
 		}
 
-		if (array_key_exists(FloatRule::CAST_FLOAT_LIKE, $args)) {
-			$self->castFloatLike = $args[FloatRule::CAST_FLOAT_LIKE];
+		if (array_key_exists(FloatRule::CAST_NUMERIC_STRING, $args)) {
+			$self->castNumericString = $args[FloatRule::CAST_NUMERIC_STRING];
 		}
 
 		return $self;

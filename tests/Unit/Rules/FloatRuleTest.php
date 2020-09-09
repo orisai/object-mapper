@@ -92,7 +92,7 @@ final class FloatRuleTest extends RuleTestCase
 		$processed = $this->rule->processValue(
 			$value,
 			FloatArgs::fromArray($this->rule->resolveArgs([
-				FloatRule::CAST_FLOAT_LIKE => true,
+				FloatRule::CAST_NUMERIC_STRING => true,
 				FloatRule::UNSIGNED => false,
 			], $this->ruleArgsContext())),
 			$this->fieldContext(),
@@ -168,7 +168,7 @@ final class FloatRuleTest extends RuleTestCase
 			$this->rule->processValue(
 				'100',
 				FloatArgs::fromArray($this->rule->resolveArgs([
-					FloatRule::CAST_FLOAT_LIKE => true,
+					FloatRule::CAST_NUMERIC_STRING => true,
 					FloatRule::MAX => 10,
 				], $this->ruleArgsContext())),
 				$this->fieldContext(),
@@ -193,7 +193,7 @@ final class FloatRuleTest extends RuleTestCase
 			$this->rule->processValue(
 				'-100',
 				FloatArgs::fromArray($this->rule->resolveArgs([
-					FloatRule::CAST_FLOAT_LIKE => true,
+					FloatRule::CAST_NUMERIC_STRING => true,
 					FloatRule::MIN => 10,
 					FloatRule::UNSIGNED => true,
 				], $this->ruleArgsContext())),
@@ -235,7 +235,7 @@ final class FloatRuleTest extends RuleTestCase
 			FloatRule::UNSIGNED => false,
 			FloatRule::MIN => 10,
 			FloatRule::MAX => 100,
-			FloatRule::CAST_FLOAT_LIKE => true,
+			FloatRule::CAST_NUMERIC_STRING => true,
 		], $this->ruleArgsContext()));
 
 		$type = $this->rule->createType($args, $this->typeContext);
@@ -252,8 +252,8 @@ final class FloatRuleTest extends RuleTestCase
 		self::assertSame(10.0, $type->getParameter(FloatRule::MIN)->getValue());
 		self::assertTrue($type->hasParameter(FloatRule::MAX));
 		self::assertSame(100.0, $type->getParameter(FloatRule::MAX)->getValue());
-		self::assertTrue($type->hasParameter('acceptsFloatLike'));
-		self::assertFalse($type->getParameter('acceptsFloatLike')->hasValue());
+		self::assertTrue($type->hasParameter('acceptsNumericString'));
+		self::assertFalse($type->getParameter('acceptsNumericString')->hasValue());
 	}
 
 }
