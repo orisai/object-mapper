@@ -47,7 +47,7 @@ abstract class RuleTestCase extends ProcessingTestCase
 			$this->processor,
 			$options ?? new Options(),
 			new MessageType('test'),
-			$defaultValueMeta ?? DefaultValueMeta::fromValueOrNothing(),
+			$defaultValueMeta ?? DefaultValueMeta::fromNothing(),
 			$initializeObjects,
 			'test',
 			'test',

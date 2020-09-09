@@ -3,17 +3,15 @@
 namespace Orisai\ObjectMapper\Meta;
 
 use Orisai\Exceptions\Logic\InvalidState;
-use function count;
-use function func_get_args;
 use function sprintf;
 
 final class DefaultValueMeta
 {
 
 	/** @var mixed */
-	private $default;
+	private $value;
 
-	private bool $hasDefault = false;
+	private bool $hasValue;
 
 	private function __construct()
 	{
@@ -22,21 +20,26 @@ final class DefaultValueMeta
 	/**
 	 * @param mixed $default
 	 */
-	public static function fromValueOrNothing($default = null): self
+	public static function fromValue($default): self
 	{
 		$self = new self();
+		$self->hasValue = true;
+		$self->value = $default;
 
-		if (count(func_get_args()) === 1) {
-			$self->hasDefault = true;
-			$self->default = $default;
-		}
+		return $self;
+	}
+
+	public static function fromNothing(): self
+	{
+		$self = new self();
+		$self->hasValue = false;
 
 		return $self;
 	}
 
 	public function hasValue(): bool
 	{
-		return $this->hasDefault;
+		return $this->hasValue;
 	}
 
 	/**
@@ -44,7 +47,7 @@ final class DefaultValueMeta
 	 */
 	public function getValue()
 	{
-		if (!$this->hasDefault) {
+		if (!$this->hasValue) {
 			throw InvalidState::create()
 				->withMessage(sprintf(
 					'Check if default value exists with %s::%s',
@@ -53,7 +56,7 @@ final class DefaultValueMeta
 				));
 		}
 
-		return $this->default;
+		return $this->value;
 	}
 
 }
