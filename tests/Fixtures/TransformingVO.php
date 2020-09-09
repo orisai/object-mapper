@@ -17,10 +17,10 @@ final class TransformingVO extends ValueObject
 	/** @BoolValue(castBoolLike=true) */
 	public bool $bool;
 
-	/** @IntValue(castIntLike=true) */
+	/** @IntValue(castNumericString=true) */
 	public int $int;
 
-	/** @FloatValue(castFloatLike=true) */
+	/** @FloatValue(castNumericString=true) */
 	public float $float;
 
 	/**

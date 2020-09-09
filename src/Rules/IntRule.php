@@ -25,7 +25,7 @@ final class IntRule implements Rule
 	public const MIN = 'min';
 	public const MAX = 'max';
 	public const UNSIGNED = 'unsigned';
-	public const CAST_INT_LIKE = 'castIntLike';
+	public const CAST_NUMERIC_STRING = 'castNumericString';
 
 	/**
 	 * @param array<mixed> $args
@@ -34,7 +34,7 @@ final class IntRule implements Rule
 	public function resolveArgs(array $args, RuleArgsContext $context): array
 	{
 		$checker = new ArgsChecker($args, self::class);
-		$checker->checkAllowedArgs([self::MIN, self::MAX, self::UNSIGNED, self::CAST_INT_LIKE]);
+		$checker->checkAllowedArgs([self::MIN, self::MAX, self::UNSIGNED, self::CAST_NUMERIC_STRING]);
 
 		$min = null;
 		if ($checker->hasArg(self::MIN)) {
@@ -51,8 +51,8 @@ final class IntRule implements Rule
 			$unsigned = $checker->checkBool(self::UNSIGNED);
 		}
 
-		if ($checker->hasArg(self::CAST_INT_LIKE)) {
-			$checker->checkBool(self::CAST_INT_LIKE);
+		if ($checker->hasArg(self::CAST_NUMERIC_STRING)) {
+			$checker->checkBool(self::CAST_NUMERIC_STRING);
 		}
 
 		if ($min !== null && $max !== null && $max < $min) {
@@ -157,8 +157,8 @@ final class IntRule implements Rule
 			$type->addKeyValueParameter('max', $args->max);
 		}
 
-		if ($args->castIntLike) {
-			$type->addKeyParameter('acceptsIntLike');
+		if ($args->castNumericString) {
+			$type->addKeyParameter('acceptsNumericString');
 		}
 
 		return $type;
@@ -170,7 +170,7 @@ final class IntRule implements Rule
 	 */
 	private function tryConvert($value, IntArgs $args)
 	{
-		if ($args->castIntLike && is_string($value)) {
+		if ($args->castNumericString && is_string($value)) {
 			// Remove regular spaces
 			$value = str_replace(' ', '', $value);
 

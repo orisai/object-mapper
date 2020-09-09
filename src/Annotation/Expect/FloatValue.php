@@ -13,7 +13,7 @@ use Orisai\ObjectMapper\Rules\Rule;
  * @property-write float|null $min
  * @property-write float|null $max
  * @property-write bool $unsigned
- * @property-write bool $castFloatLike
+ * @property-write bool $castNumericString
  */
 final class FloatValue implements RuleAnnotation
 {

@@ -11,7 +11,7 @@ final class IntArgs implements Args
 	public ?int $min = null;
 	public ?int $max = null;
 	public bool $unsigned = true;
-	public bool $castIntLike = false;
+	public bool $castNumericString = false;
 
 	private function __construct()
 	{
@@ -36,8 +36,8 @@ final class IntArgs implements Args
 			$self->unsigned = $args[IntRule::UNSIGNED];
 		}
 
-		if (array_key_exists(IntRule::CAST_INT_LIKE, $args)) {
-			$self->castIntLike = $args[IntRule::CAST_INT_LIKE];
+		if (array_key_exists(IntRule::CAST_NUMERIC_STRING, $args)) {
+			$self->castNumericString = $args[IntRule::CAST_NUMERIC_STRING];
 		}
 
 		return $self;
