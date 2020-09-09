@@ -23,8 +23,8 @@ final class PropertyMeta extends SharedMeta
 		$self = parent::fromArray($propertyMeta);
 		$self->rule = $propertyMeta[MetaSource::TYPE_RULE];
 		$self->default = array_key_exists(MetaSource::TYPE_DEFAULT_VALUE, $propertyMeta)
-			? DefaultValueMeta::fromValueOrNothing($propertyMeta[MetaSource::TYPE_DEFAULT_VALUE])
-			: DefaultValueMeta::fromValueOrNothing();
+			? DefaultValueMeta::fromValue($propertyMeta[MetaSource::TYPE_DEFAULT_VALUE])
+			: DefaultValueMeta::fromNothing();
 
 		return $self;
 	}

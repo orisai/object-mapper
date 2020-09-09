@@ -37,7 +37,7 @@ final class ArrayOfRuleTest extends RuleTestCase
 			ArrayOfArgs::fromArray($this->rule->resolveArgs([
 				ArrayOfRule::ITEM_RULE => [MetaSource::OPTION_TYPE => MixedRule::class],
 			], $this->ruleArgsContext())),
-			$this->fieldContext(DefaultValueMeta::fromValueOrNothing($defaults)),
+			$this->fieldContext(DefaultValueMeta::fromValue($defaults)),
 		);
 
 		self::assertSame($value, $processed);
@@ -71,7 +71,7 @@ final class ArrayOfRuleTest extends RuleTestCase
 				ArrayOfRule::MAX_ITEMS => 5,
 				ArrayOfRule::MERGE_DEFAULTS => true,
 			], $this->ruleArgsContext())),
-			$this->fieldContext(DefaultValueMeta::fromValueOrNothing($defaults)),
+			$this->fieldContext(DefaultValueMeta::fromValue($defaults)),
 		);
 
 		self::assertSame([456, 789, 'lorem', 'ipsum', 'key' => ['baz', 'foo', 'bar'], 'key2' => ['foo', 'bar'], 'foo', 'bar', 'baz'], $processed);
