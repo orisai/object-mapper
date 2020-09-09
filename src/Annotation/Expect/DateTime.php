@@ -11,6 +11,7 @@ use Orisai\ObjectMapper\Rules\Rule;
  * @Annotation
  * @Target({"PROPERTY", "ANNOTATION"})
  * @property-write string|null $format
+ * @property-write string $type
  */
 final class DateTime implements RuleAnnotation
 {

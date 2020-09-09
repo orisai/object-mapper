@@ -2,6 +2,7 @@
 
 namespace Tests\Orisai\ObjectMapper\Unit\Rules;
 
+use DateTime;
 use DateTimeImmutable;
 use DateTimeInterface;
 use Generator;
@@ -48,6 +49,17 @@ final class DateTimeRuleTest extends RuleTestCase
 		);
 
 		self::assertInstanceOf(DateTimeImmutable::class, $instantiated);
+
+		$instantiatedType = $this->rule->processValue(
+			$value,
+			DateTimeArgs::fromArray($this->rule->resolveArgs([
+				DateTimeRule::FORMAT => $format,
+				DateTimeRule::TYPE => DateTime::class,
+			], $this->ruleArgsContext())),
+			$this->fieldContext(null, null, true),
+		);
+
+		self::assertInstanceOf(DateTime::class, $instantiatedType);
 	}
 
 	/**

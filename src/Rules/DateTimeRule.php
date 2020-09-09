@@ -2,6 +2,7 @@
 
 namespace Orisai\ObjectMapper\Rules;
 
+use DateTime;
 use DateTimeImmutable;
 use DateTimeInterface;
 use Nette\Utils\Validators;
@@ -13,7 +14,9 @@ use Orisai\ObjectMapper\Exception\ValueDoesNotMatch;
 use Orisai\ObjectMapper\Meta\Args;
 use Orisai\ObjectMapper\Meta\ArgsChecker;
 use Orisai\ObjectMapper\Types\SimpleValueType;
+use ReflectionClass;
 use Throwable;
+use function class_exists;
 use function implode;
 use function in_array;
 use function is_int;
@@ -27,6 +30,8 @@ final class DateTimeRule implements Rule
 {
 
 	public const FORMAT = 'format';
+	public const TYPE = 'type';
+
 	public const FORMAT_TIMESTAMP = 'timestamp';
 	public const FORMATS_DATETIME = [
 		DateTimeInterface::ATOM,
@@ -51,7 +56,7 @@ final class DateTimeRule implements Rule
 	public function resolveArgs(array $args, RuleArgsContext $context): array
 	{
 		$checker = new ArgsChecker($args, self::class);
-		$checker->checkAllowedArgs([self::FORMAT]);
+		$checker->checkAllowedArgs([self::FORMAT, self::TYPE]);
 
 		if ($checker->hasArg(self::FORMAT)) {
 			$format = $args[self::FORMAT];
@@ -69,6 +74,19 @@ final class DateTimeRule implements Rule
 			}
 		}
 
+		if ($checker->hasArg(self::TYPE)) {
+			$type = $args[self::TYPE];
+
+			if (!is_string($type) || !class_exists($type) || (new ReflectionClass($type))->isAbstract()) {
+				throw InvalidArgument::create()
+					->withMessage($checker->formatMessage(
+						sprintf('%s or %s or their non-abstract child class', DateTimeImmutable::class, DateTime::class),
+						self::TYPE,
+						$type,
+					));
+			}
+		}
+
 		return $args;
 	}
 
@@ -80,7 +98,7 @@ final class DateTimeRule implements Rule
 	/**
 	 * @param mixed $value
 	 * @param DateTimeArgs $args
-	 * @return DateTimeImmutable|string|int
+	 * @return DateTimeImmutable|DateTime|string|int
 	 * @throws ValueDoesNotMatch
 	 */
 	public function processValue($value, Args $args, FieldContext $context)
@@ -97,17 +115,18 @@ final class DateTimeRule implements Rule
 		}
 
 		$stringValue = is_int($value) ? (string) $value : $value;
+		$type = $args->type;
 
 		if ($isTimestamp) {
-			$datetime = DateTimeImmutable::createFromFormat('U', $stringValue);
+			$datetime = $type::createFromFormat('U', $stringValue);
 		} elseif ($format === null) {
 			try {
-				$datetime = new DateTimeImmutable($stringValue);
+				$datetime = new $type($stringValue);
 			} catch (Throwable $exception) {
 				throw ValueDoesNotMatch::create($this->createType($args, $context));
 			}
 		} else {
-			$datetime = DateTimeImmutable::createFromFormat($format, $stringValue);
+			$datetime = $type::createFromFormat($format, $stringValue);
 		}
 
 		if ($datetime !== false) {
