@@ -178,7 +178,7 @@ class VisualTypeFormatter implements TypeFormatter
 
 	protected function formatSimpleValueType(SimpleValueType $type, ?int $level): string
 	{
-		return sprintf('%s%s', $type->getType(), $this->formatParameters($type, $level));
+		return sprintf('%s%s', $type->getName(), $this->formatParameters($type, $level));
 	}
 
 	protected function formatEnumType(EnumType $type, ?int $level): string

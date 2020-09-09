@@ -98,7 +98,7 @@ final class DateTimeRuleTest extends RuleTestCase
 			$type = $exception->getInvalidType();
 			assert($type instanceof SimpleValueType);
 
-			self::assertSame($expectedType, $type->getType());
+			self::assertSame($expectedType, $type->getName());
 		}
 
 		self::assertNotNull($exception);
@@ -126,7 +126,7 @@ final class DateTimeRuleTest extends RuleTestCase
 			$type,
 		);
 
-		self::assertSame('datetime', $type->getType());
+		self::assertSame('datetime', $type->getName());
 		self::assertCount(0, $type->getParameters());
 	}
 
@@ -143,7 +143,7 @@ final class DateTimeRuleTest extends RuleTestCase
 			$type,
 		);
 
-		self::assertSame('timestamp', $type->getType());
+		self::assertSame('timestamp', $type->getName());
 		self::assertCount(0, $type->getParameters());
 	}
 
@@ -160,7 +160,7 @@ final class DateTimeRuleTest extends RuleTestCase
 			$type,
 		);
 
-		self::assertSame('datetime', $type->getType());
+		self::assertSame('datetime', $type->getName());
 		self::assertCount(1, $type->getParameters());
 		self::assertTrue($type->hasParameter(DateTimeRule::FORMAT));
 		self::assertSame(DateTimeInterface::ATOM, $type->getParameter(DateTimeRule::FORMAT)->getValue());

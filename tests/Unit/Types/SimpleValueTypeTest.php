@@ -12,7 +12,7 @@ final class SimpleValueTypeTest extends TestCase
 	{
 		$type = new SimpleValueType('string');
 
-		self::assertSame('string', $type->getType());
+		self::assertSame('string', $type->getName());
 	}
 
 }

@@ -70,7 +70,7 @@ final class InstanceRuleTest extends RuleTestCase
 			$type = $exception->getInvalidType();
 			assert($type instanceof SimpleValueType);
 
-			self::assertSame(stdClass::class, $type->getType());
+			self::assertSame(stdClass::class, $type->getName());
 		}
 
 		self::assertNotNull($exception);
@@ -108,7 +108,7 @@ final class InstanceRuleTest extends RuleTestCase
 			$type,
 		);
 
-		self::assertSame(stdClass::class, $type->getType());
+		self::assertSame(stdClass::class, $type->getName());
 		self::assertSame(
 			[],
 			$type->getParameters(),

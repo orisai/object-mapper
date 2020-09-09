@@ -140,7 +140,7 @@ final class FloatRuleTest extends RuleTestCase
 			$type = $exception->getInvalidType();
 			assert($type instanceof SimpleValueType);
 
-			self::assertSame('float', $type->getType());
+			self::assertSame('float', $type->getName());
 		}
 
 		self::assertNotNull($exception);
@@ -177,7 +177,7 @@ final class FloatRuleTest extends RuleTestCase
 			$type = $exception->getInvalidType();
 			assert($type instanceof SimpleValueType);
 
-			self::assertSame('float', $type->getType());
+			self::assertSame('float', $type->getName());
 			self::assertTrue($type->hasInvalidParameters());
 			self::assertTrue($type->getParameter(FloatRule::MAX)->isInvalid());
 		}
@@ -203,7 +203,7 @@ final class FloatRuleTest extends RuleTestCase
 			$type = $exception->getInvalidType();
 			assert($type instanceof SimpleValueType);
 
-			self::assertSame('float', $type->getType());
+			self::assertSame('float', $type->getName());
 			self::assertTrue($type->hasInvalidParameters());
 			self::assertTrue($type->getParameter(FloatRule::MIN)->isInvalid());
 			self::assertTrue($type->getParameter(FloatRule::UNSIGNED)->isInvalid());
@@ -223,7 +223,7 @@ final class FloatRuleTest extends RuleTestCase
 			$type,
 		);
 
-		self::assertSame('float', $type->getType());
+		self::assertSame('float', $type->getName());
 		self::assertCount(1, $type->getParameters());
 		self::assertTrue($type->hasParameter('unsigned'));
 		self::assertFalse($type->getParameter('unsigned')->hasValue());
@@ -245,7 +245,7 @@ final class FloatRuleTest extends RuleTestCase
 			$type,
 		);
 
-		self::assertSame('float', $type->getType());
+		self::assertSame('float', $type->getName());
 
 		self::assertCount(3, $type->getParameters());
 		self::assertTrue($type->hasParameter(FloatRule::MIN));

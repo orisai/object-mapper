@@ -65,7 +65,7 @@ final class UrlRuleTest extends RuleTestCase
 			$type = $exception->getInvalidType();
 			assert($type instanceof SimpleValueType);
 
-			self::assertSame('url', $type->getType());
+			self::assertSame('url', $type->getName());
 		}
 
 		self::assertNotNull($exception);
@@ -95,7 +95,7 @@ final class UrlRuleTest extends RuleTestCase
 			$type,
 		);
 
-		self::assertSame('url', $type->getType());
+		self::assertSame('url', $type->getName());
 		self::assertSame(
 			[],
 			$type->getParameters(),

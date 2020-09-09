@@ -77,7 +77,7 @@ final class NullRuleTest extends RuleTestCase
 			$type = $exception->getInvalidType();
 			assert($type instanceof SimpleValueType);
 
-			self::assertSame('null', $type->getType());
+			self::assertSame('null', $type->getName());
 		}
 
 		self::assertNotNull($exception);
@@ -113,7 +113,7 @@ final class NullRuleTest extends RuleTestCase
 			$type,
 		);
 
-		self::assertSame('null', $type->getType());
+		self::assertSame('null', $type->getName());
 		self::assertCount(0, $type->getParameters());
 	}
 
@@ -130,7 +130,7 @@ final class NullRuleTest extends RuleTestCase
 			$type,
 		);
 
-		self::assertSame('null', $type->getType());
+		self::assertSame('null', $type->getName());
 
 		self::assertCount(1, $type->getParameters());
 		self::assertTrue($type->hasParameter('acceptsEmptyString'));
