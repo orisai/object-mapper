@@ -30,6 +30,10 @@ parameters:
 		- message: '#^Anonymous function should return (int|string) but returns (int|string)\|false\.$#'
 		  path: %currentWorkingDirectory%/src/Meta/ClassModificationsChecker.php
 		  count: 2
+		# It is thrown by new DateTimeImmutable, bug introduced by class-string<DateTimeImmutable|DateTime>
+		- message: '#^Throwable is never thrown in the corresponding try block$#'
+		  path: %currentWorkingDirectory%/src/Rules/DateTimeRule.php
+		  count: 1
 		# Not sure, possible bug
 		- message: '#PHPDoc tag \@return with type mixed is not subtype of native type Orisai\\ObjectMapper\\Rules\\Rule\.#'
 		  path: %currentWorkingDirectory%/src
