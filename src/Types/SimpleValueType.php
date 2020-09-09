@@ -5,16 +5,16 @@ namespace Orisai\ObjectMapper\Types;
 final class SimpleValueType extends ParametrizedType
 {
 
-	private string $type;
+	private string $name;
 
 	public function __construct(string $type)
 	{
-		$this->type = $type;
+		$this->name = $type;
 	}
 
-	public function getType(): string
+	public function getName(): string
 	{
-		return $this->type;
+		return $this->name;
 	}
 
 }

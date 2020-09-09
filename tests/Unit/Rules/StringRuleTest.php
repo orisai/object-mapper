@@ -64,7 +64,7 @@ final class StringRuleTest extends RuleTestCase
 			$type = $exception->getInvalidType();
 			assert($type instanceof SimpleValueType);
 
-			self::assertSame('string', $type->getType());
+			self::assertSame('string', $type->getName());
 		}
 
 		self::assertNotNull($exception);
@@ -103,7 +103,7 @@ final class StringRuleTest extends RuleTestCase
 			$type = $exception->getInvalidType();
 			assert($type instanceof SimpleValueType);
 
-			self::assertSame('string', $type->getType());
+			self::assertSame('string', $type->getName());
 			self::assertTrue($type->hasInvalidParameters());
 			self::assertTrue($type->getParameter(StringRule::NOT_EMPTY)->isInvalid());
 			self::assertTrue($type->getParameter(StringRule::MIN_LENGTH)->isInvalid());
@@ -133,7 +133,7 @@ final class StringRuleTest extends RuleTestCase
 			$type = $exception->getInvalidType();
 			assert($type instanceof SimpleValueType);
 
-			self::assertSame('string', $type->getType());
+			self::assertSame('string', $type->getName());
 			self::assertTrue($type->hasInvalidParameters());
 			self::assertFalse($type->getParameter(StringRule::NOT_EMPTY)->isInvalid());
 			self::assertFalse($type->getParameter(StringRule::MIN_LENGTH)->isInvalid());
@@ -163,7 +163,7 @@ final class StringRuleTest extends RuleTestCase
 			$type = $exception->getInvalidType();
 			assert($type instanceof SimpleValueType);
 
-			self::assertSame('string', $type->getType());
+			self::assertSame('string', $type->getName());
 			self::assertTrue($type->hasInvalidParameters());
 			self::assertTrue($type->getParameter(StringRule::NOT_EMPTY)->isInvalid());
 			self::assertFalse($type->hasParameter(StringRule::MIN_LENGTH));
@@ -195,7 +195,7 @@ final class StringRuleTest extends RuleTestCase
 			$type,
 		);
 
-		self::assertSame('string', $type->getType());
+		self::assertSame('string', $type->getName());
 		self::assertCount(0, $type->getParameters());
 	}
 
@@ -215,7 +215,7 @@ final class StringRuleTest extends RuleTestCase
 			$type,
 		);
 
-		self::assertSame('string', $type->getType());
+		self::assertSame('string', $type->getName());
 
 		self::assertCount(4, $type->getParameters());
 		self::assertTrue($type->hasParameter(StringRule::NOT_EMPTY));

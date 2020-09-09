@@ -111,7 +111,7 @@ final class IntRuleTest extends RuleTestCase
 			$type = $exception->getInvalidType();
 			assert($type instanceof SimpleValueType);
 
-			self::assertSame('int', $type->getType());
+			self::assertSame('int', $type->getName());
 		}
 
 		self::assertNotNull($exception);
@@ -149,7 +149,7 @@ final class IntRuleTest extends RuleTestCase
 			$type = $exception->getInvalidType();
 			assert($type instanceof SimpleValueType);
 
-			self::assertSame('int', $type->getType());
+			self::assertSame('int', $type->getName());
 			self::assertTrue($type->hasInvalidParameters());
 			self::assertTrue($type->getParameter(IntRule::MAX)->isInvalid());
 		}
@@ -175,7 +175,7 @@ final class IntRuleTest extends RuleTestCase
 			$type = $exception->getInvalidType();
 			assert($type instanceof SimpleValueType);
 
-			self::assertSame('int', $type->getType());
+			self::assertSame('int', $type->getName());
 			self::assertTrue($type->hasInvalidParameters());
 			self::assertTrue($type->getParameter(IntRule::MIN)->isInvalid());
 			self::assertTrue($type->getParameter(IntRule::UNSIGNED)->isInvalid());
@@ -195,7 +195,7 @@ final class IntRuleTest extends RuleTestCase
 			$type,
 		);
 
-		self::assertSame('int', $type->getType());
+		self::assertSame('int', $type->getName());
 		self::assertCount(1, $type->getParameters());
 		self::assertTrue($type->hasParameter('unsigned'));
 	}
@@ -216,7 +216,7 @@ final class IntRuleTest extends RuleTestCase
 			$type,
 		);
 
-		self::assertSame('int', $type->getType());
+		self::assertSame('int', $type->getName());
 
 		self::assertCount(3, $type->getParameters());
 		self::assertTrue($type->hasParameter(IntRule::MIN));

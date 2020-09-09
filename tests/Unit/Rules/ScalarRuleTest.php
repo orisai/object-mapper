@@ -104,16 +104,16 @@ final class ScalarRuleTest extends RuleTestCase
 		self::assertCount(4, $subtypes);
 
 		self::assertInstanceOf(SimpleValueType::class, $subtypes[0]);
-		self::assertSame('int', $subtypes[0]->getType());
+		self::assertSame('int', $subtypes[0]->getName());
 
 		self::assertInstanceOf(SimpleValueType::class, $subtypes[1]);
-		self::assertSame('float', $subtypes[1]->getType());
+		self::assertSame('float', $subtypes[1]->getName());
 
 		self::assertInstanceOf(SimpleValueType::class, $subtypes[2]);
-		self::assertSame('string', $subtypes[2]->getType());
+		self::assertSame('string', $subtypes[2]->getName());
 
 		self::assertInstanceOf(SimpleValueType::class, $subtypes[3]);
-		self::assertSame('bool', $subtypes[3]->getType());
+		self::assertSame('bool', $subtypes[3]->getName());
 	}
 
 }

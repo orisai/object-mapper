@@ -61,7 +61,7 @@ final class MixedRuleTest extends RuleTestCase
 			$type,
 		);
 
-		self::assertSame('mixed', $type->getType());
+		self::assertSame('mixed', $type->getName());
 		self::assertSame(
 			[],
 			$type->getParameters(),
