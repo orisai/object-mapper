@@ -129,15 +129,13 @@ final class DateTimeRule implements Rule
 			$datetime = $type::createFromFormat($format, $stringValue);
 		}
 
-		if ($datetime !== false) {
-			if ($context->isInitializeObjects()) {
-				return $datetime;
-			}
-
-			return $value;
+		if ($datetime === false) {
+			throw ValueDoesNotMatch::create($this->createType($args, $context));
 		}
 
-		throw ValueDoesNotMatch::create($this->createType($args, $context));
+		return $context->isInitializeObjects()
+			? $datetime
+			: $value;
 	}
 
 	/**
