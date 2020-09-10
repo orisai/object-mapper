@@ -11,6 +11,9 @@ use Orisai\ObjectMapper\Rules\NoArgsRule;
 use Orisai\ObjectMapper\Rules\Rule;
 use Orisai\ObjectMapper\Types\MessageType;
 
+/**
+ * @implements Rule<EmptyArgs>
+ */
 final class AlwaysInvalidRule implements Rule
 {
 
