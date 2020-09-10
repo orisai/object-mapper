@@ -156,13 +156,17 @@ final class CallbacksVO extends ValueObject
 	public static function beforeImmutableDefaultValue(): void
 	{
 		throw InvalidState::create()
-			->withMessage('Dont set "immutableDefaultValue". I am here to test before callback is not called when default value is used.');
+			->withMessage(
+				'Dont set "immutableDefaultValue". I am here to test before callback is not called when default value is used.',
+			);
 	}
 
 	public static function afterImmutableDefaultValue(): void
 	{
 		throw InvalidState::create()
-			->withMessage('Dont set "immutableDefaultValue". I am here to test after callback is not called when default value is used.');
+			->withMessage(
+				'Dont set "immutableDefaultValue". I am here to test after callback is not called when default value is used.',
+			);
 	}
 
 	public function beforeCallbackSetValue(): string

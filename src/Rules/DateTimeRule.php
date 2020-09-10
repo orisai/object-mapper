@@ -80,7 +80,11 @@ final class DateTimeRule implements Rule
 			if (!is_string($type) || !class_exists($type) || (new ReflectionClass($type))->isAbstract()) {
 				throw InvalidArgument::create()
 					->withMessage($checker->formatMessage(
-						sprintf('%s or %s or their non-abstract child class', DateTimeImmutable::class, DateTime::class),
+						sprintf(
+							'%s or %s or their non-abstract child class',
+							DateTimeImmutable::class,
+							DateTime::class,
+						),
 						self::TYPE,
 						$type,
 					));

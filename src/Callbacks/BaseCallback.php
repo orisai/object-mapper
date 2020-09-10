@@ -89,7 +89,10 @@ abstract class BaseCallback implements Callback
 	private static function validateMethod(ReflectionClass $class, string $methodName): ReflectionMethod
 	{
 		if (!$class->hasMethod($methodName)) {
-			$methods = array_map(static fn (ReflectionMethod $method): string => $method->getName(), $class->getMethods(ReflectionMethod::IS_PUBLIC));
+			$methods = array_map(
+				static fn (ReflectionMethod $method): string => $method->getName(),
+				$class->getMethods(ReflectionMethod::IS_PUBLIC),
+			);
 			$hint = ObjectHelpers::getSuggestion($methods, $methodName);
 
 			throw InvalidArgument::create()
@@ -242,7 +245,8 @@ abstract class BaseCallback implements Callback
 	public static function invoke($data, Args $args, ObjectHolder $holder, BaseFieldContext $context)
 	{
 		// Callback is skipped for unsupported runtime
-		if (!in_array($args->runtime, $context->isInitializeObjects() ? self::INITIALIZATION_RUNTIMES : self::PROCESSING_RUNTIMES, true)) {
+		$runtimes = $context->isInitializeObjects() ? self::INITIALIZATION_RUNTIMES : self::PROCESSING_RUNTIMES;
+		if (!in_array($args->runtime, $runtimes, true)) {
 			return $data;
 		}
 

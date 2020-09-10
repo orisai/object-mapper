@@ -114,7 +114,12 @@ class VisualTypeFormatter implements TypeFormatter
 		$lastFieldKey = array_key_last($fields);
 
 		foreach ($fields as $fieldName => $fieldType) {
-			$formattedField = sprintf('%s%s%s', $fieldName, $this->pathAndTypeSeparator, $this->format($fieldType, $innerLevel));
+			$formattedField = sprintf(
+				'%s%s%s',
+				$fieldName,
+				$this->pathAndTypeSeparator,
+				$this->format($fieldType, $innerLevel),
+			);
 			$formatted .= $this->formatComplexTypeInnerLine($formattedField, $innerLevel, $fieldName === $lastFieldKey);
 		}
 
@@ -215,7 +220,13 @@ class VisualTypeFormatter implements TypeFormatter
 			$key = $parameter->getKey();
 			$separator = $key === $lastKey ? '' : $this->parameterSeparator;
 			$inlineParameters .= $parameter->hasValue()
-				? sprintf('%s%s%s%s', $this->valueToString($key, false), $this->parameterKeyValueSeparator, $this->valueToString($parameter->getValue(), true, $level), $separator)
+				? sprintf(
+					'%s%s%s%s',
+					$this->valueToString($key, false),
+					$this->parameterKeyValueSeparator,
+					$this->valueToString($parameter->getValue(), true, $level),
+					$separator,
+				)
 				: sprintf('%s%s', $this->valueToString($key, false), $separator);
 		}
 

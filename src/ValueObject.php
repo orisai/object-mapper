@@ -74,7 +74,10 @@ abstract class ValueObject
 	private function getPropertyHint(string $propertyName): ?string
 	{
 		$ref = new ReflectionClass(static::class);
-		$propertyNames = array_filter($ref->getProperties(ReflectionProperty::IS_PUBLIC), static fn (ReflectionProperty $p) => !$p->isStatic());
+		$propertyNames = array_filter(
+			$ref->getProperties(ReflectionProperty::IS_PUBLIC),
+			static fn (ReflectionProperty $p) => !$p->isStatic(),
+		);
 
 		return ObjectHelpers::getSuggestion($propertyNames, $propertyName);
 	}

@@ -29,7 +29,9 @@ final class ArrayOfRule extends MultiValueRule
 	public function resolveArgs(array $args, RuleArgsContext $context): array
 	{
 		$checker = new ArgsChecker($args, self::class);
-		$checker->checkAllowedArgs([self::KEY_RULE, self::ITEM_RULE, self::MIN_ITEMS, self::MAX_ITEMS, self::MERGE_DEFAULTS]);
+		$checker->checkAllowedArgs(
+			[self::KEY_RULE, self::ITEM_RULE, self::MIN_ITEMS, self::MAX_ITEMS, self::MERGE_DEFAULTS],
+		);
 
 		$resolver = $context->getMetaResolver();
 
@@ -110,11 +112,7 @@ final class ArrayOfRule extends MultiValueRule
 
 			if ($keyRule !== null && $keyArgs !== null) {
 				try {
-					$key = $keyRule->processValue(
-						$key,
-						$keyArgs,
-						$context,
-					);
+					$key = $keyRule->processValue($key, $keyArgs, $context);
 				} catch (ValueDoesNotMatch | InvalidData $exception) {
 					$keyException = $exception;
 				}

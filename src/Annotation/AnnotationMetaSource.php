@@ -107,9 +107,13 @@ final class AnnotationMetaSource implements MetaSource
 					}
 
 					$propertyHasValidationRule = true;
-					$propertiesMeta[$propertyName][$annotation::ANNOTATION_TYPE] = AnnotationMetaExtractor::extract($annotation);
+					$propertiesMeta[$propertyName][$annotation::ANNOTATION_TYPE] = AnnotationMetaExtractor::extract(
+						$annotation,
+					);
 				} else {
-					$propertiesMeta[$propertyName][$annotation::ANNOTATION_TYPE][] = AnnotationMetaExtractor::extract($annotation);
+					$propertiesMeta[$propertyName][$annotation::ANNOTATION_TYPE][] = AnnotationMetaExtractor::extract(
+						$annotation,
+					);
 				}
 			}
 		}
