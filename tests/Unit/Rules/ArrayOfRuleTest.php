@@ -74,7 +74,10 @@ final class ArrayOfRuleTest extends RuleTestCase
 			$this->fieldContext(DefaultValueMeta::fromValue($defaults)),
 		);
 
-		self::assertSame([456, 789, 'lorem', 'ipsum', 'key' => ['baz', 'foo', 'bar'], 'key2' => ['foo', 'bar'], 'foo', 'bar', 'baz'], $processed);
+		self::assertSame(
+			[456, 789, 'lorem', 'ipsum', 'key' => ['baz', 'foo', 'bar'], 'key2' => ['foo', 'bar'], 'foo', 'bar', 'baz'],
+			$processed,
+		);
 	}
 
 	public function testProcessInvalid(): void

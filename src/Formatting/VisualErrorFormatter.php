@@ -99,7 +99,14 @@ class VisualErrorFormatter implements ErrorFormatter, TypeFormatter
 
 			$this->scopes->openScope($type->isInvalid() ? false : !$this->scopes->shouldRenderValid());
 
-			$formatted .= sprintf('%s%s%s%s%s', $rootPath !== '' ? $rootPath . $this->pathNodeSeparator : '', $fieldName, $this->pathAndTypeSeparator, $this->format($fieldType, 0), $fieldSeparator);
+			$formatted .= sprintf(
+				'%s%s%s%s%s',
+				$rootPath !== '' ? $rootPath . $this->pathNodeSeparator : '',
+				$fieldName,
+				$this->pathAndTypeSeparator,
+				$this->format($fieldType, 0),
+				$fieldSeparator,
+			);
 
 			$this->scopes->closeScope();
 		}
@@ -109,7 +116,12 @@ class VisualErrorFormatter implements ErrorFormatter, TypeFormatter
 
 		foreach ($errors as $errorKey => $error) {
 			$fieldSeparator = $errorKey === $lastErrorKey ? '' : $this->itemsSeparator;
-			$formatted .= sprintf('%s%s%s', $rootPath !== '' ? $rootPath . $this->pathNodeSeparator : '', $this->format($error, 0), $fieldSeparator);
+			$formatted .= sprintf(
+				'%s%s%s',
+				$rootPath !== '' ? $rootPath . $this->pathNodeSeparator : '',
+				$this->format($error, 0),
+				$fieldSeparator,
+			);
 		}
 
 		$this->scopes->closeScope();
@@ -174,8 +186,17 @@ class VisualErrorFormatter implements ErrorFormatter, TypeFormatter
 		foreach ($fields as $fieldName => $fieldType) {
 			$this->scopes->openScope($type->isInvalid() ? false : !$this->scopes->shouldRenderValid());
 
-			$formattedField = sprintf('%s%s%s', $fieldName, $this->pathAndTypeSeparator, $this->format($fieldType, $innerLevel));
-			$formatted .= $this->formatComplexTypeInnerLine($formattedField, $innerLevel, $errors === [] && $fieldName === $lastFieldKey);
+			$formattedField = sprintf(
+				'%s%s%s',
+				$fieldName,
+				$this->pathAndTypeSeparator,
+				$this->format($fieldType, $innerLevel),
+			);
+			$formatted .= $this->formatComplexTypeInnerLine(
+				$formattedField,
+				$innerLevel,
+				$errors === [] && $fieldName === $lastFieldKey,
+			);
 
 			$this->scopes->closeScope();
 		}
@@ -283,7 +304,11 @@ class VisualErrorFormatter implements ErrorFormatter, TypeFormatter
 				$invalidPairString .= 'value';
 			}
 
-			$invalidPairsString .= $this->formatComplexTypeInnerLine($invalidPairString, $innerLevel, $key === $lastKey);
+			$invalidPairsString .= $this->formatComplexTypeInnerLine(
+				$invalidPairString,
+				$innerLevel,
+				$key === $lastKey,
+			);
 		}
 
 		$this->scopes->closeScope();
@@ -303,7 +328,12 @@ class VisualErrorFormatter implements ErrorFormatter, TypeFormatter
 			$this->scopes->openScope(false, true);
 
 			$formatted .= $keyType !== null
-				? sprintf('<%s%s%s>', $this->format($keyType, null), $this->parameterSeparator, $this->format($itemType, 0))
+				? sprintf(
+					'<%s%s%s>',
+					$this->format($keyType, null),
+					$this->parameterSeparator,
+					$this->format($itemType, 0),
+				)
 				: sprintf('<%s>', $this->format($itemType, 0));
 
 			$this->scopes->closeScope();
@@ -334,7 +364,11 @@ class VisualErrorFormatter implements ErrorFormatter, TypeFormatter
 		foreach ($invalidItems as $key => $invalidItem) {
 			$invalidItemString = sprintf('%s%s', $this->valueToString($key, false), $this->pathAndTypeSeparator);
 			$invalidItemString .= $this->format($invalidItem, $innerLevel);
-			$invalidItemsString .= $this->formatComplexTypeInnerLine($invalidItemString, $innerLevel, $key === $lastKey);
+			$invalidItemsString .= $this->formatComplexTypeInnerLine(
+				$invalidItemString,
+				$innerLevel,
+				$key === $lastKey,
+			);
 		}
 
 		$this->scopes->closeScope();
@@ -420,7 +454,13 @@ class VisualErrorFormatter implements ErrorFormatter, TypeFormatter
 			$key = $parameter->getKey();
 			$separator = $key === $lastKey ? '' : $this->parameterSeparator;
 			$inlineParameters .= $parameter->hasValue()
-				? sprintf('%s%s%s%s', $this->valueToString($key, false), $this->parameterKeyValueSeparator, $this->valueToString($parameter->getValue(), true, $level), $separator)
+				? sprintf(
+					'%s%s%s%s',
+					$this->valueToString($key, false),
+					$this->parameterKeyValueSeparator,
+					$this->valueToString($parameter->getValue(), true, $level),
+					$separator,
+				)
 				: sprintf('%s%s', $this->valueToString($key, false), $separator);
 		}
 

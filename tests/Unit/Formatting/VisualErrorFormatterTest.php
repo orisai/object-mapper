@@ -128,10 +128,7 @@ final class VisualErrorFormatterTest extends TestCase
 		$type5Value = new ArrayType(new SimpleValueType('string'), new SimpleValueType('test'));
 		$type5Value->markInvalid();
 
-		$type5 = new ArrayType(
-			$type5Key,
-			$type5Value,
-		);
+		$type5 = new ArrayType($type5Key, $type5Value);
 		$type5->markInvalid();
 
 		self::assertSame(

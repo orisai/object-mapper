@@ -79,9 +79,15 @@ final class MetaResolver
 				throw InvalidMeta::create();
 			}
 
-			$meta[MetaSource::LOCATION_PROPERTIES] = $this->resolvePropertiesMeta($meta[MetaSource::LOCATION_PROPERTIES], $class);
+			$meta[MetaSource::LOCATION_PROPERTIES] = $this->resolvePropertiesMeta(
+				$meta[MetaSource::LOCATION_PROPERTIES],
+				$class,
+			);
 
-			$meta[self::FIELDS_PROPERTIES_MAP] = $this->resolveFieldsPropertiesMap($meta[MetaSource::LOCATION_PROPERTIES], $class);
+			$meta[self::FIELDS_PROPERTIES_MAP] = $this->resolveFieldsPropertiesMap(
+				$meta[MetaSource::LOCATION_PROPERTIES],
+				$class,
+			);
 		}
 
 		return $meta;
@@ -103,7 +109,10 @@ final class MetaResolver
 				throw InvalidMeta::create();
 			}
 
-			$meta[MetaSource::TYPE_CALLBACKS] = $this->resolveCallbacksMeta($meta[MetaSource::TYPE_CALLBACKS], $context);
+			$meta[MetaSource::TYPE_CALLBACKS] = $this->resolveCallbacksMeta(
+				$meta[MetaSource::TYPE_CALLBACKS],
+				$context,
+			);
 		}
 
 		if (array_key_exists(MetaSource::TYPE_DOCS, $meta)) {
@@ -119,7 +128,10 @@ final class MetaResolver
 				throw InvalidMeta::create();
 			}
 
-			$meta[MetaSource::TYPE_MODIFIERS] = $this->resolveModifiersMeta($meta[MetaSource::TYPE_MODIFIERS], $context);
+			$meta[MetaSource::TYPE_MODIFIERS] = $this->resolveModifiersMeta(
+				$meta[MetaSource::TYPE_MODIFIERS],
+				$context,
+			);
 		}
 
 		return $meta;
@@ -192,7 +204,10 @@ final class MetaResolver
 			throw InvalidMeta::create();
 		}
 
-		$meta[MetaSource::TYPE_RULE] = $this->resolveRuleMeta($meta[MetaSource::TYPE_RULE], $this->createRuleArgsContext($class, $property));
+		$meta[MetaSource::TYPE_RULE] = $this->resolveRuleMeta(
+			$meta[MetaSource::TYPE_RULE],
+			$this->createRuleArgsContext($class, $property),
+		);
 
 		return $meta;
 	}
@@ -411,7 +426,11 @@ final class MetaResolver
 			if (
 				$propertyValue === null
 				&& !$isPropertyTyped
-				&& !PropertyMeta::fromArray($meta[MetaSource::LOCATION_PROPERTIES][$propertyName])->getRule()->mayContainRuleType([NullRule::class, MixedRule::class])
+				&& !PropertyMeta::fromArray(
+					$meta[MetaSource::LOCATION_PROPERTIES][$propertyName],
+				)->getRule()->mayContainRuleType(
+					[NullRule::class, MixedRule::class],
+				)
 			) {
 				continue;
 			}

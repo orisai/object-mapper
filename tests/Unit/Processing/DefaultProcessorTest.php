@@ -135,7 +135,9 @@ manyStructures: array<int(unsigned), structure[
 		self::assertNull($vo);
 		self::assertInstanceOf(InvalidData::class, $exception);
 
-		self::markTestSkipped('TODO - badKey and anotherBadKey are completely invalid, complete type (including parameters) must be rendered');
+		self::markTestSkipped(
+			'TODO - badKey and anotherBadKey are completely invalid, complete type (including parameters) must be rendered',
+		);
 		self::assertSame(
 			'manyStructures: array{
 	0: structure[

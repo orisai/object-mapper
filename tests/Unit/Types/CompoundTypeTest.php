@@ -106,7 +106,9 @@ final class CompoundTypeTest extends TestCase
 	public function testNeverSetOverwrite(): void
 	{
 		$this->expectException(InvalidState::class);
-		$this->expectExceptionMessage('Cannot overwrite subtype with key 1 with invalid subtype because it was never set');
+		$this->expectExceptionMessage(
+			'Cannot overwrite subtype with key 1 with invalid subtype because it was never set',
+		);
 
 		$type = new CompoundType(CompoundType::OPERATOR_AND);
 		$type->overwriteInvalidSubtype(1, new MessageType('f'));
@@ -126,7 +128,9 @@ final class CompoundTypeTest extends TestCase
 	public function testIsOverwrittenAndCannotBeSkipped(): void
 	{
 		$this->expectException(InvalidState::class);
-		$this->expectExceptionMessage('Cannot mark subtype with key 1 skipped because it was already overwritten with invalid subtype');
+		$this->expectExceptionMessage(
+			'Cannot mark subtype with key 1 skipped because it was already overwritten with invalid subtype',
+		);
 
 		$type = new CompoundType(CompoundType::OPERATOR_AND);
 		$type->addSubtype(1, new MessageType('t'));

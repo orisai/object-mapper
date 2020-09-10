@@ -553,7 +553,12 @@ class DefaultProcessor implements Processor
 
 		foreach ($meta->getCallbacks() as $callback) {
 			if ($callback->getType() === $callbackType) {
-				$data = $callbackType::invoke($data, $this->createCallbackArgsInst($callbackType, $callback), $holder, $baseFieldContext);
+				$data = $callbackType::invoke(
+					$data,
+					$this->createCallbackArgsInst($callbackType, $callback),
+					$holder,
+					$baseFieldContext,
+				);
 			}
 		}
 

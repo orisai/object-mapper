@@ -125,7 +125,9 @@ final class Dumper
 		}
 
 		array_pop($parents);
-		$wrap = strpos($outInline, "\n") !== false || $level * self::INDENT_LENGTH + $column + strlen($outInline) + 3 > ($options[self::OPT_WRAP_LENGTH] ?? 120); // 3 = [],
+		$wrap = strpos($outInline, "\n") !== false || $level * self::INDENT_LENGTH + $column + strlen(
+			$outInline,
+		) + 3 > ($options[self::OPT_WRAP_LENGTH] ?? 120); // 3 = [],
 
 		return '[' . ($wrap ? $outWrapped : $outInline) . ']';
 	}

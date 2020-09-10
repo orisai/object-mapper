@@ -20,7 +20,10 @@ final class ClassModificationsChecker
 
 	public static function getLastModificationTimeHash(string $class): string
 	{
-		$modificationTimes = array_map(static fn (string $type): int => filemtime((new ReflectionClass($type))->getFileName()), self::getAllTypes($class));
+		$modificationTimes = array_map(
+			static fn (string $type): int => filemtime((new ReflectionClass($type))->getFileName()),
+			self::getAllTypes($class),
+		);
 
 		return md5(serialize($modificationTimes));
 	}
@@ -30,7 +33,10 @@ final class ClassModificationsChecker
 	 */
 	public static function getSourceFiles(string $class): array
 	{
-		return array_map(static fn (string $type): string => (new ReflectionClass($type))->getFileName(), self::getAllTypes($class));
+		return array_map(
+			static fn (string $type): string => (new ReflectionClass($type))->getFileName(),
+			self::getAllTypes($class),
+		);
 	}
 
 	/**
