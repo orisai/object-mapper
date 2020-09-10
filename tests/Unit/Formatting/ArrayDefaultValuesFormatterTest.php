@@ -13,6 +13,7 @@ use Orisai\ObjectMapper\Rules\RuleManager;
 use Orisai\ObjectMapper\Rules\StructureArgs;
 use Orisai\ObjectMapper\Rules\StructureRule;
 use Orisai\ObjectMapper\Types\StructureType;
+use Orisai\ObjectMapper\ValueObject;
 use PHPUnit\Framework\TestCase;
 use Tests\Orisai\ObjectMapper\Fixtures\DefaultsVO;
 use Tests\Orisai\ObjectMapper\Fixtures\NoDefaultsVO;
@@ -43,7 +44,7 @@ final class ArrayDefaultValuesFormatterTest extends TestCase
 	}
 
 	/**
-	 * @phpstan-param class-string<ValueObject>
+	 * @phpstan-param class-string<ValueObject> $class
 	 */
 	private function createType(string $class): StructureType
 	{
