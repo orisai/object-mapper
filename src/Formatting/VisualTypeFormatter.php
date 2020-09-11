@@ -17,6 +17,7 @@ use function get_class;
 use function sprintf;
 use function str_repeat;
 use function str_replace;
+use const PHP_EOL;
 
 class VisualTypeFormatter implements TypeFormatter
 {
@@ -49,12 +50,12 @@ class VisualTypeFormatter implements TypeFormatter
 	/**
 	 * Separator around all items (structures fields, invalid array and list keys)
 	 */
-	public string $aroundItemsSeparator = "\n";
+	public string $aroundItemsSeparator = PHP_EOL;
 
 	/**
 	 * Separator between items (structures fields, invalid array and list keys)
 	 */
-	public string $itemsSeparator = "\n";
+	public string $itemsSeparator = PHP_EOL;
 
 	/**
 	 * Indentation between items (structures fields, invalid array and list keys)

@@ -20,6 +20,7 @@ use function str_repeat;
 use function strlen;
 use function strpos;
 use function var_export;
+use const PHP_EOL;
 
 final class Dumper
 {
@@ -125,7 +126,7 @@ final class Dumper
 		}
 
 		array_pop($parents);
-		$wrap = strpos($outInline, "\n") !== false || $level * self::INDENT_LENGTH + $column + strlen(
+		$wrap = strpos($outInline, PHP_EOL) !== false || $level * self::INDENT_LENGTH + $column + strlen(
 			$outInline,
 		) + 3 > ($options[self::OPT_WRAP_LENGTH] ?? 120); // 3 = [],
 
