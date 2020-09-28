@@ -5,10 +5,11 @@
 </p>
 
 <p align=center>
-  <a href="https://github.com/orisai/object-mapper/actions"><img src="https://badgen.net/github/checks/orisai/object-mapper/master?cache=300"></a>
+  <a href="https://github.com/orisai/object-mapper/actions"><img src="https://github.com/orisai/object-mapper/workflows/ci/badge.svg"></a>
   <a href="https://coveralls.io/r/orisai/object-mapper"><img src="https://badgen.net/coveralls/c/github/orisai/object-mapper?cache=300"></a>
-  <a href="https://packagist.org/packages/orisai/object-mapper"><img src="https://badgen.net/packagist/dm/orisai/object-mapper?cache=3600"></a>
+  <a href="https://packagist.org/packages/orisai/object-mapper"><img src="https://badgen.net/packagist/dt/orisai/object-mapper?cache=3600"></a>
   <a href="https://packagist.org/packages/orisai/object-mapper"><img src="https://badgen.net/packagist/v/orisai/object-mapper?cache=3600"></a>
+  <a href="https://choosealicense.com/licenses/mpl-2.0/"><img src="https://badgen.net/badge/license/MPL-2.0/blue?cache=3600"></a>
 <p>
 
 ## Documentation
