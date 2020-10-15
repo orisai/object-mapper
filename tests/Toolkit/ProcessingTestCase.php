@@ -12,7 +12,7 @@ use Orisai\ObjectMapper\Processing\DefaultProcessor;
 use Orisai\ObjectMapper\Processing\Processor;
 use Orisai\ObjectMapper\Rules\DefaultRuleManager;
 use PHPUnit\Framework\TestCase;
-use Tests\Orisai\ObjectMapper\Fixtures\TestMetaCache;
+use Tests\Orisai\ObjectMapper\Doubles\TestMetaCache;
 
 abstract class ProcessingTestCase extends TestCase
 {

@@ -6,8 +6,8 @@ use Orisai\Exceptions\Logic\InvalidState;
 use Orisai\ObjectMapper\Creation\DefaultObjectCreator;
 use Orisai\ObjectMapper\Creation\ObjectCreator;
 use PHPUnit\Framework\TestCase;
-use Tests\Orisai\ObjectMapper\Fixtures\DependentVO;
-use Tests\Orisai\ObjectMapper\Fixtures\EmptyVO;
+use Tests\Orisai\ObjectMapper\Doubles\DependentVO;
+use Tests\Orisai\ObjectMapper\Doubles\EmptyVO;
 use function sprintf;
 
 final class DefaultObjectCreatorTest extends TestCase

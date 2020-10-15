@@ -10,7 +10,7 @@ use Orisai\ObjectMapper\Options;
 use Orisai\ObjectMapper\Types\MessageType;
 use ReflectionClass;
 use ReflectionProperty;
-use Tests\Orisai\ObjectMapper\Fixtures\NoDefaultsVO;
+use Tests\Orisai\ObjectMapper\Doubles\NoDefaultsVO;
 
 abstract class RuleTestCase extends ProcessingTestCase
 {

@@ -6,7 +6,7 @@ use Orisai\Exceptions\Logic\InvalidArgument;
 use Orisai\ObjectMapper\Rules\DefaultRuleManager;
 use Orisai\ObjectMapper\Rules\RuleManager;
 use PHPUnit\Framework\TestCase;
-use Tests\Orisai\ObjectMapper\Fixtures\AlwaysInvalidRule;
+use Tests\Orisai\ObjectMapper\Doubles\AlwaysInvalidRule;
 use function sprintf;
 
 final class DefaultRuleManagerTest extends TestCase

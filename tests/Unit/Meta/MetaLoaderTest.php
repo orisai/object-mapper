@@ -3,8 +3,8 @@
 namespace Tests\Orisai\ObjectMapper\Unit\Meta;
 
 use Orisai\Exceptions\Logic\InvalidState;
-use Tests\Orisai\ObjectMapper\Fixtures\FieldNameIdenticalWithAnotherPropertyNameVO;
-use Tests\Orisai\ObjectMapper\Fixtures\MultipleIdenticalFieldNamesVO;
+use Tests\Orisai\ObjectMapper\Doubles\FieldNameIdenticalWithAnotherPropertyNameVO;
+use Tests\Orisai\ObjectMapper\Doubles\MultipleIdenticalFieldNamesVO;
 use Tests\Orisai\ObjectMapper\Toolkit\ProcessingTestCase;
 
 final class MetaLoaderTest extends ProcessingTestCase
@@ -15,7 +15,7 @@ final class MetaLoaderTest extends ProcessingTestCase
 		$this->expectException(InvalidState::class);
 		$this->expectExceptionMessage(<<<'TXT'
 Context: Trying to define field name for mapped property of
-         `Tests\Orisai\ObjectMapper\Fixtures\MultipleIdenticalFieldNamesVO`.
+         `Tests\Orisai\ObjectMapper\Doubles\MultipleIdenticalFieldNamesVO`.
 Problem: Field name `field` is identical for properties `property1, property2`.
 Solution: Define unique field name for each mapped property.
 TXT);
@@ -28,7 +28,7 @@ TXT);
 		$this->expectException(InvalidState::class);
 		$this->expectExceptionMessage(<<<'TXT'
 Context: Trying to define field name for mapped property of
-         `Tests\Orisai\ObjectMapper\Fixtures\FieldNameIdenticalWithAnotherPropertyNameVO`.
+         `Tests\Orisai\ObjectMapper\Doubles\FieldNameIdenticalWithAnotherPropertyNameVO`.
 Problem: Field name `field` defined by property `property` collides with
          property `field` which does not have a field name.
 Solution: Rename field of property `property` or rename property `field` or give
