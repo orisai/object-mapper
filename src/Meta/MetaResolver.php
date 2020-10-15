@@ -470,7 +470,7 @@ final class MetaResolver
 						->withSolution('Define unique field name for each mapped property.');
 
 					throw InvalidState::create()
-						->withMessage((string) $message);
+						->withMessage($message);
 				}
 
 				$map[$fieldName] = $propertyName;
@@ -497,7 +497,7 @@ final class MetaResolver
 					));
 
 				throw InvalidState::create()
-					->withMessage((string) $message);
+					->withMessage($message);
 			}
 		}
 
