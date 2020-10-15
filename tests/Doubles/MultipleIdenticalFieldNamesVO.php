@@ -1,21 +1,24 @@
 <?php declare(strict_types = 1);
 
-namespace Tests\Orisai\ObjectMapper\Fixtures;
+namespace Tests\Orisai\ObjectMapper\Doubles;
 
 use Orisai\ObjectMapper\Annotation\Expect\StringValue;
 use Orisai\ObjectMapper\Annotation\Modifiers\FieldName;
 use Orisai\ObjectMapper\ValueObject;
 
-final class FieldNameIdenticalWithAnotherPropertyNameVO extends ValueObject
+final class MultipleIdenticalFieldNamesVO extends ValueObject
 {
-
-	/** @StringValue() */
-	public string $field;
 
 	/**
 	 * @StringValue()
 	 * @FieldName("field")
 	 */
-	public string $property;
+	public string $property1;
+
+	/**
+	 * @StringValue()
+	 * @FieldName("field")
+	 */
+	public string $property2;
 
 }

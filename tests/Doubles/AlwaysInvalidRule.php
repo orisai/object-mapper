@@ -1,6 +1,6 @@
 <?php declare(strict_types = 1);
 
-namespace Tests\Orisai\ObjectMapper\Fixtures;
+namespace Tests\Orisai\ObjectMapper\Doubles;
 
 use Orisai\ObjectMapper\Context\FieldContext;
 use Orisai\ObjectMapper\Context\TypeContext;

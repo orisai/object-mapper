@@ -6,7 +6,7 @@ use Orisai\ObjectMapper\Exception\InvalidData;
 use Orisai\ObjectMapper\Options;
 use Orisai\ObjectMapper\Rules\StructureArgs;
 use Orisai\ObjectMapper\Rules\StructureRule;
-use Tests\Orisai\ObjectMapper\Fixtures\DefaultsVO;
+use Tests\Orisai\ObjectMapper\Doubles\DefaultsVO;
 use Tests\Orisai\ObjectMapper\Toolkit\RuleTestCase;
 use function array_keys;
 

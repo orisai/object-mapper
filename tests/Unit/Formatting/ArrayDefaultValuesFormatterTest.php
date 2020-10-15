@@ -15,10 +15,10 @@ use Orisai\ObjectMapper\Rules\StructureRule;
 use Orisai\ObjectMapper\Types\StructureType;
 use Orisai\ObjectMapper\ValueObject;
 use PHPUnit\Framework\TestCase;
-use Tests\Orisai\ObjectMapper\Fixtures\DefaultsVO;
-use Tests\Orisai\ObjectMapper\Fixtures\NoDefaultsVO;
-use Tests\Orisai\ObjectMapper\Fixtures\StructuresVO;
-use Tests\Orisai\ObjectMapper\Fixtures\TestMetaCache;
+use Tests\Orisai\ObjectMapper\Doubles\DefaultsVO;
+use Tests\Orisai\ObjectMapper\Doubles\NoDefaultsVO;
+use Tests\Orisai\ObjectMapper\Doubles\StructuresVO;
+use Tests\Orisai\ObjectMapper\Doubles\TestMetaCache;
 use function assert;
 
 final class ArrayDefaultValuesFormatterTest extends TestCase

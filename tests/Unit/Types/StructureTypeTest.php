@@ -5,7 +5,7 @@ namespace Tests\Orisai\ObjectMapper\Unit\Types;
 use Orisai\ObjectMapper\Types\MessageType;
 use Orisai\ObjectMapper\Types\StructureType;
 use PHPUnit\Framework\TestCase;
-use Tests\Orisai\ObjectMapper\Fixtures\DefaultsVO;
+use Tests\Orisai\ObjectMapper\Doubles\DefaultsVO;
 
 final class StructureTypeTest extends TestCase
 {

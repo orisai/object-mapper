@@ -11,21 +11,21 @@ use Orisai\ObjectMapper\Formatting\VisualErrorFormatter;
 use Orisai\ObjectMapper\Options;
 use Orisai\ObjectMapper\ValueObject;
 use stdClass;
-use Tests\Orisai\ObjectMapper\Fixtures\AfterClassCallbackCurrentTypeInvalidDataVO;
-use Tests\Orisai\ObjectMapper\Fixtures\AfterClassCallbackNewTypeInvalidDataVO;
-use Tests\Orisai\ObjectMapper\Fixtures\AfterClassCallbackValueDoesNotMatchVO;
-use Tests\Orisai\ObjectMapper\Fixtures\BeforeClassCallbackValueDoesNotMatchVO;
-use Tests\Orisai\ObjectMapper\Fixtures\CallbacksVO;
-use Tests\Orisai\ObjectMapper\Fixtures\DefaultsVO;
-use Tests\Orisai\ObjectMapper\Fixtures\EmptyVO;
-use Tests\Orisai\ObjectMapper\Fixtures\FieldNamesVO;
-use Tests\Orisai\ObjectMapper\Fixtures\InitializingVO;
-use Tests\Orisai\ObjectMapper\Fixtures\NoDefaultsVO;
-use Tests\Orisai\ObjectMapper\Fixtures\PropertiesInitVO;
-use Tests\Orisai\ObjectMapper\Fixtures\PropertyCallbacksFailureVO;
-use Tests\Orisai\ObjectMapper\Fixtures\SkippedPropertiesVO;
-use Tests\Orisai\ObjectMapper\Fixtures\StructuresVO;
-use Tests\Orisai\ObjectMapper\Fixtures\TransformingVO;
+use Tests\Orisai\ObjectMapper\Doubles\AfterClassCallbackCurrentTypeInvalidDataVO;
+use Tests\Orisai\ObjectMapper\Doubles\AfterClassCallbackNewTypeInvalidDataVO;
+use Tests\Orisai\ObjectMapper\Doubles\AfterClassCallbackValueDoesNotMatchVO;
+use Tests\Orisai\ObjectMapper\Doubles\BeforeClassCallbackValueDoesNotMatchVO;
+use Tests\Orisai\ObjectMapper\Doubles\CallbacksVO;
+use Tests\Orisai\ObjectMapper\Doubles\DefaultsVO;
+use Tests\Orisai\ObjectMapper\Doubles\EmptyVO;
+use Tests\Orisai\ObjectMapper\Doubles\FieldNamesVO;
+use Tests\Orisai\ObjectMapper\Doubles\InitializingVO;
+use Tests\Orisai\ObjectMapper\Doubles\NoDefaultsVO;
+use Tests\Orisai\ObjectMapper\Doubles\PropertiesInitVO;
+use Tests\Orisai\ObjectMapper\Doubles\PropertyCallbacksFailureVO;
+use Tests\Orisai\ObjectMapper\Doubles\SkippedPropertiesVO;
+use Tests\Orisai\ObjectMapper\Doubles\StructuresVO;
+use Tests\Orisai\ObjectMapper\Doubles\TransformingVO;
 use Tests\Orisai\ObjectMapper\Toolkit\ProcessingTestCase;
 use function sprintf;
 
@@ -723,7 +723,7 @@ arrayOfMixed: array<mixed>',
 
 		$this->expectException(InvalidState::class);
 		$this->expectExceptionMessage(
-			'Cannot initialize properties "whatever" of "Tests\Orisai\ObjectMapper\Fixtures\SkippedPropertiesVO" instance because it has no skipped properties.',
+			'Cannot initialize properties "whatever" of "Tests\Orisai\ObjectMapper\Doubles\SkippedPropertiesVO" instance because it has no skipped properties.',
 		);
 
 		$this->processor->processSkippedProperties(['whatever'], $vo);
@@ -738,7 +738,7 @@ arrayOfMixed: array<mixed>',
 
 		$this->expectException(InvalidState::class);
 		$this->expectExceptionMessage(
-			'Cannot initialize property "whatever" of "Tests\Orisai\ObjectMapper\Fixtures\SkippedPropertiesVO" instance because it is already initialized or does not exist.',
+			'Cannot initialize property "whatever" of "Tests\Orisai\ObjectMapper\Doubles\SkippedPropertiesVO" instance because it is already initialized or does not exist.',
 		);
 
 		$this->processor->processSkippedProperties(['whatever'], $vo);
