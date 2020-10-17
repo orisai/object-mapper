@@ -5,7 +5,7 @@
 </p>
 
 <p align=center>
-  <a href="https://github.com/orisai/object-mapper/actions"><img src="https://github.com/orisai/object-mapper/workflows/ci/badge.svg"></a>
+  <a href="https://github.com/orisai/object-mapper/actions?query=workflow%3Aci"><img src="https://github.com/orisai/object-mapper/workflows/ci/badge.svg"></a>
   <a href="https://coveralls.io/r/orisai/object-mapper"><img src="https://badgen.net/coveralls/c/github/orisai/object-mapper/v1.x?cache=300"></a>
   <a href="https://packagist.org/packages/orisai/object-mapper"><img src="https://badgen.net/packagist/dt/orisai/object-mapper?cache=3600"></a>
   <a href="https://packagist.org/packages/orisai/object-mapper"><img src="https://badgen.net/packagist/v/orisai/object-mapper?cache=3600"></a>
