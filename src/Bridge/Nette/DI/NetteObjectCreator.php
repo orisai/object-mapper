@@ -17,15 +17,10 @@ final class NetteObjectCreator implements ObjectCreator
 		$this->container = $container;
 	}
 
-	/**
-	 * @template T of ValueObject
-	 * @phpstan-param class-string<T> $class
-	 * @phpstan-return T
-	 */
 	public function createInstance(string $class): ValueObject
 	{
 		$object = $this->container->createInstance($class);
-		assert($object instanceof ValueObject);
+		assert($object instanceof $class);
 
 		return $object;
 	}

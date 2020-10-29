@@ -11,11 +11,6 @@ use function sprintf;
 final class DefaultObjectCreator implements ObjectCreator
 {
 
-	/**
-	 * @template T of ValueObject
-	 * @phpstan-param class-string<T> $class
-	 * @phpstan-return T
-	 */
 	public function createInstance(string $class): ValueObject
 	{
 		try {

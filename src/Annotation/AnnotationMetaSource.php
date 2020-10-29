@@ -13,9 +13,7 @@ use Orisai\ObjectMapper\Exception\InvalidAnnotation;
 use Orisai\ObjectMapper\Meta\MetaSource;
 use Orisai\ObjectMapper\ValueObject;
 use ReflectionClass;
-use function assert;
 use function get_class;
-use function is_object;
 use function sprintf;
 
 final class AnnotationMetaSource implements MetaSource
@@ -48,8 +46,6 @@ final class AnnotationMetaSource implements MetaSource
 		$classMeta = [];
 
 		foreach ($this->reader->getClassAnnotations($class) as $annotation) {
-			assert(is_object($annotation));
-
 			if (!$annotation instanceof BaseAnnotation) {
 				continue;
 			}
@@ -84,8 +80,6 @@ final class AnnotationMetaSource implements MetaSource
 			$propertyHasValidationRule = false;
 
 			foreach ($this->reader->getPropertyAnnotations($property) as $annotation) {
-				assert(is_object($annotation));
-
 				if (!$annotation instanceof BaseAnnotation) {
 					continue;
 				}
