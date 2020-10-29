@@ -62,11 +62,8 @@ class DefaultProcessor implements Processor
 	}
 
 	/**
-	 * @template T of ValueObject
 	 * @param mixed $data
 	 * @throws InvalidData
-	 * @phpstan-param class-string<T> $class
-	 * @phpstan-return T
 	 */
 	public function process($data, string $class, ?Options $options = null): ValueObject
 	{

@@ -48,9 +48,6 @@ parameters:
 		- message: '#Instanceof between T of Orisai\\ObjectMapper\\ValueObject and Orisai\\ObjectMapper\\ValueObject will always evaluate to true\.#'
 		  path: %currentWorkingDirectory%/src/Creation/DefaultObjectCreator.php
 		  count: 1
-		- message: '#Method (.+)\:\:createInstance\(\) should return T of Orisai\\ObjectMapper\\ValueObject but returns Orisai\\ObjectMapper\\ValueObject\.#'
-		  path: %currentWorkingDirectory%/src/Bridge/Nette/DI/NetteObjectCreator.php
-		  count: 1
 		- message: '#^Parameter \#1 \$argument of class ReflectionClass constructor expects class-string\<T of object\>\|T of object, string given\.$#'
 		  path: %currentWorkingDirectory%/src/Meta/ClassModificationsChecker.php
 		  count: 2
