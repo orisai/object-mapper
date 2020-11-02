@@ -5,7 +5,6 @@ namespace Orisai\ObjectMapper\Formatting;
 use Orisai\Exceptions\Logic\InvalidState;
 use function array_key_first;
 use function array_key_last;
-use function assert;
 
 class FormattingScopes
 {
@@ -62,7 +61,6 @@ class FormattingScopes
 
 		if ($isImmutable) {
 			$key = array_key_last($this->cartridge);
-			assert($key !== null);
 			$this->immutablesCartridge[$key] = $key;
 		}
 	}
