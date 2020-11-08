@@ -21,6 +21,7 @@
 		"ext-mbstring": "*",
 		"contributte/utils": "^0.4.2",
 		"doctrine/annotations": "^1.10.3",
+		"nette/utils": "^3.1.0",
 		"orisai/exceptions": "^1.0.0"
 	},
 	"require-dev": {

@@ -2,7 +2,7 @@
 
 namespace Orisai\ObjectMapper\Processing;
 
-use Nette\Utils\ObjectHelpers;
+use Nette\Utils\Helpers;
 use Orisai\Exceptions\Logic\InvalidState;
 use Orisai\ObjectMapper\Callbacks\AfterCallback;
 use Orisai\ObjectMapper\Callbacks\BeforeCallback;
@@ -266,7 +266,7 @@ class DefaultProcessor implements Processor
 				unset($data[$fieldName]);
 
 				// Add error to type
-				$hintedPropertyName = ObjectHelpers::getSuggestion($propertyNames, $propertyName);
+				$hintedPropertyName = Helpers::getSuggestion($propertyNames, $propertyName);
 				$hintedFieldName = $hintedPropertyName !== null ?
 					$this->propertyNameToFieldName(
 						$hintedPropertyName,

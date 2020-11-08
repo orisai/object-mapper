@@ -2,7 +2,7 @@
 
 namespace Orisai\ObjectMapper\Meta;
 
-use Nette\Utils\ObjectHelpers;
+use Nette\Utils\Helpers;
 use Orisai\Exceptions\Logic\InvalidArgument;
 use function array_key_exists;
 use function array_keys;
@@ -43,7 +43,7 @@ final class ArgsChecker
 
 		foreach ($actualArgNames as $name) {
 			if (!in_array($name, $argNames, true)) {
-				$hint = ObjectHelpers::getSuggestion($argNames, $name);
+				$hint = Helpers::getSuggestion($argNames, $name);
 
 				throw InvalidArgument::create()
 					->withMessage(sprintf(
