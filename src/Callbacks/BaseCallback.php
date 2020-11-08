@@ -2,7 +2,7 @@
 
 namespace Orisai\ObjectMapper\Callbacks;
 
-use Nette\Utils\ObjectHelpers;
+use Nette\Utils\Helpers;
 use Orisai\Exceptions\Logic\InvalidArgument;
 use Orisai\ObjectMapper\Context\ArgsContext;
 use Orisai\ObjectMapper\Context\BaseFieldContext;
@@ -93,7 +93,7 @@ abstract class BaseCallback implements Callback
 				static fn (ReflectionMethod $method): string => $method->getName(),
 				$class->getMethods(ReflectionMethod::IS_PUBLIC),
 			);
-			$hint = ObjectHelpers::getSuggestion($methods, $methodName);
+			$hint = Helpers::getSuggestion($methods, $methodName);
 
 			throw InvalidArgument::create()
 				->withMessage(sprintf(

@@ -2,13 +2,13 @@
 
 namespace Orisai\ObjectMapper;
 
+use Nette\Utils\Helpers;
 use Nette\Utils\ObjectHelpers;
 use Orisai\Exceptions\Logic\InvalidState;
 use Orisai\Exceptions\Logic\MemberInaccessible;
 use Orisai\ObjectMapper\Context\SkippedPropertiesContext;
 use ReflectionClass;
 use ReflectionProperty;
-use function array_filter;
 use function array_key_exists;
 use function property_exists;
 use function sprintf;
@@ -74,12 +74,12 @@ abstract class ValueObject
 	private function getPropertyHint(string $propertyName): ?string
 	{
 		$ref = new ReflectionClass(static::class);
-		$propertyNames = array_filter(
-			$ref->getProperties(ReflectionProperty::IS_PUBLIC),
-			static fn (ReflectionProperty $p) => !$p->isStatic(),
-		);
+		$propertyNames = [];
+		foreach ($ref->getProperties(ReflectionProperty::IS_PUBLIC) as $property) {
+			$propertyNames[] = $property->getName();
+		}
 
-		return ObjectHelpers::getSuggestion($propertyNames, $propertyName);
+		return Helpers::getSuggestion($propertyNames, $propertyName);
 	}
 
 	/**
