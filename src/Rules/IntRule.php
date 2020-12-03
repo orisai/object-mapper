@@ -17,7 +17,7 @@ use function sprintf;
 use function str_replace;
 
 /**
- * @implements Rule<IntArgs>
+ * @phpstan-implements Rule<IntArgs>
  */
 final class IntRule implements Rule
 {

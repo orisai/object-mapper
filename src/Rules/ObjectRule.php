@@ -10,7 +10,7 @@ use Orisai\ObjectMapper\Types\SimpleValueType;
 use function is_object;
 
 /**
- * @implements Rule<EmptyArgs>
+ * @phpstan-implements Rule<EmptyArgs>
  */
 final class ObjectRule implements Rule
 {

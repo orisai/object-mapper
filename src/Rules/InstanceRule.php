@@ -15,7 +15,7 @@ use function interface_exists;
 use function is_string;
 
 /**
- * @implements Rule<InstanceArgs>
+ * @phpstan-implements Rule<InstanceArgs>
  */
 final class InstanceRule implements Rule
 {

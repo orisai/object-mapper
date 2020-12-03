@@ -15,7 +15,7 @@ use function is_array;
 use function sprintf;
 
 /**
- * @implements Rule<CompoundRuleArgs>
+ * @phpstan-implements Rule<CompoundRuleArgs>
  */
 abstract class CompoundRule implements Rule
 {

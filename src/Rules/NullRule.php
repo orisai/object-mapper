@@ -13,7 +13,7 @@ use function is_string;
 use function preg_match;
 
 /**
- * @implements Rule<NullArgs>
+ * @phpstan-implements Rule<NullArgs>
  */
 final class NullRule implements Rule
 {

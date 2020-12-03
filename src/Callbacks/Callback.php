@@ -12,7 +12,7 @@ use Orisai\ObjectMapper\Meta\Args;
 use Orisai\ObjectMapper\Processing\ObjectHolder;
 
 /**
- * @template T_ARGS of Args
+ * @phpstan-template T_ARGS of Args
  */
 interface Callback
 {

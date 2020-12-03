@@ -18,7 +18,7 @@ use function is_scalar;
 use function sprintf;
 
 /**
- * @implements Rule<ValueEnumArgs>
+ * @phpstan-implements Rule<ValueEnumArgs>
  */
 final class ValueEnumRule implements Rule
 {

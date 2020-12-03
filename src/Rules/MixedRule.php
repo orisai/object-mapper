@@ -8,7 +8,7 @@ use Orisai\ObjectMapper\Meta\Args;
 use Orisai\ObjectMapper\Types\SimpleValueType;
 
 /**
- * @implements Rule<EmptyArgs>
+ * @phpstan-implements Rule<EmptyArgs>
  */
 final class MixedRule implements Rule
 {

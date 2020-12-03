@@ -11,7 +11,7 @@ use Orisai\ObjectMapper\Meta\Args;
 use Orisai\ObjectMapper\Types\Type;
 
 /**
- * @template T_ARGS of Args
+ * @phpstan-template T_ARGS of Args
  */
 interface Rule
 {

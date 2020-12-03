@@ -18,7 +18,7 @@ use function sprintf;
 use function str_replace;
 
 /**
- * @implements Rule<FloatArgs>
+ * @phpstan-implements Rule<FloatArgs>
  */
 final class FloatRule implements Rule
 {
