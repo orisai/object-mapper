@@ -2,7 +2,6 @@
 
 namespace Orisai\ObjectMapper\Rules;
 
-use Contributte\Utils\Merger;
 use Orisai\ObjectMapper\Context\FieldContext;
 use Orisai\ObjectMapper\Context\RuleArgsContext;
 use Orisai\ObjectMapper\Context\TypeContext;
@@ -11,6 +10,7 @@ use Orisai\ObjectMapper\Exception\ValueDoesNotMatch;
 use Orisai\ObjectMapper\Meta\Args;
 use Orisai\ObjectMapper\Meta\ArgsChecker;
 use Orisai\ObjectMapper\Types\ArrayType;
+use Orisai\Utils\Arrays\ArrayMerger;
 use function count;
 use function is_array;
 
@@ -142,7 +142,7 @@ final class ArrayOfRule extends MultiValueRule
 		}
 
 		if ($args->mergeDefaults && $context->hasDefaultValue()) {
-			$value = Merger::merge($value, $context->getDefaultValue());
+			$value = ArrayMerger::merge($context->getDefaultValue(), $value);
 		}
 
 		return $value;

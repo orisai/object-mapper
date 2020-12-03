@@ -2,10 +2,10 @@
 
 namespace Orisai\ObjectMapper\Meta;
 
-use Contributte\Utils\Merger;
 use Orisai\Exceptions\Logic\InvalidArgument;
 use Orisai\ObjectMapper\Rules\RuleManager;
 use Orisai\ObjectMapper\ValueObject;
+use Orisai\Utils\Arrays\ArrayMerger;
 use ReflectionClass;
 use function class_exists;
 use function sprintf;
@@ -81,7 +81,7 @@ class MetaLoader
 			//		- each source should be valid structurally (MetaResolver without resolveArgs calls)
 			//		- then be merged with previous source
 			//		- and validated that rule/modifier/callback/doc args in merged form are valid
-			$meta = Merger::merge($meta, $sourceMeta);
+			$meta = ArrayMerger::merge($sourceMeta, $meta);
 		}
 
 		$meta = $this->getResolver()->resolve($classRef, $meta);
