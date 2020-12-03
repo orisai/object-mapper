@@ -23,7 +23,7 @@ final class InstanceValue implements RuleAnnotation
 	}
 
 	/**
-	 * @phpstan-return class-string<Rule>
+	 * @return class-string<Rule>
 	 */
 	public function getType(): string
 	{

@@ -15,7 +15,7 @@ interface RuleAnnotation extends BaseAnnotation
 	public const ANNOTATION_TYPE = MetaSource::TYPE_RULE;
 
 	/**
-	 * @phpstan-return class-string<Rule>
+	 * @return class-string<Rule>
 	 */
 	public function getType(): string;
 

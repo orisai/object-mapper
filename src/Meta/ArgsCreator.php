@@ -14,7 +14,7 @@ trait ArgsCreator
 	}
 
 	/**
-	 * @phpstan-param class-string<Callback> $callbackType
+	 * @param class-string<Callback> $callbackType
 	 */
 	protected function createCallbackArgsInst(string $callbackType, CallbackMeta $meta): Args
 	{

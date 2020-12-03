@@ -7,7 +7,7 @@ use Orisai\ObjectMapper\Callbacks\Callback;
 final class CallbackMeta
 {
 
-	/** @phpstan-var class-string<Callback> */
+	/** @var class-string<Callback> */
 	private string $type;
 
 	/** @var array<mixed> */
@@ -30,7 +30,7 @@ final class CallbackMeta
 	}
 
 	/**
-	 * @phpstan-return class-string<Callback>
+	 * @return class-string<Callback>
 	 */
 	public function getType(): string
 	{

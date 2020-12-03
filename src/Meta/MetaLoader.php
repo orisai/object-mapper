@@ -13,10 +13,7 @@ use function sprintf;
 class MetaLoader
 {
 
-	/**
-	 * @var array<Meta>
-	 * @phpstan-var array<class-string<ValueObject>, Meta>
-	 */
+	/** @var array<class-string<ValueObject>, Meta> */
 	protected array $arrayCache;
 
 	protected MetaCache $cache;
@@ -43,7 +40,7 @@ class MetaLoader
 	}
 
 	/**
-	 * @phpstan-param class-string<ValueObject> $class
+	 * @param class-string<ValueObject> $class
 	 */
 	public function load(string $class): Meta
 	{

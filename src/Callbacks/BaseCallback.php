@@ -84,7 +84,7 @@ abstract class BaseCallback implements Callback
 	}
 
 	/**
-	 * @phpstan-param ReflectionClass<ValueObject> $class
+	 * @param ReflectionClass<ValueObject> $class
 	 */
 	private static function validateMethod(ReflectionClass $class, string $methodName): ReflectionMethod
 	{
@@ -124,7 +124,7 @@ abstract class BaseCallback implements Callback
 	}
 
 	/**
-	 * @phpstan-param ReflectionClass<ValueObject> $class
+	 * @param ReflectionClass<ValueObject> $class
 	 */
 	private static function validateMethodSignature(
 		ReflectionMethod $method,

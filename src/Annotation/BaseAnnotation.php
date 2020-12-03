@@ -11,7 +11,7 @@ interface BaseAnnotation
 {
 
 	/**
-	 * @phpstan-return class-string
+	 * @return class-string
 	 */
 	public function getType(): string;
 

@@ -15,7 +15,7 @@ interface DocumentationAnnotation extends BaseAnnotation
 	public const ANNOTATION_TYPE = MetaSource::TYPE_DOCS;
 
 	/**
-	 * @phpstan-return class-string<Doc>
+	 * @return class-string<Doc>
 	 */
 	public function getType(): string;
 

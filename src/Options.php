@@ -17,10 +17,7 @@ class Options
 	private bool $preFillDefaultValues = false;
 	private bool $fillRawValues = false;
 
-	/**
-	 * @var array<string, array<mixed>>
-	 * @phpstan-var array<class-string, array<mixed>>
-	 */
+	/** @var array<class-string, array<mixed>> */
 	private array $dynamicContexts = [];
 
 	/**
@@ -83,7 +80,7 @@ class Options
 
 	/**
 	 * @param array<mixed> $context
-	 * @phpstan-param class-string $class
+	 * @param class-string $class
 	 */
 	final public function setDynamicContext(string $class, array $context): void
 	{
@@ -91,7 +88,7 @@ class Options
 	}
 
 	/**
-	 * @phpstan-param class-string $class
+	 * @param class-string $class
 	 */
 	final public function removeDynamicContext(string $class): void
 	{
@@ -99,7 +96,7 @@ class Options
 	}
 
 	/**
-	 * @phpstan-param class-string $class
+	 * @param class-string $class
 	 */
 	final public function hasDynamicContext(string $class): bool
 	{
@@ -108,7 +105,7 @@ class Options
 
 	/**
 	 * @return array<mixed>
-	 * @phpstan-param class-string $class
+	 * @param class-string $class
 	 */
 	final public function getDynamicContext(string $class): array
 	{

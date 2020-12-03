@@ -12,7 +12,7 @@ interface ModifierAnnotation extends BaseAnnotation
 	public const ANNOTATION_TYPE = MetaSource::TYPE_MODIFIERS;
 
 	/**
-	 * @phpstan-return class-string<Modifier>
+	 * @return class-string<Modifier>
 	 */
 	public function getType(): string;
 

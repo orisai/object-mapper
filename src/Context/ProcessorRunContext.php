@@ -12,14 +12,14 @@ class ProcessorRunContext
 	private ObjectHolder $objectHolder;
 	private Meta $meta;
 
-	/** @phpstan-var class-string<ValueObject> */
+	/** @var class-string<ValueObject> */
 	private string $class;
 
 	/** @var array<string, SkippedPropertyContext> */
 	private array $skippedProperties = [];
 
 	/**
-	 * @phpstan-param class-string<ValueObject> $class
+	 * @param class-string<ValueObject> $class
 	 */
 	public function __construct(string $class, ObjectHolder $objectHolder, Meta $meta)
 	{
@@ -29,7 +29,7 @@ class ProcessorRunContext
 	}
 
 	/**
-	 * @phpstan-return class-string<ValueObject>
+	 * @return class-string<ValueObject>
 	 */
 	public function getClass(): string
 	{

@@ -51,7 +51,7 @@ final class NetteRuleManager implements RuleManager
 	}
 
 	/**
-	 * @phpstan-param class-string<Rule> $type
+	 * @param class-string<Rule> $type
 	 */
 	public function addLazyRule(string $type, string $serviceName): void
 	{

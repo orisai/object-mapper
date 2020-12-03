@@ -14,7 +14,7 @@ final class AllOf extends CompoundRulesAnnotation
 {
 
 	/**
-	 * @phpstan-return class-string<Rule>
+	 * @return class-string<Rule>
 	 */
 	public function getType(): string
 	{

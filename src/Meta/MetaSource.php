@@ -59,7 +59,7 @@ interface MetaSource
 	 * 		],
 	 * ]
 	 *
-	 * @phpstan-param ReflectionClass<ValueObject> $class
+	 * @param ReflectionClass<ValueObject> $class
 	 * @return array<mixed>
 	 */
 	public function load(ReflectionClass $class): array;

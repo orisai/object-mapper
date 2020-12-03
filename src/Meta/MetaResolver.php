@@ -47,7 +47,7 @@ final class MetaResolver
 	}
 
 	/**
-	 * @phpstan-param ReflectionClass<ValueObject> $class
+	 * @param ReflectionClass<ValueObject> $class
 	 * @param array<mixed> $meta
 	 * @return array<mixed>
 	 */
@@ -62,7 +62,7 @@ final class MetaResolver
 	/**
 	 * @param array<mixed> $meta
 	 * @return array<mixed>
-	 * @phpstan-param ReflectionClass<ValueObject> $class
+	 * @param ReflectionClass<ValueObject> $class
 	 */
 	private function resolveMeta(array $meta, ReflectionClass $class): array
 	{
@@ -97,7 +97,7 @@ final class MetaResolver
 	 * Meta which are same for both classes and properties
 	 *
 	 * @param array<mixed> $meta
-	 * @phpstan-param ReflectionClass<ValueObject> $class
+	 * @param ReflectionClass<ValueObject> $class
 	 * @return array<mixed>
 	 */
 	private function resolveReflectorMeta(array $meta, ReflectionClass $class, ?ReflectionProperty $property): array
@@ -139,7 +139,7 @@ final class MetaResolver
 
 	/**
 	 * @param array<mixed> $meta
-	 * @phpstan-param ReflectionClass<ValueObject> $class
+	 * @param ReflectionClass<ValueObject> $class
 	 * @return array<mixed>
 	 */
 	private function resolveClassMeta(array $meta, ReflectionClass $class): array
@@ -155,7 +155,7 @@ final class MetaResolver
 	/**
 	 * @param array<mixed> $meta
 	 * @return array<mixed>
-	 * @phpstan-param ReflectionClass<ValueObject> $class
+	 * @param ReflectionClass<ValueObject> $class
 	 */
 	private function resolvePropertiesMeta(array $meta, ReflectionClass $class): array
 	{
@@ -184,7 +184,7 @@ final class MetaResolver
 	/**
 	 * @param array<mixed> $meta
 	 * @return array<mixed>
-	 * @phpstan-param ReflectionClass<ValueObject> $class
+	 * @param ReflectionClass<ValueObject> $class
 	 */
 	private function resolvePropertyMeta(array $meta, ReflectionClass $class, ReflectionProperty $property): array
 	{
@@ -410,7 +410,7 @@ final class MetaResolver
 	/**
 	 * @param array<mixed> $meta
 	 * @return array<mixed>
-	 * @phpstan-param ReflectionClass<ValueObject> $class
+	 * @param ReflectionClass<ValueObject> $class
 	 */
 	private function resolveDefaultValues(array $meta, ReflectionClass $class): array
 	{
@@ -443,7 +443,7 @@ final class MetaResolver
 
 	/**
 	 * @param array<mixed> $properties
-	 * @phpstan-param ReflectionClass<ValueObject> $class
+	 * @param ReflectionClass<ValueObject> $class
 	 * @return array<int|string, string>
 	 */
 	private function resolveFieldsPropertiesMap(array $properties, ReflectionClass $class): array
@@ -505,7 +505,7 @@ final class MetaResolver
 	}
 
 	/**
-	 * @phpstan-param ReflectionClass<ValueObject> $class
+	 * @param ReflectionClass<ValueObject> $class
 	 */
 	private function createArgsContext(ReflectionClass $class, ?ReflectionProperty $property): ArgsContext
 	{
@@ -513,7 +513,7 @@ final class MetaResolver
 	}
 
 	/**
-	 * @phpstan-param ReflectionClass<ValueObject> $class
+	 * @param ReflectionClass<ValueObject> $class
 	 */
 	private function createRuleArgsContext(ReflectionClass $class, ReflectionProperty $property): RuleArgsContext
 	{

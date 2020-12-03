@@ -26,7 +26,7 @@ interface Processor
 	 * @param mixed $data
 	 * @return array<int|string, mixed>
 	 * @throws InvalidData
-	 * @phpstan-param class-string<ValueObject> $class
+	 * @param class-string<ValueObject> $class
 	 */
 	public function processWithoutInitialization($data, string $class, ?Options $options = null): array;
 

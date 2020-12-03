@@ -12,7 +12,7 @@ final class DateTimeArgs implements Args
 
 	public ?string $format = null;
 
-	/** @phpstan-var class-string<DateTimeImmutable|DateTime> */
+	/** @var class-string<DateTimeImmutable|DateTime> */
 	public string $type = DateTimeImmutable::class;
 
 	private function __construct()

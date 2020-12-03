@@ -44,7 +44,7 @@ final class ArrayDefaultValuesFormatterTest extends TestCase
 	}
 
 	/**
-	 * @phpstan-param class-string<ValueObject> $class
+	 * @param class-string<ValueObject> $class
 	 */
 	private function createType(string $class): StructureType
 	{

@@ -9,7 +9,7 @@ final class StructureType implements Type
 
 	private bool $isInvalid = false;
 
-	/** @phpstan-var class-string<ValueObject> */
+	/** @var class-string<ValueObject> */
 	private string $class;
 
 	/** @var array<Type> */
@@ -22,7 +22,7 @@ final class StructureType implements Type
 	private array $errors = [];
 
 	/**
-	 * @phpstan-param class-string<ValueObject> $class
+	 * @param class-string<ValueObject> $class
 	 */
 	public function __construct(string $class)
 	{
@@ -30,7 +30,7 @@ final class StructureType implements Type
 	}
 
 	/**
-	 * @phpstan-return class-string<ValueObject>
+	 * @return class-string<ValueObject>
 	 */
 	public function getClass(): string
 	{

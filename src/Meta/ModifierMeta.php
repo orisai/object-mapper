@@ -7,7 +7,7 @@ use Orisai\ObjectMapper\Modifiers\Modifier;
 final class ModifierMeta
 {
 
-	/** @phpstan-var class-string<Modifier> */
+	/** @var class-string<Modifier> */
 	private string $type;
 
 	/** @var array<mixed> */
@@ -18,7 +18,7 @@ final class ModifierMeta
 	}
 
 	/**
-	 * @phpstan-param class-string<Modifier> $type
+	 * @param class-string<Modifier> $type
 	 * @param array<mixed> $args
 	 */
 	public static function from(string $type, array $args): self
