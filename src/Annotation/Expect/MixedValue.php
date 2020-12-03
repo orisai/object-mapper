@@ -17,7 +17,7 @@ final class MixedValue implements RuleAnnotation
 	use AutoMappedAnnotation;
 
 	/**
-	 * @phpstan-return class-string<Rule>
+	 * @return class-string<Rule>
 	 */
 	public function getType(): string
 	{

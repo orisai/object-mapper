@@ -24,7 +24,7 @@ final class NetteMetaCache implements MetaCache
 	}
 
 	/**
-	 * @phpstan-param class-string<ValueObject> $class
+	 * @param class-string<ValueObject> $class
 	 * @return array<mixed>|null
 	 */
 	public function load(string $class): ?array
@@ -33,7 +33,7 @@ final class NetteMetaCache implements MetaCache
 	}
 
 	/**
-	 * @phpstan-param class-string<ValueObject> $class
+	 * @param class-string<ValueObject> $class
 	 * @param array<mixed> $meta
 	 */
 	public function save(string $class, array $meta): void
@@ -42,7 +42,7 @@ final class NetteMetaCache implements MetaCache
 	}
 
 	/**
-	 * @phpstan-param class-string<ValueObject> $class
+	 * @param class-string<ValueObject> $class
 	 * @return array<mixed>
 	 */
 	protected function getDependencies(string $class): array

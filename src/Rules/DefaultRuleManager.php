@@ -30,7 +30,7 @@ final class DefaultRuleManager implements RuleManager
 	}
 
 	/**
-	 * @phpstan-param class-string<Rule> $type
+	 * @param class-string<Rule> $type
 	 */
 	public function addRule(string $type, Rule $rule): void
 	{

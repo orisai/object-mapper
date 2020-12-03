@@ -11,11 +11,11 @@ final class ObjectHolder
 	private ObjectCreator $creator;
 	private ?ValueObject $instance;
 
-	/** @phpstan-var class-string<ValueObject> */
+	/** @var class-string<ValueObject> */
 	private string $class;
 
 	/**
-	 * @phpstan-param class-string<ValueObject> $class
+	 * @param class-string<ValueObject> $class
 	 */
 	public function __construct(ObjectCreator $creator, string $class, ?ValueObject $instance = null)
 	{
@@ -25,7 +25,7 @@ final class ObjectHolder
 	}
 
 	/**
-	 * @phpstan-return class-string<ValueObject>
+	 * @return class-string<ValueObject>
 	 */
 	public function getClass(): string
 	{

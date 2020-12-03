@@ -16,7 +16,7 @@ class ArgsContext
 	private MetaResolver $metaResolver;
 
 	/**
-	 * @phpstan-param ReflectionClass<ValueObject> $class
+	 * @param ReflectionClass<ValueObject> $class
 	 */
 	public function __construct(ReflectionClass $class, ?ReflectionProperty $property, MetaResolver $metaResolver)
 	{
@@ -26,7 +26,7 @@ class ArgsContext
 	}
 
 	/**
-	 * @phpstan-return ReflectionClass<ValueObject>
+	 * @return ReflectionClass<ValueObject>
 	 */
 	public function getClass(): ReflectionClass
 	{

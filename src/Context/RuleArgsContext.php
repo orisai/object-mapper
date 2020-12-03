@@ -17,7 +17,7 @@ class RuleArgsContext extends ArgsContext
 	private MetaLoader $metaLoader;
 
 	/**
-	 * @phpstan-param ReflectionClass<ValueObject> $class
+	 * @param ReflectionClass<ValueObject> $class
 	 */
 	public function __construct(
 		ReflectionClass $class,

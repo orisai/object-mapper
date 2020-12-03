@@ -21,7 +21,7 @@ class TypeContext
 	}
 
 	/**
-	 * @phpstan-param class-string<ValueObject> $class
+	 * @param class-string<ValueObject> $class
 	 */
 	public function getMeta(string $class): Meta
 	{

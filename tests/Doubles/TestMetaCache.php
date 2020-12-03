@@ -12,7 +12,7 @@ final class TestMetaCache implements MetaCache
 	private array $cache = [];
 
 	/**
-	 * @phpstan-param class-string<ValueObject> $class
+	 * @param class-string<ValueObject> $class
 	 * @return array<mixed>|null
 	 */
 	public function load(string $class): ?array
@@ -21,7 +21,7 @@ final class TestMetaCache implements MetaCache
 	}
 
 	/**
-	 * @phpstan-param class-string<ValueObject> $class
+	 * @param class-string<ValueObject> $class
 	 * @param array<mixed> $meta
 	 */
 	public function save(string $class, array $meta): void

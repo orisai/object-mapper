@@ -14,7 +14,7 @@ final class ListOf extends MultiValueRuleAnnotation
 {
 
 	/**
-	 * @phpstan-return class-string<Rule>
+	 * @return class-string<Rule>
 	 */
 	public function getType(): string
 	{

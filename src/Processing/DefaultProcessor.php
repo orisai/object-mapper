@@ -86,7 +86,7 @@ class DefaultProcessor implements Processor
 	 * @param mixed $data
 	 * @return array<int|string, mixed>
 	 * @throws InvalidData
-	 * @phpstan-param class-string<ValueObject> $class
+	 * @param class-string<ValueObject> $class
 	 */
 	public function processWithoutInitialization($data, string $class, ?Options $options = null): array
 	{
@@ -136,7 +136,7 @@ class DefaultProcessor implements Processor
 	}
 
 	/**
-	 * @phpstan-param class-string<ValueObject> $class
+	 * @param class-string<ValueObject> $class
 	 */
 	protected function createStructureType(string $class): StructureType
 	{
@@ -159,7 +159,7 @@ class DefaultProcessor implements Processor
 	}
 
 	/**
-	 * @phpstan-param class-string<ValueObject> $class
+	 * @param class-string<ValueObject> $class
 	 */
 	protected function createProcessorRunContext(string $class, ObjectHolder $holder): ProcessorRunContext
 	{
@@ -500,7 +500,7 @@ class DefaultProcessor implements Processor
 	 * @param array<mixed> $data
 	 * @return array<mixed>
 	 * @throws InvalidData
-	 * @phpstan-param class-string<Callback> $callbackType
+	 * @param class-string<Callback> $callbackType
 	 */
 	protected function handleClassCallbacks(
 		array $data,
@@ -536,7 +536,7 @@ class DefaultProcessor implements Processor
 	 * @return mixed
 	 * @throws ValueDoesNotMatch
 	 * @throws InvalidData
-	 * @phpstan-param class-string<Callback> $callbackType
+	 * @param class-string<Callback> $callbackType
 	 */
 	protected function applyCallbacks(
 		$data,
@@ -613,7 +613,7 @@ class DefaultProcessor implements Processor
 	}
 
 	/**
-	 * @phpstan-param class-string<ValueObject> $class
+	 * @param class-string<ValueObject> $class
 	 */
 	protected function createHolder(string $class, ?ValueObject $object = null): ObjectHolder
 	{

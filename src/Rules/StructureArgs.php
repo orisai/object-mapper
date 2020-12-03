@@ -11,7 +11,7 @@ use function sprintf;
 final class StructureArgs implements Args
 {
 
-	/** @phpstan-var class-string<ValueObject> */
+	/** @var class-string<ValueObject> */
 	public string $type;
 
 	private function __construct()
@@ -36,7 +36,7 @@ final class StructureArgs implements Args
 	}
 
 	/**
-	 * @phpstan-param class-string<ValueObject> $class
+	 * @param class-string<ValueObject> $class
 	 */
 	public static function fromClass(string $class): self
 	{

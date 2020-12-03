@@ -19,10 +19,7 @@ abstract class SharedMeta
 	/** @var array<DocMeta>|null */
 	private ?array $instDocs = null;
 
-	/**
-	 * @var array<string, array<mixed>>
-	 * @phpstan-var array<class-string<Modifier>, array<mixed>>
-	 */
+	/** @var array<class-string<Modifier>, array<mixed>> */
 	private array $modifiers;
 
 	/** @var array<ModifierMeta>|null */
@@ -101,7 +98,7 @@ abstract class SharedMeta
 	}
 
 	/**
-	 * @phpstan-param class-string<Modifier> $type
+	 * @param class-string<Modifier> $type
 	 */
 	public function getModifier(string $type): ?ModifierMeta
 	{

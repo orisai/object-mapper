@@ -10,7 +10,7 @@ use function is_string;
 final class RuleMeta
 {
 
-	/** @phpstan-var class-string<Rule> */
+	/** @var class-string<Rule> */
 	private string $type;
 
 	/** @var array<mixed> */
@@ -33,7 +33,7 @@ final class RuleMeta
 	}
 
 	/**
-	 * @phpstan-return class-string<Rule>
+	 * @return class-string<Rule>
 	 */
 	public function getType(): string
 	{
@@ -49,8 +49,7 @@ final class RuleMeta
 	}
 
 	/**
-	 * @param string|array<string> $type
-	 * @phpstan-param class-string<Rule>|array<class-string<Rule>> $type
+	 * @param class-string<Rule>|array<class-string<Rule>> $type
 	 */
 	public function mayContainRuleType($type): bool
 	{
@@ -58,8 +57,7 @@ final class RuleMeta
 	}
 
 	/**
-	 * @param array<string> $types
-	 * @phpstan-param array<class-string<Rule>> $types
+	 * @param array<class-string<Rule>> $types
 	 */
 	private function mayContainRuleTypeInternal(array $types, RuleMeta $ruleNode): bool
 	{

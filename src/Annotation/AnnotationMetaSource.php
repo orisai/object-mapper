@@ -38,7 +38,7 @@ final class AnnotationMetaSource implements MetaSource
 	}
 
 	/**
-	 * @phpstan-param ReflectionClass<ValueObject> $class
+	 * @param ReflectionClass<ValueObject> $class
 	 * @return array<mixed>
 	 */
 	private function loadClassMeta(ReflectionClass $class): array
@@ -68,7 +68,7 @@ final class AnnotationMetaSource implements MetaSource
 	}
 
 	/**
-	 * @phpstan-param ReflectionClass<ValueObject> $class
+	 * @param ReflectionClass<ValueObject> $class
 	 * @return array<mixed>
 	 */
 	private function loadPropertiesMeta(ReflectionClass $class): array

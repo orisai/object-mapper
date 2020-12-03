@@ -15,7 +15,7 @@ interface CallableAnnotation extends BaseAnnotation
 	public const ANNOTATION_TYPE = MetaSource::TYPE_CALLBACKS;
 
 	/**
-	 * @phpstan-return class-string<Callback>
+	 * @return class-string<Callback>
 	 */
 	public function getType(): string;
 
