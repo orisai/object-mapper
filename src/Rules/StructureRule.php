@@ -15,7 +15,7 @@ use Orisai\ObjectMapper\ValueObject;
 use function array_keys;
 
 /**
- * @implements Rule<StructureArgs>
+ * @phpstan-implements Rule<StructureArgs>
  */
 final class StructureRule implements Rule
 {

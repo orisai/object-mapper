@@ -24,7 +24,7 @@ use function is_a;
 use function sprintf;
 
 /**
- * @implements Callback<BaseCallbackArgs>
+ * @phpstan-implements Callback<BaseCallbackArgs>
  */
 abstract class BaseCallback implements Callback
 {

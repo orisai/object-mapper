@@ -29,7 +29,7 @@ class TypeContext
 	}
 
 	/**
-	 * @template T
+	 * @phpstan-template T
 	 * @phpstan-param class-string<T> $rule
 	 * @phpstan-return T
 	 */

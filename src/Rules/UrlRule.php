@@ -11,7 +11,7 @@ use function is_string;
 use function parse_url;
 
 /**
- * @implements Rule<EmptyArgs>
+ * @phpstan-implements Rule<EmptyArgs>
  */
 final class UrlRule implements Rule
 {

@@ -8,7 +8,7 @@ interface ObjectCreator
 {
 
 	/**
-	 * @template T of ValueObject
+	 * @phpstan-template T of ValueObject
 	 * @phpstan-param class-string<T> $class
 	 * @phpstan-return T
 	 */

@@ -24,7 +24,7 @@ use function is_string;
 use function sprintf;
 
 /**
- * @implements Rule<DateTimeArgs>
+ * @phpstan-implements Rule<DateTimeArgs>
  */
 final class DateTimeRule implements Rule
 {

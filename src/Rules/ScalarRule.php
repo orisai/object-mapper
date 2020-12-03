@@ -11,7 +11,7 @@ use Orisai\ObjectMapper\Types\SimpleValueType;
 use function is_scalar;
 
 /**
- * @implements Rule<EmptyArgs>
+ * @phpstan-implements Rule<EmptyArgs>
  */
 final class ScalarRule implements Rule
 {
