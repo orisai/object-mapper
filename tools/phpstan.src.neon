@@ -3,7 +3,7 @@ includes:
 
 parameters:
 	level: max
-	resultCachePath: %currentWorkingDirectory%/var/build-tools/PHPStan/resultCache.src.php
+	resultCachePath: %currentWorkingDirectory%/var/tools/PHPStan/resultCache.src.php
 
 	ignoreErrors:
 		# Creation of unknown subclass which may require values in constructor
