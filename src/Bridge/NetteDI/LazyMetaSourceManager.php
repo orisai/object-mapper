@@ -1,13 +1,13 @@
 <?php declare(strict_types = 1);
 
-namespace Orisai\ObjectMapper\Bridge\Nette\DI;
+namespace Orisai\ObjectMapper\Bridge\NetteDI;
 
 use Nette\DI\Container;
 use Orisai\ObjectMapper\Meta\MetaSource;
 use Orisai\ObjectMapper\Meta\MetaSourceManager;
 use function assert;
 
-class NetteMetaSourceManager implements MetaSourceManager
+class LazyMetaSourceManager implements MetaSourceManager
 {
 
 	protected Container $container;
