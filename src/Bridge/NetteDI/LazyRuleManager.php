@@ -1,6 +1,6 @@
 <?php declare(strict_types = 1);
 
-namespace Orisai\ObjectMapper\Bridge\Nette\DI;
+namespace Orisai\ObjectMapper\Bridge\NetteDI;
 
 use Nette\DI\Container;
 use Orisai\Exceptions\Logic\InvalidArgument;
@@ -10,7 +10,7 @@ use function assert;
 use function in_array;
 use function sprintf;
 
-final class NetteRuleManager implements RuleManager
+final class LazyRuleManager implements RuleManager
 {
 
 	private Container $container;

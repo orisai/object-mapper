@@ -1,6 +1,6 @@
 <?php declare(strict_types = 1);
 
-namespace Orisai\ObjectMapper\Bridge\Nette\Cache;
+namespace Orisai\ObjectMapper\Bridge\NetteCache;
 
 use Nette\Caching\Cache;
 use Nette\Caching\IStorage;
