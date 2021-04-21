@@ -7,6 +7,7 @@ use function array_keys;
 use function array_map;
 use function array_merge;
 use function array_unique;
+use function assert;
 use function class_implements;
 use function class_parents;
 use function class_uses;
@@ -18,6 +19,9 @@ use function serialize;
 final class ClassModificationsChecker
 {
 
+	/**
+	 * @param class-string $class
+	 */
 	public static function getLastModificationTimeHash(string $class): string
 	{
 		$modificationTimes = array_map(
@@ -29,6 +33,7 @@ final class ClassModificationsChecker
 	}
 
 	/**
+	 * @param class-string $class
 	 * @return array<string>
 	 */
 	public static function getSourceFiles(string $class): array
@@ -40,19 +45,27 @@ final class ClassModificationsChecker
 	}
 
 	/**
-	 * @return array<string>
+	 * @param class-string $class
+	 * @return array<class-string>
 	 */
 	private static function getAllTypes(string $class): array
 	{
+		$parents = class_parents($class);
+		assert($parents !== false);
+
+		$implements = class_implements($class);
+		assert($implements !== false);
+
 		return array_keys(
 			[$class => null]
-			+ class_parents($class)
-			+ class_implements($class)
+			+ $parents
+			+ $implements
 			+ self::getUsedTraits($class),
 		);
 	}
 
 	/**
+	 * @param class-string $class
 	 * @return array<string>
 	 */
 	private static function getUsedTraits(string $class): array
@@ -60,11 +73,15 @@ final class ClassModificationsChecker
 		$traits = [];
 
 		do {
-			$traits = array_merge(class_uses($class), $traits);
+			$uses = class_uses($class);
+			assert($uses !== false);
+			$traits = array_merge($uses, $traits);
 		} while ($class = get_parent_class($class));
 
 		foreach ($traits as $trait => $same) {
-			$traits = array_merge(class_uses($trait), $traits);
+			$uses = class_uses($trait);
+			assert($uses !== false);
+			$traits = array_merge($uses, $traits);
 		}
 
 		return array_unique($traits);
