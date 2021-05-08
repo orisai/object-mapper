@@ -87,7 +87,8 @@ final class CallbacksVO extends ValueObject
 		}
 
 		// Override default and required value to ensure data set before validation pass even if they were not sent by user
-		// Note: if we define 'before' callback for 'requiredValue' and value not available by moment of callback call then callback is not called at all
+		// Note: if we define 'before' callback for 'requiredValue' and value not available by moment of callback
+		// 		 call then callback is not called at all
 		$data['overridenDefaultValue'] = 'overriddenValue';
 		$data['requiredValue'] = 'overriddenValue';
 

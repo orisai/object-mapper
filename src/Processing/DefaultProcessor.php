@@ -377,7 +377,8 @@ class DefaultProcessor implements Processor
 
 			if ($requiredFields === $options::REQUIRE_NON_DEFAULT && $defaultMeta->hasValue()) {
 				// Add default value if defaults are not required and should be used
-				// If VOs are initialized then values are always prefilled - user can work with them in after callback and they are defined by VO anyway
+				// If VOs are initialized then values are always prefilled - user can work with them in after callback
+				//   and they are defined by VO anyway
 				if ($fillDefaultValues) {
 					$data[$missingField] = $defaultMeta->getValue();
 				}

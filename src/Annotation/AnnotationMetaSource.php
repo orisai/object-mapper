@@ -91,7 +91,8 @@ final class AnnotationMetaSource implements MetaSource
 						throw InvalidArgument::create()
 							->withMessage(sprintf(
 								sprintf(
-									'Mapped property %s::$%s has multiple expectation annotations, while only one is allowed. Combine multiple with %s or %s',
+									'Mapped property %s::$%s has multiple expectation annotations, while only one is allowed. ' .
+									'Combine multiple with %s or %s',
 									$class->getName(),
 									$property->getName(),
 									Expect\AnyOf::class,
