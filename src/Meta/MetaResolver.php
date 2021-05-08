@@ -423,7 +423,8 @@ final class MetaResolver
 
 			$isPropertyTyped = $class->getProperty($propertyName)->hasType();
 
-			// It's not possible to distinguish between null and uninitialized for properties without type, default null is used only if validation allows null
+			// It's not possible to distinguish between null and uninitialized for properties without type,
+			// default null is used only if validation allows null
 			if (
 				$propertyValue === null
 				&& !$isPropertyTyped

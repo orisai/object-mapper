@@ -723,7 +723,8 @@ arrayOfMixed: array<mixed>',
 
 		$this->expectException(InvalidState::class);
 		$this->expectExceptionMessage(
-			'Cannot initialize properties "whatever" of "Tests\Orisai\ObjectMapper\Doubles\SkippedPropertiesVO" instance because it has no skipped properties.',
+			'Cannot initialize properties "whatever" of "Tests\Orisai\ObjectMapper\Doubles\SkippedPropertiesVO" instance ' .
+			'because it has no skipped properties.',
 		);
 
 		$this->processor->processSkippedProperties(['whatever'], $vo);
@@ -738,7 +739,8 @@ arrayOfMixed: array<mixed>',
 
 		$this->expectException(InvalidState::class);
 		$this->expectExceptionMessage(
-			'Cannot initialize property "whatever" of "Tests\Orisai\ObjectMapper\Doubles\SkippedPropertiesVO" instance because it is already initialized or does not exist.',
+			'Cannot initialize property "whatever" of "Tests\Orisai\ObjectMapper\Doubles\SkippedPropertiesVO" instance ' .
+			'because it is already initialized or does not exist.',
 		);
 
 		$this->processor->processSkippedProperties(['whatever'], $vo);
