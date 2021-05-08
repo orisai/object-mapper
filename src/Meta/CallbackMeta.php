@@ -15,6 +15,7 @@ final class CallbackMeta
 
 	private function __construct()
 	{
+		// Static constructor is required
 	}
 
 	/**

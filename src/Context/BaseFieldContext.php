@@ -11,6 +11,7 @@ abstract class BaseFieldContext extends TypeContext
 {
 
 	private Processor $processor;
+
 	private Options $options;
 
 	private bool $initializeObjects;

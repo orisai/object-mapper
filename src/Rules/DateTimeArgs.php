@@ -17,6 +17,7 @@ final class DateTimeArgs implements Args
 
 	private function __construct()
 	{
+		// Static constructor is required
 	}
 
 	/**

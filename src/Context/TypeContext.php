@@ -12,6 +12,7 @@ class TypeContext
 {
 
 	private MetaLoader $metaLoader;
+
 	private RuleManager $ruleManager;
 
 	public function __construct(MetaLoader $metaLoader, RuleManager $ruleManager)

@@ -15,7 +15,9 @@ class ArrayDocsFormatter implements StructureFormatter
 {
 
 	private MetaLoader $metaLoader;
+
 	private TypeFormatter $typeFormatter;
+
 	private ArrayDefaultValuesFormatter $defaultsFormatter;
 
 	public function __construct(

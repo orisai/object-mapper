@@ -698,7 +698,7 @@ arrayOfMixed: array<mixed>',
 			$this->processor->processSkippedProperties([
 				'requiredSkipped',
 			], $vo);
-		}catch (InvalidData $exception) {
+		} catch (InvalidData $exception) {
 			// Checked bellow
 		}
 

@@ -30,12 +30,14 @@ abstract class BaseCallback implements Callback
 {
 
 	// User defined
-	public const METHOD = 'method';
-	public const RUNTIME = 'runtime';
+	public const
+		METHOD = 'method',
+		RUNTIME = 'runtime';
 
 	// Internal
-	public const METHOD_IS_STATIC = 'method_is_static';
-	public const METHOD_RETURNS_VALUE = 'method_returns_value';
+	public const
+		METHOD_IS_STATIC = 'method_is_static',
+		METHOD_RETURNS_VALUE = 'method_returns_value';
 
 	private const PROCESSING_RUNTIMES = [
 		CallbackRuntime::ALWAYS,
@@ -49,6 +51,7 @@ abstract class BaseCallback implements Callback
 
 	private function __construct()
 	{
+		// Static constructor is required
 	}
 
 	/**

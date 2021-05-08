@@ -8,13 +8,16 @@ use function sprintf;
 class Options
 {
 
-	public const REQUIRE_NON_DEFAULT = 1;
-	public const REQUIRE_ALL = 2;
-	public const REQUIRE_NONE = 3;
+	public const
+		REQUIRE_NON_DEFAULT = 1,
+		REQUIRE_ALL = 2,
+		REQUIRE_NONE = 3;
 
 	/** @phpstan-var self::REQUIRE_* */
 	private int $requiredFields = self::REQUIRE_NON_DEFAULT;
+
 	private bool $preFillDefaultValues = false;
+
 	private bool $fillRawValues = false;
 
 	/** @var array<class-string, array<mixed>> */

@@ -8,8 +8,9 @@ use Orisai\ObjectMapper\Meta\ArgsChecker;
 final class ExampleDoc implements Doc
 {
 
-	public const CONTENT = 'content';
-	public const DESCRIPTION = 'description';
+	public const
+		CONTENT = 'content',
+		DESCRIPTION = 'description';
 
 	/**
 	 * @param array<mixed> $args

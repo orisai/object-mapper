@@ -12,6 +12,7 @@ final class BoolArgs implements Args
 
 	private function __construct()
 	{
+		// Static constructor is required
 	}
 
 	/**

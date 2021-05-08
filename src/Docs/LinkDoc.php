@@ -8,8 +8,9 @@ use Orisai\ObjectMapper\Meta\ArgsChecker;
 final class LinkDoc implements Doc
 {
 
-	public const URL = 'url';
-	public const DESCRIPTION = 'description';
+	public const
+		URL = 'url',
+		DESCRIPTION = 'description';
 
 	/**
 	 * @param array<mixed> $args

@@ -23,10 +23,11 @@ use function str_replace;
 final class FloatRule implements Rule
 {
 
-	public const MIN = 'min';
-	public const MAX = 'max';
-	public const UNSIGNED = 'unsigned';
-	public const CAST_NUMERIC_STRING = 'castNumericString';
+	public const
+		MIN = 'min',
+		MAX = 'max',
+		UNSIGNED = 'unsigned',
+		CAST_NUMERIC_STRING = 'castNumericString';
 
 	/**
 	 * @param array<mixed> $args

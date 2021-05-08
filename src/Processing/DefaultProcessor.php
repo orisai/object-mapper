@@ -50,8 +50,11 @@ class DefaultProcessor implements Processor
 	use ArgsCreator;
 
 	protected MetaLoader $metaLoader;
+
 	protected RuleManager $ruleManager;
+
 	protected ObjectCreator $creator;
+
 	protected ?TypeContext $typeContext = null;
 
 	public function __construct(MetaLoader $metaLoader, RuleManager $ruleManager, ObjectCreator $creator)

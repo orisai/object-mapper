@@ -12,12 +12,16 @@ class MultiValueArgs implements Args
 {
 
 	public RuleMeta $itemRuleMeta;
+
 	public ?int $minItems = null;
+
 	public ?int $maxItems = null;
+
 	public bool $mergeDefaults = false;
 
-	final private function __construct()
+	final protected function __construct()
 	{
+		// Static constructor is required
 	}
 
 	/**

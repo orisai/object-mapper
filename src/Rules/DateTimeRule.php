@@ -29,10 +29,12 @@ use function sprintf;
 final class DateTimeRule implements Rule
 {
 
-	public const FORMAT = 'format';
-	public const TYPE = 'type';
+	public const
+		FORMAT = 'format',
+		TYPE = 'type';
 
 	public const FORMAT_TIMESTAMP = 'timestamp';
+
 	public const FORMATS_DATETIME = [
 		DateTimeInterface::ATOM,
 		DateTimeInterface::COOKIE,

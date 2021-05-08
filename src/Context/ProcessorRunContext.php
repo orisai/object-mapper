@@ -10,6 +10,7 @@ class ProcessorRunContext
 {
 
 	private ObjectHolder $objectHolder;
+
 	private Meta $meta;
 
 	/** @var class-string<ValueObject> */

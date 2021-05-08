@@ -14,6 +14,7 @@ class RuleArgsContext extends ArgsContext
 {
 
 	private RuleManager $ruleManager;
+
 	private MetaLoader $metaLoader;
 
 	/**

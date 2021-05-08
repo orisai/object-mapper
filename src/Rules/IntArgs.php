@@ -9,12 +9,16 @@ final class IntArgs implements Args
 {
 
 	public ?int $min = null;
+
 	public ?int $max = null;
+
 	public bool $unsigned = true;
+
 	public bool $castNumericString = false;
 
 	private function __construct()
 	{
+		// Static constructor is required
 	}
 
 	/**
