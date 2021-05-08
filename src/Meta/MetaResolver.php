@@ -38,6 +38,7 @@ final class MetaResolver
 	public const FIELDS_PROPERTIES_MAP = 'fields_properties_map';
 
 	private MetaLoader $loader;
+
 	private RuleManager $ruleManager;
 
 	public function __construct(MetaLoader $loader, RuleManager $ruleManager)

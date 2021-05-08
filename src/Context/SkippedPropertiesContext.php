@@ -9,6 +9,7 @@ class SkippedPropertiesContext
 {
 
 	private StructureType $type;
+
 	private Options $options;
 
 	/** @var array<string, SkippedPropertyContext> */

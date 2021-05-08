@@ -15,6 +15,7 @@ final class DefaultValueMeta
 
 	private function __construct()
 	{
+		// Static constructor is required
 	}
 
 	/**

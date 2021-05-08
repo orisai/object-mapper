@@ -12,7 +12,9 @@ class ArgsContext
 
 	/** @var ReflectionClass<ValueObject> */
 	private ReflectionClass $class;
+
 	private ?ReflectionProperty $property;
+
 	private MetaResolver $metaResolver;
 
 	/**

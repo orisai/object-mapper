@@ -6,6 +6,7 @@ abstract class MultiValueType extends ParametrizedType
 {
 
 	protected Type $itemType;
+
 	protected bool $isInvalid = false;
 
 	public function __construct(Type $itemType)

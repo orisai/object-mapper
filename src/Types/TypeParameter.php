@@ -15,6 +15,7 @@ final class TypeParameter
 	private $value;
 
 	private bool $hasValue;
+
 	private bool $isInvalid = false;
 
 	/**

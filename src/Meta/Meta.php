@@ -24,6 +24,7 @@ final class Meta
 
 	private function __construct()
 	{
+		// Static constructor is required
 	}
 
 	/**

@@ -15,6 +15,7 @@ final class ModifierMeta
 
 	private function __construct()
 	{
+		// Static constructor is required
 	}
 
 	/**

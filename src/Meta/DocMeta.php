@@ -12,6 +12,7 @@ final class DocMeta
 
 	private function __construct()
 	{
+		// Static constructor is required
 	}
 
 	/**

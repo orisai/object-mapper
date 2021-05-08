@@ -25,8 +25,9 @@ abstract class SharedMeta
 	/** @var array<ModifierMeta>|null */
 	private ?array $instModifiers = null;
 
-	final private function __construct()
+	final protected function __construct()
 	{
+		// Static constructor is required
 	}
 
 	/**

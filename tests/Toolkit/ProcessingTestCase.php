@@ -18,8 +18,11 @@ abstract class ProcessingTestCase extends TestCase
 {
 
 	protected MetaLoader $metaLoader;
+
 	protected MetaResolver $metaResolver;
+
 	protected DefaultRuleManager $ruleManager;
+
 	protected Processor $processor;
 
 	protected function setUp(): void

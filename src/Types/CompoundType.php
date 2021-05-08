@@ -12,12 +12,15 @@ use function sprintf;
 final class CompoundType implements Type
 {
 
-	public const OPERATOR_AND = '&';
-	public const OPERATOR_OR = '|';
+	public const
+		OPERATOR_AND = '&',
+		OPERATOR_OR = '|';
+
 	private const OPERATORS = [
 		self::OPERATOR_AND,
 		self::OPERATOR_OR,
 	];
+
 	private const OPERATORS_HUMAN = [
 		self::OPERATOR_AND => 'and',
 		self::OPERATOR_OR => 'or',

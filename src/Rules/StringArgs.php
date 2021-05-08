@@ -9,12 +9,16 @@ final class StringArgs implements Args
 {
 
 	public ?string $pattern = null;
+
 	public bool $notEmpty = false;
+
 	public ?int $minLength = null;
+
 	public ?int $maxLength = null;
 
 	private function __construct()
 	{
+		// Static constructor is required
 	}
 
 	/**

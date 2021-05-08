@@ -18,6 +18,7 @@ final class RuleMeta
 
 	private function __construct()
 	{
+		// Static constructor is required
 	}
 
 	/**

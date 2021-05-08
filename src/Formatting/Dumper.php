@@ -25,11 +25,12 @@ use const PHP_EOL;
 final class Dumper
 {
 
-	public const OPT_INCLUDE_APOSTROPHE = 'include_apostrophe';
-	public const OPT_MAX_DEPTH = 'max_depth';
-	public const OPT_WRAP_LENGTH = 'wrap_length';
-	public const OPT_LEVEL = 'level';
-	public const OPT_INDENT_CHAR = 'indent_char';
+	public const
+		OPT_INCLUDE_APOSTROPHE = 'include_apostrophe',
+		OPT_MAX_DEPTH = 'max_depth',
+		OPT_WRAP_LENGTH = 'wrap_length',
+		OPT_LEVEL = 'level',
+		OPT_INDENT_CHAR = 'indent_char';
 
 	private const INDENT_LENGTH = 4;
 

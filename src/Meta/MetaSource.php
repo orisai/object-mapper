@@ -8,17 +8,20 @@ use ReflectionClass;
 interface MetaSource
 {
 
-	public const LOCATION_CLASS = 'class';
-	public const LOCATION_PROPERTIES = 'properties';
+	public const
+		LOCATION_CLASS = 'class',
+		LOCATION_PROPERTIES = 'properties';
 
-	public const TYPE_CALLBACKS = 'callbacks';
-	public const TYPE_DEFAULT_VALUE = 'default';
-	public const TYPE_DOCS = 'docs';
-	public const TYPE_MODIFIERS = 'modifiers';
-	public const TYPE_RULE = 'rule';
+	public const
+		TYPE_CALLBACKS = 'callbacks',
+		TYPE_DEFAULT_VALUE = 'default',
+		TYPE_DOCS = 'docs',
+		TYPE_MODIFIERS = 'modifiers',
+		TYPE_RULE = 'rule';
 
-	public const OPTION_TYPE = 'type';
-	public const OPTION_ARGS = 'args';
+	public const
+		OPTION_TYPE = 'type',
+		OPTION_ARGS = 'args';
 
 	/**
 	 * Returns metadata in following format:

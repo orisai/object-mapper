@@ -9,6 +9,7 @@ final class ObjectHolder
 {
 
 	private ObjectCreator $creator;
+
 	private ?ValueObject $instance;
 
 	/** @var class-string<ValueObject> */

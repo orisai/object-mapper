@@ -19,10 +19,11 @@ use function preg_match;
 final class StringRule implements Rule
 {
 
-	public const PATTERN = 'pattern';
-	public const MIN_LENGTH = 'minLength';
-	public const MAX_LENGTH = 'maxLength';
-	public const NOT_EMPTY = 'notEmpty';
+	public const
+		PATTERN = 'pattern',
+		MIN_LENGTH = 'minLength',
+		MAX_LENGTH = 'maxLength',
+		NOT_EMPTY = 'notEmpty';
 
 	/**
 	 * @param array<mixed> $args

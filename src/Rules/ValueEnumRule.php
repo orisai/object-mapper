@@ -23,8 +23,9 @@ use function sprintf;
 final class ValueEnumRule implements Rule
 {
 
-	public const VALUES = 'values';
-	public const USE_KEYS = 'use_keys';
+	public const
+		VALUES = 'values',
+		USE_KEYS = 'use_keys';
 
 	/**
 	 * @param array<mixed> $args

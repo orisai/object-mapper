@@ -13,10 +13,12 @@ class FieldContext extends BaseFieldContext
 {
 
 	private Type $type;
+
 	private DefaultValueMeta $default;
 
 	/** @var int|string */
 	private $fieldName;
+
 	private string $propertyName;
 
 	/**

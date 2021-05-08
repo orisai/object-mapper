@@ -9,12 +9,16 @@ final class FloatArgs implements Args
 {
 
 	public ?float $min = null;
+
 	public ?float $max = null;
+
 	public bool $unsigned = true;
+
 	public bool $castNumericString = false;
 
 	private function __construct()
 	{
+		// Static constructor is required
 	}
 
 	/**
