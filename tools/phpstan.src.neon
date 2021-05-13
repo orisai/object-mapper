@@ -56,6 +56,12 @@ parameters:
 		- message: '#Array \(array\<class-string\<Orisai\\ObjectMapper\\Rules\\Rule\>, Orisai\\ObjectMapper\\Rules\\Rule\>\) does not accept key class-string\<T\>\.#'
 		  path: %currentWorkingDirectory%/src
 		  count: 3
+		# Return typehint cannot contain just null
+		- message: '#^Method (.+)\:\:getMainProperty\(\) never returns string so it can be removed from the return typehint\.$#'
+		  path: %currentWorkingDirectory%/src/Annotation/AutoMappedAnnotation.php
+		# It's checked in context of classes using this trait - only in some is this true, condition is necessary
+		- message: '#^Strict comparison using !== between string and null will always evaluate to true\.$#'
+		  path: %currentWorkingDirectory%/src/Annotation/AutoMappedAnnotation.php
 		# Generics
 		- message: '#Call to function assert\(\) with true will always evaluate to true\.#'
 		  path: %currentWorkingDirectory%/src/Creation/DefaultObjectCreator.php
