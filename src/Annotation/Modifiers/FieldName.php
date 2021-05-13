@@ -15,7 +15,7 @@ final class FieldName implements ModifierAnnotation
 
 	use AutoMappedAnnotation;
 
-	protected function getMainProperty(): ?string
+	protected function getMainProperty(): string
 	{
 		return 'name';
 	}

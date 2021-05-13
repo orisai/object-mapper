@@ -4,6 +4,9 @@ namespace Orisai\ObjectMapper\Annotation;
 
 use function array_key_exists;
 
+/**
+ * @mixin BaseAnnotation
+ */
 trait AutoMappedAnnotation
 {
 

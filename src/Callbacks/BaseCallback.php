@@ -190,10 +190,10 @@ abstract class BaseCallback implements Callback
 						$type ?? 'none',
 					));
 			}
-		} else { // Property method
+		} else {
+			// Property method
 			// beforeField(<nothing>|mixed $data, FieldContext $context): <anything>
 			// afterField(<anything> $data, FieldContext $context): <anything>
-
 			if (
 				static::class === BeforeCallback::class
 				&& $paramData !== null
@@ -204,7 +204,7 @@ abstract class BaseCallback implements Callback
 						'First parameter of before field callback method %s::%s should have none or "mixed" type instead of %s',
 						$class->getName(),
 						$method->getName(),
-						$type ?? 'none',
+						$type,
 					));
 			}
 

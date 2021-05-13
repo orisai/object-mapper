@@ -17,7 +17,7 @@ final class InstanceValue implements RuleAnnotation
 
 	use AutoMappedAnnotation;
 
-	protected function getMainProperty(): ?string
+	protected function getMainProperty(): string
 	{
 		return 'type';
 	}

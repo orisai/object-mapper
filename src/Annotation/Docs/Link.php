@@ -17,7 +17,7 @@ final class Link implements DocumentationAnnotation
 
 	use AutoMappedAnnotation;
 
-	protected function getMainProperty(): ?string
+	protected function getMainProperty(): string
 	{
 		return 'url';
 	}
