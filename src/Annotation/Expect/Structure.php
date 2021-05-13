@@ -17,7 +17,7 @@ final class Structure implements RuleAnnotation
 
 	use AutoMappedAnnotation;
 
-	protected function getMainProperty(): ?string
+	protected function getMainProperty(): string
 	{
 		return 'type';
 	}

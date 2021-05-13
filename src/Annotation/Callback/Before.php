@@ -17,7 +17,7 @@ final class Before implements CallableAnnotation
 
 	use AutoMappedAnnotation;
 
-	protected function getMainProperty(): ?string
+	protected function getMainProperty(): string
 	{
 		return 'method';
 	}

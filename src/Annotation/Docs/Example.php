@@ -20,7 +20,7 @@ final class Example implements DocumentationAnnotation
 
 	use AutoMappedAnnotation;
 
-	protected function getMainProperty(): ?string
+	protected function getMainProperty(): string
 	{
 		return 'content';
 	}

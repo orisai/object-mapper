@@ -18,7 +18,7 @@ abstract class CompoundRulesAnnotation implements RuleAnnotation
 
 	use AutoMappedAnnotation;
 
-	protected function getMainProperty(): ?string
+	protected function getMainProperty(): string
 	{
 		return 'rules';
 	}

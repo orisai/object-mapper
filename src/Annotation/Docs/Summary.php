@@ -19,7 +19,7 @@ final class Summary implements DocumentationAnnotation
 
 	use AutoMappedAnnotation;
 
-	protected function getMainProperty(): ?string
+	protected function getMainProperty(): string
 	{
 		return 'message';
 	}

@@ -18,7 +18,7 @@ final class ValueEnum implements RuleAnnotation
 
 	use AutoMappedAnnotation;
 
-	protected function getMainProperty(): ?string
+	protected function getMainProperty(): string
 	{
 		return 'values';
 	}
