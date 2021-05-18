@@ -5,6 +5,7 @@ parameters:
 	level: 3
 	resultCachePath: %currentWorkingDirectory%/var/tools/PHPStan/resultCache.tests.php
 
-	exceptionRules:
-		methodWhitelist:
-			PHPUnit\Framework\TestCase: '#^(test|(setup|setupbeforeclass|teardown|teardownafterclass)$)#i'
+	ignoreErrors:
+		# Tests are expected to throw exceptions
+		- message: "#^Method (.+) throws checked exception (.+) but it's missing from the PHPDoc @throws tag\\.$#"
+		  path: %currentWorkingDirectory%/tests/Unit
