@@ -7,9 +7,6 @@ parameters:
 
 	ignoreErrors:
 		# Creation of unknown subclass which may require values in constructor
-		- message: '#^ArgumentCountError is never thrown in the corresponding try block$#'
-		  path: %currentWorkingDirectory%/src/Creation/DefaultObjectCreator.php
-		  count: 1
 		- message: '#^Dead catch - ArgumentCountError is never thrown in the try block\.$#'
 		  path: %currentWorkingDirectory%/src/Creation/DefaultObjectCreator.php
 		  count: 1
@@ -17,9 +14,6 @@ parameters:
 		- message: '#^Variable property access on Orisai\\ObjectMapper\\ValueObject\.$#'
 		  path: %currentWorkingDirectory%/src/Processing/DefaultProcessor.php
 		  count: 3
-		- message: '#^Unused \@throws Orisai\\ObjectMapper\\Exception\\(InvalidData|ValueDoesNotMatch) annotation$#'
-		  path: %currentWorkingDirectory%/src/Processing/DefaultProcessor.php
-		  count: 2
 		# Callback call
 		- message: '#^Variable static method call on class-string\<Orisai\\ObjectMapper\\ValueObject\>\.$#'
 		  path: %currentWorkingDirectory%/src/Callbacks/BaseCallback.php
@@ -44,10 +38,6 @@ parameters:
 		# PHPStan thinks that class_implements returns array<string> instead of array<class-string>
 		- message: '#^Method (.+)ClassModificationsChecker\:\:getAllTypes\(\) should return array\<class\-string\> but returns array\<int, \(int\|string\)\>\.$#'
 		  path: %currentWorkingDirectory%/src/Meta/ClassModificationsChecker.php
-		  count: 1
-		# It is thrown by new DateTimeImmutable, bug introduced by class-string<DateTimeImmutable|DateTime>
-		- message: '#^Throwable is never thrown in the corresponding try block$#'
-		  path: %currentWorkingDirectory%/src/Rules/DateTimeRule.php
 		  count: 1
 		# Not sure, possible bug
 		- message: '#PHPDoc tag \@return with type mixed is not subtype of native type Orisai\\ObjectMapper\\Rules\\Rule\.#'
