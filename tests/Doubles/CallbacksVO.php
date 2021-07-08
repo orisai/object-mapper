@@ -29,8 +29,8 @@ final class CallbacksVO extends ValueObject
 	/**
 	 * @var array<string, array<mixed>>
 	 * @ArrayOf(
-	 *     keyRule=@StringValue(),
-	 *     itemRule=@ArrayOf(
+	 *     key=@StringValue(),
+	 *     item=@ArrayOf(
 	 *         @MixedValue(),
 	 *     ),
 	 * )
