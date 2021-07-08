@@ -44,14 +44,13 @@ final class DefaultsVO extends ValueObject
 	public $untypedNull;
 
 	/**
-	 * phpcs:disable Squiz.Arrays.ArrayDeclaration.KeySpecified
 	 * @var array<string>
 	 * @ArrayOf(
 	 *     @MixedValue()
 	 * )
 	 */
 	public array $arrayOfMixed = [
-		'foo',
+		0 => 'foo',
 		'bar' => 'baz',
 	];
 
