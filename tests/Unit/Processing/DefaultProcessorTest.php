@@ -250,10 +250,9 @@ stringg: Field is unknown, did you mean `string`?',
 		self::assertNull($vo->nullableString);
 		self::assertNull($vo->untypedNullableString);
 		self::assertNull($vo->untypedNull);
-		// phpcs:disable Squiz.Arrays.ArrayDeclaration.KeySpecified
 		self::assertSame(
 			[
-				'foo',
+				0 => 'foo',
 				'bar' => 'baz',
 			],
 			$vo->arrayOfMixed,
@@ -274,13 +273,12 @@ stringg: Field is unknown, did you mean `string`?',
 				'untypedNullableString' => null,
 				'untypedNull' => null,
 				'arrayOfMixed' => [
-					'foo',
+					0 => 'foo',
 					'bar' => 'baz',
 				],
 			],
 			$processed,
 		);
-		// phpcs:enable
 	}
 
 	public function testNoInitialization(): void
@@ -375,7 +373,6 @@ stringg: Field is unknown, did you mean `string`?',
 		$processedData = $this->processor->processWithoutInitialization($data, CallbacksVO::class, $options);
 		$vo = $this->processor->process($data, CallbacksVO::class, $options);
 
-		// phpcs:disable Squiz.Arrays.ArrayDeclaration.KeySpecified
 		self::assertSame(
 			[
 				'array' => [
@@ -391,7 +388,7 @@ stringg: Field is unknown, did you mean `string`?',
 					'untypedNullableString' => null,
 					'untypedNull' => null,
 					'arrayOfMixed' => [
-						'foo',
+						0 => 'foo',
 						'bar' => 'baz',
 					],
 				],
@@ -401,7 +398,6 @@ stringg: Field is unknown, did you mean `string`?',
 			],
 			$processedData,
 		);
-		// phpcs:enable
 
 		self::assertSame(
 			[

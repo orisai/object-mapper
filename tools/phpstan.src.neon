@@ -59,9 +59,6 @@ parameters:
 		- message: '#Instanceof between T of Orisai\\ObjectMapper\\ValueObject and Orisai\\ObjectMapper\\ValueObject will always evaluate to true\.#'
 		  path: %currentWorkingDirectory%/src/Creation/DefaultObjectCreator.php
 		  count: 1
-		- message: '#^Parameter \#1 \$argument of class ReflectionClass constructor expects class-string\<T of object\>\|T of object, string given\.$#'
-		  path: %currentWorkingDirectory%/src/Meta/ClassModificationsChecker.php
-		  count: 2
 		# Generics - don't know how to specify type here (and it's also imho not needed)
 		- '#^Property (.+) with generic interface Orisai\\ObjectMapper\\Rules\\Rule does not specify its types\: T_ARGS$#'
 		- '#^Property (.+)CallbackMeta(.+) with generic interface Orisai\\ObjectMapper\\Callbacks\\Callback does not specify its types\: T_ARGS$#'
