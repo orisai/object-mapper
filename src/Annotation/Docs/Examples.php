@@ -2,52 +2,37 @@
 
 namespace Orisai\ObjectMapper\Annotation\Docs;
 
+use Doctrine\Common\Annotations\Annotation\NamedArgumentConstructor;
 use Orisai\ObjectMapper\Annotation\AnnotationMetaExtractor;
-use Orisai\ObjectMapper\Annotation\AutoMappedAnnotation;
-use Orisai\ObjectMapper\Annotation\BaseAnnotation;
 use Orisai\ObjectMapper\Docs\ExamplesDoc;
 use Orisai\ObjectMapper\Exception\InvalidAnnotation;
-use function is_array;
 use function sprintf;
 
 /**
  * @Annotation
+ * @NamedArgumentConstructor()
  * @Target({"CLASS", "PROPERTY"})
- * @property-write array<Example> $examples
  */
 final class Examples implements DocumentationAnnotation
 {
 
-	use AutoMappedAnnotation;
+	/** @var array<mixed> */
+	private array $examples;
 
-	protected function getMainProperty(): string
+	/**
+	 * @param array<mixed> $examples
+	 */
+	public function __construct(array $examples)
 	{
-		return 'examples';
+		$this->examples = $this->resolveExamples($examples);
 	}
 
 	/**
-	 * @param array<mixed> $args
+	 * @param array<mixed> $examples
 	 * @return array<mixed>
 	 */
-	protected function resolveArgs(array $args): array
+	private function resolveExamples(array $examples): array
 	{
-		$examples = $args['examples'] ?? null;
-
-		if ($examples instanceof BaseAnnotation) {
-			$examples = [
-				$examples,
-			];
-		}
-
-		if (!is_array($examples)) {
-			throw InvalidAnnotation::create()
-				->withMessage(sprintf(
-					'%s() should contain array of %s',
-					self::class,
-					Example::class,
-				));
-		}
-
 		foreach ($examples as $key => $example) {
 			if (!$example instanceof Example) {
 				throw InvalidAnnotation::create()->withMessage(sprintf(
@@ -60,14 +45,22 @@ final class Examples implements DocumentationAnnotation
 			$examples[$key] = AnnotationMetaExtractor::extract($example);
 		}
 
-		$args['examples'] = $examples;
-
-		return $args;
+		return $examples;
 	}
 
 	public function getType(): string
 	{
 		return ExamplesDoc::class;
+	}
+
+	/**
+	 * @return array<mixed>
+	 */
+	public function getArgs(): array
+	{
+		return [
+			'examples' => $this->examples,
+		];
 	}
 
 }

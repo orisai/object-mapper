@@ -2,44 +2,39 @@
 
 namespace Orisai\ObjectMapper\Annotation\Docs;
 
+use Doctrine\Common\Annotations\Annotation\NamedArgumentConstructor;
 use Doctrine\Common\Annotations\Annotation\Target;
 use Orisai\ObjectMapper\Annotation\AnnotationFilter;
-use Orisai\ObjectMapper\Annotation\AutoMappedAnnotation;
 use Orisai\ObjectMapper\Docs\SummaryDoc;
-use function array_key_exists;
-use function is_string;
 
 /**
  * @Annotation
+ * @NamedArgumentConstructor()
  * @Target({"CLASS", "PROPERTY"})
- * @property-write string $message
  */
 final class Summary implements DocumentationAnnotation
 {
 
-	use AutoMappedAnnotation;
+	private string $message;
 
-	protected function getMainProperty(): string
+	public function __construct(string $message)
 	{
-		return 'message';
-	}
-
-	/**
-	 * @param array<mixed> $args
-	 * @return array<mixed>
-	 */
-	protected function resolveArgs(array $args): array
-	{
-		if (array_key_exists('message', $args) && is_string($args['message'])) {
-			$args['message'] = AnnotationFilter::filterMultilineDocblock($args['message']);
-		}
-
-		return $args;
+		$this->message = AnnotationFilter::filterMultilineDocblock($message);
 	}
 
 	public function getType(): string
 	{
 		return SummaryDoc::class;
+	}
+
+	/**
+	 * @return array<mixed>
+	 */
+	public function getArgs(): array
+	{
+		return [
+			'message' => $this->message,
+		];
 	}
 
 }

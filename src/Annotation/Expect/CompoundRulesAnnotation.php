@@ -3,41 +3,31 @@
 namespace Orisai\ObjectMapper\Annotation\Expect;
 
 use Orisai\ObjectMapper\Annotation\AnnotationMetaExtractor;
-use Orisai\ObjectMapper\Annotation\AutoMappedAnnotation;
-use Orisai\ObjectMapper\Annotation\BaseAnnotation;
 use Orisai\ObjectMapper\Exception\InvalidAnnotation;
 use function count;
-use function is_array;
 use function sprintf;
 
-/**
- * @property-write array<RuleAnnotation> $rules
- */
 abstract class CompoundRulesAnnotation implements RuleAnnotation
 {
 
-	use AutoMappedAnnotation;
+	/** @var array<mixed> */
+	private array $rules;
 
-	protected function getMainProperty(): string
+	/**
+	 * @param array<RuleAnnotation> $rules
+	 */
+	public function __construct(array $rules)
 	{
-		return 'rules';
+		$this->rules = $this->resolveRules($rules);
 	}
 
 	/**
-	 * @param array<mixed> $args
+	 * @param array<mixed> $rules
 	 * @return array<mixed>
 	 */
-	protected function resolveArgs(array $args): array
+	private function resolveRules(array $rules): array
 	{
-		$rules = $args['rules'] ?? null;
-
-		if ($rules instanceof BaseAnnotation) {
-			$rules = [
-				$rules,
-			];
-		}
-
-		if (!is_array($rules) || count($rules) < 2) {
+		if (count($rules) < 2) {
 			throw InvalidAnnotation::create()
 				->withMessage(sprintf(
 					'%s() should contain array of at least two validation rules (%s)',
@@ -59,9 +49,17 @@ abstract class CompoundRulesAnnotation implements RuleAnnotation
 			$rules[$key] = AnnotationMetaExtractor::extract($rule);
 		}
 
-		$args['rules'] = $rules;
+		return $rules;
+	}
 
-		return $args;
+	/**
+	 * @return array<mixed>
+	 */
+	public function getArgs(): array
+	{
+		return [
+			'rules' => $this->rules,
+		];
 	}
 
 }

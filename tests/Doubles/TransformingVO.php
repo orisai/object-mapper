@@ -24,10 +24,10 @@ final class TransformingVO extends ValueObject
 	public float $float;
 
 	/**
-	 * @AnyOf(
+	 * @AnyOf({
 	 *     @InstanceValue(stdClass::class),
 	 *     @NullValue(castEmptyString=true)
-	 * )
+	 * })
 	 */
 	public ?stdClass $stdClassOrNull;
 

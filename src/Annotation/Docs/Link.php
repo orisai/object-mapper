@@ -2,29 +2,42 @@
 
 namespace Orisai\ObjectMapper\Annotation\Docs;
 
+use Doctrine\Common\Annotations\Annotation\NamedArgumentConstructor;
 use Doctrine\Common\Annotations\Annotation\Target;
-use Orisai\ObjectMapper\Annotation\AutoMappedAnnotation;
 use Orisai\ObjectMapper\Docs\LinkDoc;
 
 /**
  * @Annotation
+ * @NamedArgumentConstructor()
  * @Target({"ANNOTATION"})
- * @property-write string $url
- * @property-write string|null $description
  */
 final class Link implements DocumentationAnnotation
 {
 
-	use AutoMappedAnnotation;
+	private string $url;
 
-	protected function getMainProperty(): string
+	private ?string $description;
+
+	public function __construct(string $url, ?string $description = null)
 	{
-		return 'url';
+		$this->url = $url;
+		$this->description = $description;
 	}
 
 	public function getType(): string
 	{
 		return LinkDoc::class;
+	}
+
+	/**
+	 * @return array<mixed>
+	 */
+	public function getArgs(): array
+	{
+		return [
+			'url' => $this->url,
+			'description' => $this->description,
+		];
 	}
 
 }

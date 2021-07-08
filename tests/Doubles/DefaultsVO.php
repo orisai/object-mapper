@@ -16,20 +16,20 @@ final class DefaultsVO extends ValueObject
 	public string $string = 'foo';
 
 	/**
-	 * @AnyOf(
+	 * @AnyOf({
 	 *     @StringValue(),
 	 *     @NullValue(),
-	 * )
+	 * })
 	 */
 	public ?string $nullableString = null;
 
 	/**
 	 * Is optional because without type there's no difference between uninitialized and null value ($foo; and $foo = null; are the same)
 	 *
-	 * @AnyOf(
+	 * @AnyOf({
 	 *     @StringValue(),
 	 *     @NullValue(),
-	 * )
+	 * })
 	 * @phpcsSuppress SlevomatCodingStandard.TypeHints.PropertyTypeHint.MissingAnyTypeHint
 	 */
 	public $untypedNullableString;

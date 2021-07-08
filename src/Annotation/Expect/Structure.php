@@ -2,24 +2,29 @@
 
 namespace Orisai\ObjectMapper\Annotation\Expect;
 
+use Doctrine\Common\Annotations\Annotation\NamedArgumentConstructor;
 use Doctrine\Common\Annotations\Annotation\Target;
-use Orisai\ObjectMapper\Annotation\AutoMappedAnnotation;
 use Orisai\ObjectMapper\Rules\Rule;
 use Orisai\ObjectMapper\Rules\StructureRule;
+use Orisai\ObjectMapper\ValueObject;
 
 /**
  * @Annotation
+ * @NamedArgumentConstructor()
  * @Target({"PROPERTY", "ANNOTATION"})
- * @property-write string $type
  */
 final class Structure implements RuleAnnotation
 {
 
-	use AutoMappedAnnotation;
+	/** @var class-string<ValueObject> */
+	private string $type;
 
-	protected function getMainProperty(): string
+	/**
+	 * @param class-string<ValueObject> $type
+	 */
+	public function __construct(string $type)
 	{
-		return 'type';
+		$this->type = $type;
 	}
 
 	/**
@@ -28,6 +33,16 @@ final class Structure implements RuleAnnotation
 	public function getType(): string
 	{
 		return StructureRule::class;
+	}
+
+	/**
+	 * @return array<mixed>
+	 */
+	public function getArgs(): array
+	{
+		return [
+			'type' => $this->type,
+		];
 	}
 
 }

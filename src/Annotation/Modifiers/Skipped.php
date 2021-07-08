@@ -2,21 +2,28 @@
 
 namespace Orisai\ObjectMapper\Annotation\Modifiers;
 
-use Orisai\ObjectMapper\Annotation\AutoMappedAnnotation;
+use Doctrine\Common\Annotations\Annotation\NamedArgumentConstructor;
 use Orisai\ObjectMapper\Modifiers\SkippedModifier;
 
 /**
  * @Annotation
+ * @NamedArgumentConstructor()
  * @Target({"PROPERTY"})
  */
 final class Skipped implements ModifierAnnotation
 {
 
-	use AutoMappedAnnotation;
-
 	public function getType(): string
 	{
 		return SkippedModifier::class;
+	}
+
+	/**
+	 * @return array<mixed>
+	 */
+	public function getArgs(): array
+	{
+		return [];
 	}
 
 }

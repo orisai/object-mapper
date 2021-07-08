@@ -18,10 +18,10 @@ final class NoDefaultsVO extends ValueObject
 	public string $string;
 
 	/**
-	 * @AnyOf(
+	 * @AnyOf({
 	 *     @StringValue(),
 	 *     @NullValue(),
-	 * )
+	 * })
 	 */
 	public ?string $nullableString;
 

@@ -10,10 +10,4 @@ interface CallbackRuntime
 		INITIALIZATION = 'initialization',
 		ALWAYS = 'always';
 
-	public const ALL = [
-		self::PROCESSING,
-		self::INITIALIZATION,
-		self::ALWAYS,
-	];
-
 }

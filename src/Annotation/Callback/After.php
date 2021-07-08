@@ -2,29 +2,47 @@
 
 namespace Orisai\ObjectMapper\Annotation\Callback;
 
+use Doctrine\Common\Annotations\Annotation\NamedArgumentConstructor;
 use Doctrine\Common\Annotations\Annotation\Target;
-use Orisai\ObjectMapper\Annotation\AutoMappedAnnotation;
 use Orisai\ObjectMapper\Callbacks\AfterCallback;
+use Orisai\ObjectMapper\Callbacks\CallbackRuntime;
 
 /**
  * @Annotation
+ * @NamedArgumentConstructor()
  * @Target({"CLASS", "PROPERTY"})
- * @property-write string $method
- * @property-write string $runtime
  */
 final class After implements CallableAnnotation
 {
 
-	use AutoMappedAnnotation;
+	private string $method;
 
-	protected function getMainProperty(): string
+	/** @phpstan-var CallbackRuntime::* */
+	private string $runtime;
+
+	/**
+	 * @phpstan-param CallbackRuntime::* $runtime
+	 */
+	public function __construct(string $method, string $runtime = CallbackRuntime::ALWAYS)
 	{
-		return 'method';
+		$this->method = $method;
+		$this->runtime = $runtime;
 	}
 
 	public function getType(): string
 	{
 		return AfterCallback::class;
+	}
+
+	/**
+	 * @return array<mixed>
+	 */
+	public function getArgs(): array
+	{
+		return [
+			'method' => $this->method,
+			'runtime' => $this->runtime,
+		];
 	}
 
 }

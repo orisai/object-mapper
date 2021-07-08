@@ -16,33 +16,33 @@ final class StructuresVO extends ValueObject
 
 	/**
 	 * @var DefaultsVO|array<mixed>
-	 * @AnyOf(
+	 * @AnyOf({
 	 *     @Structure(DefaultsVO::class),
 	 *     @ArrayOf(
 	 *          @MixedValue()
 	 *     )
-	 * )
+	 * })
 	 */
 	public $structureOrArray;
 
 	/**
 	 * @var DefaultsVO|array<mixed>
-	 * @AnyOf(
+	 * @AnyOf({
 	 *     @Structure(DefaultsVO::class),
 	 *     @ArrayOf(
 	 *          @MixedValue()
 	 *     )
-	 * )
+	 * })
 	 */
 	public $anotherStructureOrArray;
 
 	/**
 	 * @var array<DefaultsVO|NoDefaultsVO>
 	 * @ArrayOf(
-	 *     @AnyOf(
+	 *     @AnyOf({
 	 *     	   @Structure(NoDefaultsVO::class),
 	 *         @Structure(DefaultsVO::class),
-	 *     )
+	 *     })
 	 * )
 	 */
 	public array $manyStructures;

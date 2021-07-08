@@ -67,7 +67,11 @@ abstract class BaseCallback implements Callback
 		$checker->checkString(self::METHOD);
 
 		if ($checker->hasArg(self::RUNTIME)) {
-			$checker->checkEnum(self::RUNTIME, CallbackRuntime::ALL);
+			$checker->checkEnum(self::RUNTIME, [
+				CallbackRuntime::ALWAYS,
+				CallbackRuntime::INITIALIZATION,
+				CallbackRuntime::PROCESSING,
+			]);
 		}
 
 		$class = $context->getClass();

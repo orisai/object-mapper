@@ -2,25 +2,31 @@
 
 namespace Orisai\ObjectMapper\Annotation\Expect;
 
+use Doctrine\Common\Annotations\Annotation\NamedArgumentConstructor;
 use Doctrine\Common\Annotations\Annotation\Target;
-use Orisai\ObjectMapper\Annotation\AutoMappedAnnotation;
 use Orisai\ObjectMapper\Rules\Rule;
 use Orisai\ObjectMapper\Rules\ValueEnumRule;
 
 /**
  * @Annotation
+ * @NamedArgumentConstructor()
  * @Target({"PROPERTY", "ANNOTATION"})
- * @property-write array<mixed> $values
- * @property-write bool $useKeys
  */
 final class ValueEnum implements RuleAnnotation
 {
 
-	use AutoMappedAnnotation;
+	/** @var array<mixed> */
+	private array $values;
 
-	protected function getMainProperty(): string
+	private bool $useKeys;
+
+	/**
+	 * @param array<mixed> $values
+	 */
+	public function __construct(array $values, bool $useKeys = false)
 	{
-		return 'values';
+		$this->values = $values;
+		$this->useKeys = $useKeys;
 	}
 
 	/**
@@ -29,6 +35,17 @@ final class ValueEnum implements RuleAnnotation
 	public function getType(): string
 	{
 		return ValueEnumRule::class;
+	}
+
+	/**
+	 * @return array<mixed>
+	 */
+	public function getArgs(): array
+	{
+		return [
+			'values' => $this->values,
+			'useKeys' => $this->useKeys,
+		];
 	}
 
 }

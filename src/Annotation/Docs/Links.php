@@ -2,53 +2,38 @@
 
 namespace Orisai\ObjectMapper\Annotation\Docs;
 
+use Doctrine\Common\Annotations\Annotation\NamedArgumentConstructor;
 use Doctrine\Common\Annotations\Annotation\Target;
 use Orisai\ObjectMapper\Annotation\AnnotationMetaExtractor;
-use Orisai\ObjectMapper\Annotation\AutoMappedAnnotation;
-use Orisai\ObjectMapper\Annotation\BaseAnnotation;
 use Orisai\ObjectMapper\Docs\LinksDoc;
 use Orisai\ObjectMapper\Exception\InvalidAnnotation;
-use function is_array;
 use function sprintf;
 
 /**
  * @Annotation
+ * @NamedArgumentConstructor()
  * @Target({"CLASS", "PROPERTY"})
- * @property-write array<Link> $links
  */
 final class Links implements DocumentationAnnotation
 {
 
-	use AutoMappedAnnotation;
+	/** @var array<mixed> */
+	private array $links;
 
-	protected function getMainProperty(): string
+	/**
+	 * @param array<mixed> $links
+	 */
+	public function __construct(array $links)
 	{
-		return 'links';
+		$this->links = $this->resolveLinks($links);
 	}
 
 	/**
-	 * @param array<mixed> $args
+	 * @param array<mixed> $links
 	 * @return array<mixed>
 	 */
-	protected function resolveArgs(array $args): array
+	private function resolveLinks(array $links): array
 	{
-		$links = $args['links'] ?? null;
-
-		if ($links instanceof BaseAnnotation) {
-			$links = [
-				$links,
-			];
-		}
-
-		if (!is_array($links)) {
-			throw InvalidAnnotation::create()
-				->withMessage(sprintf(
-					'%s() should contain array of %s',
-					self::class,
-					Link::class,
-				));
-		}
-
 		foreach ($links as $key => $link) {
 			if (!$link instanceof Link) {
 				throw InvalidAnnotation::create()
@@ -62,14 +47,22 @@ final class Links implements DocumentationAnnotation
 			$links[$key] = AnnotationMetaExtractor::extract($link);
 		}
 
-		$args['links'] = $links;
-
-		return $args;
+		return $links;
 	}
 
 	public function getType(): string
 	{
 		return LinksDoc::class;
+	}
+
+	/**
+	 * @return array<mixed>
+	 */
+	public function getArgs(): array
+	{
+		return [
+			'links' => $this->links,
+		];
 	}
 
 }
