@@ -87,7 +87,7 @@ final class ListOfRule extends MultiValueRule
 			$type->markKeysInvalid();
 		}
 
-		$itemMeta = $args->itemRuleMeta;
+		$itemMeta = $args->itemMeta;
 		$itemRule = $context->getRule($itemMeta->getType());
 		$itemArgs = $this->createRuleArgsInst($itemRule, $itemMeta);
 
@@ -120,7 +120,7 @@ final class ListOfRule extends MultiValueRule
 	 */
 	public function createType(Args $args, TypeContext $context): ListType
 	{
-		$itemMeta = $args->itemRuleMeta;
+		$itemMeta = $args->itemMeta;
 		$itemRule = $context->getRule($itemMeta->getType());
 		$itemArgs = $this->createRuleArgsInst($itemRule, $itemMeta);
 

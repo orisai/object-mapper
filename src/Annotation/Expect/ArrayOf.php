@@ -17,18 +17,18 @@ final class ArrayOf extends MultiValueRuleAnnotation
 {
 
 	/** @var array<mixed>|null */
-	private ?array $keyRule;
+	private ?array $key;
 
 	public function __construct(
-		RuleAnnotation $itemRule,
-		?RuleAnnotation $keyRule = null,
+		RuleAnnotation $item,
+		?RuleAnnotation $key = null,
 		?int $minItems = null,
 		?int $maxItems = null,
 		bool $mergeDefaults = false
 	)
 	{
-		parent::__construct($itemRule, $minItems, $maxItems, $mergeDefaults);
-		$this->keyRule = $keyRule === null ? null : AnnotationMetaExtractor::extract($keyRule);
+		parent::__construct($item, $minItems, $maxItems, $mergeDefaults);
+		$this->key = $key === null ? null : AnnotationMetaExtractor::extract($key);
 	}
 
 	/**
@@ -45,7 +45,7 @@ final class ArrayOf extends MultiValueRuleAnnotation
 	public function getArgs(): array
 	{
 		$args = parent::getArgs();
-		$args['keyRule'] = $this->keyRule;
+		$args['key'] = $this->key;
 
 		return $args;
 	}

@@ -45,8 +45,8 @@ final class NoDefaultsVO extends ValueObject
 	/**
 	 * @var array<int, DefaultsVO>
 	 * @ArrayOf(
-	 *     keyRule=@IntValue(),
-	 *     itemRule=@Structure(DefaultsVO::class),
+	 *     key=@IntValue(),
+	 *     item=@Structure(DefaultsVO::class),
 	 * )
 	 */
 	public array $manyStructures;

@@ -8,7 +8,7 @@ abstract class MultiValueRuleAnnotation implements RuleAnnotation
 {
 
 	/** @var array<mixed> */
-	private array $itemRule;
+	private array $item;
 
 	private ?int $minItems;
 
@@ -17,13 +17,13 @@ abstract class MultiValueRuleAnnotation implements RuleAnnotation
 	private bool $mergeDefaults;
 
 	public function __construct(
-		RuleAnnotation $itemRule,
+		RuleAnnotation $item,
 		?int $minItems = null,
 		?int $maxItems = null,
 		bool $mergeDefaults = false
 	)
 	{
-		$this->itemRule = AnnotationMetaExtractor::extract($itemRule);
+		$this->item = AnnotationMetaExtractor::extract($item);
 		$this->minItems = $minItems;
 		$this->maxItems = $maxItems;
 		$this->mergeDefaults = $mergeDefaults;
@@ -35,7 +35,7 @@ abstract class MultiValueRuleAnnotation implements RuleAnnotation
 	public function getArgs(): array
 	{
 		return [
-			'itemRule' => $this->itemRule,
+			'item' => $this->item,
 			'minItems' => $this->minItems,
 			'maxItems' => $this->maxItems,
 			'mergeDefaults' => $this->mergeDefaults,

@@ -10,7 +10,7 @@ abstract class MultiValueRule implements Rule
 	use ArgsCreator;
 
 	public const
-		ITEM_RULE = 'itemRule',
+		ITEM_RULE = 'item',
 		MIN_ITEMS = 'minItems',
 		MAX_ITEMS = 'maxItems',
 		MERGE_DEFAULTS = 'mergeDefaults';

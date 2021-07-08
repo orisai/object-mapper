@@ -20,7 +20,7 @@ use function is_array;
 final class ArrayOfRule extends MultiValueRule
 {
 
-	public const KEY_RULE = 'keyRule';
+	public const KEY_RULE = 'key';
 
 	/**
 	 * @param array<mixed> $args
@@ -93,11 +93,11 @@ final class ArrayOfRule extends MultiValueRule
 			throw ValueDoesNotMatch::create($type);
 		}
 
-		$itemMeta = $args->itemRuleMeta;
+		$itemMeta = $args->itemMeta;
 		$itemRule = $context->getRule($itemMeta->getType());
 		$itemArgs = $this->createRuleArgsInst($itemRule, $itemMeta);
 
-		$keyMeta = $args->keyRuleMeta;
+		$keyMeta = $args->keyMeta;
 		if ($keyMeta !== null) {
 			$keyRule = $context->getRule($keyMeta->getType());
 			$keyArgs = $this->createRuleArgsInst($keyRule, $keyMeta);
@@ -153,11 +153,11 @@ final class ArrayOfRule extends MultiValueRule
 	 */
 	public function createType(Args $args, TypeContext $context): ArrayType
 	{
-		$itemMeta = $args->itemRuleMeta;
+		$itemMeta = $args->itemMeta;
 		$itemRule = $context->getRule($itemMeta->getType());
 		$itemArgs = $this->createRuleArgsInst($itemRule, $itemMeta);
 
-		$keyMeta = $args->keyRuleMeta;
+		$keyMeta = $args->keyMeta;
 		if ($keyMeta !== null) {
 			$keyRule = $context->getRule($keyMeta->getType());
 			$keyArgs = $this->createRuleArgsInst($keyRule, $keyMeta);
