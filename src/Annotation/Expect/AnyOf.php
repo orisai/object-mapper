@@ -2,12 +2,14 @@
 
 namespace Orisai\ObjectMapper\Annotation\Expect;
 
+use Doctrine\Common\Annotations\Annotation\NamedArgumentConstructor;
 use Doctrine\Common\Annotations\Annotation\Target;
 use Orisai\ObjectMapper\Rules\AnyOfRule;
 use Orisai\ObjectMapper\Rules\Rule;
 
 /**
  * @Annotation
+ * @NamedArgumentConstructor()
  * @Target({"PROPERTY", "ANNOTATION"})
  */
 final class AnyOf extends CompoundRulesAnnotation

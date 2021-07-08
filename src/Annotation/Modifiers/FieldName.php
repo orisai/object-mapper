@@ -2,27 +2,41 @@
 
 namespace Orisai\ObjectMapper\Annotation\Modifiers;
 
-use Orisai\ObjectMapper\Annotation\AutoMappedAnnotation;
+use Doctrine\Common\Annotations\Annotation\NamedArgumentConstructor;
 use Orisai\ObjectMapper\Modifiers\FieldNameModifier;
 
 /**
  * @Annotation
+ * @NamedArgumentConstructor()
  * @Target({"PROPERTY"})
- * @property-write int|string $name
  */
 final class FieldName implements ModifierAnnotation
 {
 
-	use AutoMappedAnnotation;
+	/** @var int|string */
+	private $name;
 
-	protected function getMainProperty(): string
+	/**
+	 * @param int|string $name
+	 */
+	public function __construct($name)
 	{
-		return 'name';
+		$this->name = $name;
 	}
 
 	public function getType(): string
 	{
 		return FieldNameModifier::class;
+	}
+
+	/**
+	 * @return array<mixed>
+	 */
+	public function getArgs(): array
+	{
+		return [
+			'name' => $this->name,
+		];
 	}
 
 }

@@ -2,24 +2,28 @@
 
 namespace Orisai\ObjectMapper\Annotation\Expect;
 
+use Doctrine\Common\Annotations\Annotation\NamedArgumentConstructor;
 use Doctrine\Common\Annotations\Annotation\Target;
-use Orisai\ObjectMapper\Annotation\AutoMappedAnnotation;
 use Orisai\ObjectMapper\Rules\InstanceRule;
 use Orisai\ObjectMapper\Rules\Rule;
 
 /**
  * @Annotation
+ * @NamedArgumentConstructor()
  * @Target({"PROPERTY", "ANNOTATION"})
- * @property-write string $type
  */
 final class InstanceValue implements RuleAnnotation
 {
 
-	use AutoMappedAnnotation;
+	/** @var class-string */
+	private string $type;
 
-	protected function getMainProperty(): string
+	/**
+	 * @phpstan-param class-string $type
+	 */
+	public function __construct(string $type)
 	{
-		return 'type';
+		$this->type = $type;
 	}
 
 	/**
@@ -28,6 +32,16 @@ final class InstanceValue implements RuleAnnotation
 	public function getType(): string
 	{
 		return InstanceRule::class;
+	}
+
+	/**
+	 * @return array<mixed>
+	 */
+	public function getArgs(): array
+	{
+		return [
+			'type' => $this->type,
+		];
 	}
 
 }

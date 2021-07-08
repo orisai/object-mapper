@@ -2,20 +2,25 @@
 
 namespace Orisai\ObjectMapper\Annotation\Expect;
 
+use Doctrine\Common\Annotations\Annotation\NamedArgumentConstructor;
 use Doctrine\Common\Annotations\Annotation\Target;
-use Orisai\ObjectMapper\Annotation\AutoMappedAnnotation;
 use Orisai\ObjectMapper\Rules\NullRule;
 use Orisai\ObjectMapper\Rules\Rule;
 
 /**
  * @Annotation
+ * @NamedArgumentConstructor()
  * @Target({"PROPERTY", "ANNOTATION"})
- * @property-write bool $castEmptyString
  */
 final class NullValue implements RuleAnnotation
 {
 
-	use AutoMappedAnnotation;
+	private bool $castEmptyString;
+
+	public function __construct(bool $castEmptyString = false)
+	{
+		$this->castEmptyString = $castEmptyString;
+	}
 
 	/**
 	 * @return class-string<Rule>
@@ -23,6 +28,16 @@ final class NullValue implements RuleAnnotation
 	public function getType(): string
 	{
 		return NullRule::class;
+	}
+
+	/**
+	 * @return array<mixed>
+	 */
+	public function getArgs(): array
+	{
+		return [
+			'castEmptyString' => $this->castEmptyString,
+		];
 	}
 
 }

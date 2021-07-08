@@ -12,18 +12,18 @@ final class PropertiesInitVO extends ValueObject
 {
 
 	/**
-	 * @AnyOf(
+	 * @AnyOf({
 	 *     @StringValue(),
 	 *     @NullValue(),
-	 * )
+	 * })
 	 */
 	public ?string $required;
 
 	/**
-	 * @AnyOf(
+	 * @AnyOf({
 	 *     @StringValue(),
 	 *     @NullValue(),
-	 * )
+	 * })
 	 */
 	public ?string $optional = null;
 

@@ -2,19 +2,18 @@
 
 namespace Orisai\ObjectMapper\Annotation\Expect;
 
+use Doctrine\Common\Annotations\Annotation\NamedArgumentConstructor;
 use Doctrine\Common\Annotations\Annotation\Target;
-use Orisai\ObjectMapper\Annotation\AutoMappedAnnotation;
 use Orisai\ObjectMapper\Rules\ObjectRule;
 use Orisai\ObjectMapper\Rules\Rule;
 
 /**
  * @Annotation
+ * @NamedArgumentConstructor()
  * @Target({"PROPERTY", "ANNOTATION"})
  */
 final class ObjectValue implements RuleAnnotation
 {
-
-	use AutoMappedAnnotation;
 
 	/**
 	 * @return class-string<Rule>
@@ -22,6 +21,14 @@ final class ObjectValue implements RuleAnnotation
 	public function getType(): string
 	{
 		return ObjectRule::class;
+	}
+
+	/**
+	 * @return array<mixed>
+	 */
+	public function getArgs(): array
+	{
+		return [];
 	}
 
 }
