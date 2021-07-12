@@ -65,5 +65,4 @@ parameters:
 		- '#^Class Orisai\\ObjectMapper\\Rules\\MultiValueRule implements generic interface Orisai\\ObjectMapper\\Rules\\Rule but does not specify its types: T_ARGS$#'
 		- '#^Class Orisai\\ObjectMapper\\Rules\\(List|Array)OfRule has \@implements tag, but does not implement any interface\.#'
 		# Generics - no idea - probably related to previous error
-		- '#^Return type \(class-string\<(.+)Args\>\) of method (.+)(List|Array)OfRule\:\:getArgsType\(\) should be covariant with return type \(class-string\<(.+)(MultiValue|ArrayOf)Args\>\) of method (.+)Rule\<(.+)(MultiValue|ArrayOf)Args\>(.+)$#'
 		- '#^Parameter \#. \$args \((.+)Args\) of method (.+)Rule(.+) should be contravariant with parameter \$args \((.+)Args\) of method (.+)Rule\<(.+)Args\>(.+)$#'
