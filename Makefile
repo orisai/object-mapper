@@ -47,6 +47,8 @@ mutations: ## Check code for mutants
 		--coverage=../var/coverage \
 		--skip-initial-tests \
 		$(ARGS)
+bench: ## Performance benchmark
+	$(PRE_PHP) vendor/bin/phpbench run tests/Benchmark --report=default $(ARGS)
 
 # Utilities
 
