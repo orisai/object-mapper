@@ -8,6 +8,7 @@ use Orisai\ObjectMapper\ValueObject;
 
 final class ArrayOfStringVO extends ValueObject
 {
+
 	/**
 	 * @var array<string>
 	 * @ArrayOf(
@@ -15,4 +16,5 @@ final class ArrayOfStringVO extends ValueObject
 	 * )
 	 */
 	public array $items;
+
 }

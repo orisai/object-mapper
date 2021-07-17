@@ -8,6 +8,7 @@ use Orisai\ObjectMapper\ValueObject;
 
 final class ArrayOfIntVO extends ValueObject
 {
+
 	/**
 	 * @var array<int>
 	 * @ArrayOf(
@@ -15,4 +16,5 @@ final class ArrayOfIntVO extends ValueObject
 	 * )
 	 */
 	public array $items;
+
 }
