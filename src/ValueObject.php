@@ -2,15 +2,11 @@
 
 namespace Orisai\ObjectMapper;
 
-use Nette\Utils\Helpers;
 use Nette\Utils\ObjectHelpers;
 use Orisai\Exceptions\Logic\InvalidState;
-use Orisai\Exceptions\Logic\MemberInaccessible;
 use Orisai\ObjectMapper\Context\SkippedPropertiesContext;
-use ReflectionClass;
+use ReflectionException;
 use ReflectionProperty;
-use function array_key_exists;
-use function property_exists;
 use function sprintf;
 
 /**
@@ -20,9 +16,6 @@ abstract class ValueObject
 {
 
 	private ?SkippedPropertiesContext $skippedPropertiesContext = null;
-
-	/** @var array<mixed> */
-	private array $processedValues = [];
 
 	/** @var array<mixed> */
 	private array $rawValues;
@@ -71,35 +64,41 @@ abstract class ValueObject
 		return $this->rawValues;
 	}
 
-	private function getPropertyHint(string $propertyName): ?string
+	public function isInitialized(string $property): bool
 	{
-		$ref = new ReflectionClass(static::class);
-		$propertyNames = [];
-		foreach ($ref->getProperties(ReflectionProperty::IS_PUBLIC) as $property) {
-			$propertyNames[] = $property->getName();
-		}
-
-		return Helpers::getSuggestion($propertyNames, $propertyName);
+		return (new ReflectionProperty($this, $property))->isInitialized($this);
 	}
 
 	/**
-	 * @return mixed
+	 * Checks if the public non-static property exists.
 	 */
-	final public function __get(string $name)
+	private static function hasProperty(string $class, string $name): bool
 	{
-		if (!array_key_exists($name, $this->processedValues)) {
-			$hint = $this->getPropertyHint($name);
+		static $cache;
+		$prop = &$cache[$class][$name];
 
-			throw MemberInaccessible::create()
-				->withMessage(sprintf(
-					'Cannot read an undeclared property `%s::%s`%s',
-					static::class,
-					$name,
-					$hint !== null ? sprintf(', did you mean "%s"?', $hint) : '',
-				));
+		if ($prop !== null) {
+			return $prop;
 		}
 
-		return $this->processedValues[$name];
+		try {
+			$rp = new ReflectionProperty($class, $name);
+			if ($rp->isPublic() && !$rp->isStatic()) {
+				return $prop = true;
+			}
+		} catch (ReflectionException $e) {
+			// If it failed than it does not have that property
+		}
+
+		return $prop = false;
+	}
+
+	/**
+	 * @return never
+	 */
+	final public function __get(string $name): void
+	{
+		ObjectHelpers::strictGet(static::class, $name);
 	}
 
 	/**
@@ -107,38 +106,34 @@ abstract class ValueObject
 	 */
 	final public function __set(string $name, $value): void
 	{
-		if (!property_exists(static::class, $name)) {
-			$hint = $this->getPropertyHint($name);
+		$class = static::class;
 
-			throw MemberInaccessible::create()
-				->withMessage(sprintf(
-					'Cannot write to an undeclared property `%s::%s`%s',
-					static::class,
-					$name,
-					$hint !== null ? sprintf(', did you mean "%s"?', $hint) : '',
-				));
+		if (static::hasProperty($class, $name)) {
+			$this->$name = $value;
+		} else {
+			ObjectHelpers::strictSet($class, $name);
 		}
-
-		$this->processedValues[$name] = $value;
 	}
 
 	final public function __isset(string $name): bool
 	{
-		return array_key_exists($name, $this->processedValues);
+		return false;
 	}
 
 	/**
 	 * @param array<mixed> $arguments
+	 * @return never
 	 */
-	public function __call(string $name, array $arguments): void
+	final public function __call(string $name, array $arguments): void
 	{
 		ObjectHelpers::strictCall(static::class, $name);
 	}
 
 	/**
 	 * @param array<mixed> $arguments
+	 * @return never
 	 */
-	public static function __callStatic(string $name, array $arguments): void
+	final public static function __callStatic(string $name, array $arguments): void
 	{
 		ObjectHelpers::strictStaticCall(static::class, $name);
 	}
