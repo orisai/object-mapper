@@ -14,6 +14,9 @@ parameters:
 		- message: '#^Variable property access on Orisai\\ObjectMapper\\ValueObject\.$#'
 		  path: %currentWorkingDirectory%/src/Processing/DefaultProcessor.php
 		  count: 3
+		- message: '#^Variable property access on \$this\(Orisai\\ObjectMapper\\ValueObject\).$#'
+		  path: %currentWorkingDirectory%/src/ValueObject.php
+		  count: 1
 		# Callback call
 		- message: '#^Variable static method call on class-string\<Orisai\\ObjectMapper\\ValueObject\>\.$#'
 		  path: %currentWorkingDirectory%/src/Callbacks/BaseCallback.php
@@ -53,6 +56,10 @@ parameters:
 		- message: '#Instanceof between T of Orisai\\ObjectMapper\\ValueObject and Orisai\\ObjectMapper\\ValueObject will always evaluate to true\.#'
 		  path: %currentWorkingDirectory%/src/Creation/DefaultObjectCreator.php
 		  count: 1
+		# Missing typehint
+		- message: '#^Method (.+)\:\:__(.+)\(\) should always throw an exception or terminate script execution but doesn''t do that.$#'
+		  path: %currentWorkingDirectory%/src/ValueObject.php
+		  count: 3
 		# Generics - don't know how to specify type here (and it's also imho not needed)
 		- '#^Property (.+) with generic interface Orisai\\ObjectMapper\\Rules\\Rule does not specify its types\: T_ARGS$#'
 		- '#^Property (.+)CallbackMeta(.+) with generic interface Orisai\\ObjectMapper\\Callbacks\\Callback does not specify its types\: T_ARGS$#'

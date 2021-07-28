@@ -538,9 +538,9 @@ validationFailed: string',
 			'required' => null,
 		], PropertiesInitVO::class, $options);
 
-		self::assertTrue(isset($vo->required));
-		self::assertTrue(isset($vo->optional));
-		self::assertTrue(isset($vo->structure));
+		self::assertTrue($vo->isInitialized('required'));
+		self::assertTrue($vo->isInitialized('optional'));
+		self::assertTrue($vo->isInitialized('structure'));
 
 		self::assertNull($vo->required);
 		self::assertNull($vo->optional);
@@ -558,9 +558,9 @@ validationFailed: string',
 			'structure' => [],
 		], PropertiesInitVO::class, $options);
 
-		self::assertTrue(isset($vo->required));
-		self::assertTrue(isset($vo->optional));
-		self::assertTrue(isset($vo->structure));
+		self::assertTrue($vo->isInitialized('required'));
+		self::assertTrue($vo->isInitialized('optional'));
+		self::assertTrue($vo->isInitialized('structure'));
 
 		self::assertNull($vo->required);
 		self::assertNull($vo->optional);
@@ -603,9 +603,9 @@ arrayOfMixed: array<mixed>',
 
 		$vo = $this->processor->process([], PropertiesInitVO::class, $options);
 
-		self::assertFalse(isset($vo->required));
-		self::assertFalse(isset($vo->optional));
-		self::assertFalse(isset($vo->structure));
+		self::assertFalse($vo->isInitialized('required'));
+		self::assertFalse($vo->isInitialized('optional'));
+		self::assertFalse($vo->isInitialized('structure'));
 
 		$vo = $this->processor->process([
 			'required' => null,
@@ -613,9 +613,9 @@ arrayOfMixed: array<mixed>',
 			'structure' => [],
 		], PropertiesInitVO::class, $options);
 
-		self::assertTrue(isset($vo->required));
-		self::assertTrue(isset($vo->optional));
-		self::assertTrue(isset($vo->structure));
+		self::assertTrue($vo->isInitialized('required'));
+		self::assertTrue($vo->isInitialized('optional'));
+		self::assertTrue($vo->isInitialized('structure'));
 
 		self::assertNull($vo->required);
 		self::assertNull($vo->optional);
@@ -648,8 +648,8 @@ arrayOfMixed: array<mixed>',
 
 		self::assertSame('required', $vo->required);
 		self::assertSame('optional', $vo->optional);
-		self::assertFalse(isset($vo->requiredSkipped));
-		self::assertFalse(isset($vo->optionalSkipped));
+		self::assertFalse($vo->isInitialized('requiredSkipped'));
+		self::assertFalse($vo->isInitialized('optionalSkipped'));
 
 		$this->processor->processSkippedProperties([
 			'requiredSkipped',
