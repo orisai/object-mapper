@@ -25,6 +25,7 @@
 		"orisai/utils": "^1.0.0"
 	},
 	"require-dev": {
+		"brianium/paratest": "^6.3.0",
 		"infection/infection": "^0.22.1",
 		"nette/caching": "^3.0",
 		"nette/di": "^3.0.0",
