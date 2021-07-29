@@ -85,7 +85,10 @@ abstract class BaseCallback implements Callback
 
 		// Method is expected to return data unless void return type is defined
 		$returnType = $method->getReturnType();
-		$args[self::METHOD_RETURNS_VALUE] = !($returnType instanceof ReflectionNamedType && $returnType->getName() === 'void');
+		$args[self::METHOD_RETURNS_VALUE] = !(
+			$returnType instanceof ReflectionNamedType
+			&& in_array($returnType->getName(), ['void', 'never'], true)
+		);
 
 		return $args;
 	}
@@ -157,8 +160,8 @@ abstract class BaseCallback implements Callback
 		$returnType = $method->getReturnType();
 
 		if ($property === null) { // Class method
-			// beforeClass(array $data, FieldSetContext $context): array|void
-			// afterClass(array $data, FieldSetContext $context): array|void
+			// beforeClass(array $data, FieldSetContext $context): array|void|never
+			// afterClass(array $data, FieldSetContext $context): array|void|never
 
 			if ($paramData !== null && ($type = self::getTypeName($paramData->getType())) !== 'array') {
 				throw InvalidArgument::create()
@@ -185,10 +188,10 @@ abstract class BaseCallback implements Callback
 					));
 			}
 
-			if (!in_array(($type = self::getTypeName($returnType)), ['array', 'void'], true)) {
+			if (!in_array(($type = self::getTypeName($returnType)), ['array', 'void', 'never'], true)) {
 				throw InvalidArgument::create()
 					->withMessage(sprintf(
-						'Return type of class callback method %s::%s should be "array" or "void" instead of %s',
+						'Return type of class callback method %s::%s should be "array", "void" or "never" instead of %s',
 						$class->getName(),
 						$method->getName(),
 						$type ?? 'none',
