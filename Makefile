@@ -2,6 +2,7 @@ _: list
 
 # Config
 
+PHPBENCH_CONFIG=tools/phpbench.json
 PHPCS_CONFIG=tools/phpcs.xml
 PHPSTAN_SRC_CONFIG=tools/phpstan.src.neon
 PHPSTAN_TESTS_CONFIG=tools/phpstan.tests.neon
@@ -47,8 +48,9 @@ mutations: ## Check code for mutants
 		--coverage=../var/coverage \
 		--skip-initial-tests \
 		$(ARGS)
+
 bench: ## Performance benchmark
-	$(PRE_PHP) vendor/bin/phpbench run --config tools/phpbench.json tests/Benchmark --report=default $(ARGS)
+	$(PRE_PHP) vendor/bin/phpbench run --config $(PHPBENCH_CONFIG) tests/Benchmark --report=default $(ARGS)
 
 # Utilities
 
