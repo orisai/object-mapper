@@ -3,6 +3,7 @@
 namespace Orisai\ObjectMapper\Types;
 
 use Orisai\Exceptions\Logic\InvalidArgument;
+use Orisai\ObjectMapper\Exception\WithTypeAndValue;
 
 final class ArrayType extends MultiValueType
 {
@@ -29,14 +30,14 @@ final class ArrayType extends MultiValueType
 	/**
 	 * @param string|int $key
 	 */
-	public function addInvalidPair($key, ?Type $keyType, ?Type $itemType): void
+	public function addInvalidPair($key, ?WithTypeAndValue $keyTypeAndValue, ?WithTypeAndValue $itemTypeAndValue): void
 	{
-		if ($keyType === null && $itemType === null) {
+		if ($keyTypeAndValue === null && $itemTypeAndValue === null) {
 			throw InvalidArgument::create()
 				->withMessage('At least one of key type and item type of invalid pair should not be null');
 		}
 
-		$this->invalidPairs[$key] = [$keyType, $itemType];
+		$this->invalidPairs[$key] = [$keyTypeAndValue !== null ? $keyTypeAndValue->getInvalidType() : null, $itemTypeAndValue !== null ? $itemTypeAndValue->getInvalidType() : null];
 	}
 
 	public function hasInvalidPairs(): bool

@@ -3,7 +3,9 @@
 namespace Tests\Orisai\ObjectMapper\Unit\Formatting;
 
 use Orisai\ObjectMapper\Exception\InvalidData;
+use Orisai\ObjectMapper\Exception\ValueDoesNotMatch;
 use Orisai\ObjectMapper\Formatting\VisualErrorFormatter;
+use Orisai\ObjectMapper\NoValue;
 use Orisai\ObjectMapper\Types\ArrayType;
 use Orisai\ObjectMapper\Types\CompoundType;
 use Orisai\ObjectMapper\Types\EnumType;
@@ -136,8 +138,11 @@ final class VisualErrorFormatterTest extends TestCase
 			$this->formatter->formatType($type5),
 		);
 
-		$type5Key->overwriteInvalidSubtype(0, new SimpleValueType('string'));
-		$type5Key->overwriteInvalidSubtype(1, new SimpleValueType('int'));
+		$type5Key->overwriteInvalidSubtype(
+			0,
+			ValueDoesNotMatch::create(new SimpleValueType('string'), NoValue::create()),
+		);
+		$type5Key->overwriteInvalidSubtype(1, ValueDoesNotMatch::create(new SimpleValueType('int'), NoValue::create()));
 		self::assertSame(
 			'string|int',
 			$this->formatter->formatType($type5Key),

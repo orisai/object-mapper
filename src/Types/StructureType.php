@@ -2,6 +2,7 @@
 
 namespace Orisai\ObjectMapper\Types;
 
+use Orisai\ObjectMapper\Exception\WithTypeAndValue;
 use Orisai\ObjectMapper\ValueObject;
 
 final class StructureType implements Type
@@ -48,9 +49,9 @@ final class StructureType implements Type
 	/**
 	 * @param int|string $field
 	 */
-	public function overwriteInvalidField($field, Type $type): void
+	public function overwriteInvalidField($field, WithTypeAndValue $typeAndValue): void
 	{
-		$this->fields[$field] = $type;
+		$this->fields[$field] = $typeAndValue->getInvalidType();
 		$this->invalidFields[$field] = true;
 	}
 

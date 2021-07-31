@@ -27,7 +27,7 @@ final class AlwaysInvalidRule implements Rule
 	 */
 	public function processValue($value, Args $args, FieldContext $context)
 	{
-		throw ValueDoesNotMatch::create($this->createType($args, $context));
+		throw ValueDoesNotMatch::create($this->createType($args, $context), $value);
 	}
 
 	/**

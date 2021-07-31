@@ -40,12 +40,12 @@ final class AnyOfRule extends CompoundRule
 				);
 				$anyValidationSucceeded = true;
 			} catch (ValueDoesNotMatch | InvalidData $exception) {
-				$type->overwriteInvalidSubtype($key, $exception->getInvalidType());
+				$type->overwriteInvalidSubtype($key, $exception);
 			}
 		}
 
 		if (!$anyValidationSucceeded) {
-			throw ValueDoesNotMatch::create($type);
+			throw ValueDoesNotMatch::create($type, $value);
 		}
 
 		return $value;

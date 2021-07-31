@@ -80,7 +80,7 @@ final class ArrayOfRule extends MultiValueRule
 		if (!is_array($value)) {
 			$type->markInvalid();
 
-			throw ValueDoesNotMatch::create($type);
+			throw ValueDoesNotMatch::create($type, $value);
 		}
 
 		if ($args->minItems !== null && count($value) < $args->minItems) {
@@ -90,7 +90,7 @@ final class ArrayOfRule extends MultiValueRule
 		if ($args->maxItems !== null && count($value) > $args->maxItems) {
 			$type->markParameterInvalid(self::MAX_ITEMS);
 
-			throw ValueDoesNotMatch::create($type);
+			throw ValueDoesNotMatch::create($type, $value);
 		}
 
 		$itemMeta = $args->itemMeta;
@@ -129,16 +129,12 @@ final class ArrayOfRule extends MultiValueRule
 			}
 
 			if ($itemException !== null || $keyException !== null) {
-				$type->addInvalidPair(
-					$key,
-					$keyException !== null ? $keyException->getInvalidType() : null,
-					$itemException !== null ? $itemException->getInvalidType() : null,
-				);
+				$type->addInvalidPair($key, $keyException, $itemException);
 			}
 		}
 
 		if ($type->hasInvalidParameters() || $type->hasInvalidPairs()) {
-			throw ValueDoesNotMatch::create($type);
+			throw ValueDoesNotMatch::create($type, $value);
 		}
 
 		if ($args->mergeDefaults && $context->hasDefaultValue()) {

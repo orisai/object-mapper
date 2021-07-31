@@ -2,6 +2,8 @@
 
 namespace Orisai\ObjectMapper\Types;
 
+use Orisai\ObjectMapper\Exception\WithTypeAndValue;
+
 final class ListType extends MultiValueType
 {
 
@@ -23,9 +25,9 @@ final class ListType extends MultiValueType
 	/**
 	 * @param string|int $key
 	 */
-	public function addInvalidItem($key, Type $itemType): void
+	public function addInvalidItem($key, WithTypeAndValue $typeAndValue): void
 	{
-		$this->invalidItems[$key] = $itemType;
+		$this->invalidItems[$key] = $typeAndValue->getInvalidType();
 	}
 
 	public function hasInvalidItems(): bool

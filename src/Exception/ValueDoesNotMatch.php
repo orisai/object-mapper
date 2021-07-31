@@ -6,14 +6,21 @@ use Orisai\Exceptions\DomainException;
 use Orisai\ObjectMapper\Types\MessageType;
 use Orisai\ObjectMapper\Types\Type;
 
-final class ValueDoesNotMatch extends DomainException
+final class ValueDoesNotMatch extends DomainException implements WithTypeAndValue
 {
+
+	/** @var mixed */
+	private $invalidValue;
 
 	private Type $invalidType;
 
-	public static function create(Type $invalidType): self
+	/**
+	 * @param mixed $invalidValue
+	 */
+	public static function create(Type $invalidType, $invalidValue): self
 	{
 		$self = new self();
+		$self->invalidValue = $invalidValue;
 		$self->invalidType = $invalidType;
 
 		return $self;
@@ -30,6 +37,14 @@ final class ValueDoesNotMatch extends DomainException
 	public function getInvalidType(): Type
 	{
 		return $this->invalidType;
+	}
+
+	/**
+	 * @return mixed
+	 */
+	public function getInvalidValue()
+	{
+		return $this->invalidValue;
 	}
 
 }

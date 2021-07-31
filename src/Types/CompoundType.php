@@ -4,6 +4,7 @@ namespace Orisai\ObjectMapper\Types;
 
 use Orisai\Exceptions\Logic\InvalidArgument;
 use Orisai\Exceptions\Logic\InvalidState;
+use Orisai\ObjectMapper\Exception\WithTypeAndValue;
 use function array_key_exists;
 use function implode;
 use function in_array;
@@ -110,7 +111,7 @@ final class CompoundType implements Type
 	/**
 	 * @param string|int $key
 	 */
-	public function overwriteInvalidSubtype($key, Type $type): void
+	public function overwriteInvalidSubtype($key, WithTypeAndValue $exception): void
 	{
 		if (!array_key_exists($key, $this->subtypes)) {
 			throw InvalidState::create()
@@ -128,7 +129,7 @@ final class CompoundType implements Type
 				));
 		}
 
-		$this->subtypes[$key] = $type;
+		$this->subtypes[$key] = $exception->getInvalidType();
 		$this->invalidSubtypes[] = $key;
 	}
 

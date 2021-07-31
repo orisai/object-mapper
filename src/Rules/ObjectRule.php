@@ -25,7 +25,7 @@ final class ObjectRule implements Rule
 	public function processValue($value, Args $args, FieldContext $context): object
 	{
 		if (!is_object($value)) {
-			throw ValueDoesNotMatch::create($this->createType($args, $context));
+			throw ValueDoesNotMatch::create($this->createType($args, $context), $value);
 		}
 
 		return $value;

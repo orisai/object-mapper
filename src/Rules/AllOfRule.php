@@ -39,13 +39,13 @@ final class AllOfRule extends CompoundRule
 					$context,
 				);
 			} catch (ValueDoesNotMatch | InvalidData $exception) {
-				$type->overwriteInvalidSubtype($key, $exception->getInvalidType());
+				$type->overwriteInvalidSubtype($key, $exception);
 				$anyValidationFailed = true;
 			}
 		}
 
 		if ($anyValidationFailed) {
-			throw ValueDoesNotMatch::create($type);
+			throw ValueDoesNotMatch::create($type, $value);
 		}
 
 		return $value;

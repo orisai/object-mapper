@@ -54,7 +54,7 @@ final class NullRule implements Rule
 		}
 
 		if ($value !== null) {
-			throw ValueDoesNotMatch::create($this->createType($args, $context));
+			throw ValueDoesNotMatch::create($this->createType($args, $context), $value);
 		}
 
 		return $value;

@@ -25,6 +25,7 @@ use Orisai\ObjectMapper\Meta\PropertyMeta;
 use Orisai\ObjectMapper\Meta\SharedMeta;
 use Orisai\ObjectMapper\Modifiers\FieldNameModifier;
 use Orisai\ObjectMapper\Modifiers\SkippedModifier;
+use Orisai\ObjectMapper\NoValue;
 use Orisai\ObjectMapper\Options;
 use Orisai\ObjectMapper\Rules\RuleManager;
 use Orisai\ObjectMapper\Rules\StructureArgs;
@@ -182,7 +183,7 @@ class DefaultProcessor implements Processor
 			$type = $context->getType();
 			$type->markInvalid();
 
-			throw InvalidData::create($type);
+			throw InvalidData::create($type, $data);
 		}
 
 		return $data;
@@ -226,16 +227,16 @@ class DefaultProcessor implements Processor
 		ProcessorRunContext $runContext
 	): array
 	{
-		$data = $this->handleSentFields($data, $fieldSetContext, $runContext);
-		$data = $this->handleMissingFields($data, $fieldSetContext, $runContext);
+		$handledData = $this->handleSentFields($data, $fieldSetContext, $runContext);
+		$handledData = $this->handleMissingFields($handledData, $fieldSetContext, $runContext);
 
 		$type = $fieldSetContext->getType();
 
 		if ($type->hasInvalidFields()) {
-			throw InvalidData::create($type);
+			throw InvalidData::create($type, $data);
 		}
 
-		return $data;
+		return $handledData;
 	}
 
 	/**
@@ -279,7 +280,10 @@ class DefaultProcessor implements Processor
 				$hint = ($hintedFieldName !== null ? sprintf(', did you mean `%s`?', $hintedFieldName) : '.');
 				$type->overwriteInvalidField(
 					$fieldName,
-					new MessageType(sprintf('Field is unknown%s', $hint)),
+					ValueDoesNotMatch::create(
+						new MessageType(sprintf('Field is unknown%s', $hint)),
+						NoValue::create(),
+					),
 				);
 
 				continue;
@@ -311,7 +315,7 @@ class DefaultProcessor implements Processor
 					$propertyMeta,
 				);
 			} catch (ValueDoesNotMatch | InvalidData $exception) {
-				$type->overwriteInvalidField($fieldName, $exception->getInvalidType());
+				$type->overwriteInvalidField($fieldName, $exception);
 			}
 		}
 
@@ -395,7 +399,7 @@ class DefaultProcessor implements Processor
 						? $this->process([], $structureArgs->type, $options)
 						: $this->processWithoutInitialization([], $structureArgs->type, $options);
 				} catch (InvalidData $exception) {
-					$type->overwriteInvalidField($missingField, $exception->getInvalidType());
+					$type->overwriteInvalidField($missingField, $exception);
 				}
 			} elseif ($requiredFields !== $options::REQUIRE_NONE && !$type->isFieldInvalid($missingField)) {
 				// Field is missing and have no default value, mark as invalid
@@ -403,9 +407,12 @@ class DefaultProcessor implements Processor
 				$propertyRule = $this->ruleManager->getRule($propertyRuleMeta->getType());
 				$type->overwriteInvalidField(
 					$missingField,
-					$propertyRule->createType(
-						$this->createRuleArgsInst($propertyRule, $propertyRuleMeta),
-						$this->getTypeContext(),
+					ValueDoesNotMatch::create(
+						$propertyRule->createType(
+							$this->createRuleArgsInst($propertyRule, $propertyRuleMeta),
+							$this->getTypeContext(),
+						),
+						$data,
 					),
 				);
 			}
@@ -527,7 +534,7 @@ class DefaultProcessor implements Processor
 				$type->addError($catchedType);
 			}
 
-			throw InvalidData::create($type);
+			throw InvalidData::create($type, $data);
 		}
 
 		return $data;
@@ -691,12 +698,14 @@ class DefaultProcessor implements Processor
 				$object->$propertyName = $processed;
 				$skippedPropertiesContext->removeInitializedProperty($propertyName);
 			} catch (ValueDoesNotMatch | InvalidData $exception) {
-				$type->overwriteInvalidField($fieldName, $exception->getInvalidType());
+				$type->overwriteInvalidField($fieldName, $exception);
+				// TODO: better throw early?
 			}
 		}
 
 		// If any of fields is invalid, throw error
 		if ($type->hasInvalidFields()) {
+			// TODO: Where to get value?
 			throw InvalidData::create($type);
 		}
 

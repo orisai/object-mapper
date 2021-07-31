@@ -66,6 +66,7 @@ final class StructureRuleTest extends RuleTestCase
 			$type = $exception->getInvalidType();
 
 			self::assertTrue($type->isInvalid());
+			self::assertEquals(null, $exception->getInvalidValue());
 		}
 
 		self::assertNotNull($exception);

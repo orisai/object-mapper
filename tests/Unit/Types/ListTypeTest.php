@@ -2,6 +2,7 @@
 
 namespace Tests\Orisai\ObjectMapper\Unit\Types;
 
+use Orisai\ObjectMapper\Exception\InvalidData;
 use Orisai\ObjectMapper\Types\ListType;
 use Orisai\ObjectMapper\Types\MessageType;
 use Orisai\ObjectMapper\Types\SimpleValueType;
@@ -32,8 +33,8 @@ final class ListTypeTest extends TestCase
 
 		$invalid1 = new MessageType('test');
 		$invalid2 = new SimpleValueType('test');
-		$type->addInvalidItem(123, $invalid1);
-		$type->addInvalidItem('foo', $invalid2);
+		$type->addInvalidItem(123, InvalidData::create($invalid1, null));
+		$type->addInvalidItem('foo', InvalidData::create($invalid2, null));
 
 		self::assertTrue($type->hasInvalidItems());
 		self::assertSame(
