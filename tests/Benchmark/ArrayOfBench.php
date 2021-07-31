@@ -1,6 +1,6 @@
 <?php declare(strict_types = 1);
 
-namespace Orisai\Tests\Benchmark;
+namespace Tests\Orisai\ObjectMapper\Benchmark;
 
 use Generator;
 use Orisai\ObjectMapper\Exception\InvalidData;

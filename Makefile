@@ -48,7 +48,7 @@ mutations: ## Check code for mutants
 		--skip-initial-tests \
 		$(ARGS)
 bench: ## Performance benchmark
-	$(PRE_PHP) vendor/bin/phpbench run tests/Benchmark --report=default $(ARGS)
+	$(PRE_PHP) vendor/bin/phpbench run --config var/tools/PHPBench/phpbench.json tests/Benchmark --report=default $(ARGS)
 
 # Utilities
 
