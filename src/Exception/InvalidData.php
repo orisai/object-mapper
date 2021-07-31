@@ -17,7 +17,7 @@ final class InvalidData extends DomainException implements WithTypeAndValue
 
 	/**
 	 * @param mixed $invalidValue
-	 * @return static
+	 * @return self
 	 */
 	public static function create(StructureType $invalidType, $invalidValue): self
 	{
