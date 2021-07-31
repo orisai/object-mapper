@@ -30,6 +30,7 @@
 		"nette/caching": "^3.0",
 		"nette/di": "^3.0.0",
 		"orisai/coding-standard": "^2.0.0",
+		"phpbench/phpbench": "^1.0.0",
 		"phpstan/extension-installer": "^1.0.0",
 		"phpstan/phpstan": "^0.12.0",
 		"phpstan/phpstan-deprecation-rules": "^0.12.0",
