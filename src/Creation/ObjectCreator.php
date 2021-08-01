@@ -8,9 +8,9 @@ interface ObjectCreator
 {
 
 	/**
-	 * @phpstan-template T of ValueObject
-	 * @phpstan-param class-string<T> $class
-	 * @phpstan-return T
+	 * @template T of ValueObject
+	 * @param class-string<T> $class
+	 * @return T
 	 */
 	public function createInstance(string $class): ValueObject;
 

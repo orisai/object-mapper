@@ -26,9 +26,9 @@ interface RuleManager
 	];
 
 	/**
-	 * @phpstan-template T
-	 * @phpstan-param class-string<T> $rule
-	 * @phpstan-return T
+	 * @template T
+	 * @param class-string<T> $rule
+	 * @return T
 	 */
 	public function getRule(string $rule): Rule;
 
