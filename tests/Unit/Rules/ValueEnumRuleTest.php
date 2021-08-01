@@ -22,9 +22,10 @@ final class ValueEnumRuleTest extends RuleTestCase
 	}
 
 	/**
-	 * @dataProvider provideValidValues
 	 * @param mixed $value
 	 * @param array<mixed> $args
+	 *
+	 * @dataProvider provideValidValues
 	 */
 	public function testProcessValid($value, array $args): void
 	{
@@ -59,10 +60,11 @@ final class ValueEnumRuleTest extends RuleTestCase
 	}
 
 	/**
-	 * @dataProvider provideInvalidValues
 	 * @param mixed $value
 	 * @param array<mixed> $args
 	 * @param array<mixed> $expectedValues
+	 *
+	 * @dataProvider provideInvalidValues
 	 */
 	public function testProcessInvalid($value, array $args, array $expectedValues): void
 	{

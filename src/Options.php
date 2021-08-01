@@ -107,8 +107,8 @@ class Options
 	}
 
 	/**
-	 * @return array<mixed>
 	 * @param class-string $class
+	 * @return array<mixed>
 	 */
 	final public function getDynamicContext(string $class): array
 	{

@@ -62,8 +62,8 @@ final class MetaResolver
 
 	/**
 	 * @param array<mixed> $meta
-	 * @return array<mixed>
 	 * @param ReflectionClass<ValueObject> $class
+	 * @return array<mixed>
 	 */
 	private function resolveMeta(array $meta, ReflectionClass $class): array
 	{
@@ -155,8 +155,8 @@ final class MetaResolver
 
 	/**
 	 * @param array<mixed> $meta
-	 * @return array<mixed>
 	 * @param ReflectionClass<ValueObject> $class
+	 * @return array<mixed>
 	 */
 	private function resolvePropertiesMeta(array $meta, ReflectionClass $class): array
 	{
@@ -184,8 +184,8 @@ final class MetaResolver
 
 	/**
 	 * @param array<mixed> $meta
-	 * @return array<mixed>
 	 * @param ReflectionClass<ValueObject> $class
+	 * @return array<mixed>
 	 */
 	private function resolvePropertyMeta(array $meta, ReflectionClass $class, ReflectionProperty $property): array
 	{
@@ -410,8 +410,8 @@ final class MetaResolver
 
 	/**
 	 * @param array<mixed> $meta
-	 * @return array<mixed>
 	 * @param ReflectionClass<ValueObject> $class
+	 * @return array<mixed>
 	 */
 	private function resolveDefaultValues(array $meta, ReflectionClass $class): array
 	{

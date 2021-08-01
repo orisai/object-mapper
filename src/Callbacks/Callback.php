@@ -30,8 +30,8 @@ interface Callback
 
 	/**
 	 * @param mixed $data
-	 * @phpstan-param T_ARGS $args
 	 * @param FieldContext|FieldSetContext $context
+	 * @phpstan-param T_ARGS $args
 	 * @return mixed
 	 * @throws ValueDoesNotMatch
 	 * @throws InvalidData

@@ -13,10 +13,11 @@ final class ArrayOfBench extends ProcessingTestCase
 {
 
 	/**
-	 * @Iterations(3)
-	 * @ParamProviders("provideArrayOfStrings")
 	 * @param array<string> $items
 	 * @throws InvalidData
+	 *
+	 * @Iterations(3)
+	 * @ParamProviders("provideArrayOfStrings")
 	 */
 	public function benchArrayOfString(array $items): void
 	{
@@ -29,10 +30,11 @@ final class ArrayOfBench extends ProcessingTestCase
 	}
 
 	/**
-	 * @Iterations(3)
-	 * @ParamProviders("provideArrayOfInts")
 	 * @param array<int> $items
 	 * @throws InvalidData
+	 *
+	 * @Iterations(3)
+	 * @ParamProviders("provideArrayOfInts")
 	 */
 	public function benchArrayOfInts(array $items): void
 	{
