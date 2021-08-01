@@ -2,9 +2,10 @@
 
 namespace Orisai\ObjectMapper\Exception;
 
+use Orisai\Exceptions\Check\CheckedException;
 use Orisai\ObjectMapper\Types\Type;
 
-interface WithTypeAndValue
+interface WithTypeAndValue extends CheckedException
 {
 
 	function getInvalidType(): Type;

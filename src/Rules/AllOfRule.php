@@ -19,6 +19,7 @@ final class AllOfRule extends CompoundRule
 	 */
 	public function processValue($value, Args $args, FieldContext $context)
 	{
+		$inputValue = $value;
 		$type = $this->createType($args, $context);
 		$anyValidationFailed = false;
 
@@ -45,7 +46,7 @@ final class AllOfRule extends CompoundRule
 		}
 
 		if ($anyValidationFailed) {
-			throw ValueDoesNotMatch::create($type, $value);
+			throw ValueDoesNotMatch::create($type, $inputValue);
 		}
 
 		return $value;

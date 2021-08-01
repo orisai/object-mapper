@@ -2,6 +2,8 @@
 
 namespace Tests\Orisai\ObjectMapper\Unit\Types;
 
+use Orisai\ObjectMapper\Exception\ValueDoesNotMatch;
+use Orisai\ObjectMapper\NoValue;
 use Orisai\ObjectMapper\Types\MessageType;
 use Orisai\ObjectMapper\Types\StructureType;
 use PHPUnit\Framework\TestCase;
@@ -76,7 +78,7 @@ final class StructureTypeTest extends TestCase
 		self::assertFalse($type->isFieldInvalid($key3));
 
 		$invalid1 = new MessageType('t');
-		$type->overwriteInvalidField($key1, $invalid1);
+		$type->overwriteInvalidField($key1, ValueDoesNotMatch::create($invalid1, NoValue::create()));
 
 		self::assertTrue($type->hasInvalidFields());
 		self::assertTrue($type->isFieldInvalid($key1));

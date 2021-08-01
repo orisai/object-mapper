@@ -227,16 +227,16 @@ class DefaultProcessor implements Processor
 		ProcessorRunContext $runContext
 	): array
 	{
-		$handledData = $this->handleSentFields($data, $fieldSetContext, $runContext);
-		$handledData = $this->handleMissingFields($handledData, $fieldSetContext, $runContext);
+		$data = $this->handleSentFields($data, $fieldSetContext, $runContext);
+		$data = $this->handleMissingFields($data, $fieldSetContext, $runContext);
 
 		$type = $fieldSetContext->getType();
 
 		if ($type->hasInvalidFields()) {
-			throw InvalidData::create($type, $data);
+			throw InvalidData::create($type, NoValue::create());
 		}
 
-		return $handledData;
+		return $data;
 	}
 
 	/**
@@ -282,7 +282,7 @@ class DefaultProcessor implements Processor
 					$fieldName,
 					ValueDoesNotMatch::create(
 						new MessageType(sprintf('Field is unknown%s', $hint)),
-						NoValue::create(),
+						$value,
 					),
 				);
 
@@ -412,7 +412,7 @@ class DefaultProcessor implements Processor
 							$this->createRuleArgsInst($propertyRule, $propertyRuleMeta),
 							$this->getTypeContext(),
 						),
-						$data,
+						NoValue::create(),
 					),
 				);
 			}
@@ -699,14 +699,15 @@ class DefaultProcessor implements Processor
 				$skippedPropertiesContext->removeInitializedProperty($propertyName);
 			} catch (ValueDoesNotMatch | InvalidData $exception) {
 				$type->overwriteInvalidField($fieldName, $exception);
-				// TODO: better throw early?
+				// We do not rethrow because all of the fields are supposed to be processed at the same time
 			}
 		}
 
 		// If any of fields is invalid, throw error
 		if ($type->hasInvalidFields()) {
-			// TODO: Where to get value?
-			throw InvalidData::create($type);
+			// Invalid values are already tracked by individual invalid fields
+			// so we don't need to pass value here
+			throw InvalidData::create($type, NoValue::create());
 		}
 
 		// Object is fully initialized, remove partial context

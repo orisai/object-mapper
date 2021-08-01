@@ -12,13 +12,14 @@ final class AnyOfRule extends CompoundRule
 {
 
 	/**
-	 * @param mixed $value
+	 * @param mixed            $value
 	 * @param CompoundRuleArgs $args
 	 * @return mixed
 	 * @throws ValueDoesNotMatch
 	 */
 	public function processValue($value, Args $args, FieldContext $context)
 	{
+		$inputValue = $value;
 		$type = $this->createType($args, $context);
 		$anyValidationSucceeded = false;
 
@@ -45,7 +46,7 @@ final class AnyOfRule extends CompoundRule
 		}
 
 		if (!$anyValidationSucceeded) {
-			throw ValueDoesNotMatch::create($type, $value);
+			throw ValueDoesNotMatch::create($type, $inputValue);
 		}
 
 		return $value;
