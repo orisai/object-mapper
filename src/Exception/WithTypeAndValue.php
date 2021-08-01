@@ -8,11 +8,11 @@ use Orisai\ObjectMapper\Types\Type;
 interface WithTypeAndValue extends CheckedException
 {
 
-	function getInvalidType(): Type;
+	public function getInvalidType(): Type;
 
 	/**
 	 * @return mixed
 	 */
-	function getInvalidValue();
+	public function getInvalidValue();
 
 }

@@ -5,12 +5,9 @@ namespace Orisai\ObjectMapper;
 final class NoValue
 {
 
-	/**
-	 * Represents a completely missing value
-	 */
 	private function __construct()
 	{
-
+		// Represents a completely missing value
 	}
 
 	public static function create(): self
