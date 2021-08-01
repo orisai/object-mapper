@@ -14,9 +14,9 @@ interface Processor
 	 *
 	 * @template T of ValueObject
 	 * @param mixed $data
-	 * @throws InvalidData
 	 * @param class-string<T> $class
 	 * @return T
+	 * @throws InvalidData
 	 */
 	public function process($data, string $class, ?Options $options = null): ValueObject;
 
@@ -24,9 +24,9 @@ interface Processor
 	 * Validate data against $class schema and call before/after processing callbacks
 	 *
 	 * @param mixed $data
+	 * @param class-string<ValueObject> $class
 	 * @return array<int|string, mixed>
 	 * @throws InvalidData
-	 * @param class-string<ValueObject> $class
 	 */
 	public function processWithoutInitialization($data, string $class, ?Options $options = null): array;
 

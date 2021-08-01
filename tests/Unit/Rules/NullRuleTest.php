@@ -60,8 +60,9 @@ final class NullRuleTest extends RuleTestCase
 	}
 
 	/**
-	 * @dataProvider provideInvalidValues
 	 * @param mixed $value
+	 *
+	 * @dataProvider provideInvalidValues
 	 */
 	public function testProcessInvalid($value): void
 	{

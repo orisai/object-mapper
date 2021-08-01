@@ -25,8 +25,9 @@ final class DateTimeRuleTest extends RuleTestCase
 	}
 
 	/**
-	 * @dataProvider provideValidValues
 	 * @param mixed $value
+	 *
+	 * @dataProvider provideValidValues
 	 */
 	public function testProcessValid($value, ?string $format = null): void
 	{
@@ -79,8 +80,9 @@ final class DateTimeRuleTest extends RuleTestCase
 	}
 
 	/**
-	 * @dataProvider provideInvalidValues
 	 * @param mixed $value
+	 *
+	 * @dataProvider provideInvalidValues
 	 */
 	public function testProcessInvalid($value, ?string $format = null, string $expectedType = 'datetime'): void
 	{

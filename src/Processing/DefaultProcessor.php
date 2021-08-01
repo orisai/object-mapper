@@ -87,9 +87,9 @@ class DefaultProcessor implements Processor
 
 	/**
 	 * @param mixed $data
+	 * @param class-string<ValueObject> $class
 	 * @return array<int|string, mixed>
 	 * @throws InvalidData
-	 * @param class-string<ValueObject> $class
 	 */
 	public function processWithoutInitialization($data, string $class, ?Options $options = null): array
 	{
@@ -502,9 +502,9 @@ class DefaultProcessor implements Processor
 
 	/**
 	 * @param array<mixed> $data
+	 * @param class-string<Callback> $callbackType
 	 * @return array<mixed>
 	 * @throws InvalidData
-	 * @param class-string<Callback> $callbackType
 	 */
 	protected function handleClassCallbacks(
 		array $data,
@@ -537,10 +537,10 @@ class DefaultProcessor implements Processor
 	 * @param mixed $data
 	 * @param FieldContext|FieldSetContext $baseFieldContext
 	 * @param ClassMeta|PropertyMeta $meta
+	 * @param class-string<Callback> $callbackType
 	 * @return mixed
 	 * @throws ValueDoesNotMatch
 	 * @throws InvalidData
-	 * @param class-string<Callback> $callbackType
 	 */
 	protected function applyCallbacks(
 		$data,

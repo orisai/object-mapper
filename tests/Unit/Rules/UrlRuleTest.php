@@ -23,8 +23,9 @@ final class UrlRuleTest extends RuleTestCase
 	}
 
 	/**
-	 * @dataProvider provideValidValues
 	 * @param mixed $value
+	 *
+	 * @dataProvider provideValidValues
 	 */
 	public function testProcessValid($value): void
 	{
@@ -48,8 +49,9 @@ final class UrlRuleTest extends RuleTestCase
 	}
 
 	/**
-	 * @dataProvider provideInvalidValues
 	 * @param mixed $value
+	 *
+	 * @dataProvider provideInvalidValues
 	 */
 	public function testProcessInvalid($value): void
 	{

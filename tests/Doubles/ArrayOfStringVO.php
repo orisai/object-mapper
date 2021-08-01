@@ -11,6 +11,7 @@ final class ArrayOfStringVO extends ValueObject
 
 	/**
 	 * @var array<string>
+	 *
 	 * @ArrayOf(
 	 *     @StringValue()
 	 * )

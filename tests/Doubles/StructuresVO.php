@@ -16,6 +16,7 @@ final class StructuresVO extends ValueObject
 
 	/**
 	 * @var DefaultsVO|array<mixed>
+	 *
 	 * @AnyOf({
 	 *     @Structure(DefaultsVO::class),
 	 *     @ArrayOf(
@@ -27,6 +28,7 @@ final class StructuresVO extends ValueObject
 
 	/**
 	 * @var DefaultsVO|array<mixed>
+	 *
 	 * @AnyOf({
 	 *     @Structure(DefaultsVO::class),
 	 *     @ArrayOf(
@@ -38,9 +40,10 @@ final class StructuresVO extends ValueObject
 
 	/**
 	 * @var array<DefaultsVO|NoDefaultsVO>
+	 *
 	 * @ArrayOf(
 	 *     @AnyOf({
-	 *     	   @Structure(NoDefaultsVO::class),
+	 *         @Structure(NoDefaultsVO::class),
 	 *         @Structure(DefaultsVO::class),
 	 *     })
 	 * )
