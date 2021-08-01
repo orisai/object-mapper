@@ -24,7 +24,6 @@ final class ObjectRuleTest extends RuleTestCase
 
 	/**
 	 * @param mixed $value
-	 *
 	 * @dataProvider provideValidValues
 	 */
 	public function testProcessValid($value): void
@@ -55,7 +54,6 @@ final class ObjectRuleTest extends RuleTestCase
 
 	/**
 	 * @param mixed $value
-	 *
 	 * @dataProvider provideInvalidValues
 	 */
 	public function testProcessInvalid($value): void

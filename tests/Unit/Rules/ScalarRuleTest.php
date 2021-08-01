@@ -25,7 +25,6 @@ final class ScalarRuleTest extends RuleTestCase
 
 	/**
 	 * @param mixed $value
-	 *
 	 * @dataProvider provideValidValues
 	 */
 	public function testProcessValid($value): void
@@ -53,7 +52,6 @@ final class ScalarRuleTest extends RuleTestCase
 
 	/**
 	 * @param mixed $value
-	 *
 	 * @dataProvider provideInvalidValues
 	 */
 	public function testProcessInvalid($value): void

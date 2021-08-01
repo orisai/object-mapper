@@ -24,7 +24,6 @@ final class FloatRuleTest extends RuleTestCase
 	/**
 	 * @param mixed $value
 	 * @param array<mixed> $args
-	 *
 	 * @dataProvider provideValidValues
 	 */
 	public function testProcessValid($value, float $expected, array $args = []): void
@@ -86,7 +85,6 @@ final class FloatRuleTest extends RuleTestCase
 
 	/**
 	 * @param mixed $value
-	 *
 	 * @dataProvider provideFloatLikeValues
 	 */
 	public function testProcessFloatLike($value, float $expected): void
@@ -126,7 +124,6 @@ final class FloatRuleTest extends RuleTestCase
 
 	/**
 	 * @param mixed $value
-	 *
 	 * @dataProvider provideInvalidValues
 	 */
 	public function testProcessInvalid($value): void

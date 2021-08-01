@@ -21,7 +21,6 @@ final class MixedRuleTest extends RuleTestCase
 
 	/**
 	 * @param mixed $value
-	 *
 	 * @dataProvider provideValidValues
 	 */
 	public function testProcessValid($value): void

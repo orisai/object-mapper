@@ -11,7 +11,6 @@ final class ArrayOfIntVO extends ValueObject
 
 	/**
 	 * @var array<int>
-	 *
 	 * @ArrayOf(
 	 *     @IntValue()
 	 * )

@@ -15,7 +15,6 @@ final class ArrayOfBench extends ProcessingTestCase
 	/**
 	 * @param array<string> $items
 	 * @throws InvalidData
-	 *
 	 * @Iterations(3)
 	 * @ParamProviders("provideArrayOfStrings")
 	 */
@@ -32,7 +31,6 @@ final class ArrayOfBench extends ProcessingTestCase
 	/**
 	 * @param array<int> $items
 	 * @throws InvalidData
-	 *
 	 * @Iterations(3)
 	 * @ParamProviders("provideArrayOfInts")
 	 */

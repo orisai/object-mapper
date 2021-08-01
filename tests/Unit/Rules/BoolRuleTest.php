@@ -24,7 +24,6 @@ final class BoolRuleTest extends RuleTestCase
 
 	/**
 	 * @param mixed $value
-	 *
 	 * @dataProvider provideValidValues
 	 */
 	public function testProcessValid($value): void
@@ -49,7 +48,6 @@ final class BoolRuleTest extends RuleTestCase
 
 	/**
 	 * @param mixed $value
-	 *
 	 * @dataProvider provideBoolLikeValues
 	 */
 	public function testProcessBoolLike($value, bool $expected): void
@@ -82,7 +80,6 @@ final class BoolRuleTest extends RuleTestCase
 
 	/**
 	 * @param mixed $value
-	 *
 	 * @dataProvider provideInvalidValues
 	 */
 	public function testProcessInvalid($value): void
