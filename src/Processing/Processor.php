@@ -12,11 +12,11 @@ interface Processor
 	/**
 	 * Validate data against $class schema, call all callbacks and map data to initialized $class instance
 	 *
-	 * @phpstan-template T of ValueObject
+	 * @template T of ValueObject
 	 * @param mixed $data
 	 * @throws InvalidData
-	 * @phpstan-param class-string<T> $class
-	 * @phpstan-return T
+	 * @param class-string<T> $class
+	 * @return T
 	 */
 	public function process($data, string $class, ?Options $options = null): ValueObject;
 
