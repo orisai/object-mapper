@@ -34,23 +34,19 @@ final class ArrayTypeTest extends TestCase
 		self::assertSame([], $type->getInvalidPairs());
 
 		$key1 = 123;
-		$invalidKey1 = new MessageType('test');
-		$invalidItem1 = new MessageType('test');
-		$type->addInvalidPair(
-			$key1,
-			ValueDoesNotMatch::create($invalidKey1, NoValue::create()),
-			ValueDoesNotMatch::create($invalidItem1, NoValue::create()),
-		);
+		$invalidKey1 = ValueDoesNotMatch::create(new MessageType('test'), NoValue::create());
+		$invalidItem1 = ValueDoesNotMatch::create(new MessageType('test'), NoValue::create());
+		$type->addInvalidPair($key1, $invalidKey1, $invalidItem1);
 
 		$key2 = 'foo';
 		$invalidKey2 = null;
-		$invalidItem2 = new MessageType('test');
-		$type->addInvalidPair($key2, $invalidKey2, ValueDoesNotMatch::create($invalidItem2, NoValue::create()));
+		$invalidItem2 = ValueDoesNotMatch::create(new MessageType('test'), NoValue::create());
+		$type->addInvalidPair($key2, $invalidKey2, $invalidItem2);
 
 		$key3 = 'bar';
-		$invalidKey3 = new MessageType('test');
+		$invalidKey3 = ValueDoesNotMatch::create(new MessageType('test'), NoValue::create());
 		$invalidItem3 = null;
-		$type->addInvalidPair($key3, ValueDoesNotMatch::create($invalidKey3, NoValue::create()), $invalidItem3);
+		$type->addInvalidPair($key3, $invalidKey3, $invalidItem3);
 
 		self::assertTrue($type->hasInvalidPairs());
 		self::assertSame(

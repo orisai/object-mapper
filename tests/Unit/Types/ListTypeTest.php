@@ -32,10 +32,10 @@ final class ListTypeTest extends TestCase
 		self::assertFalse($type->hasInvalidItems());
 		self::assertSame([], $type->getInvalidItems());
 
-		$invalid1 = new MessageType('test');
-		$invalid2 = new SimpleValueType('test');
-		$type->addInvalidItem(123, ValueDoesNotMatch::create($invalid1, NoValue::create()));
-		$type->addInvalidItem('foo', ValueDoesNotMatch::create($invalid2, NoValue::create()));
+		$invalid1 = ValueDoesNotMatch::create(new MessageType('test'), NoValue::create());
+		$invalid2 = ValueDoesNotMatch::create(new SimpleValueType('test'), NoValue::create());
+		$type->addInvalidItem(123, $invalid1);
+		$type->addInvalidItem('foo', $invalid2);
 
 		self::assertTrue($type->hasInvalidItems());
 		self::assertSame(

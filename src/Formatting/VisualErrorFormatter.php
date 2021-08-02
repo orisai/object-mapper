@@ -295,12 +295,12 @@ class VisualErrorFormatter implements ErrorFormatter, TypeFormatter
 			$invalidPairString = sprintf('%s%s', $this->valueToString($key, false), $this->pathAndTypeSeparator);
 
 			if ($pairKeyType !== null) {
-				$invalidPairString .= $this->format($pairKeyType, null);
+				$invalidPairString .= $this->format($pairKeyType->getInvalidType(), null);
 				$invalidPairString .= ' => ';
 			}
 
 			if ($pairItemType !== null) {
-				$invalidPairString .= $this->format($pairItemType, $innerLevel);
+				$invalidPairString .= $this->format($pairItemType->getInvalidType(), $innerLevel);
 			} else {
 				$invalidPairString .= 'value';
 			}
@@ -364,7 +364,7 @@ class VisualErrorFormatter implements ErrorFormatter, TypeFormatter
 
 		foreach ($invalidItems as $key => $invalidItem) {
 			$invalidItemString = sprintf('%s%s', $this->valueToString($key, false), $this->pathAndTypeSeparator);
-			$invalidItemString .= $this->format($invalidItem, $innerLevel);
+			$invalidItemString .= $this->format($invalidItem->getInvalidType(), $innerLevel);
 			$invalidItemsString .= $this->formatComplexTypeInnerLine(
 				$invalidItemString,
 				$innerLevel,

@@ -16,7 +16,7 @@ final class StructureType implements Type
 	/** @var array<Type> */
 	private array $fields = [];
 
-	/** @var array<bool> */
+	/** @var array<WithTypeAndValue> */
 	private array $invalidFields = [];
 
 	/** @var array<Type> */
@@ -52,7 +52,7 @@ final class StructureType implements Type
 	public function overwriteInvalidField($field, WithTypeAndValue $typeAndValue): void
 	{
 		$this->fields[$field] = $typeAndValue->getInvalidType();
-		$this->invalidFields[$field] = true;
+		$this->invalidFields[$field] = $typeAndValue;
 	}
 
 	/**
@@ -61,6 +61,14 @@ final class StructureType implements Type
 	public function getFields(): array
 	{
 		return $this->fields;
+	}
+
+	/**
+	 * @return array<WithTypeAndValue>
+	 */
+	public function getInvalidFields(): array
+	{
+		return $this->invalidFields;
 	}
 
 	public function markInvalid(): void
@@ -83,7 +91,7 @@ final class StructureType implements Type
 	 */
 	public function isFieldInvalid($field): bool
 	{
-		return $this->invalidFields[$field] ?? false;
+		return isset($this->invalidFields[$field]);
 	}
 
 	public function addError(Type $type): void
