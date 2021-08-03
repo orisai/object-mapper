@@ -27,12 +27,14 @@ final class NoDefaultsVO extends ValueObject
 
 	/**
 	 * @phpcsSuppress SlevomatCodingStandard.TypeHints.PropertyTypeHint.MissingAnyTypeHint
+	 *
 	 * @StringValue()
 	 */
 	public $untypedString;
 
 	/**
 	 * @var array<mixed>
+	 *
 	 * @ArrayOf(
 	 *     @MixedValue()
 	 * )
@@ -44,6 +46,7 @@ final class NoDefaultsVO extends ValueObject
 
 	/**
 	 * @var array<int, DefaultsVO>
+	 *
 	 * @ArrayOf(
 	 *     key=@IntValue(),
 	 *     item=@Structure(DefaultsVO::class),

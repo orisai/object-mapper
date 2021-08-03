@@ -24,6 +24,7 @@ final class IntRuleTest extends RuleTestCase
 	/**
 	 * @param mixed $value
 	 * @param array<mixed> $args
+	 *
 	 * @dataProvider provideValidValues
 	 */
 	public function testProcessValid($value, array $args = []): void
@@ -63,6 +64,7 @@ final class IntRuleTest extends RuleTestCase
 
 	/**
 	 * @param mixed $value
+	 *
 	 * @dataProvider provideIntLikeValues
 	 */
 	public function testProcessIntLike($value, int $expected): void
@@ -95,6 +97,7 @@ final class IntRuleTest extends RuleTestCase
 
 	/**
 	 * @param mixed $value
+	 *
 	 * @dataProvider provideInvalidValues
 	 */
 	public function testProcessInvalid($value): void
