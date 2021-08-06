@@ -19,7 +19,6 @@ final class AnyOfRule extends CompoundRule
 	 */
 	public function processValue($value, Args $args, FieldContext $context)
 	{
-		$inputValue = $value;
 		$type = $this->createType($args, $context);
 		$anyValidationSucceeded = false;
 
@@ -34,19 +33,23 @@ final class AnyOfRule extends CompoundRule
 			$nestedRuleArgs = $this->createRuleArgsInst($nestedRule, $nestedRuleMeta);
 
 			try {
+				// the $value will not be mutated if exception occurs
 				$value = $nestedRule->processValue(
 					$value,
 					$nestedRuleArgs,
 					$context,
 				);
+
+				// only $value that is valid is mutated
 				$anyValidationSucceeded = true;
 			} catch (ValueDoesNotMatch | InvalidData $exception) {
+				// exception will always contain original value
 				$type->overwriteInvalidSubtype($key, $exception);
 			}
 		}
 
 		if (!$anyValidationSucceeded) {
-			throw ValueDoesNotMatch::create($type, $inputValue);
+			throw ValueDoesNotMatch::create($type, $value);
 		}
 
 		return $value;
