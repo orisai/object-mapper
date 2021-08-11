@@ -6,6 +6,7 @@ use Orisai\ObjectMapper\Context\FieldContext;
 use Orisai\ObjectMapper\Exception\InvalidData;
 use Orisai\ObjectMapper\Exception\ValueDoesNotMatch;
 use Orisai\ObjectMapper\Meta\Args;
+use Orisai\ObjectMapper\NoValue;
 use Orisai\ObjectMapper\Types\CompoundType;
 
 final class AnyOfRule extends CompoundRule
@@ -49,7 +50,7 @@ final class AnyOfRule extends CompoundRule
 		}
 
 		if (!$anyValidationSucceeded) {
-			throw ValueDoesNotMatch::create($type, $value);
+			throw ValueDoesNotMatch::create($type, NoValue::create());
 		}
 
 		return $value;

@@ -5,11 +5,10 @@ namespace Tests\Orisai\ObjectMapper\Unit\Rules;
 use Orisai\Exceptions\Logic\InvalidArgument;
 use Orisai\ObjectMapper\Exception\ValueDoesNotMatch;
 use Orisai\ObjectMapper\Meta\MetaSource;
+use Orisai\ObjectMapper\NoValue;
 use Orisai\ObjectMapper\Rules\AllOfRule;
 use Orisai\ObjectMapper\Rules\CompoundRuleArgs;
-use Orisai\ObjectMapper\Rules\IntRule;
 use Orisai\ObjectMapper\Rules\MixedRule;
-use Orisai\ObjectMapper\Rules\StringRule;
 use Orisai\ObjectMapper\Rules\StructureRule;
 use Orisai\ObjectMapper\Types\CompoundType;
 use Orisai\ObjectMapper\Types\MessageType;
@@ -91,39 +90,8 @@ final class AllOfRuleTest extends RuleTestCase
 
 			self::assertFalse($type->isSubtypeInvalid(2));
 			self::assertTrue($type->isSubtypeSkipped(2));
-		}
 
-		self::assertNotNull($exception);
-	}
-
-	public function testProcessNestedRuleValueMutation(): void
-	{
-		$exception = null;
-		$value = '123';
-		try {
-			$this->rule->processValue(
-				$value,
-				CompoundRuleArgs::fromArray(
-					$this->rule->resolveArgs(
-						[
-							AllOfRule::RULES => [
-								[MetaSource::OPTION_TYPE => StringRule::class],
-								[
-									MetaSource::OPTION_TYPE => IntRule::class,
-									MetaSource::OPTION_ARGS => [
-										IntRule::CAST_NUMERIC_STRING => true,
-									],
-								],
-								[MetaSource::OPTION_TYPE => AlwaysInvalidRule::class],
-							],
-						],
-						$this->ruleArgsContext(),
-					),
-				),
-				$this->fieldContext(),
-			);
-		} catch (ValueDoesNotMatch $exception) {
-			self::assertSame($value, $exception->getInvalidValue());
+			self::assertInstanceOf(NoValue::class, $exception->getInvalidValue());
 		}
 
 		self::assertNotNull($exception);

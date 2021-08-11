@@ -17,17 +17,15 @@ final class CompoundType implements Type
 		OPERATOR_AND = '&',
 		OPERATOR_OR = '|';
 
-	private const OPERATORS
-		= [
-			self::OPERATOR_AND,
-			self::OPERATOR_OR,
-		];
+	private const OPERATORS = [
+		self::OPERATOR_AND,
+		self::OPERATOR_OR,
+	];
 
-	private const OPERATORS_HUMAN
-		= [
-			self::OPERATOR_AND => 'and',
-			self::OPERATOR_OR => 'or',
-		];
+	private const OPERATORS_HUMAN = [
+		self::OPERATOR_AND => 'and',
+		self::OPERATOR_OR => 'or',
+	];
 
 	/** @var array<Type> */
 	private array $subtypes = [];
@@ -96,20 +94,14 @@ final class CompoundType implements Type
 		if (!array_key_exists($key, $this->subtypes)) {
 			throw InvalidState::create()
 				->withMessage(
-					sprintf(
-						'Cannot mark subtype with key %s skipped because it was never set',
-						$key,
-					),
+					"Cannot mark subtype with key $key skipped because it was never set",
 				);
 		}
 
 		if ($this->isSubtypeInvalid($key)) {
 			throw InvalidState::create()
 				->withMessage(
-					sprintf(
-						'Cannot mark subtype with key %s skipped because it was already overwritten with invalid subtype',
-						$key,
-					),
+					"Cannot mark subtype with key $key skipped because it was already overwritten with invalid subtype",
 				);
 		}
 
@@ -132,20 +124,14 @@ final class CompoundType implements Type
 		if (!array_key_exists($key, $this->subtypes)) {
 			throw InvalidState::create()
 				->withMessage(
-					sprintf(
-						'Cannot overwrite subtype with key %s with invalid subtype because it was never set',
-						$key,
-					),
+					"Cannot overwrite subtype with key $key with invalid subtype because it was never set",
 				);
 		}
 
 		if ($this->isSubtypeSkipped($key)) {
 			throw InvalidState::create()
 				->withMessage(
-					sprintf(
-						'Cannot overwrite subtype with key %s because it is already marked as skipped',
-						$key,
-					),
+					"Cannot overwrite subtype with key $key because it is already marked as skipped",
 				);
 		}
 

@@ -6,6 +6,7 @@ use Orisai\ObjectMapper\Context\FieldContext;
 use Orisai\ObjectMapper\Exception\InvalidData;
 use Orisai\ObjectMapper\Exception\ValueDoesNotMatch;
 use Orisai\ObjectMapper\Meta\Args;
+use Orisai\ObjectMapper\NoValue;
 use Orisai\ObjectMapper\Types\CompoundType;
 
 final class AllOfRule extends CompoundRule
@@ -19,7 +20,6 @@ final class AllOfRule extends CompoundRule
 	 */
 	public function processValue($value, Args $args, FieldContext $context)
 	{
-		$inputValue = $value;
 		$type = $this->createType($args, $context);
 		$anyValidationFailed = false;
 
@@ -46,7 +46,7 @@ final class AllOfRule extends CompoundRule
 		}
 
 		if ($anyValidationFailed) {
-			throw ValueDoesNotMatch::create($type, $inputValue);
+			throw ValueDoesNotMatch::create($type, NoValue::create());
 		}
 
 		return $value;
