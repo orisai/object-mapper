@@ -111,6 +111,10 @@ final class DateTimeRuleTest extends RuleTestCase
 	 */
 	public function provideInvalidValues(): Generator
 	{
+		yield [null];
+		yield [[]];
+		yield [true];
+		yield [1.2];
 		yield ['whatever'];
 		yield ['whatever', DateTimeImmutable::ATOM];
 		yield ['whatever', DateTimeRule::FORMAT_TIMESTAMP, 'timestamp'];
