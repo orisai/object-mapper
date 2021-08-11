@@ -6,6 +6,7 @@ use Orisai\ObjectMapper\Exception\ValueDoesNotMatch;
 use Orisai\ObjectMapper\Exception\WithTypeAndValue;
 use Orisai\ObjectMapper\Meta\DefaultValueMeta;
 use Orisai\ObjectMapper\Meta\MetaSource;
+use Orisai\ObjectMapper\NoValue;
 use Orisai\ObjectMapper\Rules\ListOfRule;
 use Orisai\ObjectMapper\Rules\MixedRule;
 use Orisai\ObjectMapper\Rules\MultiValueArgs;
@@ -143,6 +144,35 @@ final class ListOfRuleTest extends RuleTestCase
 			self::assertTrue($type->getParameter(ListOfRule::MAX_ITEMS)->isInvalid());
 			self::assertFalse($type->hasInvalidItems());
 			self::assertSame($value, $exception->getInvalidValue());
+		}
+
+		self::assertNotNull($exception);
+	}
+
+	public function testProcessInvalidItemsOnly(): void
+	{
+		$exception = null;
+		$value = ['foo', 123, 456];
+
+		try {
+			$this->rule->processValue(
+				$value,
+				MultiValueArgs::fromArray($this->rule->resolveArgs([
+					ListOfRule::ITEM_RULE => [MetaSource::OPTION_TYPE => StringRule::class],
+				], $this->ruleArgsContext())),
+				$this->fieldContext(),
+			);
+		} catch (ValueDoesNotMatch $exception) {
+			$type = $exception->getInvalidType();
+			self::assertInstanceOf(ListType::class, $type);
+
+			self::assertFalse($type->isInvalid());
+			self::assertFalse($type->areKeysInvalid());
+			self::assertFalse($type->hasInvalidParameters());
+			self::assertTrue($type->hasInvalidItems());
+			self::assertInstanceOf(NoValue::class, $exception->getInvalidValue());
+
+			self::assertCount(2, $type->getInvalidItems());
 		}
 
 		self::assertNotNull($exception);
