@@ -163,8 +163,7 @@ final class AnyOfRuleTest extends RuleTestCase
 			$type,
 		);
 
-		self::assertSame('|', $type->getOperator());
-		self::assertSame('or', $type->getOperator(true));
+		self::assertSame($type::OPERATOR_OR, $type->getOperator());
 
 		$subtypes = $type->getSubtypes();
 		self::assertCount(3, $subtypes);

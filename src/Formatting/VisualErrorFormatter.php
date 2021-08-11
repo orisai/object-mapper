@@ -64,11 +64,6 @@ class VisualErrorFormatter implements ErrorFormatter, TypeFormatter
 	 */
 	public string $itemsIndentation = "\t";
 
-	/**
-	 * Replace special characters like & or | with words
-	 */
-	public bool $humanReadableTypes = false;
-
 	protected FormattingScopes $scopes;
 
 	public function __construct()
@@ -261,7 +256,7 @@ class VisualErrorFormatter implements ErrorFormatter, TypeFormatter
 
 		$formatted = '';
 		$lastKey = array_key_last($subtypes);
-		$operator = $type->getOperator($this->humanReadableTypes);
+		$operator = $type->getOperator();
 
 		foreach ($subtypes as $key => $subtype) {
 			// In invalid subtype are valid nodes filtered
