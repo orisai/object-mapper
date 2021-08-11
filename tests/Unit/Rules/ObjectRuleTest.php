@@ -73,6 +73,7 @@ final class ObjectRuleTest extends RuleTestCase
 			assert($type instanceof SimpleValueType);
 
 			self::assertSame('object', $type->getName());
+			self::assertSame($value, $exception->getInvalidValue());
 		}
 
 		self::assertNotNull($exception);

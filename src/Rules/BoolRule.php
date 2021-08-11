@@ -65,7 +65,7 @@ final class BoolRule implements Rule
 			return $value;
 		}
 
-		throw ValueDoesNotMatch::create($this->createType($args, $context));
+		throw ValueDoesNotMatch::create($this->createType($args, $context), $value);
 	}
 
 	/**

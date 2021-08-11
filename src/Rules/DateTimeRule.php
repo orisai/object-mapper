@@ -110,7 +110,7 @@ final class DateTimeRule implements Rule
 	public function processValue($value, Args $args, FieldContext $context)
 	{
 		if (!is_string($value) && !is_int($value)) {
-			throw ValueDoesNotMatch::create($this->createType($args, $context));
+			throw ValueDoesNotMatch::create($this->createType($args, $context), $value);
 		}
 
 		$format = $args->format;
@@ -129,14 +129,14 @@ final class DateTimeRule implements Rule
 			try {
 				$datetime = new $type($stringValue);
 			} catch (Throwable $exception) {
-				throw ValueDoesNotMatch::create($this->createType($args, $context));
+				throw ValueDoesNotMatch::create($this->createType($args, $context), $value);
 			}
 		} else {
 			$datetime = $type::createFromFormat($format, $stringValue);
 		}
 
 		if ($datetime === false) {
-			throw ValueDoesNotMatch::create($this->createType($args, $context));
+			throw ValueDoesNotMatch::create($this->createType($args, $context), $value);
 		}
 
 		return $context->isInitializeObjects()

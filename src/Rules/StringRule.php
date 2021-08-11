@@ -67,7 +67,7 @@ final class StringRule implements Rule
 	public function processValue($value, Args $args, FieldContext $context): string
 	{
 		if (!is_string($value)) {
-			throw ValueDoesNotMatch::create($this->createType($args, $context));
+			throw ValueDoesNotMatch::create($this->createType($args, $context), $value);
 		}
 
 		$invalidParameters = [];
@@ -92,7 +92,7 @@ final class StringRule implements Rule
 			$type = $this->createType($args, $context);
 			$type->markParametersInvalid($invalidParameters);
 
-			throw ValueDoesNotMatch::create($type);
+			throw ValueDoesNotMatch::create($type, $value);
 		}
 
 		return $value;

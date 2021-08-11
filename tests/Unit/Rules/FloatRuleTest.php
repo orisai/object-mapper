@@ -144,6 +144,7 @@ final class FloatRuleTest extends RuleTestCase
 			assert($type instanceof SimpleValueType);
 
 			self::assertSame('float', $type->getName());
+			self::assertSame($value, $exception->getInvalidValue());
 		}
 
 		self::assertNotNull($exception);
@@ -166,10 +167,11 @@ final class FloatRuleTest extends RuleTestCase
 	public function testProcessInvalidParameterMax(): void
 	{
 		$exception = null;
+		$value = '100';
 
 		try {
 			$this->rule->processValue(
-				'100',
+				$value,
 				FloatArgs::fromArray($this->rule->resolveArgs([
 					FloatRule::CAST_NUMERIC_STRING => true,
 					FloatRule::MAX => 10,
@@ -183,6 +185,7 @@ final class FloatRuleTest extends RuleTestCase
 			self::assertSame('float', $type->getName());
 			self::assertTrue($type->hasInvalidParameters());
 			self::assertTrue($type->getParameter(FloatRule::MAX)->isInvalid());
+			self::assertSame($value, $exception->getInvalidValue());
 		}
 
 		self::assertNotNull($exception);
@@ -191,10 +194,11 @@ final class FloatRuleTest extends RuleTestCase
 	public function testProcessInvalidParametersUnsignedAndMin(): void
 	{
 		$exception = null;
+		$value = '-100';
 
 		try {
 			$this->rule->processValue(
-				'-100',
+				$value,
 				FloatArgs::fromArray($this->rule->resolveArgs([
 					FloatRule::CAST_NUMERIC_STRING => true,
 					FloatRule::MIN => 10,
@@ -210,6 +214,7 @@ final class FloatRuleTest extends RuleTestCase
 			self::assertTrue($type->hasInvalidParameters());
 			self::assertTrue($type->getParameter(FloatRule::MIN)->isInvalid());
 			self::assertTrue($type->getParameter(FloatRule::UNSIGNED)->isInvalid());
+			self::assertSame($value, $exception->getInvalidValue());
 		}
 
 		self::assertNotNull($exception);

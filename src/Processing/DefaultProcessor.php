@@ -25,6 +25,7 @@ use Orisai\ObjectMapper\Meta\PropertyMeta;
 use Orisai\ObjectMapper\Meta\SharedMeta;
 use Orisai\ObjectMapper\Modifiers\FieldNameModifier;
 use Orisai\ObjectMapper\Modifiers\SkippedModifier;
+use Orisai\ObjectMapper\NoValue;
 use Orisai\ObjectMapper\Options;
 use Orisai\ObjectMapper\Rules\RuleManager;
 use Orisai\ObjectMapper\Rules\StructureArgs;
@@ -182,7 +183,7 @@ class DefaultProcessor implements Processor
 			$type = $context->getType();
 			$type->markInvalid();
 
-			throw InvalidData::create($type);
+			throw InvalidData::create($type, $data);
 		}
 
 		return $data;
@@ -232,7 +233,7 @@ class DefaultProcessor implements Processor
 		$type = $fieldSetContext->getType();
 
 		if ($type->hasInvalidFields()) {
-			throw InvalidData::create($type);
+			throw InvalidData::create($type, NoValue::create());
 		}
 
 		return $data;
@@ -279,7 +280,10 @@ class DefaultProcessor implements Processor
 				$hint = ($hintedFieldName !== null ? sprintf(', did you mean `%s`?', $hintedFieldName) : '.');
 				$type->overwriteInvalidField(
 					$fieldName,
-					new MessageType(sprintf('Field is unknown%s', $hint)),
+					ValueDoesNotMatch::create(
+						new MessageType(sprintf('Field is unknown%s', $hint)),
+						$value,
+					),
 				);
 
 				continue;
@@ -311,7 +315,7 @@ class DefaultProcessor implements Processor
 					$propertyMeta,
 				);
 			} catch (ValueDoesNotMatch | InvalidData $exception) {
-				$type->overwriteInvalidField($fieldName, $exception->getInvalidType());
+				$type->overwriteInvalidField($fieldName, $exception);
 			}
 		}
 
@@ -395,7 +399,10 @@ class DefaultProcessor implements Processor
 						? $this->process([], $structureArgs->type, $options)
 						: $this->processWithoutInitialization([], $structureArgs->type, $options);
 				} catch (InvalidData $exception) {
-					$type->overwriteInvalidField($missingField, $exception->getInvalidType());
+					$type->overwriteInvalidField(
+						$missingField,
+						InvalidData::create($exception->getInvalidType(), NoValue::create()),
+					);
 				}
 			} elseif ($requiredFields !== $options::REQUIRE_NONE && !$type->isFieldInvalid($missingField)) {
 				// Field is missing and have no default value, mark as invalid
@@ -403,9 +410,12 @@ class DefaultProcessor implements Processor
 				$propertyRule = $this->ruleManager->getRule($propertyRuleMeta->getType());
 				$type->overwriteInvalidField(
 					$missingField,
-					$propertyRule->createType(
-						$this->createRuleArgsInst($propertyRule, $propertyRuleMeta),
-						$this->getTypeContext(),
+					ValueDoesNotMatch::create(
+						$propertyRule->createType(
+							$this->createRuleArgsInst($propertyRule, $propertyRuleMeta),
+							$this->getTypeContext(),
+						),
+						NoValue::create(),
 					),
 				);
 			}
@@ -520,14 +530,16 @@ class DefaultProcessor implements Processor
 			$data = $this->applyCallbacks($data, $fieldSetContext, $runContext, $meta, $callbackType);
 			assert(is_array($data)); // Class callbacks are forced to define return type
 		} catch (ValueDoesNotMatch | InvalidData $exception) {
-			$catchedType = $exception->getInvalidType();
+			$caughtType = $exception->getInvalidType();
 
 			// User thrown type is not the actual type from FieldSetContext
-			if ($catchedType !== $type) {
-				$type->addError($catchedType);
+			if ($caughtType !== $type) {
+				$type->addError($exception);
+
+				throw InvalidData::create($type, NoValue::create());
 			}
 
-			throw InvalidData::create($type);
+			throw InvalidData::create($type, $data);
 		}
 
 		return $data;
@@ -691,13 +703,13 @@ class DefaultProcessor implements Processor
 				$object->$propertyName = $processed;
 				$skippedPropertiesContext->removeInitializedProperty($propertyName);
 			} catch (ValueDoesNotMatch | InvalidData $exception) {
-				$type->overwriteInvalidField($fieldName, $exception->getInvalidType());
+				$type->overwriteInvalidField($fieldName, $exception);
 			}
 		}
 
 		// If any of fields is invalid, throw error
 		if ($type->hasInvalidFields()) {
-			throw InvalidData::create($type);
+			throw InvalidData::create($type, NoValue::create());
 		}
 
 		// Object is fully initialized, remove partial context

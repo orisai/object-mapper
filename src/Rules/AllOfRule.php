@@ -6,6 +6,7 @@ use Orisai\ObjectMapper\Context\FieldContext;
 use Orisai\ObjectMapper\Exception\InvalidData;
 use Orisai\ObjectMapper\Exception\ValueDoesNotMatch;
 use Orisai\ObjectMapper\Meta\Args;
+use Orisai\ObjectMapper\NoValue;
 use Orisai\ObjectMapper\Types\CompoundType;
 
 final class AllOfRule extends CompoundRule
@@ -39,13 +40,13 @@ final class AllOfRule extends CompoundRule
 					$context,
 				);
 			} catch (ValueDoesNotMatch | InvalidData $exception) {
-				$type->overwriteInvalidSubtype($key, $exception->getInvalidType());
+				$type->overwriteInvalidSubtype($key, $exception);
 				$anyValidationFailed = true;
 			}
 		}
 
 		if ($anyValidationFailed) {
-			throw ValueDoesNotMatch::create($type);
+			throw ValueDoesNotMatch::create($type, NoValue::create());
 		}
 
 		return $value;

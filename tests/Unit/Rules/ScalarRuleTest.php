@@ -4,6 +4,7 @@ namespace Tests\Orisai\ObjectMapper\Unit\Rules;
 
 use Generator;
 use Orisai\ObjectMapper\Exception\ValueDoesNotMatch;
+use Orisai\ObjectMapper\NoValue;
 use Orisai\ObjectMapper\Rules\EmptyArgs;
 use Orisai\ObjectMapper\Rules\ScalarRule;
 use Orisai\ObjectMapper\Types\CompoundType;
@@ -75,6 +76,15 @@ final class ScalarRuleTest extends RuleTestCase
 			foreach ($subtypes as $key => $subtype) {
 				self::assertTrue($type->isSubtypeInvalid($key));
 			}
+
+			$invalidSubtypes = $type->getInvalidSubtypes();
+			self::assertCount(4, $invalidSubtypes);
+			foreach ($invalidSubtypes as $key => $invalidSubtype) {
+				self::assertSame($invalidSubtype->getInvalidType(), $subtypes[$key]);
+				self::assertInstanceOf(NoValue::class, $invalidSubtype->getInvalidValue());
+			}
+
+			self::assertSame($value, $exception->getInvalidValue());
 		}
 
 		self::assertNotNull($exception);

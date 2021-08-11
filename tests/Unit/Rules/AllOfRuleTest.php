@@ -5,6 +5,7 @@ namespace Tests\Orisai\ObjectMapper\Unit\Rules;
 use Orisai\Exceptions\Logic\InvalidArgument;
 use Orisai\ObjectMapper\Exception\ValueDoesNotMatch;
 use Orisai\ObjectMapper\Meta\MetaSource;
+use Orisai\ObjectMapper\NoValue;
 use Orisai\ObjectMapper\Rules\AllOfRule;
 use Orisai\ObjectMapper\Rules\CompoundRuleArgs;
 use Orisai\ObjectMapper\Rules\MixedRule;
@@ -34,12 +35,17 @@ final class AllOfRuleTest extends RuleTestCase
 	{
 		$processed = $this->rule->processValue(
 			'value',
-			CompoundRuleArgs::fromArray($this->rule->resolveArgs([
-				AllOfRule::RULES => [
-					[MetaSource::OPTION_TYPE => MixedRule::class],
-					[MetaSource::OPTION_TYPE => MixedRule::class],
-				],
-			], $this->ruleArgsContext())),
+			CompoundRuleArgs::fromArray(
+				$this->rule->resolveArgs(
+					[
+						AllOfRule::RULES => [
+							[MetaSource::OPTION_TYPE => MixedRule::class],
+							[MetaSource::OPTION_TYPE => MixedRule::class],
+						],
+					],
+					$this->ruleArgsContext(),
+				),
+			),
 			$this->fieldContext(),
 		);
 
@@ -53,13 +59,18 @@ final class AllOfRuleTest extends RuleTestCase
 		try {
 			$this->rule->processValue(
 				'value',
-				CompoundRuleArgs::fromArray($this->rule->resolveArgs([
-					AllOfRule::RULES => [
-						[MetaSource::OPTION_TYPE => MixedRule::class],
-						[MetaSource::OPTION_TYPE => AlwaysInvalidRule::class],
-						[MetaSource::OPTION_TYPE => MixedRule::class],
-					],
-				], $this->ruleArgsContext())),
+				CompoundRuleArgs::fromArray(
+					$this->rule->resolveArgs(
+						[
+							AllOfRule::RULES => [
+								[MetaSource::OPTION_TYPE => MixedRule::class],
+								[MetaSource::OPTION_TYPE => AlwaysInvalidRule::class],
+								[MetaSource::OPTION_TYPE => MixedRule::class],
+							],
+						],
+						$this->ruleArgsContext(),
+					),
+				),
 				$this->fieldContext(),
 			);
 		} catch (ValueDoesNotMatch $exception) {
@@ -79,6 +90,8 @@ final class AllOfRuleTest extends RuleTestCase
 
 			self::assertFalse($type->isSubtypeInvalid(2));
 			self::assertTrue($type->isSubtypeSkipped(2));
+
+			self::assertInstanceOf(NoValue::class, $exception->getInvalidValue());
 		}
 
 		self::assertNotNull($exception);
@@ -91,15 +104,20 @@ final class AllOfRuleTest extends RuleTestCase
 		try {
 			$this->rule->processValue(
 				null,
-				CompoundRuleArgs::fromArray($this->rule->resolveArgs([
-					AllOfRule::RULES => [
+				CompoundRuleArgs::fromArray(
+					$this->rule->resolveArgs(
 						[
-							MetaSource::OPTION_TYPE => StructureRule::class,
-							MetaSource::OPTION_ARGS => [StructureRule::TYPE => DefaultsVO::class],
+							AllOfRule::RULES => [
+								[
+									MetaSource::OPTION_TYPE => StructureRule::class,
+									MetaSource::OPTION_ARGS => [StructureRule::TYPE => DefaultsVO::class],
+								],
+								[MetaSource::OPTION_TYPE => MixedRule::class],
+							],
 						],
-						[MetaSource::OPTION_TYPE => MixedRule::class],
-					],
-				], $this->ruleArgsContext())),
+						$this->ruleArgsContext(),
+					),
+				),
 				$this->fieldContext(),
 			);
 		} catch (ValueDoesNotMatch $exception) {
@@ -116,6 +134,8 @@ final class AllOfRuleTest extends RuleTestCase
 
 			self::assertFalse($type->isSubtypeInvalid(1));
 			self::assertTrue($type->isSubtypeSkipped(1));
+
+			self::assertInstanceOf(NoValue::class, $exception->getInvalidValue());
 		}
 
 		self::assertNotNull($exception);
@@ -123,13 +143,18 @@ final class AllOfRuleTest extends RuleTestCase
 
 	public function testType(): void
 	{
-		$args = CompoundRuleArgs::fromArray($this->rule->resolveArgs([
-			AllOfRule::RULES => [
-				[MetaSource::OPTION_TYPE => MixedRule::class],
-				[MetaSource::OPTION_TYPE => MixedRule::class],
-				[MetaSource::OPTION_TYPE => AlwaysInvalidRule::class],
-			],
-		], $this->ruleArgsContext()));
+		$args = CompoundRuleArgs::fromArray(
+			$this->rule->resolveArgs(
+				[
+					AllOfRule::RULES => [
+						[MetaSource::OPTION_TYPE => MixedRule::class],
+						[MetaSource::OPTION_TYPE => MixedRule::class],
+						[MetaSource::OPTION_TYPE => AlwaysInvalidRule::class],
+					],
+				],
+				$this->ruleArgsContext(),
+			),
+		);
 
 		$type = $this->rule->createType($args, $this->typeContext);
 
@@ -151,20 +176,25 @@ final class AllOfRuleTest extends RuleTestCase
 	public function testInnerRuleResolved(): void
 	{
 		$this->expectException(InvalidArgument::class);
-		$this->expectExceptionMessage(sprintf(
-			'"%s" does not accept any arguments, "foo" given',
-			MixedRule::class,
-		));
+		$this->expectExceptionMessage(
+			sprintf(
+				'"%s" does not accept any arguments, "foo" given',
+				MixedRule::class,
+			),
+		);
 
-		$this->rule->resolveArgs([
-			AllOfRule::RULES => [
-				[MetaSource::OPTION_TYPE => MixedRule::class],
-				[
-					MetaSource::OPTION_TYPE => MixedRule::class,
-					MetaSource::OPTION_ARGS => ['foo' => 'bar'],
+		$this->rule->resolveArgs(
+			[
+				AllOfRule::RULES => [
+					[MetaSource::OPTION_TYPE => MixedRule::class],
+					[
+						MetaSource::OPTION_TYPE => MixedRule::class,
+						MetaSource::OPTION_ARGS => ['foo' => 'bar'],
+					],
 				],
 			],
-		], $this->ruleArgsContext());
+			$this->ruleArgsContext(),
+		);
 	}
 
 }
