@@ -65,7 +65,8 @@ final class CompoundTypeTest extends TestCase
 		self::assertTrue($type->isSubtypeValid($key1));
 		self::assertFalse($type->isSubtypeInvalid($key1));
 
-		$type->overwriteInvalidSubtype($key1, ValueDoesNotMatch::create($invalid1, NoValue::create()));
+		$invalid1Exception = ValueDoesNotMatch::create($invalid1, NoValue::create());
+		$type->overwriteInvalidSubtype($key1, $invalid1Exception);
 		self::assertFalse($type->isSubtypeValid($key1));
 		self::assertTrue($type->isSubtypeInvalid($key1));
 		self::assertSame($invalid1, $type->getSubtypes()[$key1]);
@@ -77,6 +78,13 @@ final class CompoundTypeTest extends TestCase
 				$key3 => $subtype3,
 			],
 			$type->getSubtypes(),
+		);
+
+		self::assertSame(
+			[
+				$key1 => $invalid1Exception,
+			],
+			$type->getInvalidSubtypes(),
 		);
 
 		self::assertFalse($type->isSubtypeSkipped($key2));

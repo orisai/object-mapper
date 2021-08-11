@@ -84,7 +84,8 @@ final class StructureTypeTest extends TestCase
 		self::assertFalse($type->isFieldInvalid($key3));
 
 		$invalid1 = new MessageType('t');
-		$type->overwriteInvalidField($key1, ValueDoesNotMatch::create($invalid1, NoValue::create()));
+		$invalid1Exception = ValueDoesNotMatch::create($invalid1, NoValue::create());
+		$type->overwriteInvalidField($key1, $invalid1Exception);
 
 		self::assertTrue($type->hasInvalidFields());
 		self::assertTrue($type->isFieldInvalid($key1));
@@ -97,6 +98,13 @@ final class StructureTypeTest extends TestCase
 				$key3 => $field3,
 			],
 			$type->getFields(),
+		);
+
+		self::assertSame(
+			[
+				$key1 => $invalid1Exception,
+			],
+			$type->getInvalidFields(),
 		);
 	}
 
