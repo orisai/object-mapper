@@ -4,6 +4,8 @@ namespace Tests\Orisai\ObjectMapper\Unit\Types;
 
 use Orisai\Exceptions\Logic\InvalidArgument;
 use Orisai\Exceptions\Logic\InvalidState;
+use Orisai\ObjectMapper\Exception\ValueDoesNotMatch;
+use Orisai\ObjectMapper\NoValue;
 use Orisai\ObjectMapper\Types\ArrayType;
 use Orisai\ObjectMapper\Types\CompoundType;
 use Orisai\ObjectMapper\Types\MessageType;
@@ -63,7 +65,8 @@ final class CompoundTypeTest extends TestCase
 		self::assertTrue($type->isSubtypeValid($key1));
 		self::assertFalse($type->isSubtypeInvalid($key1));
 
-		$type->overwriteInvalidSubtype($key1, $invalid1);
+		$invalid1Exception = ValueDoesNotMatch::create($invalid1, NoValue::create());
+		$type->overwriteInvalidSubtype($key1, $invalid1Exception);
 		self::assertFalse($type->isSubtypeValid($key1));
 		self::assertTrue($type->isSubtypeInvalid($key1));
 		self::assertSame($invalid1, $type->getSubtypes()[$key1]);
@@ -75,6 +78,13 @@ final class CompoundTypeTest extends TestCase
 				$key3 => $subtype3,
 			],
 			$type->getSubtypes(),
+		);
+
+		self::assertSame(
+			[
+				$key1 => $invalid1Exception,
+			],
+			$type->getInvalidSubtypes(),
 		);
 
 		self::assertFalse($type->isSubtypeSkipped($key2));
@@ -111,7 +121,7 @@ final class CompoundTypeTest extends TestCase
 		);
 
 		$type = new CompoundType(CompoundType::OPERATOR_AND);
-		$type->overwriteInvalidSubtype(1, new MessageType('f'));
+		$type->overwriteInvalidSubtype(1, ValueDoesNotMatch::create(new MessageType('f'), NoValue::create()));
 	}
 
 	public function testIsSkippedAndCannotBeOverwritten(): void
@@ -122,7 +132,7 @@ final class CompoundTypeTest extends TestCase
 		$type = new CompoundType(CompoundType::OPERATOR_AND);
 		$type->addSubtype(1, new MessageType('t'));
 		$type->setSubtypeSkipped(1);
-		$type->overwriteInvalidSubtype(1, new MessageType('t'));
+		$type->overwriteInvalidSubtype(1, ValueDoesNotMatch::create(new MessageType('t'), NoValue::create()));
 	}
 
 	public function testIsOverwrittenAndCannotBeSkipped(): void
@@ -134,7 +144,7 @@ final class CompoundTypeTest extends TestCase
 
 		$type = new CompoundType(CompoundType::OPERATOR_AND);
 		$type->addSubtype(1, new MessageType('t'));
-		$type->overwriteInvalidSubtype(1, new MessageType('t'));
+		$type->overwriteInvalidSubtype(1, ValueDoesNotMatch::create(new MessageType('t'), NoValue::create()));
 		$type->setSubtypeSkipped(1);
 	}
 

@@ -53,10 +53,11 @@ final class StructureRuleTest extends RuleTestCase
 	public function testProcessInvalid(): void
 	{
 		$exception = null;
+		$value = null;
 
 		try {
 			$this->rule->processValue(
-				null,
+				$value,
 				StructureArgs::fromArray($this->rule->resolveArgs([
 					StructureRule::TYPE => DefaultsVO::class,
 				], $this->ruleArgsContext())),
@@ -66,6 +67,7 @@ final class StructureRuleTest extends RuleTestCase
 			$type = $exception->getInvalidType();
 
 			self::assertTrue($type->isInvalid());
+			self::assertSame($value, $exception->getInvalidValue());
 		}
 
 		self::assertNotNull($exception);

@@ -4,6 +4,7 @@ namespace Orisai\ObjectMapper\Types;
 
 use Orisai\Exceptions\Logic\InvalidArgument;
 use Orisai\Exceptions\Logic\InvalidState;
+use Orisai\ObjectMapper\Exception\WithTypeAndValue;
 use function array_key_exists;
 use function implode;
 use function in_array;
@@ -32,7 +33,7 @@ final class CompoundType implements Type
 	/** @var array<int|string> */
 	private array $skippedSubtypes = [];
 
-	/** @var array<int|string> */
+	/** @var array<WithTypeAndValue> */
 	private array $invalidSubtypes = [];
 
 	private string $operator;
@@ -41,11 +42,13 @@ final class CompoundType implements Type
 	{
 		if (!in_array($operator, self::OPERATORS, true)) {
 			throw InvalidArgument::create()
-				->withMessage(sprintf(
-					'Invalid operator %s, choose one of %s',
-					$operator,
-					implode(', ', self::OPERATORS),
-				));
+				->withMessage(
+					sprintf(
+						'Invalid operator %s, choose one of %s',
+						$operator,
+						implode(', ', self::OPERATORS),
+					),
+				);
 		}
 
 		$this->operator = $operator;
@@ -58,10 +61,12 @@ final class CompoundType implements Type
 	{
 		if (array_key_exists($key, $this->subtypes)) {
 			throw InvalidState::create()
-				->withMessage(sprintf(
-					'Cannot set subtype with key %s because it was already set',
-					$key,
-				));
+				->withMessage(
+					sprintf(
+						'Cannot set subtype with key %s because it was already set',
+						$key,
+					),
+				);
 		}
 
 		$this->subtypes[$key] = $node;
@@ -75,6 +80,12 @@ final class CompoundType implements Type
 		return $this->subtypes;
 	}
 
+	/** @return  array<WithTypeAndValue> */
+	public function getInvalidSubtypes(): array
+	{
+		return $this->invalidSubtypes;
+	}
+
 	/**
 	 * @param string|int $key
 	 */
@@ -82,18 +93,16 @@ final class CompoundType implements Type
 	{
 		if (!array_key_exists($key, $this->subtypes)) {
 			throw InvalidState::create()
-				->withMessage(sprintf(
-					'Cannot mark subtype with key %s skipped because it was never set',
-					$key,
-				));
+				->withMessage(
+					"Cannot mark subtype with key $key skipped because it was never set",
+				);
 		}
 
 		if ($this->isSubtypeInvalid($key)) {
 			throw InvalidState::create()
-				->withMessage(sprintf(
-					'Cannot mark subtype with key %s skipped because it was already overwritten with invalid subtype',
-					$key,
-				));
+				->withMessage(
+					"Cannot mark subtype with key $key skipped because it was already overwritten with invalid subtype",
+				);
 		}
 
 		$this->skippedSubtypes[] = $key;
@@ -110,26 +119,24 @@ final class CompoundType implements Type
 	/**
 	 * @param string|int $key
 	 */
-	public function overwriteInvalidSubtype($key, Type $type): void
+	public function overwriteInvalidSubtype($key, WithTypeAndValue $withTypeAndValue): void
 	{
 		if (!array_key_exists($key, $this->subtypes)) {
 			throw InvalidState::create()
-				->withMessage(sprintf(
-					'Cannot overwrite subtype with key %s with invalid subtype because it was never set',
-					$key,
-				));
+				->withMessage(
+					"Cannot overwrite subtype with key $key with invalid subtype because it was never set",
+				);
 		}
 
 		if ($this->isSubtypeSkipped($key)) {
 			throw InvalidState::create()
-				->withMessage(sprintf(
-					'Cannot overwrite subtype with key %s because it is already marked as skipped',
-					$key,
-				));
+				->withMessage(
+					"Cannot overwrite subtype with key $key because it is already marked as skipped",
+				);
 		}
 
-		$this->subtypes[$key] = $type;
-		$this->invalidSubtypes[] = $key;
+		$this->subtypes[$key] = $withTypeAndValue->getInvalidType();
+		$this->invalidSubtypes[$key] = $withTypeAndValue;
 	}
 
 	/**
@@ -137,7 +144,7 @@ final class CompoundType implements Type
 	 */
 	public function isSubtypeInvalid($key): bool
 	{
-		return in_array($key, $this->invalidSubtypes, true);
+		return isset($this->invalidSubtypes[$key]);
 	}
 
 	public function getOperator(bool $human = false): string

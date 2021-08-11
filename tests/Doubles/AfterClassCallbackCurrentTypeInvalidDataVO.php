@@ -27,7 +27,7 @@ final class AfterClassCallbackCurrentTypeInvalidDataVO extends ValueObject
 		$type = $context->getType();
 		$type->markInvalid();
 
-		throw InvalidData::create($type);
+		throw InvalidData::create($type, $data);
 	}
 
 }

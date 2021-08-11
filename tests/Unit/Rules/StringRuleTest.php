@@ -67,6 +67,7 @@ final class StringRuleTest extends RuleTestCase
 			assert($type instanceof SimpleValueType);
 
 			self::assertSame('string', $type->getName());
+			self::assertSame($value, $exception->getInvalidValue());
 		}
 
 		self::assertNotNull($exception);
@@ -89,10 +90,11 @@ final class StringRuleTest extends RuleTestCase
 	public function testProcessInvalidParameters(): void
 	{
 		$exception = null;
+		$value = '';
 
 		try {
 			$this->rule->processValue(
-				'',
+				$value,
 				StringArgs::fromArray($this->rule->resolveArgs([
 					StringRule::NOT_EMPTY => true,
 					StringRule::MIN_LENGTH => 1,
@@ -111,6 +113,7 @@ final class StringRuleTest extends RuleTestCase
 			self::assertTrue($type->getParameter(StringRule::MIN_LENGTH)->isInvalid());
 			self::assertTrue($type->getParameter(StringRule::PATTERN)->isInvalid());
 			self::assertFalse($type->getParameter(StringRule::MAX_LENGTH)->isInvalid());
+			self::assertSame($value, $exception->getInvalidValue());
 		}
 
 		self::assertNotNull($exception);
@@ -119,10 +122,11 @@ final class StringRuleTest extends RuleTestCase
 	public function testProcessAnotherInvalidParameters(): void
 	{
 		$exception = null;
+		$value = 'I am longer than expected';
 
 		try {
 			$this->rule->processValue(
-				'I am longer than expected',
+				$value,
 				StringArgs::fromArray($this->rule->resolveArgs([
 					StringRule::NOT_EMPTY => true,
 					StringRule::MIN_LENGTH => 1,
@@ -141,6 +145,7 @@ final class StringRuleTest extends RuleTestCase
 			self::assertFalse($type->getParameter(StringRule::MIN_LENGTH)->isInvalid());
 			self::assertFalse($type->getParameter(StringRule::PATTERN)->isInvalid());
 			self::assertTrue($type->getParameter(StringRule::MAX_LENGTH)->isInvalid());
+			self::assertSame($value, $exception->getInvalidValue());
 		}
 
 		self::assertNotNull($exception);
@@ -171,6 +176,7 @@ final class StringRuleTest extends RuleTestCase
 			self::assertFalse($type->hasParameter(StringRule::MIN_LENGTH));
 			self::assertFalse($type->hasParameter(StringRule::PATTERN));
 			self::assertFalse($type->hasParameter(StringRule::MAX_LENGTH));
+			self::assertSame($value, $exception->getInvalidValue());
 		}
 
 		self::assertNotNull($exception);

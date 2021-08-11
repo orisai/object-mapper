@@ -3,6 +3,8 @@
 namespace Tests\Orisai\ObjectMapper\Unit\Types;
 
 use Orisai\Exceptions\Logic\InvalidArgument;
+use Orisai\ObjectMapper\Exception\ValueDoesNotMatch;
+use Orisai\ObjectMapper\NoValue;
 use Orisai\ObjectMapper\Types\ArrayType;
 use Orisai\ObjectMapper\Types\MessageType;
 use PHPUnit\Framework\TestCase;
@@ -32,17 +34,17 @@ final class ArrayTypeTest extends TestCase
 		self::assertSame([], $type->getInvalidPairs());
 
 		$key1 = 123;
-		$invalidKey1 = new MessageType('test');
-		$invalidItem1 = new MessageType('test');
+		$invalidKey1 = ValueDoesNotMatch::create(new MessageType('test'), NoValue::create());
+		$invalidItem1 = ValueDoesNotMatch::create(new MessageType('test'), NoValue::create());
 		$type->addInvalidPair($key1, $invalidKey1, $invalidItem1);
 
 		$key2 = 'foo';
 		$invalidKey2 = null;
-		$invalidItem2 = new MessageType('test');
+		$invalidItem2 = ValueDoesNotMatch::create(new MessageType('test'), NoValue::create());
 		$type->addInvalidPair($key2, $invalidKey2, $invalidItem2);
 
 		$key3 = 'bar';
-		$invalidKey3 = new MessageType('test');
+		$invalidKey3 = ValueDoesNotMatch::create(new MessageType('test'), NoValue::create());
 		$invalidItem3 = null;
 		$type->addInvalidPair($key3, $invalidKey3, $invalidItem3);
 

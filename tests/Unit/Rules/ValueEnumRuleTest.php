@@ -81,6 +81,7 @@ final class ValueEnumRuleTest extends RuleTestCase
 			assert($type instanceof EnumType);
 
 			self::assertSame($expectedValues, $type->getValues());
+			self::assertSame($value, $exception->getInvalidValue());
 		}
 
 		self::assertNotNull($exception);

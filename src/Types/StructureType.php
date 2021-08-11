@@ -2,6 +2,7 @@
 
 namespace Orisai\ObjectMapper\Types;
 
+use Orisai\ObjectMapper\Exception\WithTypeAndValue;
 use Orisai\ObjectMapper\ValueObject;
 
 final class StructureType implements Type
@@ -15,10 +16,10 @@ final class StructureType implements Type
 	/** @var array<Type> */
 	private array $fields = [];
 
-	/** @var array<bool> */
+	/** @var array<WithTypeAndValue> */
 	private array $invalidFields = [];
 
-	/** @var array<Type> */
+	/** @var array<WithTypeAndValue> */
 	private array $errors = [];
 
 	/**
@@ -48,10 +49,10 @@ final class StructureType implements Type
 	/**
 	 * @param int|string $field
 	 */
-	public function overwriteInvalidField($field, Type $type): void
+	public function overwriteInvalidField($field, WithTypeAndValue $typeAndValue): void
 	{
-		$this->fields[$field] = $type;
-		$this->invalidFields[$field] = true;
+		$this->fields[$field] = $typeAndValue->getInvalidType();
+		$this->invalidFields[$field] = $typeAndValue;
 	}
 
 	/**
@@ -60,6 +61,14 @@ final class StructureType implements Type
 	public function getFields(): array
 	{
 		return $this->fields;
+	}
+
+	/**
+	 * @return array<WithTypeAndValue>
+	 */
+	public function getInvalidFields(): array
+	{
+		return $this->invalidFields;
 	}
 
 	public function markInvalid(): void
@@ -82,12 +91,12 @@ final class StructureType implements Type
 	 */
 	public function isFieldInvalid($field): bool
 	{
-		return $this->invalidFields[$field] ?? false;
+		return isset($this->invalidFields[$field]);
 	}
 
-	public function addError(Type $type): void
+	public function addError(WithTypeAndValue $error): void
 	{
-		$this->errors[] = $type;
+		$this->errors[] = $error;
 	}
 
 	public function hasErrors(): bool
@@ -96,7 +105,7 @@ final class StructureType implements Type
 	}
 
 	/**
-	 * @return array<Type>
+	 * @return array<WithTypeAndValue>
 	 */
 	public function getErrors(): array
 	{

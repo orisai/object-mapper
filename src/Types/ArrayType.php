@@ -3,6 +3,7 @@
 namespace Orisai\ObjectMapper\Types;
 
 use Orisai\Exceptions\Logic\InvalidArgument;
+use Orisai\ObjectMapper\Exception\WithTypeAndValue;
 
 final class ArrayType extends MultiValueType
 {
@@ -10,8 +11,8 @@ final class ArrayType extends MultiValueType
 	private ?Type $keyType;
 
 	/**
-	 * @var array<array<Type|null>>
-	 * @phpstan-var array<array{?Type, ?Type}>
+	 * @var array<array<WithTypeAndValue|null>>
+	 * @phpstan-var array<array{?WithTypeAndValue, ?WithTypeAndValue}>
 	 */
 	private array $invalidPairs = [];
 
@@ -29,14 +30,14 @@ final class ArrayType extends MultiValueType
 	/**
 	 * @param string|int $key
 	 */
-	public function addInvalidPair($key, ?Type $keyType, ?Type $itemType): void
+	public function addInvalidPair($key, ?WithTypeAndValue $keyTypeAndValue, ?WithTypeAndValue $itemTypeAndValue): void
 	{
-		if ($keyType === null && $itemType === null) {
+		if ($keyTypeAndValue === null && $itemTypeAndValue === null) {
 			throw InvalidArgument::create()
 				->withMessage('At least one of key type and item type of invalid pair should not be null');
 		}
 
-		$this->invalidPairs[$key] = [$keyType, $itemType];
+		$this->invalidPairs[$key] = [$keyTypeAndValue, $itemTypeAndValue];
 	}
 
 	public function hasInvalidPairs(): bool
@@ -45,8 +46,8 @@ final class ArrayType extends MultiValueType
 	}
 
 	/**
-	 * @return array<array<Type|null>>
-	 * @phpstan-return array<array{?Type, ?Type}>
+	 * @return array<array<WithTypeAndValue|null>>
+	 * @phpstan-return array<array{?WithTypeAndValue, ?WithTypeAndValue}>
 	 */
 	public function getInvalidPairs(): array
 	{

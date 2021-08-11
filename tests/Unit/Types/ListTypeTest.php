@@ -2,6 +2,8 @@
 
 namespace Tests\Orisai\ObjectMapper\Unit\Types;
 
+use Orisai\ObjectMapper\Exception\ValueDoesNotMatch;
+use Orisai\ObjectMapper\NoValue;
 use Orisai\ObjectMapper\Types\ListType;
 use Orisai\ObjectMapper\Types\MessageType;
 use Orisai\ObjectMapper\Types\SimpleValueType;
@@ -30,8 +32,8 @@ final class ListTypeTest extends TestCase
 		self::assertFalse($type->hasInvalidItems());
 		self::assertSame([], $type->getInvalidItems());
 
-		$invalid1 = new MessageType('test');
-		$invalid2 = new SimpleValueType('test');
+		$invalid1 = ValueDoesNotMatch::create(new MessageType('test'), NoValue::create());
+		$invalid2 = ValueDoesNotMatch::create(new SimpleValueType('test'), NoValue::create());
 		$type->addInvalidItem(123, $invalid1);
 		$type->addInvalidItem('foo', $invalid2);
 

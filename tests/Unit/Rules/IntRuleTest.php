@@ -115,6 +115,7 @@ final class IntRuleTest extends RuleTestCase
 			assert($type instanceof SimpleValueType);
 
 			self::assertSame('int', $type->getName());
+			self::assertSame($value, $exception->getInvalidValue());
 		}
 
 		self::assertNotNull($exception);
@@ -138,10 +139,11 @@ final class IntRuleTest extends RuleTestCase
 	public function testProcessInvalidParameterMax(): void
 	{
 		$exception = null;
+		$value = '100';
 
 		try {
 			$this->rule->processValue(
-				'100',
+				$value,
 				IntArgs::fromArray($this->rule->resolveArgs([
 					IntRule::CAST_NUMERIC_STRING => true,
 					IntRule::MAX => 10,
@@ -155,6 +157,7 @@ final class IntRuleTest extends RuleTestCase
 			self::assertSame('int', $type->getName());
 			self::assertTrue($type->hasInvalidParameters());
 			self::assertTrue($type->getParameter(IntRule::MAX)->isInvalid());
+			self::assertSame($value, $exception->getInvalidValue());
 		}
 
 		self::assertNotNull($exception);
@@ -163,10 +166,11 @@ final class IntRuleTest extends RuleTestCase
 	public function testProcessInvalidParametersUnsignedAndMin(): void
 	{
 		$exception = null;
+		$value = '-100';
 
 		try {
 			$this->rule->processValue(
-				'-100',
+				$value,
 				IntArgs::fromArray($this->rule->resolveArgs([
 					IntRule::CAST_NUMERIC_STRING => true,
 					IntRule::MIN => 10,
@@ -182,6 +186,7 @@ final class IntRuleTest extends RuleTestCase
 			self::assertTrue($type->hasInvalidParameters());
 			self::assertTrue($type->getParameter(IntRule::MIN)->isInvalid());
 			self::assertTrue($type->getParameter(IntRule::UNSIGNED)->isInvalid());
+			self::assertSame($value, $exception->getInvalidValue());
 		}
 
 		self::assertNotNull($exception);

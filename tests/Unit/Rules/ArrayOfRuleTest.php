@@ -3,6 +3,7 @@
 namespace Tests\Orisai\ObjectMapper\Unit\Rules;
 
 use Orisai\ObjectMapper\Exception\ValueDoesNotMatch;
+use Orisai\ObjectMapper\Exception\WithTypeAndValue;
 use Orisai\ObjectMapper\Meta\DefaultValueMeta;
 use Orisai\ObjectMapper\Meta\MetaSource;
 use Orisai\ObjectMapper\Rules\ArrayOfArgs;
@@ -83,10 +84,11 @@ final class ArrayOfRuleTest extends RuleTestCase
 	public function testProcessInvalid(): void
 	{
 		$exception = null;
+		$value = null;
 
 		try {
 			$this->rule->processValue(
-				null,
+				$value,
 				ArrayOfArgs::fromArray($this->rule->resolveArgs([
 					ArrayOfRule::ITEM_RULE => [MetaSource::OPTION_TYPE => MixedRule::class],
 				], $this->ruleArgsContext())),
@@ -97,6 +99,7 @@ final class ArrayOfRuleTest extends RuleTestCase
 			assert($type instanceof ArrayType);
 
 			self::assertTrue($type->isInvalid());
+			self::assertSame($value, $exception->getInvalidValue());
 		}
 
 		self::assertNotNull($exception);
@@ -105,10 +108,11 @@ final class ArrayOfRuleTest extends RuleTestCase
 	public function testProcessInvalidParameterMinAndInvalidValuesAndKeys(): void
 	{
 		$exception = null;
+		$value = ['foo' => 'bar', 'baz' => 123, 10 => 456, 11 => 'test'];
 
 		try {
 			$this->rule->processValue(
-				['foo' => 'bar', 'baz' => 123, 10 => 456, 11 => 'test'],
+				$value,
 				ArrayOfArgs::fromArray($this->rule->resolveArgs([
 					ArrayOfRule::KEY_RULE => [MetaSource::OPTION_TYPE => StringRule::class],
 					ArrayOfRule::ITEM_RULE => [MetaSource::OPTION_TYPE => StringRule::class],
@@ -121,23 +125,24 @@ final class ArrayOfRuleTest extends RuleTestCase
 			assert($type instanceof ArrayType);
 
 			self::assertFalse($type->isInvalid());
+			self::assertSame($value, $exception->getInvalidValue());
 			self::assertTrue($type->getParameter(ArrayOfRule::MIN_ITEMS)->isInvalid());
 
 			self::assertTrue($type->hasInvalidPairs());
 			$invalidPairs = $type->getInvalidPairs();
 			self::assertCount(3, $invalidPairs);
 
-			[$key, $value] = $invalidPairs['baz'];
-			self::assertNull($key);
-			self::assertNotNull($value);
+			[$pairKey, $pairValue] = $invalidPairs['baz'];
+			self::assertNull($pairKey);
+			self::assertInstanceOf(WithTypeAndValue::class, $pairValue);
 
-			[$key, $value] = $invalidPairs[10];
-			self::assertNotNull($key);
-			self::assertNotNull($value);
+			[$pairKey, $pairValue] = $invalidPairs[10];
+			self::assertInstanceOf(WithTypeAndValue::class, $pairKey);
+			self::assertInstanceOf(WithTypeAndValue::class, $pairValue);
 
-			[$key, $value] = $invalidPairs[11];
-			self::assertNotNull($key);
-			self::assertNull($value);
+			[$pairKey, $pairValue] = $invalidPairs[11];
+			self::assertInstanceOf(WithTypeAndValue::class, $pairKey);
+			self::assertNull($pairValue);
 		}
 
 		self::assertNotNull($exception);
@@ -146,10 +151,11 @@ final class ArrayOfRuleTest extends RuleTestCase
 	public function testProcessInvalidParameterMax(): void
 	{
 		$exception = null;
+		$value = ['foo', 3 => 'bar', 'baz', 123, 456];
 
 		try {
 			$this->rule->processValue(
-				['foo', 3 => 'bar', 'baz', 123, 456],
+				$value,
 				ArrayOfArgs::fromArray($this->rule->resolveArgs([
 					ArrayOfRule::ITEM_RULE => [MetaSource::OPTION_TYPE => StringRule::class],
 					ArrayOfRule::MAX_ITEMS => 2,
@@ -164,6 +170,7 @@ final class ArrayOfRuleTest extends RuleTestCase
 			self::assertFalse($type->hasParameter(ArrayOfRule::MIN_ITEMS));
 			self::assertTrue($type->getParameter(ArrayOfRule::MAX_ITEMS)->isInvalid());
 			self::assertFalse($type->hasInvalidPairs());
+			self::assertSame($value, $exception->getInvalidValue());
 		}
 
 		self::assertNotNull($exception);
