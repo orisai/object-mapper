@@ -4,6 +4,8 @@ namespace Tests\Orisai\ObjectMapper\Benchmark;
 
 use Generator;
 use Orisai\ObjectMapper\Exception\InvalidData;
+use PhpBench\Benchmark\Metadata\Annotations\Iterations;
+use PhpBench\Benchmark\Metadata\Annotations\ParamProviders;
 use Tests\Orisai\ObjectMapper\Doubles\ArrayOfIntVO;
 use Tests\Orisai\ObjectMapper\Doubles\ArrayOfStringVO;
 use Tests\Orisai\ObjectMapper\Toolkit\ProcessingTestCase;
@@ -17,7 +19,7 @@ final class ArrayOfBench extends ProcessingTestCase
 	 * @throws InvalidData
 	 *
 	 * @Iterations(3)
-	 * @ParamProviders("provideArrayOfStrings")
+	 * @ParamProviders("provideArrayOfString")
 	 */
 	public function benchArrayOfString(array $items): void
 	{
@@ -34,9 +36,9 @@ final class ArrayOfBench extends ProcessingTestCase
 	 * @throws InvalidData
 	 *
 	 * @Iterations(3)
-	 * @ParamProviders("provideArrayOfInts")
+	 * @ParamProviders("provideArrayOfInt")
 	 */
-	public function benchArrayOfInts(array $items): void
+	public function benchArrayOfInt(array $items): void
 	{
 		$this->setUp();
 		$data = [
@@ -46,13 +48,13 @@ final class ArrayOfBench extends ProcessingTestCase
 		$this->processor->process($data, ArrayOfIntVO::class);
 	}
 
-	public function provideArrayOfStrings(): Generator
+	public function provideArrayOfString(): Generator
 	{
 		yield '10k' => array_fill(0, 10_000, 'string');
 		yield '100k' => array_fill(0, 100_000, 'string');
 	}
 
-	public function provideArrayOfInts(): Generator
+	public function provideArrayOfInt(): Generator
 	{
 		yield '10k' => array_fill(0, 10_000, 42);
 		yield '100k' => array_fill(0, 100_000, 42);
