@@ -62,11 +62,6 @@ class VisualTypeFormatter implements TypeFormatter
 	 */
 	public string $itemsIndentation = "\t";
 
-	/**
-	 * Replace special characters like & or | with words
-	 */
-	public bool $humanReadableTypes = false;
-
 	public function formatType(Type $type): string
 	{
 		return $this->format($type, 0);
@@ -150,7 +145,7 @@ class VisualTypeFormatter implements TypeFormatter
 		$lastKey = array_key_last($subtypes);
 
 		foreach ($subtypes as $key => $subtype) {
-			$separator = $key === $lastKey ? '' : $type->getOperator($this->humanReadableTypes);
+			$separator = $key === $lastKey ? '' : $type->getOperator();
 			$formatted .= sprintf('%s%s', $this->format($subtype, $level), $separator);
 		}
 

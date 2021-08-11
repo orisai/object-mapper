@@ -22,11 +22,6 @@ final class CompoundType implements Type
 		self::OPERATOR_OR,
 	];
 
-	private const OPERATORS_HUMAN = [
-		self::OPERATOR_AND => 'and',
-		self::OPERATOR_OR => 'or',
-	];
-
 	/** @var array<Type> */
 	private array $subtypes = [];
 
@@ -36,6 +31,7 @@ final class CompoundType implements Type
 	/** @var array<WithTypeAndValue> */
 	private array $invalidSubtypes = [];
 
+	/** @phpstan-var self::OPERATOR_* */
 	private string $operator;
 
 	public function __construct(string $operator)
@@ -147,11 +143,12 @@ final class CompoundType implements Type
 		return isset($this->invalidSubtypes[$key]);
 	}
 
-	public function getOperator(bool $human = false): string
+	/**
+	 * @phpstan-return self::OPERATOR_*
+	 */
+	public function getOperator(): string
 	{
-		return $human
-			? self::OPERATORS_HUMAN[$this->operator]
-			: $this->operator;
+		return $this->operator;
 	}
 
 	/**

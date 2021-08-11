@@ -20,7 +20,6 @@ final class CompoundTypeTest extends TestCase
 		$type = new CompoundType(CompoundType::OPERATOR_AND);
 
 		self::assertSame(CompoundType::OPERATOR_AND, $type->getOperator());
-		self::assertSame('and', $type->getOperator(true));
 		self::assertSame([], $type->getSubtypes());
 	}
 
@@ -37,7 +36,6 @@ final class CompoundTypeTest extends TestCase
 		$type = new CompoundType(CompoundType::OPERATOR_OR);
 
 		self::assertSame(CompoundType::OPERATOR_OR, $type->getOperator());
-		self::assertSame('or', $type->getOperator(true));
 		self::assertSame([], $type->getSubtypes());
 
 		$key1 = 1;
