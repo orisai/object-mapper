@@ -14,7 +14,6 @@ use Orisai\ObjectMapper\Types\ListType;
 use Orisai\ObjectMapper\Types\SimpleValueType;
 use Tests\Orisai\ObjectMapper\Doubles\AlwaysInvalidRule;
 use Tests\Orisai\ObjectMapper\Toolkit\RuleTestCase;
-use function assert;
 
 final class ListOfRuleTest extends RuleTestCase
 {
@@ -77,7 +76,7 @@ final class ListOfRuleTest extends RuleTestCase
 			);
 		} catch (ValueDoesNotMatch $exception) {
 			$type = $exception->getInvalidType();
-			assert($type instanceof ListType);
+			self::assertInstanceOf(ListType::class, $type);
 
 			self::assertTrue($type->isInvalid());
 			self::assertSame($value, $exception->getInvalidValue());
@@ -102,7 +101,7 @@ final class ListOfRuleTest extends RuleTestCase
 			);
 		} catch (ValueDoesNotMatch $exception) {
 			$type = $exception->getInvalidType();
-			assert($type instanceof ListType);
+			self::assertInstanceOf(ListType::class, $type);
 
 			self::assertFalse($type->isInvalid());
 			self::assertTrue($type->areKeysInvalid());
@@ -136,7 +135,7 @@ final class ListOfRuleTest extends RuleTestCase
 			);
 		} catch (ValueDoesNotMatch $exception) {
 			$type = $exception->getInvalidType();
-			assert($type instanceof ListType);
+			self::assertInstanceOf(ListType::class, $type);
 
 			self::assertFalse($type->isInvalid());
 			self::assertFalse($type->areKeysInvalid());

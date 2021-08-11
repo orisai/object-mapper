@@ -19,7 +19,6 @@ use Tests\Orisai\ObjectMapper\Doubles\DefaultsVO;
 use Tests\Orisai\ObjectMapper\Doubles\NoDefaultsVO;
 use Tests\Orisai\ObjectMapper\Doubles\StructuresVO;
 use Tests\Orisai\ObjectMapper\Doubles\TestMetaCache;
-use function assert;
 
 final class ArrayDefaultValuesFormatterTest extends TestCase
 {
@@ -52,7 +51,7 @@ final class ArrayDefaultValuesFormatterTest extends TestCase
 			StructureArgs::fromClass($class),
 			new TypeContext($this->metaLoader, $this->ruleManager),
 		);
-		assert($type instanceof StructureType);
+		self::assertInstanceOf(StructureType::class, $type);
 
 		return $type;
 	}

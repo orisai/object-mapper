@@ -8,7 +8,6 @@ use Orisai\ObjectMapper\Rules\FloatArgs;
 use Orisai\ObjectMapper\Rules\FloatRule;
 use Orisai\ObjectMapper\Types\SimpleValueType;
 use Tests\Orisai\ObjectMapper\Toolkit\RuleTestCase;
-use function assert;
 
 final class FloatRuleTest extends RuleTestCase
 {
@@ -141,7 +140,7 @@ final class FloatRuleTest extends RuleTestCase
 			);
 		} catch (ValueDoesNotMatch $exception) {
 			$type = $exception->getInvalidType();
-			assert($type instanceof SimpleValueType);
+			self::assertInstanceOf(SimpleValueType::class, $type);
 
 			self::assertSame('float', $type->getName());
 			self::assertSame($value, $exception->getInvalidValue());
@@ -180,7 +179,7 @@ final class FloatRuleTest extends RuleTestCase
 			);
 		} catch (ValueDoesNotMatch $exception) {
 			$type = $exception->getInvalidType();
-			assert($type instanceof SimpleValueType);
+			self::assertInstanceOf(SimpleValueType::class, $type);
 
 			self::assertSame('float', $type->getName());
 			self::assertTrue($type->hasInvalidParameters());
@@ -208,7 +207,7 @@ final class FloatRuleTest extends RuleTestCase
 			);
 		} catch (ValueDoesNotMatch $exception) {
 			$type = $exception->getInvalidType();
-			assert($type instanceof SimpleValueType);
+			self::assertInstanceOf(SimpleValueType::class, $type);
 
 			self::assertSame('float', $type->getName());
 			self::assertTrue($type->hasInvalidParameters());

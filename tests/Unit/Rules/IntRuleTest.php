@@ -8,7 +8,6 @@ use Orisai\ObjectMapper\Rules\IntArgs;
 use Orisai\ObjectMapper\Rules\IntRule;
 use Orisai\ObjectMapper\Types\SimpleValueType;
 use Tests\Orisai\ObjectMapper\Toolkit\RuleTestCase;
-use function assert;
 
 final class IntRuleTest extends RuleTestCase
 {
@@ -112,7 +111,7 @@ final class IntRuleTest extends RuleTestCase
 			);
 		} catch (ValueDoesNotMatch $exception) {
 			$type = $exception->getInvalidType();
-			assert($type instanceof SimpleValueType);
+			self::assertInstanceOf(SimpleValueType::class, $type);
 
 			self::assertSame('int', $type->getName());
 			self::assertSame($value, $exception->getInvalidValue());
@@ -152,7 +151,7 @@ final class IntRuleTest extends RuleTestCase
 			);
 		} catch (ValueDoesNotMatch $exception) {
 			$type = $exception->getInvalidType();
-			assert($type instanceof SimpleValueType);
+			self::assertInstanceOf(SimpleValueType::class, $type);
 
 			self::assertSame('int', $type->getName());
 			self::assertTrue($type->hasInvalidParameters());
@@ -180,7 +179,7 @@ final class IntRuleTest extends RuleTestCase
 			);
 		} catch (ValueDoesNotMatch $exception) {
 			$type = $exception->getInvalidType();
-			assert($type instanceof SimpleValueType);
+			self::assertInstanceOf(SimpleValueType::class, $type);
 
 			self::assertSame('int', $type->getName());
 			self::assertTrue($type->hasInvalidParameters());

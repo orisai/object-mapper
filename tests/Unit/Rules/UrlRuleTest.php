@@ -9,7 +9,6 @@ use Orisai\ObjectMapper\Rules\UrlRule;
 use Orisai\ObjectMapper\Types\SimpleValueType;
 use stdClass;
 use Tests\Orisai\ObjectMapper\Toolkit\RuleTestCase;
-use function assert;
 
 final class UrlRuleTest extends RuleTestCase
 {
@@ -65,7 +64,7 @@ final class UrlRuleTest extends RuleTestCase
 			);
 		} catch (ValueDoesNotMatch $exception) {
 			$type = $exception->getInvalidType();
-			assert($type instanceof SimpleValueType);
+			self::assertInstanceOf(SimpleValueType::class, $type);
 
 			self::assertSame('url', $type->getName());
 			self::assertSame($value, $exception->getInvalidValue());

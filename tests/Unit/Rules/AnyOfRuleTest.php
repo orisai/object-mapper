@@ -16,7 +16,6 @@ use Orisai\ObjectMapper\Types\SimpleValueType;
 use Tests\Orisai\ObjectMapper\Doubles\AlwaysInvalidRule;
 use Tests\Orisai\ObjectMapper\Doubles\DefaultsVO;
 use Tests\Orisai\ObjectMapper\Toolkit\RuleTestCase;
-use function assert;
 use function sprintf;
 
 final class AnyOfRuleTest extends RuleTestCase
@@ -75,7 +74,7 @@ final class AnyOfRuleTest extends RuleTestCase
 			);
 		} catch (ValueDoesNotMatch $exception) {
 			$type = $exception->getInvalidType();
-			assert($type instanceof CompoundType);
+			self::assertInstanceOf(CompoundType::class, $type);
 
 			self::assertSame('|', $type->getOperator());
 
@@ -122,7 +121,7 @@ final class AnyOfRuleTest extends RuleTestCase
 			);
 		} catch (ValueDoesNotMatch $exception) {
 			$type = $exception->getInvalidType();
-			assert($type instanceof CompoundType);
+			self::assertInstanceOf(CompoundType::class, $type);
 
 			self::assertSame('|', $type->getOperator());
 

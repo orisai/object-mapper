@@ -9,7 +9,6 @@ use Orisai\ObjectMapper\Rules\ObjectRule;
 use Orisai\ObjectMapper\Types\SimpleValueType;
 use stdClass;
 use Tests\Orisai\ObjectMapper\Toolkit\RuleTestCase;
-use function assert;
 
 final class ObjectRuleTest extends RuleTestCase
 {
@@ -70,7 +69,7 @@ final class ObjectRuleTest extends RuleTestCase
 			);
 		} catch (ValueDoesNotMatch $exception) {
 			$type = $exception->getInvalidType();
-			assert($type instanceof SimpleValueType);
+			self::assertInstanceOf(SimpleValueType::class, $type);
 
 			self::assertSame('object', $type->getName());
 			self::assertSame($value, $exception->getInvalidValue());
