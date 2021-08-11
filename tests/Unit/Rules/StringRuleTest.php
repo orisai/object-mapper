@@ -9,7 +9,6 @@ use Orisai\ObjectMapper\Rules\StringRule;
 use Orisai\ObjectMapper\Types\SimpleValueType;
 use stdClass;
 use Tests\Orisai\ObjectMapper\Toolkit\RuleTestCase;
-use function assert;
 
 final class StringRuleTest extends RuleTestCase
 {
@@ -64,7 +63,7 @@ final class StringRuleTest extends RuleTestCase
 			);
 		} catch (ValueDoesNotMatch $exception) {
 			$type = $exception->getInvalidType();
-			assert($type instanceof SimpleValueType);
+			self::assertInstanceOf(SimpleValueType::class, $type);
 
 			self::assertSame('string', $type->getName());
 			self::assertSame($value, $exception->getInvalidValue());
@@ -105,7 +104,7 @@ final class StringRuleTest extends RuleTestCase
 			);
 		} catch (ValueDoesNotMatch $exception) {
 			$type = $exception->getInvalidType();
-			assert($type instanceof SimpleValueType);
+			self::assertInstanceOf(SimpleValueType::class, $type);
 
 			self::assertSame('string', $type->getName());
 			self::assertTrue($type->hasInvalidParameters());
@@ -137,7 +136,7 @@ final class StringRuleTest extends RuleTestCase
 			);
 		} catch (ValueDoesNotMatch $exception) {
 			$type = $exception->getInvalidType();
-			assert($type instanceof SimpleValueType);
+			self::assertInstanceOf(SimpleValueType::class, $type);
 
 			self::assertSame('string', $type->getName());
 			self::assertTrue($type->hasInvalidParameters());
@@ -168,7 +167,7 @@ final class StringRuleTest extends RuleTestCase
 			);
 		} catch (ValueDoesNotMatch $exception) {
 			$type = $exception->getInvalidType();
-			assert($type instanceof SimpleValueType);
+			self::assertInstanceOf(SimpleValueType::class, $type);
 
 			self::assertSame('string', $type->getName());
 			self::assertTrue($type->hasInvalidParameters());

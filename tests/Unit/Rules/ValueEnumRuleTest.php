@@ -8,7 +8,6 @@ use Orisai\ObjectMapper\Rules\ValueEnumArgs;
 use Orisai\ObjectMapper\Rules\ValueEnumRule;
 use Orisai\ObjectMapper\Types\EnumType;
 use Tests\Orisai\ObjectMapper\Toolkit\RuleTestCase;
-use function assert;
 
 final class ValueEnumRuleTest extends RuleTestCase
 {
@@ -78,7 +77,7 @@ final class ValueEnumRuleTest extends RuleTestCase
 			);
 		} catch (ValueDoesNotMatch $exception) {
 			$type = $exception->getInvalidType();
-			assert($type instanceof EnumType);
+			self::assertInstanceOf(EnumType::class, $type);
 
 			self::assertSame($expectedValues, $type->getValues());
 			self::assertSame($value, $exception->getInvalidValue());

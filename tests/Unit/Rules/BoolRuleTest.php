@@ -9,7 +9,6 @@ use Orisai\ObjectMapper\Rules\BoolRule;
 use Orisai\ObjectMapper\Types\SimpleValueType;
 use stdClass;
 use Tests\Orisai\ObjectMapper\Toolkit\RuleTestCase;
-use function assert;
 
 final class BoolRuleTest extends RuleTestCase
 {
@@ -97,7 +96,7 @@ final class BoolRuleTest extends RuleTestCase
 			);
 		} catch (ValueDoesNotMatch $exception) {
 			$type = $exception->getInvalidType();
-			assert($type instanceof SimpleValueType);
+			self::assertInstanceOf(SimpleValueType::class, $type);
 
 			self::assertSame('bool', $type->getName());
 			self::assertSame($value, $exception->getInvalidValue());

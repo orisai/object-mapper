@@ -11,7 +11,6 @@ use Orisai\ObjectMapper\Rules\DateTimeArgs;
 use Orisai\ObjectMapper\Rules\DateTimeRule;
 use Orisai\ObjectMapper\Types\SimpleValueType;
 use Tests\Orisai\ObjectMapper\Toolkit\RuleTestCase;
-use function assert;
 
 final class DateTimeRuleTest extends RuleTestCase
 {
@@ -98,7 +97,7 @@ final class DateTimeRuleTest extends RuleTestCase
 			);
 		} catch (ValueDoesNotMatch $exception) {
 			$type = $exception->getInvalidType();
-			assert($type instanceof SimpleValueType);
+			self::assertInstanceOf(SimpleValueType::class, $type);
 
 			self::assertSame($expectedType, $type->getName());
 			self::assertSame($value, $exception->getInvalidValue());

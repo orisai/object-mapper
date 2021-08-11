@@ -14,7 +14,6 @@ use Orisai\ObjectMapper\Types\ArrayType;
 use Orisai\ObjectMapper\Types\SimpleValueType;
 use Tests\Orisai\ObjectMapper\Doubles\AlwaysInvalidRule;
 use Tests\Orisai\ObjectMapper\Toolkit\RuleTestCase;
-use function assert;
 
 final class ArrayOfRuleTest extends RuleTestCase
 {
@@ -96,7 +95,7 @@ final class ArrayOfRuleTest extends RuleTestCase
 			);
 		} catch (ValueDoesNotMatch $exception) {
 			$type = $exception->getInvalidType();
-			assert($type instanceof ArrayType);
+			self::assertInstanceOf(ArrayType::class, $type);
 
 			self::assertTrue($type->isInvalid());
 			self::assertSame($value, $exception->getInvalidValue());
@@ -122,7 +121,7 @@ final class ArrayOfRuleTest extends RuleTestCase
 			);
 		} catch (ValueDoesNotMatch $exception) {
 			$type = $exception->getInvalidType();
-			assert($type instanceof ArrayType);
+			self::assertInstanceOf(ArrayType::class, $type);
 
 			self::assertFalse($type->isInvalid());
 			self::assertSame($value, $exception->getInvalidValue());
@@ -164,7 +163,7 @@ final class ArrayOfRuleTest extends RuleTestCase
 			);
 		} catch (ValueDoesNotMatch $exception) {
 			$type = $exception->getInvalidType();
-			assert($type instanceof ArrayType);
+			self::assertInstanceOf(ArrayType::class, $type);
 
 			self::assertFalse($type->isInvalid());
 			self::assertFalse($type->hasParameter(ArrayOfRule::MIN_ITEMS));
