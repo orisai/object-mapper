@@ -9,6 +9,7 @@ use Orisai\ObjectMapper\Exception\InvalidData;
 use Orisai\ObjectMapper\Exception\ValueDoesNotMatch;
 use Orisai\ObjectMapper\Meta\Args;
 use Orisai\ObjectMapper\Meta\ArgsChecker;
+use Orisai\ObjectMapper\NoValue;
 use Orisai\ObjectMapper\Types\ArrayType;
 use Orisai\Utils\Arrays\ArrayMerger;
 use function count;
@@ -133,8 +134,12 @@ final class ArrayOfRule extends MultiValueRule
 			}
 		}
 
-		if ($type->hasInvalidParameters() || $type->hasInvalidPairs()) {
-			throw ValueDoesNotMatch::create($type, $value);
+		$hasInvalidParameters = $type->hasInvalidParameters();
+		if ($hasInvalidParameters || $type->hasInvalidPairs()) {
+			throw ValueDoesNotMatch::create(
+				$type,
+				$hasInvalidParameters ? $value : NoValue::create(),
+			);
 		}
 
 		if ($args->mergeDefaults && $context->hasDefaultValue()) {
