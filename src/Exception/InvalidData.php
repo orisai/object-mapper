@@ -5,7 +5,6 @@ namespace Orisai\ObjectMapper\Exception;
 use Orisai\Exceptions\DomainException;
 use Orisai\ObjectMapper\Formatting\ErrorFormatter;
 use Orisai\ObjectMapper\Types\StructureType;
-use function sprintf;
 
 final class InvalidData extends DomainException implements WithTypeAndValue
 {
@@ -16,19 +15,18 @@ final class InvalidData extends DomainException implements WithTypeAndValue
 	private StructureType $invalidType;
 
 	/**
-	 * @param mixed         $invalidValue
+	 * @param mixed $invalidValue
 	 */
 	public static function create(StructureType $invalidType, $invalidValue): self
 	{
 		$self = new self();
 		$self->invalidValue = $invalidValue;
 		$self->invalidType = $invalidType;
+
+		$selfClass = self::class;
+		$formatterClass = ErrorFormatter::class;
 		$self->withMessage(
-			sprintf(
-				'Get validation errors from `%s` with an `%s`',
-				self::class,
-				ErrorFormatter::class,
-			),
+			"Get validation errors from `$selfClass` with an `$formatterClass`",
 		);
 
 		return $self;
