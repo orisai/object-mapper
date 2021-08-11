@@ -101,6 +101,7 @@ final class DateTimeRuleTest extends RuleTestCase
 			assert($type instanceof SimpleValueType);
 
 			self::assertSame($expectedType, $type->getName());
+			self::assertSame($value, $exception->getInvalidValue());
 		}
 
 		self::assertNotNull($exception);

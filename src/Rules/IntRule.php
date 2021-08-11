@@ -107,6 +107,8 @@ final class IntRule implements Rule
 	 */
 	public function processValue($value, Args $args, FieldContext $context): int
 	{
+		$initValue = $value;
+
 		if (!is_int($value)) {
 			$value = $this->tryConvert($value, $args);
 		}
@@ -133,7 +135,7 @@ final class IntRule implements Rule
 			$type = $this->createType($args, $context);
 			$type->markParametersInvalid($invalidParameters);
 
-			throw ValueDoesNotMatch::create($type, $value);
+			throw ValueDoesNotMatch::create($type, $initValue);
 		}
 
 		return $value;

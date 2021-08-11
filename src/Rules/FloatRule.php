@@ -108,6 +108,8 @@ final class FloatRule implements Rule
 	 */
 	public function processValue($value, Args $args, FieldContext $context): float
 	{
+		$initValue = $value;
+
 		if (is_int($value)) {
 			$value = (float) $value;
 		}
@@ -138,7 +140,7 @@ final class FloatRule implements Rule
 			$type = $this->createType($args, $context);
 			$type->markParametersInvalid($invalidParameters);
 
-			throw ValueDoesNotMatch::create($type, $value);
+			throw ValueDoesNotMatch::create($type, $initValue);
 		}
 
 		return $value;

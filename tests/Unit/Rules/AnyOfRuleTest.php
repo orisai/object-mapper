@@ -134,6 +134,8 @@ final class AnyOfRuleTest extends RuleTestCase
 
 			self::assertTrue($type->isSubtypeInvalid(1));
 			self::assertFalse($type->isSubtypeSkipped(1));
+
+			self::assertInstanceOf(NoValue::class, $exception->getInvalidValue());
 		}
 
 		self::assertNotNull($exception);

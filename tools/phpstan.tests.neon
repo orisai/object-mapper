@@ -9,3 +9,7 @@ parameters:
 		# Tests are expected to throw exceptions
 		- message: "#^Method (.+) throws checked exception (.+) but it's missing from the PHPDoc @throws tag\\.$#"
 		  path: %currentWorkingDirectory%/tests/Unit
+
+		# Just let me keep same style for all rule tests
+		- message: '#^You should use assertNull\(\) instead of assertSame\(null, \$actual\)\.$#'
+		  path: %currentWorkingDirectory%/tests/Unit/Rules
