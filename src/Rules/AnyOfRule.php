@@ -34,17 +34,14 @@ final class AnyOfRule extends CompoundRule
 			$nestedRuleArgs = $this->createRuleArgsInst($nestedRule, $nestedRuleMeta);
 
 			try {
-				// the $value will not be mutated if exception occurs
 				$value = $nestedRule->processValue(
 					$value,
 					$nestedRuleArgs,
 					$context,
 				);
 
-				// only $value that is valid is mutated
 				$anyValidationSucceeded = true;
 			} catch (ValueDoesNotMatch | InvalidData $exception) {
-				// exception will always contain original value
 				$type->overwriteInvalidSubtype($key, $exception);
 			}
 		}
