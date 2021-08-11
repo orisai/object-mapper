@@ -530,11 +530,13 @@ class DefaultProcessor implements Processor
 			$data = $this->applyCallbacks($data, $fieldSetContext, $runContext, $meta, $callbackType);
 			assert(is_array($data)); // Class callbacks are forced to define return type
 		} catch (ValueDoesNotMatch | InvalidData $exception) {
-			$catchedType = $exception->getInvalidType();
+			$caughtType = $exception->getInvalidType();
 
 			// User thrown type is not the actual type from FieldSetContext
-			if ($catchedType !== $type) {
-				$type->addError($catchedType);
+			if ($caughtType !== $type) {
+				$type->addError($exception);
+
+				throw InvalidData::create($type, NoValue::create());
 			}
 
 			throw InvalidData::create($type, $data);

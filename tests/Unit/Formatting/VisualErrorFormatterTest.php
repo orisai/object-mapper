@@ -296,7 +296,10 @@ final class VisualErrorFormatterTest extends TestCase
 		$type1->addField('0', new SimpleValueType('t'));
 		$type1->addField('a', new SimpleValueType('t'));
 		$type1->addField('b', $fieldType1);
-		$type1->addError(new MessageType('Whole structure is invalid'));
+		$type1->addError(ValueDoesNotMatch::create(
+			new MessageType('Whole structure is invalid'),
+			NoValue::create(),
+		));
 		$type1->markInvalid();
 
 		self::assertSame(
@@ -351,7 +354,10 @@ Whole structure is invalid',
 		$type1->addField('0', new SimpleValueType('t'));
 		$type1->addField('a', new SimpleValueType('t'));
 		$type1->addField('b', $fieldType1);
-		$type1->addError(new MessageType('Random error'));
+		$type1->addError(ValueDoesNotMatch::create(
+			new MessageType('Random error'),
+			NoValue::create(),
+		));
 		$type1->overwriteInvalidField(
 			'0',
 			ValueDoesNotMatch::create(new SimpleValueType('overwritten'), NoValue::create()),

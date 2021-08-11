@@ -35,10 +35,16 @@ final class StructureTypeTest extends TestCase
 		self::assertSame([], $type->getErrors());
 		self::assertFalse($type->hasErrors());
 
-		$error1 = new MessageType('t');
+		$error1 = ValueDoesNotMatch::create(
+			new MessageType('t'),
+			NoValue::create(),
+		);
 		$type->addError($error1);
 
-		$error2 = new MessageType('t');
+		$error2 = ValueDoesNotMatch::create(
+			new MessageType('t'),
+			NoValue::create(),
+		);
 		$type->addError($error2);
 
 		self::assertTrue($type->hasErrors());

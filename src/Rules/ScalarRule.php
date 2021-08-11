@@ -34,7 +34,8 @@ final class ScalarRule implements Rule
 		$type = $this->createType($args, $context);
 		foreach ($this->getSubtypes() as $key => $subtype) {
 			$type->overwriteInvalidSubtype(
-				$key, ValueDoesNotMatch::create($subtype, NoValue::create()),
+				$key,
+				ValueDoesNotMatch::create($subtype, NoValue::create()),
 			);
 		}
 

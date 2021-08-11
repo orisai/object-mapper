@@ -120,7 +120,7 @@ class VisualErrorFormatter implements ErrorFormatter, TypeFormatter
 			$formatted .= sprintf(
 				'%s%s%s',
 				$rootPath !== '' ? $rootPath . $this->pathNodeSeparator : '',
-				$this->format($error, 0),
+				$this->format($error->getInvalidType(), 0),
 				$fieldSeparator,
 			);
 		}
@@ -206,7 +206,7 @@ class VisualErrorFormatter implements ErrorFormatter, TypeFormatter
 		$this->scopes->openScope(false);
 
 		foreach ($errors as $errorKey => $error) {
-			$formattedError = $this->format($error, $innerLevel);
+			$formattedError = $this->format($error->getInvalidType(), $innerLevel);
 			$formatted .= $this->formatComplexTypeInnerLine($formattedError, $innerLevel, $errorKey === $lastErrorKey);
 		}
 

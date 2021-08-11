@@ -6,6 +6,7 @@ use Orisai\ObjectMapper\Annotation\Callback\After;
 use Orisai\ObjectMapper\Annotation\Expect\StringValue;
 use Orisai\ObjectMapper\Callbacks\CallbackRuntime;
 use Orisai\ObjectMapper\Exception\InvalidData;
+use Orisai\ObjectMapper\Exception\ValueDoesNotMatch;
 use Orisai\ObjectMapper\NoValue;
 use Orisai\ObjectMapper\Types\MessageType;
 use Orisai\ObjectMapper\Types\StructureType;
@@ -26,7 +27,12 @@ final class AfterClassCallbackNewTypeInvalidDataVO extends ValueObject
 	public static function after(): void
 	{
 		$type = new StructureType(EmptyVO::class);
-		$type->addError(new MessageType('test'));
+		$type->addError(
+			ValueDoesNotMatch::create(
+				new MessageType('test'),
+				NoValue::create(),
+			),
+		);
 
 		throw InvalidData::create($type, NoValue::create());
 	}

@@ -19,7 +19,7 @@ final class StructureType implements Type
 	/** @var array<WithTypeAndValue> */
 	private array $invalidFields = [];
 
-	/** @var array<Type> */
+	/** @var array<WithTypeAndValue> */
 	private array $errors = [];
 
 	/**
@@ -94,9 +94,9 @@ final class StructureType implements Type
 		return isset($this->invalidFields[$field]);
 	}
 
-	public function addError(Type $type): void
+	public function addError(WithTypeAndValue $error): void
 	{
-		$this->errors[] = $type;
+		$this->errors[] = $error;
 	}
 
 	public function hasErrors(): bool
@@ -105,7 +105,7 @@ final class StructureType implements Type
 	}
 
 	/**
-	 * @return array<Type>
+	 * @return array<WithTypeAndValue>
 	 */
 	public function getErrors(): array
 	{
