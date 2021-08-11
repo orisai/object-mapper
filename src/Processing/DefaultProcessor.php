@@ -399,7 +399,10 @@ class DefaultProcessor implements Processor
 						? $this->process([], $structureArgs->type, $options)
 						: $this->processWithoutInitialization([], $structureArgs->type, $options);
 				} catch (InvalidData $exception) {
-					$type->overwriteInvalidField($missingField, $exception);
+					$type->overwriteInvalidField(
+						$missingField,
+						InvalidData::create($exception->getInvalidType(), NoValue::create()),
+					);
 				}
 			} elseif ($requiredFields !== $options::REQUIRE_NONE && !$type->isFieldInvalid($missingField)) {
 				// Field is missing and have no default value, mark as invalid
@@ -699,14 +702,11 @@ class DefaultProcessor implements Processor
 				$skippedPropertiesContext->removeInitializedProperty($propertyName);
 			} catch (ValueDoesNotMatch | InvalidData $exception) {
 				$type->overwriteInvalidField($fieldName, $exception);
-				// We do not rethrow because all of the fields are supposed to be processed at the same time
 			}
 		}
 
 		// If any of fields is invalid, throw error
 		if ($type->hasInvalidFields()) {
-			// Invalid values are already tracked by individual invalid fields
-			// so we don't need to pass value here
 			throw InvalidData::create($type, NoValue::create());
 		}
 
