@@ -105,7 +105,7 @@ abstract class ValueObject
 	{
 		$class = static::class;
 
-		if (static::hasProperty($class, $name)) {
+		if (self::hasProperty($class, $name)) {
 			$this->$name = $value;
 		} else {
 			ObjectHelpers::strictSet($class, $name);

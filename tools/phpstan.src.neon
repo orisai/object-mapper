@@ -47,8 +47,8 @@ parameters:
 		  path: %currentWorkingDirectory%/src
 		  count: 2
 		- message: '#Array \(array\<class-string\<Orisai\\ObjectMapper\\Rules\\Rule\>, Orisai\\ObjectMapper\\Rules\\Rule\>\) does not accept key class-string\<T\>\.#'
-		  path: %currentWorkingDirectory%/src
-		  count: 3
+		  path: %currentWorkingDirectory%/src/Bridge/NetteDI/LazyRuleManager.php
+		  count: 1
 		# Generics
 		- message: '#Call to function assert\(\) with true will always evaluate to true\.#'
 		  path: %currentWorkingDirectory%/src/Creation/DefaultObjectCreator.php
