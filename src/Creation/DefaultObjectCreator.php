@@ -5,7 +5,6 @@ namespace Orisai\ObjectMapper\Creation;
 use ArgumentCountError;
 use Orisai\Exceptions\Logic\InvalidState;
 use Orisai\ObjectMapper\ValueObject;
-use function assert;
 use function sprintf;
 
 final class DefaultObjectCreator implements ObjectCreator
@@ -23,8 +22,6 @@ final class DefaultObjectCreator implements ObjectCreator
 					ObjectCreator::class,
 				));
 		}
-
-		assert($object instanceof ValueObject);
 
 		return $object;
 	}

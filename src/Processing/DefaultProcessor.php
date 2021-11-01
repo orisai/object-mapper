@@ -144,13 +144,10 @@ class DefaultProcessor implements Processor
 	 */
 	protected function createStructureType(string $class): StructureType
 	{
-		$type = $this->ruleManager->getRule(StructureRule::class)->createType(
+		return $this->ruleManager->getRule(StructureRule::class)->createType(
 			StructureArgs::fromClass($class),
 			$this->getTypeContext(),
 		);
-		assert($type instanceof StructureType);
-
-		return $type;
 	}
 
 	protected function createFieldSetContext(

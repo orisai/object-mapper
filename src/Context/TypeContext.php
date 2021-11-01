@@ -30,7 +30,7 @@ class TypeContext
 	}
 
 	/**
-	 * @template T
+	 * @template T of Rule
 	 * @param class-string<T> $rule
 	 * @return T
 	 */

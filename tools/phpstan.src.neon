@@ -2,65 +2,51 @@ includes:
 	- phpstan.base.neon
 
 parameters:
-	level: max
+	level: 8
 	resultCachePath: %currentWorkingDirectory%/var/tools/PHPStan/resultCache.src.php
 
 	ignoreErrors:
 		# Creation of unknown subclass which may require values in constructor
 		- message: '#^Dead catch - ArgumentCountError is never thrown in the try block\.$#'
-		  path: %currentWorkingDirectory%/src/Creation/DefaultObjectCreator.php
+		  path: ../src/Creation/DefaultObjectCreator.php
 		  count: 1
 		# Values mapping to object
 		- message: '#^Variable property access on Orisai\\ObjectMapper\\ValueObject\.$#'
-		  path: %currentWorkingDirectory%/src/Processing/DefaultProcessor.php
+		  path: ../src/Processing/DefaultProcessor.php
 		  count: 3
 		- message: '#^Variable property access on \$this\(Orisai\\ObjectMapper\\ValueObject\).$#'
-		  path: %currentWorkingDirectory%/src/ValueObject.php
+		  path: ../src/ValueObject.php
 		  count: 1
 		# Callback call
 		- message: '#^Variable static method call on class-string\<Orisai\\ObjectMapper\\ValueObject\>\.$#'
-		  path: %currentWorkingDirectory%/src/Callbacks/BaseCallback.php
+		  path: ../src/Callbacks/BaseCallback.php
 		  count: 1
 		- message: '#^Variable method call on Orisai\\ObjectMapper\\ValueObject\.$#'
-		  path: %currentWorkingDirectory%/src/Callbacks/BaseCallback.php
+		  path: ../src/Callbacks/BaseCallback.php
 		  count: 1
 		# File always exists
 		- message: '#^Parameter \#1 \$filename of function filemtime expects string, string\|false given\.$#'
-		  path: %currentWorkingDirectory%/src/Meta/ClassModificationsChecker.php
+		  path: ../src/Meta/ClassModificationsChecker.php
 		  count: 1
 		- message: '#^Anonymous function should return (int|string) but returns (int|string)\|false\.$#'
-		  path: %currentWorkingDirectory%/src/Meta/ClassModificationsChecker.php
+		  path: ../src/Meta/ClassModificationsChecker.php
 		  count: 2
 		# Intentional check
 		- message: "#^Call to method ReflectionClass\\<(.+)ValueObject\\>\\:\\:isSubclassOf\\(\\) with '(.+)ValueObject' will always evaluate to true\\.$#"
-		  path: %currentWorkingDirectory%/src/Meta/MetaLoader.php
+		  path: ../src/Meta/MetaLoader.php
 		  count: 1
 		- message: "#^Call to method ReflectionClass\\<(.+)Args\\>\\:\\:isSubclassOf\\(\\) with '(.+)Args' will always evaluate to true\\.$#"
-		  path: %currentWorkingDirectory%/src/Meta/MetaResolver.php
+		  path: ../src/Meta/MetaResolver.php
 		  count: 1
 		# PHPStan thinks that class_implements returns array<string> instead of array<class-string>
 		- message: '#^Method (.+)ClassModificationsChecker\:\:getAllTypes\(\) should return array\<class\-string\> but returns array\<int, \(int\|string\)\>\.$#'
-		  path: %currentWorkingDirectory%/src/Meta/ClassModificationsChecker.php
-		  count: 1
-		# Not sure, possible bug
-		- message: '#PHPDoc tag \@return with type mixed is not subtype of native type Orisai\\ObjectMapper\\Rules\\Rule\.#'
-		  path: %currentWorkingDirectory%/src
-		  count: 2
-		- message: '#Array \(array\<class-string\<Orisai\\ObjectMapper\\Rules\\Rule\>, Orisai\\ObjectMapper\\Rules\\Rule\>\) does not accept key class-string\<T\>\.#'
-		  path: %currentWorkingDirectory%/src/Bridge/NetteDI/LazyRuleManager.php
+		  path: ../src/Meta/ClassModificationsChecker.php
 		  count: 1
 		# Generics
-		- message: '#Call to function assert\(\) with true will always evaluate to true\.#'
-		  path: %currentWorkingDirectory%/src/Creation/DefaultObjectCreator.php
-		  count: 1
-		- message: '#Instanceof between T of Orisai\\ObjectMapper\\ValueObject and Orisai\\ObjectMapper\\ValueObject will always evaluate to true\.#'
-		  path: %currentWorkingDirectory%/src/Creation/DefaultObjectCreator.php
-		  count: 1
-		# Missing typehint
-		- message: '#^Method (.+)\:\:__(.+)\(\) should always throw an exception or terminate script execution but doesn''t do that.$#'
-		  path: %currentWorkingDirectory%/src/ValueObject.php
-		  count: 3
-		# Generics - don't know how to specify type here (and it's also imho not needed)
+		- message: '#^Method (.+)RuleManager\:\:getRule\(\) should return T of (.+)Rule but returns (.+)Rule\.$#'
+		  path: ../src/Bridge/NetteDI/LazyRuleManager.php
+		- message: '#^Method (.+)RuleManager\:\:getRule\(\) should return T of (.+)Rule but returns (.+)Rule\.$#'
+		  path: ../src/Rules/DefaultRuleManager.php
 		- '#^Property (.+) with generic interface Orisai\\ObjectMapper\\Rules\\Rule does not specify its types\: T_ARGS$#'
 		- '#^Property (.+)CallbackMeta(.+) with generic interface Orisai\\ObjectMapper\\Callbacks\\Callback does not specify its types\: T_ARGS$#'
 		- '#^Method (.+) return type with generic interface Orisai\\ObjectMapper\\Callbacks\\Callback does not specify its types\: T_ARGS$#'
