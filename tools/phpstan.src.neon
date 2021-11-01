@@ -6,10 +6,6 @@ parameters:
 	resultCachePath: %currentWorkingDirectory%/var/tools/PHPStan/resultCache.src.php
 
 	ignoreErrors:
-		# Creation of unknown subclass which may require values in constructor
-		- message: '#^Dead catch - ArgumentCountError is never thrown in the try block\.$#'
-		  path: ../src/Creation/DefaultObjectCreator.php
-		  count: 1
 		# Values mapping to object
 		- message: '#^Variable property access on Orisai\\ObjectMapper\\ValueObject\.$#'
 		  path: ../src/Processing/DefaultProcessor.php
@@ -34,9 +30,6 @@ parameters:
 		# Intentional check
 		- message: "#^Call to method ReflectionClass\\<(.+)ValueObject\\>\\:\\:isSubclassOf\\(\\) with '(.+)ValueObject' will always evaluate to true\\.$#"
 		  path: ../src/Meta/MetaLoader.php
-		  count: 1
-		- message: "#^Call to method ReflectionClass\\<(.+)Args\\>\\:\\:isSubclassOf\\(\\) with '(.+)Args' will always evaluate to true\\.$#"
-		  path: ../src/Meta/MetaResolver.php
 		  count: 1
 		# PHPStan thinks that class_implements returns array<string> instead of array<class-string>
 		- message: '#^Method (.+)ClassModificationsChecker\:\:getAllTypes\(\) should return array\<class\-string\> but returns array\<int, \(int\|string\)\>\.$#'

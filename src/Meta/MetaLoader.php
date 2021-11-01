@@ -8,7 +8,6 @@ use Orisai\ObjectMapper\ValueObject;
 use Orisai\Utils\Arrays\ArrayMerger;
 use ReflectionClass;
 use function class_exists;
-use function sprintf;
 
 class MetaLoader
 {
@@ -56,18 +55,21 @@ class MetaLoader
 
 		if (!class_exists($class)) {
 			throw InvalidArgument::create()
-				->withMessage(sprintf('Class "%s" does not exist', $class));
+				->withMessage("Class '$class' does not exist");
 		}
 
 		$classRef = new ReflectionClass($class);
 
-		if (!$classRef->isSubclassOf(ValueObject::class) || $classRef->isAbstract()) {
+		if (!$classRef->isSubclassOf(ValueObject::class)) {
+			$valueObjectClass = ValueObject::class;
+
 			throw InvalidArgument::create()
-				->withMessage(sprintf(
-					'Class "%s" should be non-abstract subclass of "%s"',
-					$class,
-					ValueObject::class,
-				));
+				->withMessage("Class '$class' should be subclass of '$valueObjectClass'.");
+		}
+
+		if (!$classRef->isInstantiable()) {
+			throw InvalidArgument::create()
+				->withMessage("Class '$class' must be instantiable.");
 		}
 
 		$meta = [];

@@ -2,28 +2,28 @@
 
 namespace Orisai\ObjectMapper\Creation;
 
-use ArgumentCountError;
 use Orisai\Exceptions\Logic\InvalidState;
 use Orisai\ObjectMapper\ValueObject;
-use function sprintf;
+use ReflectionClass;
 
 final class DefaultObjectCreator implements ObjectCreator
 {
 
 	public function createInstance(string $class): ValueObject
 	{
-		try {
-			$object = new $class();
-		} catch (ArgumentCountError $error) {
+		$reflection = new ReflectionClass($class);
+
+		$ctor = $reflection->getConstructor();
+		if ($ctor !== null && $ctor->getNumberOfRequiredParameters() !== 0) {
+			$selfClass = self::class;
+			$creatorClass = ObjectCreator::class;
+
 			throw InvalidState::create()
-				->withMessage(sprintf(
-					'%s is unable to create object with required constructor arguments. You may want use some other %s implementation.',
-					self::class,
-					ObjectCreator::class,
-				));
+				->withMessage("$selfClass is unable to create object with required constructor arguments. " .
+					"You may want use some other $creatorClass implementation.");
 		}
 
-		return $object;
+		return new $class();
 	}
 
 }

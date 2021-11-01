@@ -745,7 +745,7 @@ arrayOfMixed: array<mixed>',
 	public function testNotAClass(): void
 	{
 		$this->expectException(InvalidArgument::class);
-		$this->expectExceptionMessage('Class "foo" does not exist');
+		$this->expectExceptionMessage("Class 'foo' does not exist");
 
 		$this->processor->process([], 'foo');
 	}
@@ -754,7 +754,7 @@ arrayOfMixed: array<mixed>',
 	{
 		$this->expectException(InvalidArgument::class);
 		$this->expectExceptionMessage(sprintf(
-			'Class "%s" should be non-abstract subclass of "%s"',
+			"Class '%s' should be subclass of '%s'",
 			stdClass::class,
 			ValueObject::class,
 		));

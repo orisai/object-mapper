@@ -395,14 +395,11 @@ final class MetaResolver
 
 		$argsRef = new ReflectionClass($argsType);
 
-		if ($argsRef->isAbstract() || !$argsRef->isSubclassOf(Args::class)) {
+		if ($argsRef->isAbstract() || $argsRef->isInterface() || $argsRef->isTrait()) {
+			$ruleClass = get_class($rule);
+
 			throw InvalidArgument::create()
-				->withMessage(sprintf(
-					'Class %s returned by %s::getArgsType() should be non-abstract subclass of %s',
-					$argsType,
-					get_class($rule),
-					Args::class,
-				));
+				->withMessage("Class $argsType returned by $ruleClass::getArgsType() must be instantiable.");
 		}
 
 		return $meta;
