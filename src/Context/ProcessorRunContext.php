@@ -6,21 +6,26 @@ use Orisai\ObjectMapper\Meta\Meta;
 use Orisai\ObjectMapper\Processing\ObjectHolder;
 use Orisai\ObjectMapper\ValueObject;
 
+/**
+ * @template T of ValueObject
+ */
 class ProcessorRunContext
 {
 
+	/** @var ObjectHolder<T> */
 	private ObjectHolder $objectHolder;
 
 	private Meta $meta;
 
-	/** @var class-string<ValueObject> */
+	/** @var class-string<T> */
 	private string $class;
 
 	/** @var array<string, SkippedPropertyContext> */
 	private array $skippedProperties = [];
 
 	/**
-	 * @param class-string<ValueObject> $class
+	 * @param class-string<T> $class
+	 * @param ObjectHolder<T> $objectHolder
 	 */
 	public function __construct(string $class, ObjectHolder $objectHolder, Meta $meta)
 	{
@@ -30,13 +35,16 @@ class ProcessorRunContext
 	}
 
 	/**
-	 * @return class-string<ValueObject>
+	 * @return class-string<T>
 	 */
 	public function getClass(): string
 	{
 		return $this->class;
 	}
 
+	/**
+	 * @return ObjectHolder<T>
+	 */
 	public function getObjectHolder(): ObjectHolder
 	{
 		return $this->objectHolder;

@@ -5,7 +5,6 @@ namespace Orisai\ObjectMapper\Annotation\Expect;
 use Doctrine\Common\Annotations\Annotation\NamedArgumentConstructor;
 use Doctrine\Common\Annotations\Annotation\Target;
 use Orisai\ObjectMapper\Rules\InstanceRule;
-use Orisai\ObjectMapper\Rules\Rule;
 
 /**
  * @Annotation
@@ -26,9 +25,6 @@ final class InstanceValue implements RuleAnnotation
 		$this->type = $type;
 	}
 
-	/**
-	 * @return class-string<Rule>
-	 */
 	public function getType(): string
 	{
 		return InstanceRule::class;

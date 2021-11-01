@@ -4,7 +4,6 @@ namespace Orisai\ObjectMapper\Annotation\Expect;
 
 use Doctrine\Common\Annotations\Annotation\NamedArgumentConstructor;
 use Doctrine\Common\Annotations\Annotation\Target;
-use Orisai\ObjectMapper\Rules\Rule;
 use Orisai\ObjectMapper\Rules\UrlRule;
 
 /**
@@ -15,9 +14,6 @@ use Orisai\ObjectMapper\Rules\UrlRule;
 final class Url implements RuleAnnotation
 {
 
-	/**
-	 * @return class-string<Rule>
-	 */
 	public function getType(): string
 	{
 		return UrlRule::class;

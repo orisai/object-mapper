@@ -3,6 +3,7 @@
 namespace Orisai\ObjectMapper\Annotation\Expect;
 
 use Orisai\ObjectMapper\Annotation\BaseAnnotation;
+use Orisai\ObjectMapper\Meta\Args;
 use Orisai\ObjectMapper\Meta\MetaSource;
 use Orisai\ObjectMapper\Rules\Rule;
 
@@ -15,7 +16,7 @@ interface RuleAnnotation extends BaseAnnotation
 	public const ANNOTATION_TYPE = MetaSource::TYPE_RULE;
 
 	/**
-	 * @return class-string<Rule>
+	 * @return class-string<Rule<Args>>
 	 */
 	public function getType(): string;
 

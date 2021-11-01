@@ -4,7 +4,6 @@ namespace Orisai\ObjectMapper\Annotation\Expect;
 
 use Doctrine\Common\Annotations\Annotation\NamedArgumentConstructor;
 use Doctrine\Common\Annotations\Annotation\Target;
-use Orisai\ObjectMapper\Rules\Rule;
 use Orisai\ObjectMapper\Rules\ValueEnumRule;
 
 /**
@@ -29,9 +28,6 @@ final class ValueEnum implements RuleAnnotation
 		$this->useKeys = $useKeys;
 	}
 
-	/**
-	 * @return class-string<Rule>
-	 */
 	public function getType(): string
 	{
 		return ValueEnumRule::class;

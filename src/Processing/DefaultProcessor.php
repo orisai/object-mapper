@@ -17,6 +17,7 @@ use Orisai\ObjectMapper\Context\TypeContext;
 use Orisai\ObjectMapper\Creation\ObjectCreator;
 use Orisai\ObjectMapper\Exception\InvalidData;
 use Orisai\ObjectMapper\Exception\ValueDoesNotMatch;
+use Orisai\ObjectMapper\Meta\Args;
 use Orisai\ObjectMapper\Meta\ArgsCreator;
 use Orisai\ObjectMapper\Meta\ClassMeta;
 use Orisai\ObjectMapper\Meta\Meta;
@@ -119,6 +120,7 @@ class DefaultProcessor implements Processor
 
 	/**
 	 * @param mixed $data
+	 * @param ProcessorRunContext<ValueObject> $runContext
 	 * @return array<int|string, mixed>
 	 * @throws InvalidData
 	 */
@@ -160,7 +162,10 @@ class DefaultProcessor implements Processor
 	}
 
 	/**
-	 * @param class-string<ValueObject> $class
+	 * @template RC of ValueObject
+	 * @param class-string<RC> $class
+	 * @param ObjectHolder<RC> $holder
+	 * @return ProcessorRunContext<RC>
 	 */
 	protected function createProcessorRunContext(string $class, ObjectHolder $holder): ProcessorRunContext
 	{
@@ -215,6 +220,7 @@ class DefaultProcessor implements Processor
 
 	/**
 	 * @param array<int|string, mixed> $data
+	 * @param ProcessorRunContext<ValueObject> $runContext
 	 * @return array<int|string, mixed>
 	 * @throws InvalidData
 	 */
@@ -238,6 +244,7 @@ class DefaultProcessor implements Processor
 
 	/**
 	 * @param array<int|string, mixed> $data
+	 * @param ProcessorRunContext<ValueObject> $runContext
 	 * @return array<int|string, mixed>
 	 */
 	protected function handleSentFields(
@@ -321,6 +328,7 @@ class DefaultProcessor implements Processor
 
 	/**
 	 * @param array<int|string, mixed> $data
+	 * @param ProcessorRunContext<ValueObject> $runContext
 	 * @return array<string>
 	 */
 	protected function findMissingProperties(array $data, ProcessorRunContext $runContext): array
@@ -337,6 +345,7 @@ class DefaultProcessor implements Processor
 	}
 
 	/**
+	 * @param ProcessorRunContext<ValueObject> $runContext
 	 * @return array<string>
 	 */
 	protected function getSkippedProperties(ProcessorRunContext $runContext): array
@@ -346,6 +355,7 @@ class DefaultProcessor implements Processor
 
 	/**
 	 * @param array<int|string, mixed> $data
+	 * @param ProcessorRunContext<ValueObject> $runContext
 	 * @return array<int|string, mixed>
 	 */
 	protected function handleMissingFields(
@@ -467,6 +477,7 @@ class DefaultProcessor implements Processor
 
 	/**
 	 * @param mixed $value
+	 * @param ProcessorRunContext<ValueObject> $runContext
 	 * @return mixed
 	 * @throws ValueDoesNotMatch
 	 * @throws InvalidData
@@ -509,7 +520,8 @@ class DefaultProcessor implements Processor
 
 	/**
 	 * @param array<mixed> $data
-	 * @param class-string<Callback> $callbackType
+	 * @param ProcessorRunContext<ValueObject> $runContext
+	 * @param class-string<Callback<Args>> $callbackType
 	 * @return array<mixed>
 	 * @throws InvalidData
 	 */
@@ -545,8 +557,9 @@ class DefaultProcessor implements Processor
 	/**
 	 * @param mixed $data
 	 * @param FieldContext|FieldSetContext $baseFieldContext
+	 * @param ProcessorRunContext<ValueObject> $runContext
 	 * @param ClassMeta|PropertyMeta $meta
-	 * @param class-string<Callback> $callbackType
+	 * @param class-string<Callback<Args>> $callbackType
 	 * @return mixed
 	 * @throws ValueDoesNotMatch
 	 * @throws InvalidData
@@ -583,6 +596,7 @@ class DefaultProcessor implements Processor
 	/**
 	 * @param array<int|string, mixed> $data
 	 * @param array<mixed> $rawData
+	 * @param ProcessorRunContext<ValueObject> $runContext
 	 */
 	protected function fillObject(
 		ValueObject $object,
@@ -626,7 +640,10 @@ class DefaultProcessor implements Processor
 	}
 
 	/**
-	 * @param class-string<ValueObject> $class
+	 * @template H of ValueObject
+	 * @param class-string<H> $class
+	 * @param H|null $object
+	 * @return ObjectHolder<H>
 	 */
 	protected function createHolder(string $class, ?ValueObject $object = null): ObjectHolder
 	{

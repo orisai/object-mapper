@@ -4,6 +4,10 @@ namespace Orisai\ObjectMapper\Rules;
 
 use Orisai\ObjectMapper\Meta\ArgsCreator;
 
+/**
+ * @phpstan-template T of MultiValueArgs
+ * @phpstan-implements Rule<T>
+ */
 abstract class MultiValueRule implements Rule
 {
 

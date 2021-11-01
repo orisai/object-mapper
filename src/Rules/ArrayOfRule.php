@@ -16,7 +16,7 @@ use function count;
 use function is_array;
 
 /**
- * @phpstan-implements Rule<ArrayOfArgs>
+ * @phpstan-extends MultiValueRule<ArrayOfArgs>
  */
 final class ArrayOfRule extends MultiValueRule
 {

@@ -5,7 +5,6 @@ namespace Orisai\ObjectMapper\Annotation\Expect;
 use Doctrine\Common\Annotations\Annotation\NamedArgumentConstructor;
 use Doctrine\Common\Annotations\Annotation\Target;
 use Orisai\ObjectMapper\Rules\BoolRule;
-use Orisai\ObjectMapper\Rules\Rule;
 
 /**
  * @Annotation
@@ -22,9 +21,6 @@ final class BoolValue implements RuleAnnotation
 		$this->castBoolLike = $castBoolLike;
 	}
 
-	/**
-	 * @return class-string<Rule>
-	 */
 	public function getType(): string
 	{
 		return BoolRule::class;

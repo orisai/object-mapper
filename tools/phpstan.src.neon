@@ -43,19 +43,24 @@ parameters:
 		  path: ../src/Meta/ClassModificationsChecker.php
 		  count: 1
 		# Generics
+		# Generics - class-string-map https://psalm.dev/r/155368cea8
+		- message: '#^Property (.+) with generic interface Orisai\\ObjectMapper\\Rules\\Rule does not specify its types\: T_ARGS$#'
+		  paths:
+		  	- ../src/Bridge/NetteDI/LazyRuleManager.php
+		  	- ../src/Rules/DefaultRuleManager.php
 		- message: '#^Method (.+)RuleManager\:\:getRule\(\) should return T of (.+)Rule but returns (.+)Rule\.$#'
-		  path: ../src/Bridge/NetteDI/LazyRuleManager.php
-		- message: '#^Method (.+)RuleManager\:\:getRule\(\) should return T of (.+)Rule but returns (.+)Rule\.$#'
-		  path: ../src/Rules/DefaultRuleManager.php
-		- '#^Property (.+) with generic interface Orisai\\ObjectMapper\\Rules\\Rule does not specify its types\: T_ARGS$#'
-		- '#^Property (.+)CallbackMeta(.+) with generic interface Orisai\\ObjectMapper\\Callbacks\\Callback does not specify its types\: T_ARGS$#'
-		- '#^Method (.+) return type with generic interface Orisai\\ObjectMapper\\Callbacks\\Callback does not specify its types\: T_ARGS$#'
-		- '#^Method (.+) return type with generic interface Orisai\\ObjectMapper\\Rules\\Rule does not specify its types\: T_ARGS$#'
-		- '#^Method (.+) has parameter (.+) with generic interface Orisai\\ObjectMapper\\Rules\\Rule but does not specify its types: T_ARGS$#'
-		- '#^Method (.+)process\(\) should return T of Orisai\\ObjectMapper\\ValueObject but returns Orisai\\ObjectMapper\\ValueObject\.$#'
-		- '#^Method (.+)(handleClassCallbacks|applyCallbacks|createCallbackArgsInst)\(\) has parameter (.+) with generic interface Orisai\\ObjectMapper\\Callbacks\\Callback but does not specify its types\: T_ARGS$#'
-		# Generics - bug - interface is implemented by abstract MultiValueRule, T_ARGS type is specified by specific final rule
-		- '#^Class Orisai\\ObjectMapper\\Rules\\MultiValueRule implements generic interface Orisai\\ObjectMapper\\Rules\\Rule but does not specify its types: T_ARGS$#'
-		- '#^Class Orisai\\ObjectMapper\\Rules\\(List|Array)OfRule has \@implements tag, but does not implement any interface\.#'
-		# Generics - no idea - probably related to previous error
-		- '#^Parameter \#. \$args \((.+)Args\) of method (.+)Rule(.+) should be contravariant with parameter \$args \((.+)Args\) of method (.+)Rule\<(.+)Args\>(.+)$#'
+		  paths:
+		  	- ../src/Bridge/NetteDI/LazyRuleManager.php
+		  	- ../src/Rules/DefaultRuleManager.php
+		# Generics - phpstan resolves correct class-string as a constant string - but not on test site https://phpstan.org/r/ce7cd979-ab2f-4373-a589-f63bfa01ca33
+		- message: '#^Method (.+)(Before|After)\:\:getType\(\) should return class-string\<(.+)Callback\<(.+)Args\>\> but returns ''(.+)Callback''\.$#'
+		  paths:
+		  	- ../src/Annotation/Callback/After.php
+		  	- ../src/Annotation/Callback/Before.php
+		- message: '#^Method (.+)\:\:getType\(\) should return class-string\<(.+)Rule\<(.+)Args\>\> but returns ''(.+)Rule''\.$#'
+		  path:
+		  	../src/Annotation/Expect
+		- message: '#^Parameter \#1 \$type of method (.+)RuleMeta\:\:mayContainRuleType\(\) expects array\<class-string\<(.+)Rule(.+)\>\>, array{''(.+)Rule''} given\.$#'
+		  path: ../src/Meta/MetaResolver.php
+		- message: '#^Parameter \#5 \$callbackType of method (.+)\:\:(handleClass|apply)(Callbacks)\(\) expects class-string\<(.+)Callback\<(.+)Args\>\>, ''(.+)Callback'' given\.$#'
+		  path: ../src/Processing/DefaultProcessor.php

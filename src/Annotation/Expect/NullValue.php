@@ -5,7 +5,6 @@ namespace Orisai\ObjectMapper\Annotation\Expect;
 use Doctrine\Common\Annotations\Annotation\NamedArgumentConstructor;
 use Doctrine\Common\Annotations\Annotation\Target;
 use Orisai\ObjectMapper\Rules\NullRule;
-use Orisai\ObjectMapper\Rules\Rule;
 
 /**
  * @Annotation
@@ -22,9 +21,6 @@ final class NullValue implements RuleAnnotation
 		$this->castEmptyString = $castEmptyString;
 	}
 
-	/**
-	 * @return class-string<Rule>
-	 */
 	public function getType(): string
 	{
 		return NullRule::class;

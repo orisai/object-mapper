@@ -5,18 +5,23 @@ namespace Orisai\ObjectMapper\Processing;
 use Orisai\ObjectMapper\Creation\ObjectCreator;
 use Orisai\ObjectMapper\ValueObject;
 
+/**
+ * @template T of ValueObject
+ */
 final class ObjectHolder
 {
 
 	private ObjectCreator $creator;
 
+	/** @var T|null */
 	private ?ValueObject $instance;
 
-	/** @var class-string<ValueObject> */
+	/** @var class-string<T> */
 	private string $class;
 
 	/**
-	 * @param class-string<ValueObject> $class
+	 * @param class-string<T> $class
+	 * @param T|null $instance
 	 */
 	public function __construct(ObjectCreator $creator, string $class, ?ValueObject $instance = null)
 	{
@@ -26,20 +31,19 @@ final class ObjectHolder
 	}
 
 	/**
-	 * @return class-string<ValueObject>
+	 * @return class-string<T>
 	 */
 	public function getClass(): string
 	{
 		return $this->class;
 	}
 
+	/**
+	 * @return T
+	 */
 	public function getInstance(): ValueObject
 	{
-		if ($this->instance !== null) {
-			return $this->instance;
-		}
-
-		return $this->instance = $this->creator->createInstance($this->class);
+		return $this->instance ?? ($this->instance = $this->creator->createInstance($this->class));
 	}
 
 }

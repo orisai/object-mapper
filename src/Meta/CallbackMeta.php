@@ -7,7 +7,7 @@ use Orisai\ObjectMapper\Callbacks\Callback;
 final class CallbackMeta
 {
 
-	/** @var class-string<Callback> */
+	/** @var class-string<Callback<Args>> */
 	private string $type;
 
 	/** @var array<mixed> */
@@ -31,7 +31,7 @@ final class CallbackMeta
 	}
 
 	/**
-	 * @return class-string<Callback>
+	 * @return class-string<Callback<Args>>
 	 */
 	public function getType(): string
 	{

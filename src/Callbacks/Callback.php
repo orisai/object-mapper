@@ -10,6 +10,7 @@ use Orisai\ObjectMapper\Exception\InvalidData;
 use Orisai\ObjectMapper\Exception\ValueDoesNotMatch;
 use Orisai\ObjectMapper\Meta\Args;
 use Orisai\ObjectMapper\Processing\ObjectHolder;
+use Orisai\ObjectMapper\ValueObject;
 
 /**
  * @phpstan-template T_ARGS of Args
@@ -31,6 +32,7 @@ interface Callback
 	/**
 	 * @param mixed $data
 	 * @param FieldContext|FieldSetContext $context
+	 * @param ObjectHolder<ValueObject> $holder
 	 * @phpstan-param T_ARGS $args
 	 * @return mixed
 	 * @throws ValueDoesNotMatch

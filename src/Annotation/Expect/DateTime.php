@@ -7,7 +7,6 @@ use DateTimeInterface;
 use Doctrine\Common\Annotations\Annotation\NamedArgumentConstructor;
 use Doctrine\Common\Annotations\Annotation\Target;
 use Orisai\ObjectMapper\Rules\DateTimeRule;
-use Orisai\ObjectMapper\Rules\Rule;
 
 /**
  * @Annotation
@@ -31,9 +30,6 @@ final class DateTime implements RuleAnnotation
 		$this->format = $format;
 	}
 
-	/**
-	 * @return class-string<Rule>
-	 */
 	public function getType(): string
 	{
 		return DateTimeRule::class;

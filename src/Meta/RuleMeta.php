@@ -10,7 +10,7 @@ use function is_string;
 final class RuleMeta
 {
 
-	/** @var class-string<Rule> */
+	/** @var class-string<Rule<Args>> */
 	private string $type;
 
 	/** @var array<mixed> */
@@ -34,7 +34,7 @@ final class RuleMeta
 	}
 
 	/**
-	 * @return class-string<Rule>
+	 * @return class-string<Rule<Args>>
 	 */
 	public function getType(): string
 	{
@@ -50,7 +50,7 @@ final class RuleMeta
 	}
 
 	/**
-	 * @param class-string<Rule>|array<class-string<Rule>> $type
+	 * @param class-string<Rule<Args>>|array<class-string<Rule<Args>>> $type
 	 */
 	public function mayContainRuleType($type): bool
 	{
@@ -58,7 +58,7 @@ final class RuleMeta
 	}
 
 	/**
-	 * @param array<class-string<Rule>> $types
+	 * @param array<class-string<Rule<Args>>> $types
 	 */
 	private function mayContainRuleTypeInternal(array $types, RuleMeta $ruleNode): bool
 	{

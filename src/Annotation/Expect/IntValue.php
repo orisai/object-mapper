@@ -5,7 +5,6 @@ namespace Orisai\ObjectMapper\Annotation\Expect;
 use Doctrine\Common\Annotations\Annotation\NamedArgumentConstructor;
 use Doctrine\Common\Annotations\Annotation\Target;
 use Orisai\ObjectMapper\Rules\IntRule;
-use Orisai\ObjectMapper\Rules\Rule;
 
 /**
  * @Annotation
@@ -36,9 +35,6 @@ final class IntValue implements RuleAnnotation
 		$this->castNumericString = $castNumericString;
 	}
 
-	/**
-	 * @return class-string<Rule>
-	 */
 	public function getType(): string
 	{
 		return IntRule::class;
