@@ -1,4 +1,8 @@
-<h1 align="center">Orisai Object Mapper</h1>
+<h1 align="center">
+	<img src="https://github.com/orisai/.github/blob/main/images/repo_title.png" alt="Orisai"/>
+	<br/>
+	Object Mapper
+</h1>
 
 <p align="center">
     Raw data mapping to validated objects
