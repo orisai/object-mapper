@@ -267,7 +267,7 @@ final class MetaResolver
 	{
 		$optimized = [];
 
-		foreach ($meta as $key => $doc) {
+		foreach ($meta as $doc) {
 			if (!is_array($doc)) {
 				throw InvalidMeta::create();
 			}
@@ -317,7 +317,7 @@ final class MetaResolver
 	{
 		$optimized = [];
 
-		foreach ($meta as $key => $modifier) {
+		foreach ($meta as $modifier) {
 			if (!is_array($modifier)) {
 				throw InvalidMeta::create();
 			}
