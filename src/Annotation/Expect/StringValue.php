@@ -16,16 +16,16 @@ final class StringValue implements RuleAnnotation
 
 	private ?string $pattern;
 
-	private ?string $minLength;
+	private ?int $minLength;
 
-	private ?string $maxLength;
+	private ?int $maxLength;
 
 	private bool $notEmpty;
 
 	public function __construct(
 		?string $pattern = null,
-		?string $minLength = null,
-		?string $maxLength = null,
+		?int $minLength = null,
+		?int $maxLength = null,
 		bool $notEmpty = false
 	)
 	{
