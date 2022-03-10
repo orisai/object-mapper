@@ -11,6 +11,7 @@ use Orisai\ObjectMapper\Rules\DateTimeArgs;
 use Orisai\ObjectMapper\Rules\DateTimeRule;
 use Orisai\ObjectMapper\Types\SimpleValueType;
 use Tests\Orisai\ObjectMapper\Toolkit\RuleTestCase;
+use const PHP_VERSION_ID;
 
 final class DateTimeRuleTest extends RuleTestCase
 {
@@ -79,11 +80,17 @@ final class DateTimeRuleTest extends RuleTestCase
 	}
 
 	/**
-	 * @param mixed $value
+	 * @param mixed              $value
+	 * @param array<int, string> $invalidParameters
 	 *
 	 * @dataProvider provideInvalidValues
 	 */
-	public function testProcessInvalid($value, string $format, string $expectedType = 'datetime'): void
+	public function testProcessInvalid(
+		$value,
+		string $format,
+		array $invalidParameters = [],
+		string $expectedType = 'datetime'
+	): void
 	{
 		$exception = null;
 
@@ -101,6 +108,15 @@ final class DateTimeRuleTest extends RuleTestCase
 
 			self::assertSame($expectedType, $type->getName());
 			self::assertSame($value, $exception->getInvalidValue());
+
+			$parameters = [];
+			foreach ($type->getParameters() as $parameter) {
+				if ($parameter->isInvalid()) {
+					$parameters[] = $parameter->getKey();
+				}
+			}
+
+			self::assertSame($parameters, $invalidParameters);
 		}
 
 		self::assertNotNull($exception);
@@ -111,14 +127,28 @@ final class DateTimeRuleTest extends RuleTestCase
 	 */
 	public function provideInvalidValues(): Generator
 	{
-		yield [null, DateTimeRule::FORMAT_ANY];
-		yield [[], DateTimeRule::FORMAT_ANY];
-		yield [true, DateTimeRule::FORMAT_ANY];
-		yield [1.2, DateTimeRule::FORMAT_ANY];
-		yield ['whatever', DateTimeRule::FORMAT_ANY];
-		yield ['whatever', DateTimeImmutable::ATOM];
-		yield ['whatever', DateTimeRule::FORMAT_TIMESTAMP, 'timestamp'];
-		yield ['2013-04-12T16:40:00-04:00', DateTimeImmutable::COOKIE];
+		yield [null, DateTimeRule::FORMAT_ANY, []];
+		yield [[], DateTimeRule::FORMAT_ANY, []];
+		yield [true, DateTimeRule::FORMAT_ANY, []];
+		yield [1.2, DateTimeRule::FORMAT_ANY, []];
+		yield ['whatever', DateTimeRule::FORMAT_ANY, [
+			'Failed to parse time string (whatever) at position 0 (w): The timezone could not be found in the database',
+		]];
+
+		yield ['whatever', DateTimeImmutable::ATOM, [
+			'A four digit year could not be found',
+			'Data missing',
+		]];
+
+		yield ['whatever', DateTimeRule::FORMAT_TIMESTAMP, [
+			PHP_VERSION_ID < 8_00_00 ? 'Unexpected data found.' : 'Found unexpected data',
+		], 'timestamp'];
+
+		yield ['2013-04-12T16:40:00-04:00', DateTimeImmutable::COOKIE, [
+			'A textual day could not be found',
+			'Unexpected data found.',
+			'The separation symbol could not be found',
+		]];
 	}
 
 	public function testType(): void

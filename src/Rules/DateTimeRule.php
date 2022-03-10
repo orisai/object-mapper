@@ -15,10 +15,14 @@ use Orisai\ObjectMapper\Meta\ArgsChecker;
 use Orisai\ObjectMapper\Types\SimpleValueType;
 use ReflectionClass;
 use Throwable;
+use function assert;
 use function class_exists;
 use function is_int;
 use function is_string;
 use function sprintf;
+use function strpos;
+use function substr;
+use const PHP_VERSION_ID;
 
 /**
  * @phpstan-implements Rule<DateTimeArgs>
@@ -91,22 +95,45 @@ final class DateTimeRule implements Rule
 		}
 
 		$stringValue = is_int($value) ? (string) $value : $value;
-		$type = $args->type;
+		$classType = $args->type;
 
 		if ($isTimestamp) {
-			$datetime = $type::createFromFormat('U', $stringValue);
+			$datetime = $classType::createFromFormat('U', $stringValue);
 		} elseif ($format === self::FORMAT_ANY) {
 			try {
-				$datetime = new $type($stringValue);
+				$datetime = new $classType($stringValue);
 			} catch (Throwable $exception) {
-				throw ValueDoesNotMatch::create($this->createType($args, $context), $value);
+				$type = $this->createType($args, $context);
+				$message = $exception->getMessage();
+				if (PHP_VERSION_ID < 8_01_00) {
+					// Drop 'DateTimeImmutable::__construct(): ' from message start
+					$pos = strpos($message, ' ');
+					assert($pos !== false);
+					$message = substr($message, $pos + 1);
+				}
+
+				$type->addKeyParameter($message);
+				$type->markParameterInvalid($message);
+
+				throw ValueDoesNotMatch::create($type, $value);
 			}
 		} else {
-			$datetime = $type::createFromFormat($format, $stringValue);
+			$datetime = $classType::createFromFormat($format, $stringValue);
 		}
 
 		if ($datetime === false) {
-			throw ValueDoesNotMatch::create($this->createType($args, $context), $value);
+			$errors = $args->isImmutable()
+				? DateTimeImmutable::getLastErrors()
+				: DateTime::getLastErrors();
+			assert($errors !== false);
+			$type = $this->createType($args, $context);
+
+			foreach ($errors['errors'] as $error) {
+				$type->addKeyParameter($error);
+				$type->markParameterInvalid($error);
+			}
+
+			throw ValueDoesNotMatch::create($type, $value);
 		}
 
 		return $context->isInitializeObjects()

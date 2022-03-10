@@ -7,6 +7,7 @@ use DateTimeImmutable;
 use DateTimeInterface;
 use Orisai\ObjectMapper\Meta\Args;
 use function array_key_exists;
+use function is_a;
 
 final class DateTimeArgs implements Args
 {
@@ -37,6 +38,11 @@ final class DateTimeArgs implements Args
 		}
 
 		return $self;
+	}
+
+	public function isImmutable(): bool
+	{
+		return is_a($this->type, DateTimeImmutable::class, true);
 	}
 
 }
