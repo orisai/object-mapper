@@ -3,6 +3,7 @@
 namespace Tests\Orisai\ObjectMapper\Unit\Processing;
 
 use DateTimeImmutable;
+use DateTimeInterface;
 use Orisai\Exceptions\Logic\InvalidArgument;
 use Orisai\Exceptions\Logic\InvalidState;
 use Orisai\ObjectMapper\Exception\InvalidData;
@@ -290,7 +291,7 @@ stringg: Field is unknown, did you mean `string`?',
 		$instance->foo = 'bar';
 
 		$data = [
-			'datetime' => 'now',
+			'datetime' => '1990-12-31T12:34:56+00:00',
 			'instance' => $instance,
 			'structure' => [],
 		];
@@ -298,7 +299,8 @@ stringg: Field is unknown, did you mean `string`?',
 
 		self::assertSame(
 			[
-				'datetime' => 'now', // Returns 'now' intentionally instead of value which would be returned by instance serialization
+				// Returns raw value intentionally instead of value which would be returned by instance serialization
+				'datetime' => '1990-12-31T12:34:56+00:00',
 				'instance' => $instance,
 				'structure' => [
 					'string' => 'foo',
@@ -321,7 +323,7 @@ stringg: Field is unknown, did you mean `string`?',
 		$instance->foo = 'bar';
 
 		$data = [
-			'datetime' => '2011-01-01T15:03:01.012345Z',
+			'datetime' => '1990-12-31T12:34:56+00:00',
 			'instance' => $instance,
 			'structure' => [],
 		];
@@ -329,7 +331,7 @@ stringg: Field is unknown, did you mean `string`?',
 
 		self::assertInstanceOf(InitializingVO::class, $vo);
 		self::assertInstanceOf(DateTimeImmutable::class, $vo->datetime);
-		self::assertSame('2011-01-01T15:03:01.012345', $vo->datetime->format('Y-m-d\TH:i:s.u'));
+		self::assertSame('1990-12-31T12:34:56+00:00', $vo->datetime->format(DateTimeInterface::ATOM));
 		self::assertInstanceOf(stdClass::class, $vo->instance);
 	}
 

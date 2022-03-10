@@ -28,7 +28,7 @@ final class DateTimeRuleTest extends RuleTestCase
 	 *
 	 * @dataProvider provideValidValues
 	 */
-	public function testProcessValid($value, ?string $format = null): void
+	public function testProcessValid($value, string $format): void
 	{
 		$processed = $this->rule->processValue(
 			$value,
@@ -67,15 +67,15 @@ final class DateTimeRuleTest extends RuleTestCase
 	 */
 	public function provideValidValues(): Generator
 	{
-		yield ['now'];
-		yield ['yesterday'];
-		yield ['1879-03-14'];
-		yield ['2013-04-12T16:40:00-04:00'];
+		yield ['now', DateTimeRule::FORMAT_ANY];
+		yield ['yesterday', DateTimeRule::FORMAT_ANY];
+		yield ['1879-03-14', DateTimeRule::FORMAT_ANY];
+		yield ['2013-04-12T16:40:00-04:00', DateTimeRule::FORMAT_ANY];
 		yield ['2013-04-12T16:40:00-04:00', DateTimeImmutable::ATOM];
 		yield ['1389312000', DateTimeRule::FORMAT_TIMESTAMP];
 		yield [1_389_312_000, DateTimeRule::FORMAT_TIMESTAMP];
-		yield ['1389312000'];
-		yield [1_389_312_000];
+		yield ['1389312000', DateTimeRule::FORMAT_ANY];
+		yield [1_389_312_000, DateTimeRule::FORMAT_ANY];
 	}
 
 	/**
@@ -83,7 +83,7 @@ final class DateTimeRuleTest extends RuleTestCase
 	 *
 	 * @dataProvider provideInvalidValues
 	 */
-	public function testProcessInvalid($value, ?string $format = null, string $expectedType = 'datetime'): void
+	public function testProcessInvalid($value, string $format, string $expectedType = 'datetime'): void
 	{
 		$exception = null;
 
@@ -111,11 +111,11 @@ final class DateTimeRuleTest extends RuleTestCase
 	 */
 	public function provideInvalidValues(): Generator
 	{
-		yield [null];
-		yield [[]];
-		yield [true];
-		yield [1.2];
-		yield ['whatever'];
+		yield [null, DateTimeRule::FORMAT_ANY];
+		yield [[], DateTimeRule::FORMAT_ANY];
+		yield [true, DateTimeRule::FORMAT_ANY];
+		yield [1.2, DateTimeRule::FORMAT_ANY];
+		yield ['whatever', DateTimeRule::FORMAT_ANY];
 		yield ['whatever', DateTimeImmutable::ATOM];
 		yield ['whatever', DateTimeRule::FORMAT_TIMESTAMP, 'timestamp'];
 		yield ['2013-04-12T16:40:00-04:00', DateTimeImmutable::COOKIE];
@@ -133,7 +133,9 @@ final class DateTimeRuleTest extends RuleTestCase
 		);
 
 		self::assertSame('datetime', $type->getName());
-		self::assertCount(0, $type->getParameters());
+		self::assertCount(1, $type->getParameters());
+		self::assertTrue($type->hasParameter(DateTimeRule::FORMAT));
+		self::assertSame(DateTimeInterface::ATOM, $type->getParameter(DateTimeRule::FORMAT)->getValue());
 	}
 
 	public function testTypeWithTimestamp(): void
@@ -156,7 +158,7 @@ final class DateTimeRuleTest extends RuleTestCase
 	public function testTypeWithArgs(): void
 	{
 		$args = DateTimeArgs::fromArray($this->rule->resolveArgs([
-			DateTimeRule::FORMAT => DateTimeInterface::ATOM,
+			DateTimeRule::FORMAT => DateTimeInterface::COOKIE,
 		], $this->ruleArgsContext()));
 
 		$type = $this->rule->createType($args, $this->typeContext);
@@ -169,7 +171,7 @@ final class DateTimeRuleTest extends RuleTestCase
 		self::assertSame('datetime', $type->getName());
 		self::assertCount(1, $type->getParameters());
 		self::assertTrue($type->hasParameter(DateTimeRule::FORMAT));
-		self::assertSame(DateTimeInterface::ATOM, $type->getParameter(DateTimeRule::FORMAT)->getValue());
+		self::assertSame(DateTimeInterface::COOKIE, $type->getParameter(DateTimeRule::FORMAT)->getValue());
 	}
 
 }

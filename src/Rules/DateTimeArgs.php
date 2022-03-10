@@ -4,13 +4,14 @@ namespace Orisai\ObjectMapper\Rules;
 
 use DateTime;
 use DateTimeImmutable;
+use DateTimeInterface;
 use Orisai\ObjectMapper\Meta\Args;
 use function array_key_exists;
 
 final class DateTimeArgs implements Args
 {
 
-	public ?string $format = null;
+	public string $format = DateTimeInterface::ATOM;
 
 	/** @var class-string<DateTimeImmutable|DateTime> */
 	public string $type = DateTimeImmutable::class;

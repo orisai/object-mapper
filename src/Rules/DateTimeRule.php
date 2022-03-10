@@ -4,7 +4,6 @@ namespace Orisai\ObjectMapper\Rules;
 
 use DateTime;
 use DateTimeImmutable;
-use DateTimeInterface;
 use Nette\Utils\Validators;
 use Orisai\Exceptions\Logic\InvalidArgument;
 use Orisai\ObjectMapper\Context\FieldContext;
@@ -17,8 +16,6 @@ use Orisai\ObjectMapper\Types\SimpleValueType;
 use ReflectionClass;
 use Throwable;
 use function class_exists;
-use function implode;
-use function in_array;
 use function is_int;
 use function is_string;
 use function sprintf;
@@ -33,23 +30,8 @@ final class DateTimeRule implements Rule
 		FORMAT = 'format',
 		TYPE = 'type';
 
-	public const FORMAT_TIMESTAMP = 'timestamp';
-
-	public const FORMATS_DATETIME = [
-		DateTimeInterface::ATOM,
-		DateTimeInterface::COOKIE,
-		DateTimeInterface::RFC822,
-		DateTimeInterface::RFC850,
-		DateTimeInterface::RFC1036,
-		DateTimeInterface::RFC1123,
-		DateTimeInterface::RFC2822,
-		DateTimeInterface::RFC3339,
-		DateTimeInterface::RFC3339_EXTENDED,
-		DateTimeInterface::RFC7231,
-		DateTimeInterface::RSS,
-		DateTimeInterface::W3C,
-		self::FORMAT_TIMESTAMP,
-	];
+	public const FORMAT_TIMESTAMP = 'timestamp',
+		FORMAT_ANY = 'any';
 
 	/**
 	 * @param array<mixed> $args
@@ -61,19 +43,7 @@ final class DateTimeRule implements Rule
 		$checker->checkAllowedArgs([self::FORMAT, self::TYPE]);
 
 		if ($checker->hasArg(self::FORMAT)) {
-			$format = $args[self::FORMAT];
-
-			if ($format !== null && !in_array($format, self::FORMATS_DATETIME, true)) {
-				throw InvalidArgument::create()
-					->withMessage(sprintf(
-						'Argument %s given to rule %s expected to be %s or one of formats defined in %s constants (%s)',
-						self::FORMAT,
-						self::class,
-						self::FORMAT_TIMESTAMP,
-						DateTimeInterface::class,
-						implode(', ', self::FORMATS_DATETIME),
-					));
-			}
+			$checker->checkString(self::FORMAT);
 		}
 
 		if ($checker->hasArg(self::TYPE)) {
@@ -116,7 +86,7 @@ final class DateTimeRule implements Rule
 		$format = $args->format;
 		$isTimestamp = false;
 
-		if ($format === self::FORMAT_TIMESTAMP || ($format === null && Validators::isNumericInt($value))) {
+		if ($format === self::FORMAT_TIMESTAMP || ($format === self::FORMAT_ANY && Validators::isNumericInt($value))) {
 			$isTimestamp = true;
 		}
 
@@ -125,7 +95,7 @@ final class DateTimeRule implements Rule
 
 		if ($isTimestamp) {
 			$datetime = $type::createFromFormat('U', $stringValue);
-		} elseif ($format === null) {
+		} elseif ($format === self::FORMAT_ANY) {
 			try {
 				$datetime = new $type($stringValue);
 			} catch (Throwable $exception) {
@@ -155,7 +125,7 @@ final class DateTimeRule implements Rule
 
 		$type = new SimpleValueType('datetime');
 
-		if ($args->format !== null) {
+		if ($args->format !== self::FORMAT_ANY) {
 			$type->addKeyValueParameter('format', $args->format);
 		}
 
