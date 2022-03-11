@@ -4,8 +4,8 @@ namespace Orisai\ObjectMapper\Annotation\Expect;
 
 use Doctrine\Common\Annotations\Annotation\NamedArgumentConstructor;
 use Doctrine\Common\Annotations\Annotation\Target;
+use Orisai\ObjectMapper\MappedObject;
 use Orisai\ObjectMapper\Rules\StructureRule;
-use Orisai\ObjectMapper\ValueObject;
 
 /**
  * @Annotation
@@ -15,11 +15,11 @@ use Orisai\ObjectMapper\ValueObject;
 final class Structure implements RuleAnnotation
 {
 
-	/** @var class-string<ValueObject> */
+	/** @var class-string<MappedObject> */
 	private string $type;
 
 	/**
-	 * @param class-string<ValueObject> $type
+	 * @param class-string<MappedObject> $type
 	 */
 	public function __construct(string $type)
 	{

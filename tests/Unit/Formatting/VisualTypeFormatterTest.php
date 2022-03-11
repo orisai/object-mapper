@@ -3,6 +3,7 @@
 namespace Tests\Orisai\ObjectMapper\Unit\Formatting;
 
 use Orisai\ObjectMapper\Formatting\VisualTypeFormatter;
+use Orisai\ObjectMapper\MappedObject;
 use Orisai\ObjectMapper\Types\ArrayType;
 use Orisai\ObjectMapper\Types\CompoundType;
 use Orisai\ObjectMapper\Types\EnumType;
@@ -10,7 +11,6 @@ use Orisai\ObjectMapper\Types\ListType;
 use Orisai\ObjectMapper\Types\MessageType;
 use Orisai\ObjectMapper\Types\SimpleValueType;
 use Orisai\ObjectMapper\Types\StructureType;
-use Orisai\ObjectMapper\ValueObject;
 use PHPUnit\Framework\TestCase;
 
 /**
@@ -159,7 +159,7 @@ final class VisualTypeFormatterTest extends TestCase
 
 	public function testStructure(): void
 	{
-		$type1 = new StructureType(ValueObject::class);
+		$type1 = new StructureType(MappedObject::class);
 		$type1->addField('0', new SimpleValueType('t'));
 		$type1->addField('a', new SimpleValueType('t'));
 

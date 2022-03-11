@@ -6,10 +6,10 @@ use DateTimeImmutable;
 use Orisai\ObjectMapper\Annotation\Expect\DateTime;
 use Orisai\ObjectMapper\Annotation\Expect\InstanceValue;
 use Orisai\ObjectMapper\Annotation\Expect\Structure;
-use Orisai\ObjectMapper\ValueObject;
+use Orisai\ObjectMapper\MappedObject;
 use stdClass;
 
-final class InitializingVO extends ValueObject
+final class InitializingVO extends MappedObject
 {
 
 	/** @DateTime() */

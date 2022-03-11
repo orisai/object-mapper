@@ -9,9 +9,9 @@ use Orisai\ObjectMapper\Annotation\Expect\MixedValue;
 use Orisai\ObjectMapper\Annotation\Expect\NullValue;
 use Orisai\ObjectMapper\Annotation\Expect\StringValue;
 use Orisai\ObjectMapper\Annotation\Expect\Structure;
-use Orisai\ObjectMapper\ValueObject;
+use Orisai\ObjectMapper\MappedObject;
 
-final class NoDefaultsVO extends ValueObject
+final class NoDefaultsVO extends MappedObject
 {
 
 	/** @StringValue() */

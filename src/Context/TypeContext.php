@@ -2,11 +2,11 @@
 
 namespace Orisai\ObjectMapper\Context;
 
+use Orisai\ObjectMapper\MappedObject;
 use Orisai\ObjectMapper\Meta\Meta;
 use Orisai\ObjectMapper\Meta\MetaLoader;
 use Orisai\ObjectMapper\Rules\Rule;
 use Orisai\ObjectMapper\Rules\RuleManager;
-use Orisai\ObjectMapper\ValueObject;
 
 class TypeContext
 {
@@ -22,7 +22,7 @@ class TypeContext
 	}
 
 	/**
-	 * @param class-string<ValueObject> $class
+	 * @param class-string<MappedObject> $class
 	 */
 	public function getMeta(string $class): Meta
 	{

@@ -8,10 +8,10 @@ use Orisai\ObjectMapper\Annotation\Expect\FloatValue;
 use Orisai\ObjectMapper\Annotation\Expect\InstanceValue;
 use Orisai\ObjectMapper\Annotation\Expect\IntValue;
 use Orisai\ObjectMapper\Annotation\Expect\NullValue;
-use Orisai\ObjectMapper\ValueObject;
+use Orisai\ObjectMapper\MappedObject;
 use stdClass;
 
-final class TransformingVO extends ValueObject
+final class TransformingVO extends MappedObject
 {
 
 	/** @BoolValue(castBoolLike=true) */

@@ -2,10 +2,10 @@
 
 namespace Orisai\ObjectMapper\Context;
 
+use Orisai\ObjectMapper\MappedObject;
 use Orisai\ObjectMapper\Meta\MetaLoader;
 use Orisai\ObjectMapper\Meta\MetaResolver;
 use Orisai\ObjectMapper\Rules\RuleManager;
-use Orisai\ObjectMapper\ValueObject;
 use ReflectionClass;
 use ReflectionProperty;
 use function assert;
@@ -18,7 +18,7 @@ class RuleArgsContext extends ArgsContext
 	private MetaLoader $metaLoader;
 
 	/**
-	 * @param ReflectionClass<ValueObject> $class
+	 * @param ReflectionClass<MappedObject> $class
 	 */
 	public function __construct(
 		ReflectionClass $class,

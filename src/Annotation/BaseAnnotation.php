@@ -3,7 +3,7 @@
 namespace Orisai\ObjectMapper\Annotation;
 
 /**
- * Base interface for value object annotations
+ * Base interface for mapped object annotations
  *
  * @internal
  */

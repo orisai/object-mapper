@@ -10,8 +10,8 @@ use Orisai\ObjectMapper\Annotation\Docs\DocumentationAnnotation;
 use Orisai\ObjectMapper\Annotation\Expect\RuleAnnotation;
 use Orisai\ObjectMapper\Annotation\Modifiers\ModifierAnnotation;
 use Orisai\ObjectMapper\Exception\InvalidAnnotation;
+use Orisai\ObjectMapper\MappedObject;
 use Orisai\ObjectMapper\Meta\MetaSource;
-use Orisai\ObjectMapper\ValueObject;
 use ReflectionClass;
 use function get_class;
 use function sprintf;
@@ -38,7 +38,7 @@ final class AnnotationMetaSource implements MetaSource
 	}
 
 	/**
-	 * @param ReflectionClass<ValueObject> $class
+	 * @param ReflectionClass<MappedObject> $class
 	 * @return array<mixed>
 	 */
 	private function loadClassMeta(ReflectionClass $class): array
@@ -68,7 +68,7 @@ final class AnnotationMetaSource implements MetaSource
 	}
 
 	/**
-	 * @param ReflectionClass<ValueObject> $class
+	 * @param ReflectionClass<MappedObject> $class
 	 * @return array<mixed>
 	 */
 	private function loadPropertiesMeta(ReflectionClass $class): array

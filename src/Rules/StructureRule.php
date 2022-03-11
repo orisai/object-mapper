@@ -6,12 +6,12 @@ use Orisai\ObjectMapper\Context\FieldContext;
 use Orisai\ObjectMapper\Context\RuleArgsContext;
 use Orisai\ObjectMapper\Context\TypeContext;
 use Orisai\ObjectMapper\Exception\InvalidData;
+use Orisai\ObjectMapper\MappedObject;
 use Orisai\ObjectMapper\Meta\Args;
 use Orisai\ObjectMapper\Meta\ArgsChecker;
 use Orisai\ObjectMapper\Meta\ArgsCreator;
 use Orisai\ObjectMapper\Modifiers\FieldNameModifier;
 use Orisai\ObjectMapper\Types\StructureType;
-use Orisai\ObjectMapper\ValueObject;
 use function array_keys;
 
 /**
@@ -52,7 +52,7 @@ final class StructureRule implements Rule
 	/**
 	 * @param mixed $value
 	 * @param StructureArgs $args
-	 * @return ValueObject|array<mixed>
+	 * @return MappedObject|array<mixed>
 	 * @throws InvalidData
 	 */
 	public function processValue($value, Args $args, FieldContext $context)

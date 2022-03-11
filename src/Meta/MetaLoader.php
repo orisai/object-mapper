@@ -3,8 +3,8 @@
 namespace Orisai\ObjectMapper\Meta;
 
 use Orisai\Exceptions\Logic\InvalidArgument;
+use Orisai\ObjectMapper\MappedObject;
 use Orisai\ObjectMapper\Rules\RuleManager;
-use Orisai\ObjectMapper\ValueObject;
 use Orisai\Utils\Arrays\ArrayMerger;
 use ReflectionClass;
 use function class_exists;
@@ -12,7 +12,7 @@ use function class_exists;
 class MetaLoader
 {
 
-	/** @var array<class-string<ValueObject>, Meta> */
+	/** @var array<class-string<MappedObject>, Meta> */
 	protected array $arrayCache;
 
 	protected MetaCache $cache;
@@ -39,7 +39,7 @@ class MetaLoader
 	}
 
 	/**
-	 * @param class-string<ValueObject> $class
+	 * @param class-string<MappedObject> $class
 	 */
 	public function load(string $class): Meta
 	{
@@ -60,11 +60,11 @@ class MetaLoader
 
 		$classRef = new ReflectionClass($class);
 
-		if (!$classRef->isSubclassOf(ValueObject::class)) {
-			$valueObjectClass = ValueObject::class;
+		if (!$classRef->isSubclassOf(MappedObject::class)) {
+			$mappedObjectClass = MappedObject::class;
 
 			throw InvalidArgument::create()
-				->withMessage("Class '$class' should be subclass of '$valueObjectClass'.");
+				->withMessage("Class '$class' should be subclass of '$mappedObjectClass'.");
 		}
 
 		if (!$classRef->isInstantiable()) {

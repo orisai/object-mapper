@@ -10,13 +10,13 @@ use Orisai\ObjectMapper\Context\ArgsContext;
 use Orisai\ObjectMapper\Context\RuleArgsContext;
 use Orisai\ObjectMapper\Docs\Doc;
 use Orisai\ObjectMapper\Exception\InvalidMeta;
+use Orisai\ObjectMapper\MappedObject;
 use Orisai\ObjectMapper\Modifiers\FieldNameModifier;
 use Orisai\ObjectMapper\Modifiers\Modifier;
 use Orisai\ObjectMapper\Rules\MixedRule;
 use Orisai\ObjectMapper\Rules\NullRule;
 use Orisai\ObjectMapper\Rules\Rule;
 use Orisai\ObjectMapper\Rules\RuleManager;
-use Orisai\ObjectMapper\ValueObject;
 use ReflectionClass;
 use ReflectionProperty;
 use function array_key_exists;
@@ -48,8 +48,8 @@ final class MetaResolver
 	}
 
 	/**
-	 * @param ReflectionClass<ValueObject> $class
-	 * @param array<mixed> $meta
+	 * @param ReflectionClass<MappedObject> $class
+	 * @param array<mixed>                  $meta
 	 * @return array<mixed>
 	 */
 	public function resolve(ReflectionClass $class, array $meta): array
@@ -61,8 +61,8 @@ final class MetaResolver
 	}
 
 	/**
-	 * @param array<mixed> $meta
-	 * @param ReflectionClass<ValueObject> $class
+	 * @param array<mixed>                  $meta
+	 * @param ReflectionClass<MappedObject> $class
 	 * @return array<mixed>
 	 */
 	private function resolveMeta(array $meta, ReflectionClass $class): array
@@ -97,8 +97,8 @@ final class MetaResolver
 	/**
 	 * Meta which are same for both classes and properties
 	 *
-	 * @param array<mixed> $meta
-	 * @param ReflectionClass<ValueObject> $class
+	 * @param array<mixed>                  $meta
+	 * @param ReflectionClass<MappedObject> $class
 	 * @return array<mixed>
 	 */
 	private function resolveReflectorMeta(array $meta, ReflectionClass $class, ?ReflectionProperty $property): array
@@ -139,8 +139,8 @@ final class MetaResolver
 	}
 
 	/**
-	 * @param array<mixed> $meta
-	 * @param ReflectionClass<ValueObject> $class
+	 * @param array<mixed>                  $meta
+	 * @param ReflectionClass<MappedObject> $class
 	 * @return array<mixed>
 	 */
 	private function resolveClassMeta(array $meta, ReflectionClass $class): array
@@ -154,8 +154,8 @@ final class MetaResolver
 	}
 
 	/**
-	 * @param array<mixed> $meta
-	 * @param ReflectionClass<ValueObject> $class
+	 * @param array<mixed>                  $meta
+	 * @param ReflectionClass<MappedObject> $class
 	 * @return array<mixed>
 	 */
 	private function resolvePropertiesMeta(array $meta, ReflectionClass $class): array
@@ -183,8 +183,8 @@ final class MetaResolver
 	}
 
 	/**
-	 * @param array<mixed> $meta
-	 * @param ReflectionClass<ValueObject> $class
+	 * @param array<mixed>                  $meta
+	 * @param ReflectionClass<MappedObject> $class
 	 * @return array<mixed>
 	 */
 	private function resolvePropertyMeta(array $meta, ReflectionClass $class, ReflectionProperty $property): array
@@ -195,7 +195,7 @@ final class MetaResolver
 					'Property %s::$%s is not valid mapped property, \'%s\' supports only non-static public properties to be mapped.',
 					$class->getName(),
 					$property->getName(),
-					ValueObject::class,
+					MappedObject::class,
 				));
 		}
 
@@ -406,8 +406,8 @@ final class MetaResolver
 	}
 
 	/**
-	 * @param array<mixed> $meta
-	 * @param ReflectionClass<ValueObject> $class
+	 * @param array<mixed>                  $meta
+	 * @param ReflectionClass<MappedObject> $class
 	 * @return array<mixed>
 	 */
 	private function resolveDefaultValues(array $meta, ReflectionClass $class): array
@@ -441,8 +441,8 @@ final class MetaResolver
 	}
 
 	/**
-	 * @param array<mixed> $properties
-	 * @param ReflectionClass<ValueObject> $class
+	 * @param array<mixed>                  $properties
+	 * @param ReflectionClass<MappedObject> $class
 	 * @return array<int|string, string>
 	 */
 	private function resolveFieldsPropertiesMap(array $properties, ReflectionClass $class): array
@@ -504,7 +504,7 @@ final class MetaResolver
 	}
 
 	/**
-	 * @param ReflectionClass<ValueObject> $class
+	 * @param ReflectionClass<MappedObject> $class
 	 */
 	private function createArgsContext(ReflectionClass $class, ?ReflectionProperty $property): ArgsContext
 	{
@@ -512,7 +512,7 @@ final class MetaResolver
 	}
 
 	/**
-	 * @param ReflectionClass<ValueObject> $class
+	 * @param ReflectionClass<MappedObject> $class
 	 */
 	private function createRuleArgsContext(ReflectionClass $class, ReflectionProperty $property): RuleArgsContext
 	{

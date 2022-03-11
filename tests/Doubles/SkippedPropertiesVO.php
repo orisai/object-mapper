@@ -4,9 +4,9 @@ namespace Tests\Orisai\ObjectMapper\Doubles;
 
 use Orisai\ObjectMapper\Annotation\Expect\StringValue;
 use Orisai\ObjectMapper\Annotation\Modifiers\Skipped;
-use Orisai\ObjectMapper\ValueObject;
+use Orisai\ObjectMapper\MappedObject;
 
-final class SkippedPropertiesVO extends ValueObject
+final class SkippedPropertiesVO extends MappedObject
 {
 
 	/** @StringValue() */

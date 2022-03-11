@@ -12,14 +12,14 @@ use Orisai\ObjectMapper\Callbacks\CallbackRuntime;
 use Orisai\ObjectMapper\Context\FieldContext;
 use Orisai\ObjectMapper\Context\FieldSetContext;
 use Orisai\ObjectMapper\Exception\InvalidData;
-use Orisai\ObjectMapper\ValueObject;
+use Orisai\ObjectMapper\MappedObject;
 use function array_key_exists;
 
 /**
  * @Before(method="beforeClass", runtime=CallbackRuntime::ALWAYS)
  * @After(method="afterClass", runtime=CallbackRuntime::ALWAYS)
  */
-final class CallbacksVO extends ValueObject
+final class CallbacksVO extends MappedObject
 {
 
 	public const STRUCTURE_CLASS = 'structure_class';
@@ -46,7 +46,7 @@ final class CallbacksVO extends ValueObject
 	 * )
 	 * @After(method="afterStructure", runtime=CallbackRuntime::ALWAYS)
 	 */
-	public ValueObject $structure;
+	public MappedObject $structure;
 
 	/** @StringValue() */
 	public string $overridenDefaultValue = 'defaultValue_before_override';
@@ -104,12 +104,12 @@ final class CallbacksVO extends ValueObject
 	{
 		$data['array']['afterClassCallback'][] = $context->isInitializeObjects();
 
-		if ($context->isInitializeObjects() && !$data['structure'] instanceof ValueObject) {
+		if ($context->isInitializeObjects() && !$data['structure'] instanceof MappedObject) {
 			throw InvalidState::create()
 				->withMessage('Instance should be initialized by that moment');
 		}
 
-		if (!$context->isInitializeObjects() && $data['structure'] instanceof ValueObject) {
+		if (!$context->isInitializeObjects() && $data['structure'] instanceof MappedObject) {
 			throw InvalidState::create()
 				->withMessage('Instance should not be initialized, context is not set to initialize object');
 		}
@@ -141,7 +141,7 @@ final class CallbacksVO extends ValueObject
 
 	/**
 	 * @param array<mixed> $structure
-	 * @return ValueObject|array<mixed>
+	 * @return MappedObject|array<mixed>
 	 * @throws InvalidData
 	 */
 	public static function afterStructure(array $structure, FieldContext $context)

@@ -6,12 +6,12 @@ use Orisai\ObjectMapper\Annotation\Callback\After;
 use Orisai\ObjectMapper\Annotation\Expect\StringValue;
 use Orisai\ObjectMapper\Callbacks\CallbackRuntime;
 use Orisai\ObjectMapper\Exception\ValueDoesNotMatch;
-use Orisai\ObjectMapper\ValueObject;
+use Orisai\ObjectMapper\MappedObject;
 
 /**
  * @After(method="after", runtime=CallbackRuntime::ALWAYS)
  */
-final class AfterClassCallbackValueDoesNotMatchVO extends ValueObject
+final class AfterClassCallbackValueDoesNotMatchVO extends MappedObject
 {
 
 	/** @StringValue() */

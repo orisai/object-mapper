@@ -2,15 +2,15 @@
 
 namespace Orisai\ObjectMapper\Context;
 
+use Orisai\ObjectMapper\MappedObject;
 use Orisai\ObjectMapper\Meta\MetaResolver;
-use Orisai\ObjectMapper\ValueObject;
 use ReflectionClass;
 use ReflectionProperty;
 
 class ArgsContext
 {
 
-	/** @var ReflectionClass<ValueObject> */
+	/** @var ReflectionClass<MappedObject> */
 	private ReflectionClass $class;
 
 	private ?ReflectionProperty $property;
@@ -18,7 +18,7 @@ class ArgsContext
 	private MetaResolver $metaResolver;
 
 	/**
-	 * @param ReflectionClass<ValueObject> $class
+	 * @param ReflectionClass<MappedObject> $class
 	 */
 	public function __construct(ReflectionClass $class, ?ReflectionProperty $property, MetaResolver $metaResolver)
 	{
@@ -28,7 +28,7 @@ class ArgsContext
 	}
 
 	/**
-	 * @return ReflectionClass<ValueObject>
+	 * @return ReflectionClass<MappedObject>
 	 */
 	public function getClass(): ReflectionClass
 	{

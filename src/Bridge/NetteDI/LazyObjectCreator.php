@@ -4,7 +4,7 @@ namespace Orisai\ObjectMapper\Bridge\NetteDI;
 
 use Nette\DI\Container;
 use Orisai\ObjectMapper\Creation\ObjectCreator;
-use Orisai\ObjectMapper\ValueObject;
+use Orisai\ObjectMapper\MappedObject;
 use function assert;
 
 final class LazyObjectCreator implements ObjectCreator
@@ -17,7 +17,7 @@ final class LazyObjectCreator implements ObjectCreator
 		$this->container = $container;
 	}
 
-	public function createInstance(string $class): ValueObject
+	public function createInstance(string $class): MappedObject
 	{
 		$object = $this->container->createInstance($class);
 		assert($object instanceof $class);

@@ -2,9 +2,9 @@
 
 namespace Tests\Orisai\ObjectMapper\Doubles;
 
-use Orisai\ObjectMapper\ValueObject;
+use Orisai\ObjectMapper\MappedObject;
 
-final class EmptyVO extends ValueObject
+final class EmptyVO extends MappedObject
 {
 
 }

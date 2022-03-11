@@ -7,17 +7,17 @@ parameters:
 
 	ignoreErrors:
 		# Values mapping to object
-		- message: '#^Variable property access on Orisai\\ObjectMapper\\ValueObject\.$#'
+		- message: '#^Variable property access on Orisai\\ObjectMapper\\MappedObject\.$#'
 		  path: ../src/Processing/DefaultProcessor.php
 		  count: 3
-		- message: '#^Variable property access on \$this\(Orisai\\ObjectMapper\\ValueObject\).$#'
-		  path: ../src/ValueObject.php
+		- message: '#^Variable property access on \$this\(Orisai\\ObjectMapper\\MappedObject\).$#'
+		  path: ../src/MappedObject.php
 		  count: 1
 		# Callback call
-		- message: '#^Variable static method call on class-string\<Orisai\\ObjectMapper\\ValueObject\>\.$#'
+		- message: '#^Variable static method call on class-string\<Orisai\\ObjectMapper\\MappedObject\>\.$#'
 		  path: ../src/Callbacks/BaseCallback.php
 		  count: 1
-		- message: '#^Variable method call on Orisai\\ObjectMapper\\ValueObject\.$#'
+		- message: '#^Variable method call on Orisai\\ObjectMapper\\MappedObject\.$#'
 		  path: ../src/Callbacks/BaseCallback.php
 		  count: 1
 		# File always exists
@@ -28,7 +28,7 @@ parameters:
 		  path: ../src/Meta/ClassModificationsChecker.php
 		  count: 2
 		# Intentional check
-		- message: "#^Call to method ReflectionClass\\<(.+)ValueObject\\>\\:\\:isSubclassOf\\(\\) with '(.+)ValueObject' will always evaluate to true\\.$#"
+		- message: "#^Call to method ReflectionClass\\<(.+)MappedObject\\>\\:\\:isSubclassOf\\(\\) with '(.+)MappedObject' will always evaluate to true\\.$#"
 		  path: ../src/Meta/MetaLoader.php
 		  count: 1
 		# PHPStan thinks that class_implements returns array<string> instead of array<class-string>

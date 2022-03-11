@@ -2,12 +2,12 @@
 
 namespace Orisai\ObjectMapper\Context;
 
+use Orisai\ObjectMapper\MappedObject;
 use Orisai\ObjectMapper\Meta\Meta;
 use Orisai\ObjectMapper\Processing\ObjectHolder;
-use Orisai\ObjectMapper\ValueObject;
 
 /**
- * @template T of ValueObject
+ * @template T of MappedObject
  */
 class ProcessorRunContext
 {

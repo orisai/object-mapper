@@ -7,15 +7,15 @@ use Orisai\ObjectMapper\Annotation\Expect\StringValue;
 use Orisai\ObjectMapper\Callbacks\CallbackRuntime;
 use Orisai\ObjectMapper\Exception\InvalidData;
 use Orisai\ObjectMapper\Exception\ValueDoesNotMatch;
+use Orisai\ObjectMapper\MappedObject;
 use Orisai\ObjectMapper\NoValue;
 use Orisai\ObjectMapper\Types\MessageType;
 use Orisai\ObjectMapper\Types\StructureType;
-use Orisai\ObjectMapper\ValueObject;
 
 /**
  * @After(method="after", runtime=CallbackRuntime::ALWAYS)
  */
-final class AfterClassCallbackNewTypeInvalidDataVO extends ValueObject
+final class AfterClassCallbackNewTypeInvalidDataVO extends MappedObject
 {
 
 	/** @StringValue() */

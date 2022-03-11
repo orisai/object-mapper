@@ -8,13 +8,13 @@ use Orisai\ObjectMapper\Annotation\Callback\Before;
 use Orisai\ObjectMapper\Annotation\Expect\StringValue;
 use Orisai\ObjectMapper\Callbacks\CallbackRuntime;
 use Orisai\ObjectMapper\Exception\ValueDoesNotMatch;
-use Orisai\ObjectMapper\ValueObject;
+use Orisai\ObjectMapper\MappedObject;
 
 /**
  * @Before(method="beforeClass", runtime=CallbackRuntime::ALWAYS)
  * @After(method="afterClass", runtime=CallbackRuntime::ALWAYS)
  */
-final class PropertyCallbacksFailureVO extends ValueObject
+final class PropertyCallbacksFailureVO extends MappedObject
 {
 
 	/**

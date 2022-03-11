@@ -9,8 +9,8 @@ use Orisai\Exceptions\Logic\InvalidState;
 use Orisai\ObjectMapper\Exception\InvalidData;
 use Orisai\ObjectMapper\Formatting\ErrorFormatter;
 use Orisai\ObjectMapper\Formatting\VisualErrorFormatter;
+use Orisai\ObjectMapper\MappedObject;
 use Orisai\ObjectMapper\Options;
-use Orisai\ObjectMapper\ValueObject;
 use stdClass;
 use Tests\Orisai\ObjectMapper\Doubles\AfterClassCallbackCurrentTypeInvalidDataVO;
 use Tests\Orisai\ObjectMapper\Doubles\AfterClassCallbackNewTypeInvalidDataVO;
@@ -758,7 +758,7 @@ arrayOfMixed: array<mixed>',
 		$this->expectExceptionMessage(sprintf(
 			"Class '%s' should be subclass of '%s'",
 			stdClass::class,
-			ValueObject::class,
+			MappedObject::class,
 		));
 
 		$this->processor->process([], stdClass::class);

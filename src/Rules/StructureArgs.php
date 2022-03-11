@@ -3,15 +3,15 @@
 namespace Orisai\ObjectMapper\Rules;
 
 use Orisai\Exceptions\Logic\InvalidArgument;
+use Orisai\ObjectMapper\MappedObject;
 use Orisai\ObjectMapper\Meta\Args;
-use Orisai\ObjectMapper\ValueObject;
 use function array_key_exists;
 use function sprintf;
 
 final class StructureArgs implements Args
 {
 
-	/** @var class-string<ValueObject> */
+	/** @var class-string<MappedObject> */
 	public string $type;
 
 	private function __construct()
@@ -37,7 +37,7 @@ final class StructureArgs implements Args
 	}
 
 	/**
-	 * @param class-string<ValueObject> $class
+	 * @param class-string<MappedObject> $class
 	 */
 	public static function fromClass(string $class): self
 	{

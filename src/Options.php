@@ -66,7 +66,7 @@ class Options
 	}
 
 	/**
-	 * Make user-sent values accessible by $valueObject->getRawValues()
+	 * Make user-sent values accessible by $mappedObject->getRawValues()
 	 * Note: used only if objects are initialized
 	 * Note: use only for debug, it may lead to significant raw data grow in bigger hierarchies
 	 * 		 you can set data to a custom property in before class callback, if are always needed

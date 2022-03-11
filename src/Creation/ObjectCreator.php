@@ -2,16 +2,16 @@
 
 namespace Orisai\ObjectMapper\Creation;
 
-use Orisai\ObjectMapper\ValueObject;
+use Orisai\ObjectMapper\MappedObject;
 
 interface ObjectCreator
 {
 
 	/**
-	 * @template T of ValueObject
+	 * @template T of MappedObject
 	 * @param class-string<T> $class
 	 * @return T
 	 */
-	public function createInstance(string $class): ValueObject;
+	public function createInstance(string $class): MappedObject;
 
 }

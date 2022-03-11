@@ -3,13 +3,13 @@
 namespace Orisai\ObjectMapper\Creation;
 
 use Orisai\Exceptions\Logic\InvalidState;
-use Orisai\ObjectMapper\ValueObject;
+use Orisai\ObjectMapper\MappedObject;
 use ReflectionClass;
 
 final class DefaultObjectCreator implements ObjectCreator
 {
 
-	public function createInstance(string $class): ValueObject
+	public function createInstance(string $class): MappedObject
 	{
 		$reflection = new ReflectionClass($class);
 

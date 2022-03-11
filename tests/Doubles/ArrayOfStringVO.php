@@ -4,9 +4,9 @@ namespace Tests\Orisai\ObjectMapper\Doubles;
 
 use Orisai\ObjectMapper\Annotation\Expect\ArrayOf;
 use Orisai\ObjectMapper\Annotation\Expect\StringValue;
-use Orisai\ObjectMapper\ValueObject;
+use Orisai\ObjectMapper\MappedObject;
 
-final class ArrayOfStringVO extends ValueObject
+final class ArrayOfStringVO extends MappedObject
 {
 
 	/**

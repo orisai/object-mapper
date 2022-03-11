@@ -2,17 +2,17 @@
 
 namespace Tests\Orisai\ObjectMapper\Doubles;
 
+use Orisai\ObjectMapper\MappedObject;
 use Orisai\ObjectMapper\Meta\MetaCache;
-use Orisai\ObjectMapper\ValueObject;
 
 final class TestMetaCache implements MetaCache
 {
 
-	/** @var array<class-string<ValueObject>, array<mixed>> */
+	/** @var array<class-string<MappedObject>, array<mixed>> */
 	private array $cache = [];
 
 	/**
-	 * @param class-string<ValueObject> $class
+	 * @param class-string<MappedObject> $class
 	 * @return array<mixed>|null
 	 */
 	public function load(string $class): ?array
@@ -21,8 +21,8 @@ final class TestMetaCache implements MetaCache
 	}
 
 	/**
-	 * @param class-string<ValueObject> $class
-	 * @param array<mixed> $meta
+	 * @param class-string<MappedObject> $class
+	 * @param array<mixed>               $meta
 	 */
 	public function save(string $class, array $meta): void
 	{

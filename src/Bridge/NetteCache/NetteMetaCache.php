@@ -4,9 +4,9 @@ namespace Orisai\ObjectMapper\Bridge\NetteCache;
 
 use Nette\Caching\Cache;
 use Nette\Caching\IStorage;
+use Orisai\ObjectMapper\MappedObject;
 use Orisai\ObjectMapper\Meta\ClassModificationsChecker;
 use Orisai\ObjectMapper\Meta\MetaCache;
-use Orisai\ObjectMapper\ValueObject;
 
 final class NetteMetaCache implements MetaCache
 {
@@ -24,7 +24,7 @@ final class NetteMetaCache implements MetaCache
 	}
 
 	/**
-	 * @param class-string<ValueObject> $class
+	 * @param class-string<MappedObject> $class
 	 * @return array<mixed>|null
 	 */
 	public function load(string $class): ?array
@@ -33,8 +33,8 @@ final class NetteMetaCache implements MetaCache
 	}
 
 	/**
-	 * @param class-string<ValueObject> $class
-	 * @param array<mixed> $meta
+	 * @param class-string<MappedObject> $class
+	 * @param array<mixed>               $meta
 	 */
 	public function save(string $class, array $meta): void
 	{
@@ -42,7 +42,7 @@ final class NetteMetaCache implements MetaCache
 	}
 
 	/**
-	 * @param class-string<ValueObject> $class
+	 * @param class-string<MappedObject> $class
 	 * @return array<mixed>
 	 */
 	protected function getDependencies(string $class): array

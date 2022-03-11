@@ -8,10 +8,10 @@ use Orisai\ObjectMapper\Context\ArgsContext;
 use Orisai\ObjectMapper\Context\BaseFieldContext;
 use Orisai\ObjectMapper\Context\FieldContext;
 use Orisai\ObjectMapper\Context\FieldSetContext;
+use Orisai\ObjectMapper\MappedObject;
 use Orisai\ObjectMapper\Meta\Args;
 use Orisai\ObjectMapper\Meta\ArgsChecker;
 use Orisai\ObjectMapper\Processing\ObjectHolder;
-use Orisai\ObjectMapper\ValueObject;
 use ReflectionClass;
 use ReflectionMethod;
 use ReflectionNamedType;
@@ -94,7 +94,7 @@ abstract class BaseCallback implements Callback
 	}
 
 	/**
-	 * @param ReflectionClass<ValueObject> $class
+	 * @param ReflectionClass<MappedObject> $class
 	 */
 	private static function validateMethod(ReflectionClass $class, string $methodName): ReflectionMethod
 	{
@@ -134,7 +134,7 @@ abstract class BaseCallback implements Callback
 	}
 
 	/**
-	 * @param ReflectionClass<ValueObject> $class
+	 * @param ReflectionClass<MappedObject> $class
 	 */
 	private static function validateMethodSignature(
 		ReflectionMethod $method,

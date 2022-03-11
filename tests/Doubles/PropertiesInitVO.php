@@ -6,9 +6,9 @@ use Orisai\ObjectMapper\Annotation\Expect\AnyOf;
 use Orisai\ObjectMapper\Annotation\Expect\NullValue;
 use Orisai\ObjectMapper\Annotation\Expect\StringValue;
 use Orisai\ObjectMapper\Annotation\Expect\Structure;
-use Orisai\ObjectMapper\ValueObject;
+use Orisai\ObjectMapper\MappedObject;
 
-final class PropertiesInitVO extends ValueObject
+final class PropertiesInitVO extends MappedObject
 {
 
 	/**

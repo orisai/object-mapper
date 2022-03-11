@@ -6,9 +6,9 @@ use Orisai\ObjectMapper\Annotation\Expect\AnyOf;
 use Orisai\ObjectMapper\Annotation\Expect\ArrayOf;
 use Orisai\ObjectMapper\Annotation\Expect\MixedValue;
 use Orisai\ObjectMapper\Annotation\Expect\Structure;
-use Orisai\ObjectMapper\ValueObject;
+use Orisai\ObjectMapper\MappedObject;
 
-final class StructuresVO extends ValueObject
+final class StructuresVO extends MappedObject
 {
 
 	/** @Structure(DefaultsVO::class) */

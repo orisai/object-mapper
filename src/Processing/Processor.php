@@ -3,8 +3,8 @@
 namespace Orisai\ObjectMapper\Processing;
 
 use Orisai\ObjectMapper\Exception\InvalidData;
+use Orisai\ObjectMapper\MappedObject;
 use Orisai\ObjectMapper\Options;
-use Orisai\ObjectMapper\ValueObject;
 
 interface Processor
 {
@@ -12,33 +12,33 @@ interface Processor
 	/**
 	 * Validate data against $class schema, call all callbacks and map data to initialized $class instance
 	 *
-	 * @template T of ValueObject
+	 * @template T of MappedObject
 	 * @param mixed $data
 	 * @param class-string<T> $class
 	 * @return T
 	 * @throws InvalidData
 	 */
-	public function process($data, string $class, ?Options $options = null): ValueObject;
+	public function process($data, string $class, ?Options $options = null): MappedObject;
 
 	/**
 	 * Validate data against $class schema and call before/after processing callbacks
 	 *
-	 * @param mixed $data
-	 * @param class-string<ValueObject> $class
+	 * @param mixed                      $data
+	 * @param class-string<MappedObject> $class
 	 * @return array<int|string, mixed>
 	 * @throws InvalidData
 	 */
 	public function processWithoutInitialization($data, string $class, ?Options $options = null): array;
 
 	/**
-	 * Validate and initialize ValueObject properties which were skipped due to LateProcessed modifier
+	 * Validate and initialize MappedObject properties which were skipped due to LateProcessed modifier
 	 *
 	 * @param array<string> $properties
 	 * @throws InvalidData
 	 */
 	public function processSkippedProperties(
 		array $properties,
-		ValueObject $object,
+		MappedObject $object,
 		?Options $options = null
 	): void;
 

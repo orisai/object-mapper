@@ -5,6 +5,7 @@ namespace Tests\Orisai\ObjectMapper\Unit\Formatting;
 use Orisai\ObjectMapper\Annotation\AnnotationMetaSource;
 use Orisai\ObjectMapper\Context\TypeContext;
 use Orisai\ObjectMapper\Formatting\ArrayDefaultValuesFormatter;
+use Orisai\ObjectMapper\MappedObject;
 use Orisai\ObjectMapper\Meta\DefaultMetaResolverFactory;
 use Orisai\ObjectMapper\Meta\DefaultMetaSourceManager;
 use Orisai\ObjectMapper\Meta\MetaLoader;
@@ -13,7 +14,6 @@ use Orisai\ObjectMapper\Rules\RuleManager;
 use Orisai\ObjectMapper\Rules\StructureArgs;
 use Orisai\ObjectMapper\Rules\StructureRule;
 use Orisai\ObjectMapper\Types\StructureType;
-use Orisai\ObjectMapper\ValueObject;
 use PHPUnit\Framework\TestCase;
 use Tests\Orisai\ObjectMapper\Doubles\DefaultsVO;
 use Tests\Orisai\ObjectMapper\Doubles\NoDefaultsVO;
@@ -43,7 +43,7 @@ final class ArrayDefaultValuesFormatterTest extends TestCase
 	}
 
 	/**
-	 * @param class-string<ValueObject> $class
+	 * @param class-string<MappedObject> $class
 	 */
 	private function createType(string $class): StructureType
 	{

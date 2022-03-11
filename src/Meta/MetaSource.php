@@ -2,7 +2,7 @@
 
 namespace Orisai\ObjectMapper\Meta;
 
-use Orisai\ObjectMapper\ValueObject;
+use Orisai\ObjectMapper\MappedObject;
 use ReflectionClass;
 
 interface MetaSource
@@ -62,7 +62,7 @@ interface MetaSource
 	 * 		],
 	 * ]
 	 *
-	 * @param ReflectionClass<ValueObject> $class
+	 * @param ReflectionClass<MappedObject> $class
 	 * @return array<mixed>
 	 */
 	public function load(ReflectionClass $class): array;

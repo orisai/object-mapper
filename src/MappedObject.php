@@ -10,9 +10,9 @@ use ReflectionProperty;
 use function sprintf;
 
 /**
- * Base class required for value objects
+ * Base class required for mapped objects
  */
-abstract class ValueObject
+abstract class MappedObject
 {
 
 	private ?SkippedPropertiesContext $skippedPropertiesContext = null;

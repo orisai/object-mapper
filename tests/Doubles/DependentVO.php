@@ -2,10 +2,10 @@
 
 namespace Tests\Orisai\ObjectMapper\Doubles;
 
-use Orisai\ObjectMapper\ValueObject;
+use Orisai\ObjectMapper\MappedObject;
 use stdClass;
 
-final class DependentVO extends ValueObject
+final class DependentVO extends MappedObject
 {
 
 	public ?stdClass $class = null;
