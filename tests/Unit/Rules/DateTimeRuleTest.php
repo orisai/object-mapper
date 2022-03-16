@@ -72,7 +72,7 @@ final class DateTimeRuleTest extends RuleTestCase
 		yield ['yesterday', DateTimeRule::FORMAT_ANY];
 		yield ['1879-03-14', DateTimeRule::FORMAT_ANY];
 		yield ['2013-04-12T16:40:00-04:00', DateTimeRule::FORMAT_ANY];
-		yield ['2013-04-12T16:40:00-04:00', DateTimeImmutable::ATOM];
+		yield ['2013-04-12T16:40:00-04:00', DateTimeInterface::ATOM];
 		yield ['1389312000', DateTimeRule::FORMAT_TIMESTAMP];
 		yield [1_389_312_000, DateTimeRule::FORMAT_TIMESTAMP];
 		yield ['1389312000', DateTimeRule::FORMAT_ANY];
@@ -140,7 +140,7 @@ final class DateTimeRuleTest extends RuleTestCase
 			'Failed to parse time string (whatever) at position 0 (w): The timezone could not be found in the database',
 		]];
 
-		yield ['whatever', DateTimeImmutable::ATOM, [
+		yield ['whatever', DateTimeInterface::ATOM, [
 			'format: Y-m-d\TH:i:sP',
 			'A four digit year could not be found',
 			'Data missing',
@@ -150,7 +150,7 @@ final class DateTimeRuleTest extends RuleTestCase
 			PHP_VERSION_ID < 8_00_00 ? 'Unexpected data found.' : 'Found unexpected data',
 		], 'timestamp'];
 
-		yield ['2013-04-12T16:40:00-04:00', DateTimeImmutable::COOKIE, [
+		yield ['2013-04-12T16:40:00-04:00', DateTimeInterface::COOKIE, [
 			'format: l, d-M-Y H:i:s T',
 			'A textual day could not be found',
 			'Unexpected data found.',
