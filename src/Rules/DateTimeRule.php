@@ -104,6 +104,10 @@ final class DateTimeRule implements Rule
 				$datetime = new $classType($stringValue);
 			} catch (Throwable $exception) {
 				$type = $this->createType($args, $context);
+				if ($type->hasParameter('format')) {
+					$type->markParameterInvalid('format');
+				}
+
 				$message = $exception->getMessage();
 				if (PHP_VERSION_ID < 8_01_00) {
 					// Drop 'DateTimeImmutable::__construct(): ' from message start
@@ -126,7 +130,11 @@ final class DateTimeRule implements Rule
 				? DateTimeImmutable::getLastErrors()
 				: DateTime::getLastErrors();
 			assert($errors !== false);
+
 			$type = $this->createType($args, $context);
+			if ($type->hasParameter('format')) {
+				$type->markParameterInvalid('format');
+			}
 
 			foreach ($errors['errors'] as $error) {
 				$type->addKeyParameter($error);

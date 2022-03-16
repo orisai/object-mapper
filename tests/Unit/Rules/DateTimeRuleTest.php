@@ -112,7 +112,12 @@ final class DateTimeRuleTest extends RuleTestCase
 			$parameters = [];
 			foreach ($type->getParameters() as $parameter) {
 				if ($parameter->isInvalid()) {
-					$parameters[] = $parameter->getKey();
+					$parameterString = $parameter->getKey();
+					if ($parameter->hasValue()) {
+						$parameterString .= ": {$parameter->getValue()}";
+					}
+
+					$parameters[] = $parameterString;
 				}
 			}
 
@@ -136,6 +141,7 @@ final class DateTimeRuleTest extends RuleTestCase
 		]];
 
 		yield ['whatever', DateTimeImmutable::ATOM, [
+			'format: Y-m-d\TH:i:sP',
 			'A four digit year could not be found',
 			'Data missing',
 		]];
@@ -145,6 +151,7 @@ final class DateTimeRuleTest extends RuleTestCase
 		], 'timestamp'];
 
 		yield ['2013-04-12T16:40:00-04:00', DateTimeImmutable::COOKIE, [
+			'format: l, d-M-Y H:i:s T',
 			'A textual day could not be found',
 			'Unexpected data found.',
 			'The separation symbol could not be found',
