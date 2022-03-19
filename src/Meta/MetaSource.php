@@ -33,9 +33,6 @@ interface MetaSource
 	 * 		],
 	 * 		'properties' => [
 	 * 			'propertyName' => [
-	 *				// Default value, if any
-	 * 				// Key is not set in case no default is available to distinguish between no value and null
-	 * 				'default' => 'example',
 	 *				'callbacks' => [
 	 * 					CallbackMeta,
 	 * 				],
