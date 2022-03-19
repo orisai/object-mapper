@@ -40,10 +40,7 @@ interface MetaSource
 	 * 					DocMeta,
 	 * 				],
 	 * 				'modifiers' => [
-	 * 					[
-	 * 						'type' => AnnotationClass::class,
-	 * 						'args' => [],
-	 * 					],
+	 * 					ModifierMeta,
 	 * 				],
 	 *				'rule' => RuleMeta,
 	 * 			],

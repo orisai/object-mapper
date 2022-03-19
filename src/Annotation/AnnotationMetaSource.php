@@ -14,6 +14,7 @@ use Orisai\ObjectMapper\MappedObject;
 use Orisai\ObjectMapper\Meta\CallbackMeta;
 use Orisai\ObjectMapper\Meta\DocMeta;
 use Orisai\ObjectMapper\Meta\MetaSource;
+use Orisai\ObjectMapper\Meta\ModifierMeta;
 use Orisai\ObjectMapper\Meta\RuleMeta;
 use ReflectionClass;
 use function get_class;
@@ -75,7 +76,10 @@ final class AnnotationMetaSource implements MetaSource
 					$annotation->getArgs(),
 				);
 			} else {
-				$classMeta[$annotation::ANNOTATION_TYPE][] = AnnotationMetaExtractor::extract($annotation);
+				$classMeta[$annotation::ANNOTATION_TYPE][] = new ModifierMeta(
+					$annotation->getType(),
+					$annotation->getArgs(),
+				);
 			}
 		}
 
@@ -132,8 +136,9 @@ final class AnnotationMetaSource implements MetaSource
 						$annotation->getArgs(),
 					);
 				} else {
-					$propertiesMeta[$propertyName][$annotation::ANNOTATION_TYPE][] = AnnotationMetaExtractor::extract(
-						$annotation,
+					$propertiesMeta[$propertyName][$annotation::ANNOTATION_TYPE][] = new ModifierMeta(
+						$annotation->getType(),
+						$annotation->getArgs(),
 					);
 				}
 			}

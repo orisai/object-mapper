@@ -10,7 +10,6 @@ use Orisai\ObjectMapper\Context\RuleArgsContext;
 use Orisai\ObjectMapper\Exception\InvalidMeta;
 use Orisai\ObjectMapper\MappedObject;
 use Orisai\ObjectMapper\Modifiers\FieldNameModifier;
-use Orisai\ObjectMapper\Modifiers\Modifier;
 use Orisai\ObjectMapper\Rules\MixedRule;
 use Orisai\ObjectMapper\Rules\NullRule;
 use Orisai\ObjectMapper\Rules\Rule;
@@ -280,7 +279,7 @@ final class MetaResolver
 		$optimized = [];
 
 		foreach ($meta as $modifier) {
-			if (!is_array($modifier)) {
+			if (!$modifier instanceof ModifierMeta) {
 				throw InvalidMeta::create();
 			}
 
@@ -292,30 +291,12 @@ final class MetaResolver
 	}
 
 	/**
-	 * @param array<mixed> $meta
 	 * @return array<mixed>
 	 */
-	private function resolveModifierMeta(array $meta, ArgsContext $context): array
+	private function resolveModifierMeta(ModifierMeta $meta, ArgsContext $context): array
 	{
-		if (
-			!array_key_exists(MetaSource::OPTION_TYPE, $meta)
-			|| !is_string(($type = $meta[MetaSource::OPTION_TYPE]))
-			|| !is_subclass_of($type, Modifier::class)
-		) {
-			throw InvalidMeta::create();
-		}
-
-		if (array_key_exists(MetaSource::OPTION_ARGS, $meta)) {
-			$args = $meta[MetaSource::OPTION_ARGS];
-
-			if (!is_array($args)) {
-				throw InvalidMeta::create();
-			}
-		} else {
-			$args = [];
-		}
-
-		$args = $type::resolveArgs($args, $context);
+		$type = $meta->getType();
+		$args = $type::resolveArgs($meta->getArgs(), $context);
 
 		return [$type, $args];
 	}

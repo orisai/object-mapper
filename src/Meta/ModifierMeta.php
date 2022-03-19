@@ -13,22 +13,23 @@ final class ModifierMeta
 	/** @var array<mixed> */
 	private array $args;
 
-	private function __construct()
+	/**
+	 * @param class-string<Modifier> $type
+	 * @param array<mixed>                 $args
+	 */
+	public function __construct(string $type, array $args)
 	{
-		// Static constructor is required
+		$this->type = $type;
+		$this->args = $args;
 	}
 
 	/**
 	 * @param class-string<Modifier> $type
-	 * @param array<mixed> $args
+	 * @param array<mixed>           $args
 	 */
 	public static function from(string $type, array $args): self
 	{
-		$self = new self();
-		$self->type = $type;
-		$self->args = $args;
-
-		return $self;
+		return new self($type, $args);
 	}
 
 	/**
