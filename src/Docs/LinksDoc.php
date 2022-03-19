@@ -4,6 +4,7 @@ namespace Orisai\ObjectMapper\Docs;
 
 use Orisai\ObjectMapper\Args\ArgsChecker;
 use Orisai\ObjectMapper\Context\ArgsContext;
+use Orisai\ObjectMapper\Meta\DocMeta;
 
 final class LinksDoc implements Doc
 {
@@ -20,14 +21,15 @@ final class LinksDoc implements Doc
 		$checker->checkAllowedArgs([self::LINKS]);
 
 		$checker->checkRequiredArg(self::LINKS);
+		/** @var array<DocMeta> $links */
 		$links = $checker->checkArray(self::LINKS);
 
 		$resolver = $context->getMetaResolver();
 		$optimized = [];
 
-		foreach ($links as $key => $link) {
-			[, , $args] = $resolver->resolveDocMeta($link, $context);
-			$optimized[$key] = $args;
+		foreach ($links as $link) {
+			$optimized[$link->getName()::getUniqueName()]
+				= $resolver->resolveDocMeta($link, $context);
 		}
 
 		return $optimized;

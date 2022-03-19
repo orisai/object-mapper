@@ -7,6 +7,7 @@ use Nette\Caching\IStorage;
 use Orisai\ObjectMapper\MappedObject;
 use Orisai\ObjectMapper\Meta\ClassModificationsChecker;
 use Orisai\ObjectMapper\Meta\MetaCache;
+use Orisai\ObjectMapper\Meta\Runtime\RuntimeMeta;
 
 final class NetteMetaCache implements MetaCache
 {
@@ -25,18 +26,16 @@ final class NetteMetaCache implements MetaCache
 
 	/**
 	 * @param class-string<MappedObject> $class
-	 * @return array<mixed>|null
 	 */
-	public function load(string $class): ?array
+	public function load(string $class): ?RuntimeMeta
 	{
 		return $this->cache->load($class);
 	}
 
 	/**
 	 * @param class-string<MappedObject> $class
-	 * @param array<mixed>               $meta
 	 */
-	public function save(string $class, array $meta): void
+	public function save(string $class, RuntimeMeta $meta): void
 	{
 		$this->cache->save($class, $meta, $this->getDependencies($class));
 	}

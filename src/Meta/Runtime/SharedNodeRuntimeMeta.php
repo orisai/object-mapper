@@ -2,10 +2,8 @@
 
 namespace Orisai\ObjectMapper\Meta\Runtime;
 
-use Orisai\ObjectMapper\Docs\Doc;
 use Orisai\ObjectMapper\Meta\CallbackMeta;
 use Orisai\ObjectMapper\Meta\DocMeta;
-use Orisai\ObjectMapper\Meta\MetaSource;
 use Orisai\ObjectMapper\Meta\ModifierMeta;
 use Orisai\ObjectMapper\Modifiers\Modifier;
 
@@ -15,17 +13,11 @@ use Orisai\ObjectMapper\Modifiers\Modifier;
 abstract class SharedNodeRuntimeMeta
 {
 
-	/** @var array<mixed> */
+	/** @var array<int, CallbackMeta> */
 	private array $callbacks;
 
-	/** @var array<CallbackMeta>|null */
-	private ?array $instCallbacks = null;
-
-	/** @var array<class-string<Doc>, array<mixed>> */
+	/** @var array<string, DocMeta> */
 	private array $docs;
-
-	/** @var array<DocMeta>|null */
-	private ?array $instDocs = null;
 
 	/** @var array<class-string<Modifier>, array<mixed>> */
 	private array $modifiers;
@@ -33,59 +25,32 @@ abstract class SharedNodeRuntimeMeta
 	/** @var array<ModifierMeta>|null */
 	private ?array $instModifiers = null;
 
-	final protected function __construct()
-	{
-		// Static constructor is required
-	}
-
 	/**
-	 * @param array<mixed> $meta
-	 * @return static
+	 * @param array<int, CallbackMeta>                    $callbacks
+	 * @param array<string, DocMeta>                      $docs
+	 * @param array<class-string<Modifier>, array<mixed>> $modifiers
 	 */
-	public static function fromArray(array $meta): self
+	public function __construct(array $callbacks, array $docs, array $modifiers)
 	{
-		$self = new static();
-		$self->callbacks = $meta[MetaSource::TYPE_CALLBACKS] ?? [];
-		$self->docs = $meta[MetaSource::TYPE_DOCS] ?? [];
-		$self->modifiers = $meta[MetaSource::TYPE_MODIFIERS] ?? [];
-
-		return $self;
+		$this->callbacks = $callbacks;
+		$this->docs = $docs;
+		$this->modifiers = $modifiers;
 	}
 
 	/**
-	 * @return array<CallbackMeta>
+	 * @return array<int, CallbackMeta>
 	 */
 	public function getCallbacks(): array
 	{
-		if ($this->instCallbacks !== null) {
-			return $this->instCallbacks;
-		}
-
-		$processed = [];
-
-		foreach ($this->callbacks as $callback) {
-			$processed[] = CallbackMeta::fromArray($callback);
-		}
-
-		return $this->instCallbacks = $processed;
+		return $this->callbacks;
 	}
 
 	/**
-	 * @return array<DocMeta>
+	 * @return array<string, DocMeta>
 	 */
 	public function getDocs(): array
 	{
-		if ($this->instDocs !== null) {
-			return $this->instDocs;
-		}
-
-		$processed = [];
-
-		foreach ($this->docs as $name => $args) {
-			$processed[] = DocMeta::from($name, $args);
-		}
-
-		return $this->instDocs = $processed;
+		return $this->docs;
 	}
 
 	/**

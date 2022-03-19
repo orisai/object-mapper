@@ -3,20 +3,19 @@
 namespace Orisai\ObjectMapper\Meta;
 
 use Orisai\ObjectMapper\MappedObject;
+use Orisai\ObjectMapper\Meta\Runtime\RuntimeMeta;
 
 interface MetaCache
 {
 
 	/**
 	 * @param class-string<MappedObject> $class
-	 * @return array<mixed>|null
 	 */
-	public function load(string $class): ?array;
+	public function load(string $class): ?RuntimeMeta;
 
 	/**
 	 * @param class-string<MappedObject> $class
-	 * @param array<mixed>               $meta
 	 */
-	public function save(string $class, array $meta): void;
+	public function save(string $class, RuntimeMeta $meta): void;
 
 }

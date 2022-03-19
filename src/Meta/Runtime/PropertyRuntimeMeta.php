@@ -3,33 +3,29 @@
 namespace Orisai\ObjectMapper\Meta\Runtime;
 
 use Orisai\ObjectMapper\Meta\DefaultValueMeta;
-use Orisai\ObjectMapper\Meta\MetaSource;
 use Orisai\ObjectMapper\Meta\RuleMeta;
-use function array_key_exists;
 
 final class PropertyRuntimeMeta extends SharedNodeRuntimeMeta
 {
 
 	private DefaultValueMeta $default;
 
-	/** @var array<mixed> */
-	private array $rule;
-
-	private ?RuleMeta $instRule = null;
+	private RuleMeta $rule;
 
 	/**
-	 * @param array<mixed> $propertyMeta
-	 * @return static
+	 * {@inheritDoc}
 	 */
-	public static function fromArray(array $propertyMeta): self
+	public function __construct(
+		array $callbacks,
+		array $docs,
+		array $modifiers,
+		RuleMeta $rule,
+		DefaultValueMeta $default
+	)
 	{
-		$self = parent::fromArray($propertyMeta);
-		$self->rule = $propertyMeta[MetaSource::TYPE_RULE];
-		$self->default = array_key_exists(MetaSource::TYPE_DEFAULT_VALUE, $propertyMeta)
-			? DefaultValueMeta::fromValue($propertyMeta[MetaSource::TYPE_DEFAULT_VALUE])
-			: DefaultValueMeta::fromNothing();
-
-		return $self;
+		parent::__construct($callbacks, $docs, $modifiers);
+		$this->rule = $rule;
+		$this->default = $default;
 	}
 
 	public function getDefault(): DefaultValueMeta
@@ -39,11 +35,7 @@ final class PropertyRuntimeMeta extends SharedNodeRuntimeMeta
 
 	public function getRule(): RuleMeta
 	{
-		if ($this->instRule !== null) {
-			return $this->instRule;
-		}
-
-		return $this->instRule = RuleMeta::fromArray($this->rule);
+		return $this->rule;
 	}
 
 }

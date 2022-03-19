@@ -9,17 +9,18 @@ use Orisai\ObjectMapper\Context\ArgsContext;
 use Orisai\ObjectMapper\Context\RuleArgsContext;
 use Orisai\ObjectMapper\Exception\InvalidMeta;
 use Orisai\ObjectMapper\MappedObject;
-use Orisai\ObjectMapper\Meta\Compile\ClassCompileMeta;
 use Orisai\ObjectMapper\Meta\Compile\CompileMeta;
 use Orisai\ObjectMapper\Meta\Compile\PropertyCompileMeta;
 use Orisai\ObjectMapper\Meta\Compile\SharedNodeCompileMeta;
+use Orisai\ObjectMapper\Meta\Runtime\ClassRuntimeMeta;
 use Orisai\ObjectMapper\Meta\Runtime\PropertyRuntimeMeta;
+use Orisai\ObjectMapper\Meta\Runtime\RuntimeMeta;
 use Orisai\ObjectMapper\Modifiers\FieldNameModifier;
+use Orisai\ObjectMapper\Modifiers\Modifier;
 use Orisai\ObjectMapper\Rules\MixedRule;
 use Orisai\ObjectMapper\Rules\NullRule;
 use Orisai\ObjectMapper\Rules\Rule;
 use Orisai\ObjectMapper\Rules\RuleManager;
-use Orisai\Utils\Arrays\ArrayMerger;
 use ReflectionClass;
 use ReflectionProperty;
 use function array_key_exists;
@@ -38,8 +39,6 @@ use function sprintf;
 final class MetaResolver
 {
 
-	public const FIELDS_PROPERTIES_MAP = 'fields_properties_map';
-
 	private MetaLoader $loader;
 
 	private RuleManager $ruleManager;
@@ -52,91 +51,48 @@ final class MetaResolver
 
 	/**
 	 * @param ReflectionClass<MappedObject> $class
-	 * @return array<mixed>
 	 */
-	public function resolve(ReflectionClass $class, CompileMeta $meta): array
+	public function resolve(ReflectionClass $class, CompileMeta $meta): RuntimeMeta
 	{
-		$array = $this->resolveMeta($meta, $class);
+		return new RuntimeMeta(
+			$this->resolveClassMeta($meta, $class),
+			$this->resolvePropertiesMeta($meta, $class),
+			$this->resolveFieldsPropertiesMap($meta, $class),
+		);
+	}
+
+	/**
+	 * @param ReflectionClass<MappedObject> $class
+	 */
+	private function resolveClassMeta(CompileMeta $meta, ReflectionClass $class): ClassRuntimeMeta
+	{
+		$context = $this->createArgsContext($class, null);
+		$classMeta = $meta->getClass();
+
+		return new ClassRuntimeMeta(
+			$this->resolveCallbacksMeta($classMeta, $context),
+			$this->resolveDocsMeta($classMeta, $context),
+			$this->resolveModifiersMeta($classMeta, $context),
+		);
+	}
+
+	/**
+	 * @param ReflectionClass<MappedObject> $class
+	 * @return array<string, PropertyRuntimeMeta>
+	 */
+	private function resolvePropertiesMeta(CompileMeta $meta, ReflectionClass $class): array
+	{
 		$defaults = $this->resolveDefaultValues($meta, $class);
 
-		return ArrayMerger::merge($array, $defaults);
-	}
-
-	/**
-	 * @param ReflectionClass<MappedObject> $class
-	 * @return array<mixed>
-	 */
-	private function resolveMeta(CompileMeta $meta, ReflectionClass $class): array
-	{
 		$array = [];
-
-		$array[MetaSource::LOCATION_CLASS] = $this->resolveClassMeta($meta->getClass(), $class);
-
-		$array[MetaSource::LOCATION_PROPERTIES] = $this->resolvePropertiesMeta(
-			$meta->getProperties(),
-			$class,
-		);
-
-		$array[self::FIELDS_PROPERTIES_MAP] = $this->resolveFieldsPropertiesMap(
-			$array[MetaSource::LOCATION_PROPERTIES],
-			$class,
-		);
-
-		return $array;
-	}
-
-	/**
-	 * Meta which are same for both classes and properties
-	 *
-	 * @param ReflectionClass<MappedObject> $class
-	 * @return array<mixed>
-	 */
-	private function resolveReflectorMeta(
-		SharedNodeCompileMeta $meta,
-		ReflectionClass $class,
-		?ReflectionProperty $property
-	): array
-	{
-		$context = $this->createArgsContext($class, $property);
-
-		$array = [];
-
-		$array[MetaSource::TYPE_CALLBACKS] = $this->resolveCallbacksMeta(
-			$meta->getCallbacks(),
-			$context,
-		);
-
-		$array[MetaSource::TYPE_DOCS] = $this->resolveDocsMeta($meta->getDocs(), $context);
-
-		$array[MetaSource::TYPE_MODIFIERS] = $this->resolveModifiersMeta(
-			$meta->getModifiers(),
-			$context,
-		);
-
-		return $array;
-	}
-
-	/**
-	 * @param ReflectionClass<MappedObject> $class
-	 * @return array<mixed>
-	 */
-	private function resolveClassMeta(ClassCompileMeta $meta, ReflectionClass $class): array
-	{
-		return $this->resolveReflectorMeta($meta, $class, null);
-	}
-
-	/**
-	 * @param array<string, PropertyCompileMeta> $meta
-	 * @param ReflectionClass<MappedObject>      $class
-	 * @return array<mixed>
-	 */
-	private function resolvePropertiesMeta(array $meta, ReflectionClass $class): array
-	{
-		$array = [];
-		foreach ($meta as $propertyName => $propertyMeta) {
+		foreach ($meta->getProperties() as $propertyName => $propertyMeta) {
 			$property = $class->getProperty($propertyName);
-
-			$array[$propertyName] = $this->resolvePropertyMeta($propertyMeta, $class, $property);
+			$array[$propertyName] = $this->resolvePropertyMeta(
+				$propertyMeta,
+				$class,
+				$property,
+				$defaults[$propertyName] ?? DefaultValueMeta::fromNothing(),
+			);
 		}
 
 		return $array;
@@ -144,13 +100,13 @@ final class MetaResolver
 
 	/**
 	 * @param ReflectionClass<MappedObject> $class
-	 * @return array<mixed>
 	 */
 	private function resolvePropertyMeta(
 		PropertyCompileMeta $meta,
 		ReflectionClass $class,
-		ReflectionProperty $property
-	): array
+		ReflectionProperty $property,
+		DefaultValueMeta $defaultValue
+	): PropertyRuntimeMeta
 	{
 		if (!$property->isPublic() || $property->isStatic()) {
 			throw InvalidArgument::create()
@@ -162,78 +118,73 @@ final class MetaResolver
 				));
 		}
 
-		$array = $this->resolveReflectorMeta($meta, $class, $property);
+		$context = $this->createArgsContext($class, $property);
 
-		$array[MetaSource::TYPE_RULE] = $this->resolveRuleMetaInternal(
-			$meta->getRule(),
-			$this->createRuleArgsContext($class, $property),
+		return new PropertyRuntimeMeta(
+			$this->resolveCallbacksMeta($meta, $context),
+			$this->resolveDocsMeta($meta, $context),
+			$this->resolveModifiersMeta($meta, $context),
+			$this->resolveRuleMetaInternal(
+				$meta->getRule(),
+				$this->createRuleArgsContext($class, $property),
+			),
+			$defaultValue,
 		);
-
-		return $array;
 	}
 
 	/**
-	 * @param array<int, CallbackMeta> $meta
-	 * @return array<mixed>
+	 * @return array<int, CallbackMeta>
 	 */
-	private function resolveCallbacksMeta(array $meta, ArgsContext $context): array
+	private function resolveCallbacksMeta(SharedNodeCompileMeta $meta, ArgsContext $context): array
 	{
 		$array = [];
-		foreach ($meta as $key => $callback) {
+		foreach ($meta->getCallbacks() as $key => $callback) {
 			$array[$key] = $this->resolveCallbackMeta($callback, $context);
 		}
 
 		return $array;
 	}
 
-	/**
-	 * @return array<mixed>
-	 */
-	private function resolveCallbackMeta(CallbackMeta $meta, ArgsContext $context): array
+	private function resolveCallbackMeta(CallbackMeta $meta, ArgsContext $context): CallbackMeta
 	{
-		$array = $meta->toArray();
-		$array[MetaSource::OPTION_ARGS] = $meta->getType()::resolveArgs($meta->getArgs(), $context);
+		$type = $meta->getType();
+
+		return new CallbackMeta(
+			$type,
+			$type::resolveArgs($meta->getArgs(), $context),
+		);
+	}
+
+	/**
+	 * @return array<string, DocMeta>
+	 */
+	private function resolveDocsMeta(SharedNodeCompileMeta $meta, ArgsContext $context): array
+	{
+		$array = [];
+
+		foreach ($meta->getDocs() as $doc) {
+			$array[$doc->getName()::getUniqueName()] = $this->resolveDocMeta($doc, $context);
+		}
 
 		return $array;
 	}
 
-	/**
-	 * @param array<int, DocMeta> $meta
-	 * @return array<mixed>
-	 */
-	public function resolveDocsMeta(array $meta, ArgsContext $context): array
-	{
-		$optimized = [];
-
-		foreach ($meta as $doc) {
-			[, $name, $args] = $this->resolveDocMeta($doc, $context);
-			$optimized[$name] = $args;
-		}
-
-		return $optimized;
-	}
-
-	/**
-	 * @return array<mixed>
-	 */
-	public function resolveDocMeta(DocMeta $meta, ArgsContext $context): array
+	public function resolveDocMeta(DocMeta $meta, ArgsContext $context): DocMeta
 	{
 		$type = $meta->getName();
-		$name = $type::getUniqueName();
 		$args = $type::resolveArgs($meta->getArgs(), $context);
 
-		return [$type, $name, $args];
+		return new DocMeta($type, $args);
 	}
 
 	/**
-	 * @param array<int, ModifierMeta> $meta
-	 * @return array<mixed>
+	 * @return array<class-string<Modifier>, array<mixed>>
 	 */
-	private function resolveModifiersMeta(array $meta, ArgsContext $context): array
+	private function resolveModifiersMeta(SharedNodeCompileMeta $meta, ArgsContext $context): array
 	{
 		$optimized = [];
 
-		foreach ($meta as $modifier) {
+		foreach ($meta->getModifiers() as $modifier) {
 			[$type, $args] = $this->resolveModifierMeta($modifier, $context);
 			$optimized[$type] = $args;
 		}
@@ -242,7 +193,7 @@ final class MetaResolver
 	}
 
 	/**
-	 * @return array<mixed>
+	 * @return array{class-string<Modifier>, array<mixed>}
 	 */
 	private function resolveModifierMeta(ModifierMeta $meta, ArgsContext $context): array
 	{
@@ -281,15 +232,13 @@ final class MetaResolver
 		return $this->resolveRuleMetaInternal(
 			new RuleMeta($meta[MetaSource::OPTION_TYPE], $meta[MetaSource::OPTION_ARGS]),
 			$context,
-		);
+		)->toArray();
 	}
 
-	/**
-	 * @return array<mixed>
-	 */
-	private function resolveRuleMetaInternal(RuleMeta $meta, RuleArgsContext $context): array
+	private function resolveRuleMetaInternal(RuleMeta $meta, RuleArgsContext $context): RuleMeta
 	{
-		$rule = $this->ruleManager->getRule($meta->getType());
+		$type = $meta->getType();
+		$rule = $this->ruleManager->getRule($type);
 		$args = $rule->resolveArgs($meta->getArgs(), $context);
 
 		$argsType = $rule->getArgsType();
@@ -312,15 +261,12 @@ final class MetaResolver
 				->withMessage("Class $argsType returned by $ruleClass::getArgsType() must be instantiable.");
 		}
 
-		$array = $meta->toArray();
-		$array[MetaSource::OPTION_ARGS] = $args;
-
-		return $array;
+		return new RuleMeta($type, $args);
 	}
 
 	/**
 	 * @param ReflectionClass<MappedObject> $class
-	 * @return array<mixed>
+	 * @return array<string, DefaultValueMeta>
 	 */
 	private function resolveDefaultValues(CompileMeta $meta, ReflectionClass $class): array
 	{
@@ -333,43 +279,38 @@ final class MetaResolver
 			}
 
 			$isPropertyTyped = $class->getProperty($propertyName)->hasType();
+			$containsNullable = $properties[$propertyName]->getRule()->mayContainRuleType(
+				[NullRule::class, MixedRule::class],
+			);
 
 			// It's not possible to distinguish between null and uninitialized for properties without type,
 			// default null is used only if validation allows null
-			if (
-				$propertyValue === null
-				&& !$isPropertyTyped
-				&& !PropertyRuntimeMeta::fromArray(
-					[
-						MetaSource::TYPE_RULE => $properties[$propertyName]->getRule()->toArray(),
-					],
-				)->getRule()->mayContainRuleType(
-					[NullRule::class, MixedRule::class],
-				)
-			) {
-				continue;
-			}
-
-			$propertiesMeta[$propertyName][MetaSource::TYPE_DEFAULT_VALUE] = $propertyValue;
+			$propertiesMeta[$propertyName] = $propertyValue === null && !$isPropertyTyped && !$containsNullable
+				? DefaultValueMeta::fromNothing()
+				: DefaultValueMeta::fromValue($propertyValue);
 		}
 
-		$array = [];
-		$array[MetaSource::LOCATION_PROPERTIES] = $propertiesMeta;
-
-		return $array;
+		return $propertiesMeta;
 	}
 
 	/**
-	 * @param array<mixed>                  $properties
 	 * @param ReflectionClass<MappedObject> $class
 	 * @return array<int|string, string>
 	 */
-	private function resolveFieldsPropertiesMap(array $properties, ReflectionClass $class): array
+	private function resolveFieldsPropertiesMap(CompileMeta $meta, ReflectionClass $class): array
 	{
+		$properties = $meta->getProperties();
+
 		$map = [];
 		foreach ($properties as $propertyName => $property) {
-			$propertyMeta = PropertyRuntimeMeta::fromArray($property);
-			$fieldNameMeta = $propertyMeta->getModifier(FieldNameModifier::class);
+			$fieldNameMeta = null;
+			foreach ($property->getModifiers() as $modifier) {
+				if ($modifier->getType() === FieldNameModifier::class) {
+					$fieldNameMeta = $modifier;
+
+					break;
+				}
+			}
 
 			if ($fieldNameMeta !== null) {
 				$fieldName = $fieldNameMeta->getArgs()[FieldNameModifier::NAME];

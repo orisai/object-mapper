@@ -10,17 +10,6 @@ interface MetaSource
 {
 
 	public const
-		LOCATION_CLASS = 'class',
-		LOCATION_PROPERTIES = 'properties';
-
-	public const
-		TYPE_CALLBACKS = 'callbacks',
-		TYPE_DEFAULT_VALUE = 'default',
-		TYPE_DOCS = 'docs',
-		TYPE_MODIFIERS = 'modifiers',
-		TYPE_RULE = 'rule';
-
-	public const
 		OPTION_TYPE = 'type',
 		OPTION_ARGS = 'args';
 

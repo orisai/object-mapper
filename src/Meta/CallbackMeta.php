@@ -25,28 +25,6 @@ final class CallbackMeta
 	}
 
 	/**
-	 * @param array<mixed> $callbackMeta
-	 */
-	public static function fromArray(array $callbackMeta): self
-	{
-		return new self(
-			$callbackMeta[MetaSource::OPTION_TYPE],
-			$callbackMeta[MetaSource::OPTION_ARGS] ?? [],
-		);
-	}
-
-	/**
-	 * @return array{type: class-string<Callback<Args>>, args: array<mixed>}
-	 */
-	public function toArray(): array
-	{
-		return [
-			MetaSource::OPTION_TYPE => $this->type,
-			MetaSource::OPTION_ARGS => $this->args,
-		];
-	}
-
-	/**
 	 * @return class-string<Callback<Args>>
 	 */
 	public function getType(): string

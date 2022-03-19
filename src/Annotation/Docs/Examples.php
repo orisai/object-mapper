@@ -3,9 +3,9 @@
 namespace Orisai\ObjectMapper\Annotation\Docs;
 
 use Doctrine\Common\Annotations\Annotation\NamedArgumentConstructor;
-use Orisai\ObjectMapper\Annotation\AnnotationMetaExtractor;
 use Orisai\ObjectMapper\Docs\ExamplesDoc;
 use Orisai\ObjectMapper\Exception\InvalidAnnotation;
+use Orisai\ObjectMapper\Meta\DocMeta;
 use function sprintf;
 
 /**
@@ -16,7 +16,7 @@ use function sprintf;
 final class Examples implements DocumentationAnnotation
 {
 
-	/** @var array<mixed> */
+	/** @var array<DocMeta> */
 	private array $examples;
 
 	/**
@@ -29,7 +29,7 @@ final class Examples implements DocumentationAnnotation
 
 	/**
 	 * @param array<mixed> $examples
-	 * @return array<mixed>
+	 * @return array<DocMeta>
 	 */
 	private function resolveExamples(array $examples): array
 	{
@@ -42,7 +42,7 @@ final class Examples implements DocumentationAnnotation
 				));
 			}
 
-			$examples[$key] = AnnotationMetaExtractor::extract($example);
+			$examples[$key] = DocMeta::from($example->getType(), $example->getArgs());
 		}
 
 		return $examples;

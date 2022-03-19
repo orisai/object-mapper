@@ -52,7 +52,7 @@ class MetaLoader
 		$meta = $this->cache->load($class);
 
 		if ($meta !== null) {
-			return $this->arrayCache[$class] = RuntimeMeta::fromArray($meta);
+			return $this->arrayCache[$class] = $meta;
 		}
 
 		if (!class_exists($class)) {
@@ -84,11 +84,16 @@ class MetaLoader
 			$sourceMeta = $source->load($classRef);
 		}
 
-		$meta = $sourceMeta !== null ? $this->getResolver()->resolve($classRef, $sourceMeta) : [];
+		if ($sourceMeta === null) {
+			throw InvalidArgument::create()
+				->withMessage("No metadata for class $class");
+		}
+
+		$meta = $this->getResolver()->resolve($classRef, $sourceMeta);
 
 		$this->cache->save($class, $meta);
 
-		return $this->arrayCache[$class] = RuntimeMeta::fromArray($meta);
+		return $this->arrayCache[$class] = $meta;
 	}
 
 	protected function getResolver(): MetaResolver

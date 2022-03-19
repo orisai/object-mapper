@@ -4,9 +4,9 @@ namespace Orisai\ObjectMapper\Annotation\Docs;
 
 use Doctrine\Common\Annotations\Annotation\NamedArgumentConstructor;
 use Doctrine\Common\Annotations\Annotation\Target;
-use Orisai\ObjectMapper\Annotation\AnnotationMetaExtractor;
 use Orisai\ObjectMapper\Docs\LinksDoc;
 use Orisai\ObjectMapper\Exception\InvalidAnnotation;
+use Orisai\ObjectMapper\Meta\DocMeta;
 use function sprintf;
 
 /**
@@ -17,7 +17,7 @@ use function sprintf;
 final class Links implements DocumentationAnnotation
 {
 
-	/** @var array<mixed> */
+	/** @var array<DocMeta> */
 	private array $links;
 
 	/**
@@ -30,7 +30,7 @@ final class Links implements DocumentationAnnotation
 
 	/**
 	 * @param array<mixed> $links
-	 * @return array<mixed>
+	 * @return array<DocMeta>
 	 */
 	private function resolveLinks(array $links): array
 	{
@@ -44,7 +44,7 @@ final class Links implements DocumentationAnnotation
 					));
 			}
 
-			$links[$key] = AnnotationMetaExtractor::extract($link);
+			$links[$key] = DocMeta::from($link->getType(), $link->getArgs());
 		}
 
 		return $links;

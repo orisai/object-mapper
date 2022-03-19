@@ -4,6 +4,7 @@ namespace Orisai\ObjectMapper\Docs;
 
 use Orisai\ObjectMapper\Args\ArgsChecker;
 use Orisai\ObjectMapper\Context\ArgsContext;
+use Orisai\ObjectMapper\Meta\DocMeta;
 
 final class ExamplesDoc implements Doc
 {
@@ -20,14 +21,15 @@ final class ExamplesDoc implements Doc
 		$checker->checkAllowedArgs([self::EXAMPLES]);
 
 		$checker->checkRequiredArg(self::EXAMPLES);
+		/** @var array<DocMeta> $examples */
 		$examples = $checker->checkArray(self::EXAMPLES);
 
 		$resolver = $context->getMetaResolver();
 		$optimized = [];
 
-		foreach ($examples as $key => $example) {
-			[, , $args] = $resolver->resolveDocMeta($example, $context);
-			$optimized[$key] = $args;
+		foreach ($examples as $example) {
+			$optimized[$example->getName()::getUniqueName()]
+				= $resolver->resolveDocMeta($example, $context);
 		}
 
 		return $optimized;
