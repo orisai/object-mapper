@@ -5,6 +5,7 @@ namespace Orisai\ObjectMapper\Meta;
 use Orisai\Exceptions\Logic\InvalidArgument;
 use Orisai\Exceptions\Logic\NotImplemented;
 use Orisai\ObjectMapper\MappedObject;
+use Orisai\ObjectMapper\Meta\Runtime\RuntimeMeta;
 use Orisai\ObjectMapper\Rules\RuleManager;
 use ReflectionClass;
 use function class_exists;
@@ -13,7 +14,7 @@ use function count;
 class MetaLoader
 {
 
-	/** @var array<class-string<MappedObject>, Meta> */
+	/** @var array<class-string<MappedObject>, RuntimeMeta> */
 	protected array $arrayCache;
 
 	protected MetaCache $cache;
@@ -42,7 +43,7 @@ class MetaLoader
 	/**
 	 * @param class-string<MappedObject> $class
 	 */
-	public function load(string $class): Meta
+	public function load(string $class): RuntimeMeta
 	{
 		if (isset($this->arrayCache[$class])) {
 			return $this->arrayCache[$class];
@@ -51,7 +52,7 @@ class MetaLoader
 		$meta = $this->cache->load($class);
 
 		if ($meta !== null) {
-			return $this->arrayCache[$class] = Meta::fromArray($meta);
+			return $this->arrayCache[$class] = RuntimeMeta::fromArray($meta);
 		}
 
 		if (!class_exists($class)) {
@@ -87,7 +88,7 @@ class MetaLoader
 
 		$this->cache->save($class, $meta);
 
-		return $this->arrayCache[$class] = Meta::fromArray($meta);
+		return $this->arrayCache[$class] = RuntimeMeta::fromArray($meta);
 	}
 
 	protected function getResolver(): MetaResolver

@@ -3,7 +3,7 @@
 namespace Orisai\ObjectMapper\Context;
 
 use Orisai\ObjectMapper\MappedObject;
-use Orisai\ObjectMapper\Meta\Meta;
+use Orisai\ObjectMapper\Meta\Runtime\RuntimeMeta;
 use Orisai\ObjectMapper\Processing\ObjectHolder;
 
 /**
@@ -15,7 +15,7 @@ class ProcessorRunContext
 	/** @var ObjectHolder<T> */
 	private ObjectHolder $objectHolder;
 
-	private Meta $meta;
+	private RuntimeMeta $meta;
 
 	/** @var class-string<T> */
 	private string $class;
@@ -27,7 +27,7 @@ class ProcessorRunContext
 	 * @param class-string<T> $class
 	 * @param ObjectHolder<T> $objectHolder
 	 */
-	public function __construct(string $class, ObjectHolder $objectHolder, Meta $meta)
+	public function __construct(string $class, ObjectHolder $objectHolder, RuntimeMeta $meta)
 	{
 		$this->class = $class;
 		$this->objectHolder = $objectHolder;
@@ -50,7 +50,7 @@ class ProcessorRunContext
 		return $this->objectHolder;
 	}
 
-	public function getMeta(): Meta
+	public function getMeta(): RuntimeMeta
 	{
 		return $this->meta;
 	}

@@ -13,6 +13,7 @@ use Orisai\ObjectMapper\Meta\Compile\ClassCompileMeta;
 use Orisai\ObjectMapper\Meta\Compile\CompileMeta;
 use Orisai\ObjectMapper\Meta\Compile\PropertyCompileMeta;
 use Orisai\ObjectMapper\Meta\Compile\SharedNodeCompileMeta;
+use Orisai\ObjectMapper\Meta\Runtime\PropertyRuntimeMeta;
 use Orisai\ObjectMapper\Modifiers\FieldNameModifier;
 use Orisai\ObjectMapper\Rules\MixedRule;
 use Orisai\ObjectMapper\Rules\NullRule;
@@ -338,7 +339,7 @@ final class MetaResolver
 			if (
 				$propertyValue === null
 				&& !$isPropertyTyped
-				&& !PropertyMeta::fromArray(
+				&& !PropertyRuntimeMeta::fromArray(
 					[
 						MetaSource::TYPE_RULE => $properties[$propertyName]->getRule()->toArray(),
 					],
@@ -367,7 +368,7 @@ final class MetaResolver
 	{
 		$map = [];
 		foreach ($properties as $propertyName => $property) {
-			$propertyMeta = PropertyMeta::fromArray($property);
+			$propertyMeta = PropertyRuntimeMeta::fromArray($property);
 			$fieldNameMeta = $propertyMeta->getModifier(FieldNameModifier::class);
 
 			if ($fieldNameMeta !== null) {

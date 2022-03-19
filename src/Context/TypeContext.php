@@ -3,8 +3,8 @@
 namespace Orisai\ObjectMapper\Context;
 
 use Orisai\ObjectMapper\MappedObject;
-use Orisai\ObjectMapper\Meta\Meta;
 use Orisai\ObjectMapper\Meta\MetaLoader;
+use Orisai\ObjectMapper\Meta\Runtime\RuntimeMeta;
 use Orisai\ObjectMapper\Rules\Rule;
 use Orisai\ObjectMapper\Rules\RuleManager;
 
@@ -24,7 +24,7 @@ class TypeContext
 	/**
 	 * @param class-string<MappedObject> $class
 	 */
-	public function getMeta(string $class): Meta
+	public function getMeta(string $class): RuntimeMeta
 	{
 		return $this->metaLoader->load($class);
 	}

@@ -20,11 +20,11 @@ use Orisai\ObjectMapper\Exception\ValueDoesNotMatch;
 use Orisai\ObjectMapper\MappedObject;
 use Orisai\ObjectMapper\Meta\Args;
 use Orisai\ObjectMapper\Meta\ArgsCreator;
-use Orisai\ObjectMapper\Meta\ClassMeta;
-use Orisai\ObjectMapper\Meta\Meta;
 use Orisai\ObjectMapper\Meta\MetaLoader;
-use Orisai\ObjectMapper\Meta\PropertyMeta;
-use Orisai\ObjectMapper\Meta\SharedMeta;
+use Orisai\ObjectMapper\Meta\Runtime\ClassRuntimeMeta;
+use Orisai\ObjectMapper\Meta\Runtime\PropertyRuntimeMeta;
+use Orisai\ObjectMapper\Meta\Runtime\RuntimeMeta;
+use Orisai\ObjectMapper\Meta\Runtime\SharedNodeRuntimeMeta;
 use Orisai\ObjectMapper\Modifiers\FieldNameModifier;
 use Orisai\ObjectMapper\Modifiers\SkippedModifier;
 use Orisai\ObjectMapper\NoValue;
@@ -194,7 +194,7 @@ class DefaultProcessor implements Processor
 	/**
 	 * @param int|string $fieldName
 	 */
-	protected function fieldNameToPropertyName($fieldName, Meta $meta): string
+	protected function fieldNameToPropertyName($fieldName, RuntimeMeta $meta): string
 	{
 		$map = $meta->getFieldsPropertiesMap();
 
@@ -204,7 +204,7 @@ class DefaultProcessor implements Processor
 	/**
 	 * @return int|string
 	 */
-	protected function propertyNameToFieldName(string $propertyName, PropertyMeta $meta)
+	protected function propertyNameToFieldName(string $propertyName, PropertyRuntimeMeta $meta)
 	{
 		$fieldNameMeta = $meta->getModifier(FieldNameModifier::class);
 		if ($fieldNameMeta !== null) {
@@ -455,7 +455,7 @@ class DefaultProcessor implements Processor
 	 */
 	protected function createFieldContext(
 		FieldSetContext $fieldSetContext,
-		PropertyMeta $meta,
+		PropertyRuntimeMeta $meta,
 		$fieldName,
 		string $propertyName
 	): FieldContext
@@ -486,7 +486,7 @@ class DefaultProcessor implements Processor
 		$value,
 		FieldContext $fieldContext,
 		ProcessorRunContext $runContext,
-		PropertyMeta $meta
+		PropertyRuntimeMeta $meta
 	)
 	{
 		$value = $this->applyCallbacks($value, $fieldContext, $runContext, $meta, BeforeCallback::class);
@@ -502,7 +502,7 @@ class DefaultProcessor implements Processor
 	 * @throws ValueDoesNotMatch
 	 * @throws InvalidData
 	 */
-	protected function processPropertyRules($value, FieldContext $fieldContext, PropertyMeta $meta)
+	protected function processPropertyRules($value, FieldContext $fieldContext, PropertyRuntimeMeta $meta)
 	{
 		$ruleMeta = $meta->getRule();
 		$rule = $this->ruleManager->getRule($ruleMeta->getType());
@@ -529,7 +529,7 @@ class DefaultProcessor implements Processor
 		array $data,
 		FieldSetContext $fieldSetContext,
 		ProcessorRunContext $runContext,
-		ClassMeta $meta,
+		ClassRuntimeMeta $meta,
 		string $callbackType
 	): array
 	{
@@ -555,11 +555,11 @@ class DefaultProcessor implements Processor
 	}
 
 	/**
-	 * @param mixed                             $data
-	 * @param FieldContext|FieldSetContext      $baseFieldContext
-	 * @param ProcessorRunContext<MappedObject> $runContext
-	 * @param ClassMeta|PropertyMeta            $meta
-	 * @param class-string<Callback<Args>>      $callbackType
+	 * @param mixed                                $data
+	 * @param FieldContext|FieldSetContext         $baseFieldContext
+	 * @param ProcessorRunContext<MappedObject>    $runContext
+	 * @param ClassRuntimeMeta|PropertyRuntimeMeta $meta
+	 * @param class-string<Callback<Args>>         $callbackType
 	 * @return mixed
 	 * @throws ValueDoesNotMatch
 	 * @throws InvalidData
@@ -568,7 +568,7 @@ class DefaultProcessor implements Processor
 		$data,
 		BaseFieldContext $baseFieldContext,
 		ProcessorRunContext $runContext,
-		SharedMeta $meta,
+		SharedNodeRuntimeMeta $meta,
 		string $callbackType
 	)
 	{

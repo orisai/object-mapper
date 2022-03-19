@@ -1,11 +1,18 @@
 <?php declare(strict_types = 1);
 
-namespace Orisai\ObjectMapper\Meta;
+namespace Orisai\ObjectMapper\Meta\Runtime;
 
 use Orisai\ObjectMapper\Docs\Doc;
+use Orisai\ObjectMapper\Meta\CallbackMeta;
+use Orisai\ObjectMapper\Meta\DocMeta;
+use Orisai\ObjectMapper\Meta\MetaSource;
+use Orisai\ObjectMapper\Meta\ModifierMeta;
 use Orisai\ObjectMapper\Modifiers\Modifier;
 
-abstract class SharedMeta
+/**
+ * @internal
+ */
+abstract class SharedNodeRuntimeMeta
 {
 
 	/** @var array<mixed> */

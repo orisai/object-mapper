@@ -1,22 +1,25 @@
 <?php declare(strict_types = 1);
 
-namespace Orisai\ObjectMapper\Meta;
+namespace Orisai\ObjectMapper\Meta\Runtime;
+
+use Orisai\ObjectMapper\Meta\MetaResolver;
+use Orisai\ObjectMapper\Meta\MetaSource;
 
 /**
  * Value object for meta returned from MetaLoader
  */
-final class Meta
+final class RuntimeMeta
 {
 
 	/** @var array<mixed> */
 	private array $class;
 
-	private ?ClassMeta $instClass = null;
+	private ?ClassRuntimeMeta $instClass = null;
 
 	/** @var array<mixed> */
 	private array $properties;
 
-	/** @var array<PropertyMeta>|null */
+	/** @var array<PropertyRuntimeMeta>|null */
 	private ?array $instProperties = null;
 
 	/** @var array<int|string, string> */
@@ -40,17 +43,17 @@ final class Meta
 		return $self;
 	}
 
-	public function getClass(): ClassMeta
+	public function getClass(): ClassRuntimeMeta
 	{
 		if ($this->instClass !== null) {
 			return $this->instClass;
 		}
 
-		return $this->instClass = ClassMeta::fromArray($this->class);
+		return $this->instClass = ClassRuntimeMeta::fromArray($this->class);
 	}
 
 	/**
-	 * @return array<PropertyMeta>
+	 * @return array<PropertyRuntimeMeta>
 	 */
 	public function getProperties(): array
 	{
@@ -61,7 +64,7 @@ final class Meta
 		$processed = [];
 
 		foreach ($this->properties as $name => $property) {
-			$processed[$name] = PropertyMeta::fromArray($property);
+			$processed[$name] = PropertyRuntimeMeta::fromArray($property);
 		}
 
 		return $this->instProperties = $processed;

@@ -1,10 +1,13 @@
 <?php declare(strict_types = 1);
 
-namespace Orisai\ObjectMapper\Meta;
+namespace Orisai\ObjectMapper\Meta\Runtime;
 
+use Orisai\ObjectMapper\Meta\DefaultValueMeta;
+use Orisai\ObjectMapper\Meta\MetaSource;
+use Orisai\ObjectMapper\Meta\RuleMeta;
 use function array_key_exists;
 
-final class PropertyMeta extends SharedMeta
+final class PropertyRuntimeMeta extends SharedNodeRuntimeMeta
 {
 
 	private DefaultValueMeta $default;

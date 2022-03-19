@@ -3,7 +3,7 @@
 namespace Orisai\ObjectMapper\Formatting;
 
 use Orisai\ObjectMapper\Meta\MetaLoader;
-use Orisai\ObjectMapper\Meta\SharedMeta;
+use Orisai\ObjectMapper\Meta\Runtime\SharedNodeRuntimeMeta;
 use Orisai\ObjectMapper\Types\ArrayType;
 use Orisai\ObjectMapper\Types\CompoundType;
 use Orisai\ObjectMapper\Types\MultiValueType;
@@ -96,7 +96,7 @@ class ArrayDocsFormatter implements StructureFormatter
 	/**
 	 * @return array<mixed>
 	 */
-	private function formatDocs(SharedMeta $meta): array
+	private function formatDocs(SharedNodeRuntimeMeta $meta): array
 	{
 		$docs = [];
 
