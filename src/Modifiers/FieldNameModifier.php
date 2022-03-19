@@ -3,8 +3,8 @@
 namespace Orisai\ObjectMapper\Modifiers;
 
 use Orisai\Exceptions\Logic\InvalidArgument;
+use Orisai\ObjectMapper\Args\ArgsChecker;
 use Orisai\ObjectMapper\Context\ArgsContext;
-use Orisai\ObjectMapper\Meta\ArgsChecker;
 use function is_int;
 use function is_string;
 

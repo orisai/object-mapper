@@ -3,7 +3,7 @@
 namespace Orisai\ObjectMapper\Annotation\Expect;
 
 use Orisai\ObjectMapper\Annotation\BaseAnnotation;
-use Orisai\ObjectMapper\Meta\Args;
+use Orisai\ObjectMapper\Args\Args;
 use Orisai\ObjectMapper\Rules\Rule;
 
 /**

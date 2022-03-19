@@ -2,6 +2,7 @@
 
 namespace Orisai\ObjectMapper\Meta;
 
+use Orisai\ObjectMapper\Args\Args;
 use Orisai\ObjectMapper\Rules\CompoundRule;
 use Orisai\ObjectMapper\Rules\Rule;
 use function is_a;

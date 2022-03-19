@@ -4,13 +4,13 @@ namespace Orisai\ObjectMapper\Callbacks;
 
 use Nette\Utils\Helpers;
 use Orisai\Exceptions\Logic\InvalidArgument;
+use Orisai\ObjectMapper\Args\Args;
+use Orisai\ObjectMapper\Args\ArgsChecker;
 use Orisai\ObjectMapper\Context\ArgsContext;
 use Orisai\ObjectMapper\Context\BaseFieldContext;
 use Orisai\ObjectMapper\Context\FieldContext;
 use Orisai\ObjectMapper\Context\FieldSetContext;
 use Orisai\ObjectMapper\MappedObject;
-use Orisai\ObjectMapper\Meta\Args;
-use Orisai\ObjectMapper\Meta\ArgsChecker;
 use Orisai\ObjectMapper\Processing\ObjectHolder;
 use ReflectionClass;
 use ReflectionMethod;

@@ -2,8 +2,8 @@
 
 namespace Orisai\ObjectMapper\Modifiers;
 
+use Orisai\ObjectMapper\Args\ArgsChecker;
 use Orisai\ObjectMapper\Context\ArgsContext;
-use Orisai\ObjectMapper\Meta\ArgsChecker;
 
 final class SkippedModifier implements Modifier
 {

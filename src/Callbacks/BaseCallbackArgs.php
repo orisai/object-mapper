@@ -2,7 +2,7 @@
 
 namespace Orisai\ObjectMapper\Callbacks;
 
-use Orisai\ObjectMapper\Meta\Args;
+use Orisai\ObjectMapper\Args\Args;
 use function array_key_exists;
 
 final class BaseCallbackArgs implements Args

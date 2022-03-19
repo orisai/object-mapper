@@ -3,7 +3,7 @@
 namespace Orisai\ObjectMapper\Rules;
 
 use Orisai\Exceptions\Logic\InvalidArgument;
-use Orisai\ObjectMapper\Meta\Args;
+use Orisai\ObjectMapper\Args\Args;
 use function in_array;
 use function sprintf;
 
@@ -31,7 +31,7 @@ final class DefaultRuleManager implements RuleManager
 	}
 
 	/**
-	 * @param class-string<Rule<Args>> $type
+	 * @param class-string<Rule<Args>>             $type
 	 * @param Rule<Args> $rule
 	 */
 	public function addRule(string $type, Rule $rule): void

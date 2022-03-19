@@ -2,7 +2,7 @@
 
 namespace Orisai\ObjectMapper\Rules;
 
-use Orisai\ObjectMapper\Meta\Args;
+use Orisai\ObjectMapper\Args\Args;
 
 final class EmptyArgs implements Args
 {

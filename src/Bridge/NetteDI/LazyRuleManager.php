@@ -4,7 +4,7 @@ namespace Orisai\ObjectMapper\Bridge\NetteDI;
 
 use Nette\DI\Container;
 use Orisai\Exceptions\Logic\InvalidArgument;
-use Orisai\ObjectMapper\Meta\Args;
+use Orisai\ObjectMapper\Args\Args;
 use Orisai\ObjectMapper\Rules\Rule;
 use Orisai\ObjectMapper\Rules\RuleManager;
 use function assert;

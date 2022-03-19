@@ -2,10 +2,10 @@
 
 namespace Orisai\ObjectMapper\Rules;
 
+use Orisai\ObjectMapper\Args\Args;
 use Orisai\ObjectMapper\Context\FieldContext;
 use Orisai\ObjectMapper\Exception\InvalidData;
 use Orisai\ObjectMapper\Exception\ValueDoesNotMatch;
-use Orisai\ObjectMapper\Meta\Args;
 use Orisai\ObjectMapper\NoValue;
 use Orisai\ObjectMapper\Types\CompoundType;
 

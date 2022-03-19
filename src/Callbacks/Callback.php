@@ -2,6 +2,7 @@
 
 namespace Orisai\ObjectMapper\Callbacks;
 
+use Orisai\ObjectMapper\Args\Args;
 use Orisai\ObjectMapper\Context\ArgsContext;
 use Orisai\ObjectMapper\Context\BaseFieldContext;
 use Orisai\ObjectMapper\Context\FieldContext;
@@ -9,7 +10,6 @@ use Orisai\ObjectMapper\Context\FieldSetContext;
 use Orisai\ObjectMapper\Exception\InvalidData;
 use Orisai\ObjectMapper\Exception\ValueDoesNotMatch;
 use Orisai\ObjectMapper\MappedObject;
-use Orisai\ObjectMapper\Meta\Args;
 use Orisai\ObjectMapper\Processing\ObjectHolder;
 
 /**

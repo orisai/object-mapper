@@ -2,7 +2,7 @@
 
 namespace Orisai\ObjectMapper\Rules;
 
-use Orisai\ObjectMapper\Meta\ArgsCreator;
+use Orisai\ObjectMapper\Args\ArgsCreator;
 
 /**
  * @phpstan-template T of MultiValueArgs

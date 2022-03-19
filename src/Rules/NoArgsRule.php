@@ -2,8 +2,8 @@
 
 namespace Orisai\ObjectMapper\Rules;
 
+use Orisai\ObjectMapper\Args\ArgsChecker;
 use Orisai\ObjectMapper\Context\RuleArgsContext;
-use Orisai\ObjectMapper\Meta\ArgsChecker;
 
 trait NoArgsRule
 {

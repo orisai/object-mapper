@@ -1,8 +1,10 @@
 <?php declare(strict_types = 1);
 
-namespace Orisai\ObjectMapper\Meta;
+namespace Orisai\ObjectMapper\Args;
 
 use Orisai\ObjectMapper\Callbacks\Callback;
+use Orisai\ObjectMapper\Meta\CallbackMeta;
+use Orisai\ObjectMapper\Meta\RuleMeta;
 use Orisai\ObjectMapper\Rules\Rule;
 
 trait ArgsCreator

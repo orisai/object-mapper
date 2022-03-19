@@ -3,8 +3,8 @@
 namespace Orisai\ObjectMapper\Annotation\Callback;
 
 use Orisai\ObjectMapper\Annotation\BaseAnnotation;
+use Orisai\ObjectMapper\Args\Args;
 use Orisai\ObjectMapper\Callbacks\Callback;
-use Orisai\ObjectMapper\Meta\Args;
 
 /**
  * Base interface for callable annotations

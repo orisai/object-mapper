@@ -2,6 +2,7 @@
 
 namespace Orisai\ObjectMapper\Meta;
 
+use Orisai\ObjectMapper\Args\Args;
 use Orisai\ObjectMapper\Callbacks\Callback;
 
 final class CallbackMeta

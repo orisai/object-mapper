@@ -3,8 +3,8 @@
 namespace Orisai\ObjectMapper\Rules;
 
 use Orisai\Exceptions\Logic\InvalidArgument;
+use Orisai\ObjectMapper\Args\Args;
 use Orisai\ObjectMapper\MappedObject;
-use Orisai\ObjectMapper\Meta\Args;
 use function array_key_exists;
 use function sprintf;
 

@@ -5,7 +5,7 @@ namespace Orisai\ObjectMapper\Rules;
 use DateTime;
 use DateTimeImmutable;
 use DateTimeInterface;
-use Orisai\ObjectMapper\Meta\Args;
+use Orisai\ObjectMapper\Args\Args;
 use function array_key_exists;
 use function is_a;
 

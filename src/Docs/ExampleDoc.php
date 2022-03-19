@@ -2,8 +2,8 @@
 
 namespace Orisai\ObjectMapper\Docs;
 
+use Orisai\ObjectMapper\Args\ArgsChecker;
 use Orisai\ObjectMapper\Context\ArgsContext;
-use Orisai\ObjectMapper\Meta\ArgsChecker;
 
 final class ExampleDoc implements Doc
 {

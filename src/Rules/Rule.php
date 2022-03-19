@@ -2,12 +2,12 @@
 
 namespace Orisai\ObjectMapper\Rules;
 
+use Orisai\ObjectMapper\Args\Args;
 use Orisai\ObjectMapper\Context\FieldContext;
 use Orisai\ObjectMapper\Context\RuleArgsContext;
 use Orisai\ObjectMapper\Context\TypeContext;
 use Orisai\ObjectMapper\Exception\InvalidData;
 use Orisai\ObjectMapper\Exception\ValueDoesNotMatch;
-use Orisai\ObjectMapper\Meta\Args;
 use Orisai\ObjectMapper\Types\Type;
 
 /**
