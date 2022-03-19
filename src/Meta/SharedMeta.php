@@ -2,6 +2,7 @@
 
 namespace Orisai\ObjectMapper\Meta;
 
+use Orisai\ObjectMapper\Docs\Doc;
 use Orisai\ObjectMapper\Modifiers\Modifier;
 
 abstract class SharedMeta
@@ -13,7 +14,7 @@ abstract class SharedMeta
 	/** @var array<CallbackMeta>|null */
 	private ?array $instCallbacks = null;
 
-	/** @var array<string, array<mixed>> */
+	/** @var array<class-string<Doc>, array<mixed>> */
 	private array $docs;
 
 	/** @var array<DocMeta>|null */

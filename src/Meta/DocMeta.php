@@ -2,31 +2,39 @@
 
 namespace Orisai\ObjectMapper\Meta;
 
+use Orisai\ObjectMapper\Docs\Doc;
+
 final class DocMeta
 {
 
+	/** @var class-string<Doc> */
 	private string $name;
 
 	/** @var array<mixed> */
 	private array $args;
 
-	private function __construct()
+	/**
+	 * @param class-string<Doc> $name
+	 * @param array<mixed>      $args
+	 */
+	public function __construct(string $name, array $args)
 	{
-		// Static constructor is required
+		$this->name = $name;
+		$this->args = $args;
 	}
 
 	/**
-	 * @param array<mixed> $args
+	 * @param class-string<Doc> $name
+	 * @param array<mixed>      $args
 	 */
 	public static function from(string $name, array $args): self
 	{
-		$self = new self();
-		$self->name = $name;
-		$self->args = $args;
-
-		return $self;
+		return new self($name, $args);
 	}
 
+	/**
+	 * @return class-string<Doc>
+	 */
 	public function getName(): string
 	{
 		return $this->name;

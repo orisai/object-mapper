@@ -40,10 +40,7 @@ interface MetaSource
 	 * 					CallbackMeta,
 	 * 				],
 	 *				'docs' => [
-	 * 					[
-	 * 						'type' => AnnotationClass:class,
-	 * 						'args' => [],
-	 * 					],
+	 * 					DocMeta,
 	 * 				],
 	 * 				'modifiers' => [
 	 * 					[
