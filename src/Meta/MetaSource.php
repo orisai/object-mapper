@@ -37,10 +37,7 @@ interface MetaSource
 	 * 				// Key is not set in case no default is available to distinguish between no value and null
 	 * 				'default' => 'example',
 	 *				'callbacks' => [
-	 * 					[
-	 * 						'type' => AnnotationClass:class,
-	 * 						'args' => [],
-	 * 					],
+	 * 					CallbackMeta,
 	 * 				],
 	 *				'docs' => [
 	 * 					[

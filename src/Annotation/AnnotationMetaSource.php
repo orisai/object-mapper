@@ -11,6 +11,7 @@ use Orisai\ObjectMapper\Annotation\Expect\RuleAnnotation;
 use Orisai\ObjectMapper\Annotation\Modifiers\ModifierAnnotation;
 use Orisai\ObjectMapper\Exception\InvalidAnnotation;
 use Orisai\ObjectMapper\MappedObject;
+use Orisai\ObjectMapper\Meta\CallbackMeta;
 use Orisai\ObjectMapper\Meta\MetaSource;
 use Orisai\ObjectMapper\Meta\RuleMeta;
 use ReflectionClass;
@@ -62,7 +63,10 @@ final class AnnotationMetaSource implements MetaSource
 					));
 			}
 
-			$classMeta[$annotation::ANNOTATION_TYPE][] = AnnotationMetaExtractor::extract($annotation);
+			$classMeta[$annotation::ANNOTATION_TYPE][] = $annotation instanceof CallableAnnotation ? new CallbackMeta(
+				$annotation->getType(),
+				$annotation->getArgs(),
+			) : AnnotationMetaExtractor::extract($annotation);
 		}
 
 		return $classMeta;
@@ -104,6 +108,11 @@ final class AnnotationMetaSource implements MetaSource
 
 					$propertyHasValidationRule = true;
 					$propertiesMeta[$propertyName][$annotation::ANNOTATION_TYPE] = new RuleMeta(
+						$annotation->getType(),
+						$annotation->getArgs(),
+					);
+				} elseif ($annotation instanceof CallableAnnotation) {
+					$propertiesMeta[$propertyName][$annotation::ANNOTATION_TYPE][] = new CallbackMeta(
 						$annotation->getType(),
 						$annotation->getArgs(),
 					);

@@ -5,7 +5,6 @@ namespace Orisai\ObjectMapper\Meta;
 use Orisai\Exceptions\Logic\InvalidArgument;
 use Orisai\Exceptions\Logic\InvalidState;
 use Orisai\Exceptions\Message;
-use Orisai\ObjectMapper\Callbacks\Callback;
 use Orisai\ObjectMapper\Context\ArgsContext;
 use Orisai\ObjectMapper\Context\RuleArgsContext;
 use Orisai\ObjectMapper\Docs\Doc;
@@ -220,7 +219,7 @@ final class MetaResolver
 	private function resolveCallbacksMeta(array $meta, ArgsContext $context): array
 	{
 		foreach ($meta as $key => $callback) {
-			if (!is_array($callback)) {
+			if (!$callback instanceof CallbackMeta) {
 				throw InvalidMeta::create();
 			}
 
@@ -231,32 +230,14 @@ final class MetaResolver
 	}
 
 	/**
-	 * @param array<mixed> $meta
 	 * @return array<mixed>
 	 */
-	private function resolveCallbackMeta(array $meta, ArgsContext $context): array
+	private function resolveCallbackMeta(CallbackMeta $meta, ArgsContext $context): array
 	{
-		if (
-			!array_key_exists(MetaSource::OPTION_TYPE, $meta)
-			|| !is_string(($type = $meta[MetaSource::OPTION_TYPE]))
-			|| !is_subclass_of($type, Callback::class)
-		) {
-			throw InvalidMeta::create();
-		}
+		$array = $meta->toArray();
+		$array[MetaSource::OPTION_ARGS] = $meta->getType()::resolveArgs($meta->getArgs(), $context);
 
-		if (array_key_exists(MetaSource::OPTION_ARGS, $meta)) {
-			$args = $meta[MetaSource::OPTION_ARGS];
-
-			if (!is_array($args)) {
-				throw InvalidMeta::create();
-			}
-		} else {
-			$args = [];
-		}
-
-		$meta[MetaSource::OPTION_ARGS] = $type::resolveArgs($args, $context);
-
-		return $meta;
+		return $array;
 	}
 
 	/**

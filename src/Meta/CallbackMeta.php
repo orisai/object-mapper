@@ -13,9 +13,14 @@ final class CallbackMeta
 	/** @var array<mixed> */
 	private array $args;
 
-	private function __construct()
+	/**
+	 * @param class-string<Callback<Args>> $type
+	 * @param array<mixed>                 $args
+	 */
+	public function __construct(string $type, array $args)
 	{
-		// Static constructor is required
+		$this->type = $type;
+		$this->args = $args;
 	}
 
 	/**
@@ -23,11 +28,21 @@ final class CallbackMeta
 	 */
 	public static function fromArray(array $callbackMeta): self
 	{
-		$self = new self();
-		$self->type = $callbackMeta[MetaSource::OPTION_TYPE];
-		$self->args = $callbackMeta[MetaSource::OPTION_ARGS] ?? [];
+		return new self(
+			$callbackMeta[MetaSource::OPTION_TYPE],
+			$callbackMeta[MetaSource::OPTION_ARGS] ?? [],
+		);
+	}
 
-		return $self;
+	/**
+	 * @return array{type: class-string<Callback<Args>>, args: array<mixed>}
+	 */
+	public function toArray(): array
+	{
+		return [
+			MetaSource::OPTION_TYPE => $this->type,
+			MetaSource::OPTION_ARGS => $this->args,
+		];
 	}
 
 	/**
