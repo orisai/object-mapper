@@ -3,6 +3,7 @@
 namespace Orisai\ObjectMapper\Meta;
 
 use Orisai\ObjectMapper\MappedObject;
+use Orisai\ObjectMapper\Meta\Compile\CompileMeta;
 use ReflectionClass;
 
 interface MetaSource
@@ -24,32 +25,8 @@ interface MetaSource
 		OPTION_ARGS = 'args';
 
 	/**
-	 * Returns metadata in following format:
-	 * [
-	 * 		'class' => [
-	 * 			'callbacks' => [...],
-	 * 			'docs' => [...],
-	 * 			'modifiers' => [...],
-	 * 		],
-	 * 		'properties' => [
-	 * 			'propertyName' => [
-	 *				'callbacks' => [
-	 * 					CallbackMeta,
-	 * 				],
-	 *				'docs' => [
-	 * 					DocMeta,
-	 * 				],
-	 * 				'modifiers' => [
-	 * 					ModifierMeta,
-	 * 				],
-	 *				'rule' => RuleMeta,
-	 * 			],
-	 * 		],
-	 * ]
-	 *
 	 * @param ReflectionClass<MappedObject> $class
-	 * @return array<mixed>
 	 */
-	public function load(ReflectionClass $class): array;
+	public function load(ReflectionClass $class): CompileMeta;
 
 }

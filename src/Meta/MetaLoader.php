@@ -3,11 +3,12 @@
 namespace Orisai\ObjectMapper\Meta;
 
 use Orisai\Exceptions\Logic\InvalidArgument;
+use Orisai\Exceptions\Logic\NotImplemented;
 use Orisai\ObjectMapper\MappedObject;
 use Orisai\ObjectMapper\Rules\RuleManager;
-use Orisai\Utils\Arrays\ArrayMerger;
 use ReflectionClass;
 use function class_exists;
+use function count;
 
 class MetaLoader
 {
@@ -72,18 +73,17 @@ class MetaLoader
 				->withMessage("Class '$class' must be instantiable.");
 		}
 
-		$meta = [];
-
-		foreach ($this->sourceManager->getAll() as $source) {
-			$sourceMeta = $source->load($classRef);
-			// TODO - merge source parts individually - default value, rule, callbacks, ... have different merging rules
-			//		- each source should be valid structurally (MetaResolver without resolveArgs calls)
-			//		- then be merged with previous source
-			//		- and validated that rule/modifier/callback/doc args in merged form are valid
-			$meta = ArrayMerger::merge($sourceMeta, $meta);
+		if (count($this->sourceManager->getAll()) > 1) {
+			throw NotImplemented::create()
+				->withMessage('Only one source is supported at this moment.');
 		}
 
-		$meta = $this->getResolver()->resolve($classRef, $meta);
+		$sourceMeta = null;
+		foreach ($this->sourceManager->getAll() as $source) {
+			$sourceMeta = $source->load($classRef);
+		}
+
+		$meta = $sourceMeta !== null ? $this->getResolver()->resolve($classRef, $sourceMeta) : [];
 
 		$this->cache->save($class, $meta);
 

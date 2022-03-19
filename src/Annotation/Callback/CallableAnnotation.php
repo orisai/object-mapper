@@ -5,15 +5,12 @@ namespace Orisai\ObjectMapper\Annotation\Callback;
 use Orisai\ObjectMapper\Annotation\BaseAnnotation;
 use Orisai\ObjectMapper\Callbacks\Callback;
 use Orisai\ObjectMapper\Meta\Args;
-use Orisai\ObjectMapper\Meta\MetaSource;
 
 /**
  * Base interface for callable annotations
  */
 interface CallableAnnotation extends BaseAnnotation
 {
-
-	public const ANNOTATION_TYPE = MetaSource::TYPE_CALLBACKS;
 
 	/**
 	 * @return class-string<Callback<Args>>

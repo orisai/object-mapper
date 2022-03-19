@@ -12,6 +12,9 @@ use Orisai\ObjectMapper\Annotation\Modifiers\ModifierAnnotation;
 use Orisai\ObjectMapper\Exception\InvalidAnnotation;
 use Orisai\ObjectMapper\MappedObject;
 use Orisai\ObjectMapper\Meta\CallbackMeta;
+use Orisai\ObjectMapper\Meta\Compile\ClassCompileMeta;
+use Orisai\ObjectMapper\Meta\Compile\CompileMeta;
+use Orisai\ObjectMapper\Meta\Compile\PropertyCompileMeta;
 use Orisai\ObjectMapper\Meta\DocMeta;
 use Orisai\ObjectMapper\Meta\MetaSource;
 use Orisai\ObjectMapper\Meta\ModifierMeta;
@@ -30,24 +33,22 @@ final class AnnotationMetaSource implements MetaSource
 		$this->reader = $reader ?? new AnnotationReader();
 	}
 
-	/**
-	 * @return array<mixed>
-	 */
-	public function load(ReflectionClass $class): array
+	public function load(ReflectionClass $class): CompileMeta
 	{
-		return [
-			self::LOCATION_CLASS => $this->loadClassMeta($class),
-			self::LOCATION_PROPERTIES => $this->loadPropertiesMeta($class),
-		];
+		return new CompileMeta(
+			$this->loadClassMeta($class),
+			$this->loadPropertiesMeta($class),
+		);
 	}
 
 	/**
 	 * @param ReflectionClass<MappedObject> $class
-	 * @return array<mixed>
 	 */
-	private function loadClassMeta(ReflectionClass $class): array
+	private function loadClassMeta(ReflectionClass $class): ClassCompileMeta
 	{
-		$classMeta = [];
+		$callbacks = [];
+		$docs = [];
+		$modifiers = [];
 
 		foreach ($this->reader->getClassAnnotations($class) as $annotation) {
 			if (!$annotation instanceof BaseAnnotation) {
@@ -66,37 +67,39 @@ final class AnnotationMetaSource implements MetaSource
 			}
 
 			if ($annotation instanceof CallableAnnotation) {
-				$classMeta[$annotation::ANNOTATION_TYPE][] = new CallbackMeta(
+				$callbacks[] = new CallbackMeta(
 					$annotation->getType(),
 					$annotation->getArgs(),
 				);
 			} elseif ($annotation instanceof DocumentationAnnotation) {
-				$classMeta[$annotation::ANNOTATION_TYPE][] = new DocMeta(
+				$docs[] = new DocMeta(
 					$annotation->getType(),
 					$annotation->getArgs(),
 				);
 			} else {
-				$classMeta[$annotation::ANNOTATION_TYPE][] = new ModifierMeta(
+				$modifiers[] = new ModifierMeta(
 					$annotation->getType(),
 					$annotation->getArgs(),
 				);
 			}
 		}
 
-		return $classMeta;
+		return new ClassCompileMeta($callbacks, $docs, $modifiers);
 	}
 
 	/**
 	 * @param ReflectionClass<MappedObject> $class
-	 * @return array<mixed>
+	 * @return array<string, PropertyCompileMeta>
 	 */
 	private function loadPropertiesMeta(ReflectionClass $class): array
 	{
-		$propertiesMeta = [];
+		$properties = [];
 
 		foreach ($class->getProperties() as $property) {
-			$propertyName = $property->getName();
-			$propertyHasValidationRule = false;
+			$callbacks = [];
+			$docs = [];
+			$modifiers = [];
+			$rule = null;
 
 			foreach ($this->reader->getPropertyAnnotations($property) as $annotation) {
 				if (!$annotation instanceof BaseAnnotation) {
@@ -106,45 +109,61 @@ final class AnnotationMetaSource implements MetaSource
 				$annotation = $this->checkAnnotationType($annotation);
 
 				if ($annotation instanceof RuleAnnotation) {
-					if ($propertyHasValidationRule) {
+					if ($rule !== null) {
 						throw InvalidArgument::create()
 							->withMessage(sprintf(
-								sprintf(
-									'Mapped property %s::$%s has multiple expectation annotations, while only one is allowed. ' .
-									'Combine multiple with %s or %s',
-									$class->getName(),
-									$property->getName(),
-									Expect\AnyOf::class,
-									Expect\AllOf::class,
-								),
+								'Mapped property %s::$%s has multiple expectation annotations, while only one is allowed. ' .
+								'Combine multiple with %s or %s',
+								$class->getName(),
+								$property->getName(),
+								Expect\AnyOf::class,
+								Expect\AllOf::class,
 							));
 					}
 
-					$propertyHasValidationRule = true;
-					$propertiesMeta[$propertyName][$annotation::ANNOTATION_TYPE] = new RuleMeta(
+					$rule = new RuleMeta(
 						$annotation->getType(),
 						$annotation->getArgs(),
 					);
 				} elseif ($annotation instanceof CallableAnnotation) {
-					$propertiesMeta[$propertyName][$annotation::ANNOTATION_TYPE][] = new CallbackMeta(
+					$callbacks[] = new CallbackMeta(
 						$annotation->getType(),
 						$annotation->getArgs(),
 					);
 				} elseif ($annotation instanceof DocumentationAnnotation) {
-					$propertiesMeta[$propertyName][$annotation::ANNOTATION_TYPE][] = new DocMeta(
+					$docs[] = new DocMeta(
 						$annotation->getType(),
 						$annotation->getArgs(),
 					);
 				} else {
-					$propertiesMeta[$propertyName][$annotation::ANNOTATION_TYPE][] = new ModifierMeta(
+					$modifiers[] = new ModifierMeta(
 						$annotation->getType(),
 						$annotation->getArgs(),
 					);
 				}
 			}
+
+			if ($rule === null && $callbacks === [] && $docs === [] && $modifiers === []) {
+				continue;
+			}
+
+			if ($rule === null) {
+				throw InvalidArgument::create()
+					->withMessage(
+						"Property {$class->getName()}::\${$property->getName()} has mapped object annotation, " .
+						'but no rule annotation.',
+					);
+			}
+
+			$properties[$property->getName()] = new PropertyCompileMeta(
+				$callbacks,
+				$docs,
+				$modifiers,
+				$rule,
+			);
 		}
 
-		return $propertiesMeta;
+		return $properties;
 	}
 
 	/**

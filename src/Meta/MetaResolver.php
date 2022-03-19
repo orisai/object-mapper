@@ -9,11 +9,16 @@ use Orisai\ObjectMapper\Context\ArgsContext;
 use Orisai\ObjectMapper\Context\RuleArgsContext;
 use Orisai\ObjectMapper\Exception\InvalidMeta;
 use Orisai\ObjectMapper\MappedObject;
+use Orisai\ObjectMapper\Meta\Compile\ClassCompileMeta;
+use Orisai\ObjectMapper\Meta\Compile\CompileMeta;
+use Orisai\ObjectMapper\Meta\Compile\PropertyCompileMeta;
+use Orisai\ObjectMapper\Meta\Compile\SharedNodeCompileMeta;
 use Orisai\ObjectMapper\Modifiers\FieldNameModifier;
 use Orisai\ObjectMapper\Rules\MixedRule;
 use Orisai\ObjectMapper\Rules\NullRule;
 use Orisai\ObjectMapper\Rules\Rule;
 use Orisai\ObjectMapper\Rules\RuleManager;
+use Orisai\Utils\Arrays\ArrayMerger;
 use ReflectionClass;
 use ReflectionProperty;
 use function array_key_exists;
@@ -46,145 +51,105 @@ final class MetaResolver
 
 	/**
 	 * @param ReflectionClass<MappedObject> $class
-	 * @param array<mixed>                  $meta
 	 * @return array<mixed>
 	 */
-	public function resolve(ReflectionClass $class, array $meta): array
+	public function resolve(ReflectionClass $class, CompileMeta $meta): array
 	{
-		$meta = $this->resolveMeta($meta, $class);
-		$meta = $this->resolveDefaultValues($meta, $class);
+		$array = $this->resolveMeta($meta, $class);
+		$defaults = $this->resolveDefaultValues($meta, $class);
 
-		return $meta;
+		return ArrayMerger::merge($array, $defaults);
 	}
 
 	/**
-	 * @param array<mixed>                  $meta
 	 * @param ReflectionClass<MappedObject> $class
 	 * @return array<mixed>
 	 */
-	private function resolveMeta(array $meta, ReflectionClass $class): array
+	private function resolveMeta(CompileMeta $meta, ReflectionClass $class): array
 	{
-		if (array_key_exists(MetaSource::LOCATION_CLASS, $meta)) {
-			if (!is_array($meta[MetaSource::LOCATION_CLASS])) {
-				throw InvalidMeta::create();
-			}
+		$array = [];
 
-			$meta[MetaSource::LOCATION_CLASS] = $this->resolveClassMeta($meta[MetaSource::LOCATION_CLASS], $class);
-		}
+		$array[MetaSource::LOCATION_CLASS] = $this->resolveClassMeta($meta->getClass(), $class);
 
-		if (array_key_exists(MetaSource::LOCATION_PROPERTIES, $meta)) {
-			if (!is_array($meta[MetaSource::LOCATION_PROPERTIES])) {
-				throw InvalidMeta::create();
-			}
+		$array[MetaSource::LOCATION_PROPERTIES] = $this->resolvePropertiesMeta(
+			$meta->getProperties(),
+			$class,
+		);
 
-			$meta[MetaSource::LOCATION_PROPERTIES] = $this->resolvePropertiesMeta(
-				$meta[MetaSource::LOCATION_PROPERTIES],
-				$class,
-			);
+		$array[self::FIELDS_PROPERTIES_MAP] = $this->resolveFieldsPropertiesMap(
+			$array[MetaSource::LOCATION_PROPERTIES],
+			$class,
+		);
 
-			$meta[self::FIELDS_PROPERTIES_MAP] = $this->resolveFieldsPropertiesMap(
-				$meta[MetaSource::LOCATION_PROPERTIES],
-				$class,
-			);
-		}
-
-		return $meta;
+		return $array;
 	}
 
 	/**
 	 * Meta which are same for both classes and properties
 	 *
-	 * @param array<mixed>                  $meta
 	 * @param ReflectionClass<MappedObject> $class
 	 * @return array<mixed>
 	 */
-	private function resolveReflectorMeta(array $meta, ReflectionClass $class, ?ReflectionProperty $property): array
+	private function resolveReflectorMeta(
+		SharedNodeCompileMeta $meta,
+		ReflectionClass $class,
+		?ReflectionProperty $property
+	): array
 	{
 		$context = $this->createArgsContext($class, $property);
 
-		if (array_key_exists(MetaSource::TYPE_CALLBACKS, $meta)) {
-			if (!is_array($meta[MetaSource::TYPE_CALLBACKS])) {
-				throw InvalidMeta::create();
-			}
+		$array = [];
 
-			$meta[MetaSource::TYPE_CALLBACKS] = $this->resolveCallbacksMeta(
-				$meta[MetaSource::TYPE_CALLBACKS],
-				$context,
-			);
-		}
+		$array[MetaSource::TYPE_CALLBACKS] = $this->resolveCallbacksMeta(
+			$meta->getCallbacks(),
+			$context,
+		);
 
-		if (array_key_exists(MetaSource::TYPE_DOCS, $meta)) {
-			if (!is_array($meta[MetaSource::TYPE_DOCS])) {
-				throw InvalidMeta::create();
-			}
+		$array[MetaSource::TYPE_DOCS] = $this->resolveDocsMeta($meta->getDocs(), $context);
 
-			$meta[MetaSource::TYPE_DOCS] = $this->resolveDocsMeta($meta[MetaSource::TYPE_DOCS], $context);
-		}
+		$array[MetaSource::TYPE_MODIFIERS] = $this->resolveModifiersMeta(
+			$meta->getModifiers(),
+			$context,
+		);
 
-		if (array_key_exists(MetaSource::TYPE_MODIFIERS, $meta)) {
-			if (!is_array($meta[MetaSource::TYPE_MODIFIERS])) {
-				throw InvalidMeta::create();
-			}
-
-			$meta[MetaSource::TYPE_MODIFIERS] = $this->resolveModifiersMeta(
-				$meta[MetaSource::TYPE_MODIFIERS],
-				$context,
-			);
-		}
-
-		return $meta;
+		return $array;
 	}
 
 	/**
-	 * @param array<mixed>                  $meta
 	 * @param ReflectionClass<MappedObject> $class
 	 * @return array<mixed>
 	 */
-	private function resolveClassMeta(array $meta, ReflectionClass $class): array
+	private function resolveClassMeta(ClassCompileMeta $meta, ReflectionClass $class): array
 	{
-		if (array_key_exists(MetaSource::TYPE_RULE, $meta)) {
-			throw InvalidArgument::create()
-				->withMessage('Rules cannot be used for class, only properties are allowed');
-		}
-
 		return $this->resolveReflectorMeta($meta, $class, null);
 	}
 
 	/**
-	 * @param array<mixed>                  $meta
-	 * @param ReflectionClass<MappedObject> $class
+	 * @param array<string, PropertyCompileMeta> $meta
+	 * @param ReflectionClass<MappedObject>      $class
 	 * @return array<mixed>
 	 */
 	private function resolvePropertiesMeta(array $meta, ReflectionClass $class): array
 	{
+		$array = [];
 		foreach ($meta as $propertyName => $propertyMeta) {
 			$property = $class->getProperty($propertyName);
 
-			if (!is_array($propertyMeta)) {
-				throw InvalidMeta::create();
-			}
-
-			if (!isset($propertyMeta[MetaSource::TYPE_RULE])) {
-				throw InvalidArgument::create()
-					->withMessage(sprintf(
-						'Property %s::$%s requires a rule, standalone usage of documentation and callbacks is not allowed for mapped properties',
-						$class->getName(),
-						$property->getName(),
-					));
-			}
-
-			$meta[$propertyName] = $this->resolvePropertyMeta($propertyMeta, $class, $property);
+			$array[$propertyName] = $this->resolvePropertyMeta($propertyMeta, $class, $property);
 		}
 
-		return $meta;
+		return $array;
 	}
 
 	/**
-	 * @param array<mixed>                  $meta
 	 * @param ReflectionClass<MappedObject> $class
 	 * @return array<mixed>
 	 */
-	private function resolvePropertyMeta(array $meta, ReflectionClass $class, ReflectionProperty $property): array
+	private function resolvePropertyMeta(
+		PropertyCompileMeta $meta,
+		ReflectionClass $class,
+		ReflectionProperty $property
+	): array
 	{
 		if (!$property->isPublic() || $property->isStatic()) {
 			throw InvalidArgument::create()
@@ -196,35 +161,28 @@ final class MetaResolver
 				));
 		}
 
-		$meta = $this->resolveReflectorMeta($meta, $class, $property);
+		$array = $this->resolveReflectorMeta($meta, $class, $property);
 
-		if (!array_key_exists(MetaSource::TYPE_RULE, $meta) || !$meta[MetaSource::TYPE_RULE] instanceof RuleMeta) {
-			throw InvalidMeta::create();
-		}
-
-		$meta[MetaSource::TYPE_RULE] = $this->resolveRuleMetaInternal(
-			$meta[MetaSource::TYPE_RULE],
+		$array[MetaSource::TYPE_RULE] = $this->resolveRuleMetaInternal(
+			$meta->getRule(),
 			$this->createRuleArgsContext($class, $property),
 		);
 
-		return $meta;
+		return $array;
 	}
 
 	/**
-	 * @param array<mixed> $meta
+	 * @param array<int, CallbackMeta> $meta
 	 * @return array<mixed>
 	 */
 	private function resolveCallbacksMeta(array $meta, ArgsContext $context): array
 	{
+		$array = [];
 		foreach ($meta as $key => $callback) {
-			if (!$callback instanceof CallbackMeta) {
-				throw InvalidMeta::create();
-			}
-
-			$meta[$key] = $this->resolveCallbackMeta($callback, $context);
+			$array[$key] = $this->resolveCallbackMeta($callback, $context);
 		}
 
-		return $meta;
+		return $array;
 	}
 
 	/**
@@ -239,7 +197,7 @@ final class MetaResolver
 	}
 
 	/**
-	 * @param array<mixed> $meta
+	 * @param array<int, DocMeta> $meta
 	 * @return array<mixed>
 	 */
 	public function resolveDocsMeta(array $meta, ArgsContext $context): array
@@ -247,10 +205,6 @@ final class MetaResolver
 		$optimized = [];
 
 		foreach ($meta as $doc) {
-			if (!$doc instanceof DocMeta) {
-				throw InvalidMeta::create();
-			}
-
 			[, $name, $args] = $this->resolveDocMeta($doc, $context);
 			$optimized[$name] = $args;
 		}
@@ -271,7 +225,7 @@ final class MetaResolver
 	}
 
 	/**
-	 * @param array<mixed> $meta
+	 * @param array<int, ModifierMeta> $meta
 	 * @return array<mixed>
 	 */
 	private function resolveModifiersMeta(array $meta, ArgsContext $context): array
@@ -279,10 +233,6 @@ final class MetaResolver
 		$optimized = [];
 
 		foreach ($meta as $modifier) {
-			if (!$modifier instanceof ModifierMeta) {
-				throw InvalidMeta::create();
-			}
-
 			[$type, $args] = $this->resolveModifierMeta($modifier, $context);
 			$optimized[$type] = $args;
 		}
@@ -368,15 +318,16 @@ final class MetaResolver
 	}
 
 	/**
-	 * @param array<mixed>                  $meta
 	 * @param ReflectionClass<MappedObject> $class
 	 * @return array<mixed>
 	 */
-	private function resolveDefaultValues(array $meta, ReflectionClass $class): array
+	private function resolveDefaultValues(CompileMeta $meta, ReflectionClass $class): array
 	{
+		$propertiesMeta = [];
+		$properties = $meta->getProperties();
 		foreach ($class->getDefaultProperties() as $propertyName => $propertyValue) {
 			// Property is not mapped property
-			if (!isset($meta[MetaSource::LOCATION_PROPERTIES][$propertyName])) {
+			if (!isset($properties[$propertyName])) {
 				continue;
 			}
 
@@ -388,7 +339,9 @@ final class MetaResolver
 				$propertyValue === null
 				&& !$isPropertyTyped
 				&& !PropertyMeta::fromArray(
-					$meta[MetaSource::LOCATION_PROPERTIES][$propertyName],
+					[
+						MetaSource::TYPE_RULE => $properties[$propertyName]->getRule()->toArray(),
+					],
 				)->getRule()->mayContainRuleType(
 					[NullRule::class, MixedRule::class],
 				)
@@ -396,10 +349,13 @@ final class MetaResolver
 				continue;
 			}
 
-			$meta[MetaSource::LOCATION_PROPERTIES][$propertyName][MetaSource::TYPE_DEFAULT_VALUE] = $propertyValue;
+			$propertiesMeta[$propertyName][MetaSource::TYPE_DEFAULT_VALUE] = $propertyValue;
 		}
 
-		return $meta;
+		$array = [];
+		$array[MetaSource::LOCATION_PROPERTIES] = $propertiesMeta;
+
+		return $array;
 	}
 
 	/**
