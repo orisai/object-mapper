@@ -16,9 +16,14 @@ final class RuleMeta
 	/** @var array<mixed> */
 	private array $args;
 
-	private function __construct()
+	/**
+	 * @param class-string<Rule<Args>> $type
+	 * @param array<mixed>             $args
+	 */
+	public function __construct(string $type, array $args)
 	{
-		// Static constructor is required
+		$this->type = $type;
+		$this->args = $args;
 	}
 
 	/**
@@ -26,11 +31,21 @@ final class RuleMeta
 	 */
 	public static function fromArray(array $ruleMeta): self
 	{
-		$self = new self();
-		$self->type = $ruleMeta[MetaSource::OPTION_TYPE];
-		$self->args = $ruleMeta[MetaSource::OPTION_ARGS] ?? [];
+		return new self(
+			$ruleMeta[MetaSource::OPTION_TYPE],
+			$ruleMeta[MetaSource::OPTION_ARGS] ?? [],
+		);
+	}
 
-		return $self;
+	/**
+	 * @return array{type: class-string<Rule<Args>>, args: array<mixed>}
+	 */
+	public function toArray(): array
+	{
+		return [
+			MetaSource::OPTION_TYPE => $this->type,
+			MetaSource::OPTION_ARGS => $this->args,
+		];
 	}
 
 	/**

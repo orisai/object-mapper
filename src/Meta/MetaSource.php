@@ -54,10 +54,7 @@ interface MetaSource
 	 * 						'args' => [],
 	 * 					],
 	 * 				],
-	 *				'rule' => [
-	 * 					'type' => RuleClass::class,
-	 * 					'args' => [],
-	 * 				],
+	 *				'rule' => RuleMeta,
 	 * 			],
 	 * 		],
 	 * ]

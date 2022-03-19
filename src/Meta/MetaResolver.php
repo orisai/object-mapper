@@ -201,11 +201,11 @@ final class MetaResolver
 
 		$meta = $this->resolveReflectorMeta($meta, $class, $property);
 
-		if (!array_key_exists(MetaSource::TYPE_RULE, $meta) || !is_array($meta[MetaSource::TYPE_RULE])) {
+		if (!array_key_exists(MetaSource::TYPE_RULE, $meta) || !$meta[MetaSource::TYPE_RULE] instanceof RuleMeta) {
 			throw InvalidMeta::create();
 		}
 
-		$meta[MetaSource::TYPE_RULE] = $this->resolveRuleMeta(
+		$meta[MetaSource::TYPE_RULE] = $this->resolveRuleMetaInternal(
 			$meta[MetaSource::TYPE_RULE],
 			$this->createRuleArgsContext($class, $property),
 		);
@@ -374,13 +374,29 @@ final class MetaResolver
 
 		$rule = $this->ruleManager->getRule($meta[MetaSource::OPTION_TYPE]);
 
-		if (array_key_exists(MetaSource::OPTION_ARGS, $meta)) {
-			if (!is_array($meta[MetaSource::OPTION_ARGS])) {
-				throw InvalidMeta::create();
-			}
-
-			$meta[MetaSource::OPTION_ARGS] = $rule->resolveArgs($meta[MetaSource::OPTION_ARGS], $context);
+		if (!array_key_exists(MetaSource::OPTION_ARGS, $meta)) {
+			$meta[MetaSource::OPTION_ARGS] = [];
 		}
+
+		if (!is_array($meta[MetaSource::OPTION_ARGS])) {
+			throw InvalidMeta::create();
+		}
+
+		$meta[MetaSource::OPTION_ARGS] = $rule->resolveArgs($meta[MetaSource::OPTION_ARGS], $context);
+
+		return $this->resolveRuleMetaInternal(
+			new RuleMeta($meta[MetaSource::OPTION_TYPE], $meta[MetaSource::OPTION_ARGS]),
+			$context,
+		);
+	}
+
+	/**
+	 * @return array<mixed>
+	 */
+	private function resolveRuleMetaInternal(RuleMeta $meta, RuleArgsContext $context): array
+	{
+		$rule = $this->ruleManager->getRule($meta->getType());
+		$args = $rule->resolveArgs($meta->getArgs(), $context);
 
 		$argsType = $rule->getArgsType();
 
@@ -402,7 +418,10 @@ final class MetaResolver
 				->withMessage("Class $argsType returned by $ruleClass::getArgsType() must be instantiable.");
 		}
 
-		return $meta;
+		$array = $meta->toArray();
+		$array[MetaSource::OPTION_ARGS] = $args;
+
+		return $array;
 	}
 
 	/**

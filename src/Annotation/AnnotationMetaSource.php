@@ -12,6 +12,7 @@ use Orisai\ObjectMapper\Annotation\Modifiers\ModifierAnnotation;
 use Orisai\ObjectMapper\Exception\InvalidAnnotation;
 use Orisai\ObjectMapper\MappedObject;
 use Orisai\ObjectMapper\Meta\MetaSource;
+use Orisai\ObjectMapper\Meta\RuleMeta;
 use ReflectionClass;
 use function get_class;
 use function sprintf;
@@ -102,8 +103,9 @@ final class AnnotationMetaSource implements MetaSource
 					}
 
 					$propertyHasValidationRule = true;
-					$propertiesMeta[$propertyName][$annotation::ANNOTATION_TYPE] = AnnotationMetaExtractor::extract(
-						$annotation,
+					$propertiesMeta[$propertyName][$annotation::ANNOTATION_TYPE] = new RuleMeta(
+						$annotation->getType(),
+						$annotation->getArgs(),
 					);
 				} else {
 					$propertiesMeta[$propertyName][$annotation::ANNOTATION_TYPE][] = AnnotationMetaExtractor::extract(
