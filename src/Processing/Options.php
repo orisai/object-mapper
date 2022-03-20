@@ -1,9 +1,8 @@
 <?php declare(strict_types = 1);
 
-namespace Orisai\ObjectMapper;
+namespace Orisai\ObjectMapper\Processing;
 
 use Orisai\Exceptions\Logic\InvalidState;
-use Orisai\ObjectMapper\Processing\RequiredFields;
 use function get_class;
 use function sprintf;
 

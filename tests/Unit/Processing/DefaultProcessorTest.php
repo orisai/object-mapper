@@ -10,7 +10,7 @@ use Orisai\ObjectMapper\Exception\InvalidData;
 use Orisai\ObjectMapper\Formatting\ErrorFormatter;
 use Orisai\ObjectMapper\Formatting\VisualErrorFormatter;
 use Orisai\ObjectMapper\MappedObject;
-use Orisai\ObjectMapper\Options;
+use Orisai\ObjectMapper\Processing\Options;
 use Orisai\ObjectMapper\Processing\RequiredFields;
 use stdClass;
 use Tests\Orisai\ObjectMapper\Doubles\AfterClassCallbackCurrentTypeInvalidDataVO;

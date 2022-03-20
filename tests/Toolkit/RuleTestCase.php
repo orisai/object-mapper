@@ -6,7 +6,7 @@ use Orisai\ObjectMapper\Context\FieldContext;
 use Orisai\ObjectMapper\Context\RuleArgsContext;
 use Orisai\ObjectMapper\Context\TypeContext;
 use Orisai\ObjectMapper\Meta\DefaultValueMeta;
-use Orisai\ObjectMapper\Options;
+use Orisai\ObjectMapper\Processing\Options;
 use Orisai\ObjectMapper\Types\MessageType;
 use ReflectionClass;
 use ReflectionProperty;

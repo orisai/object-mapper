@@ -5,6 +5,7 @@ namespace Orisai\ObjectMapper;
 use Nette\Utils\ObjectHelpers;
 use Orisai\Exceptions\Logic\InvalidState;
 use Orisai\ObjectMapper\Context\SkippedPropertiesContext;
+use Orisai\ObjectMapper\Processing\Options;
 use ReflectionException;
 use ReflectionProperty;
 use function sprintf;

@@ -4,7 +4,6 @@ namespace Orisai\ObjectMapper\Processing;
 
 use Orisai\ObjectMapper\Exception\InvalidData;
 use Orisai\ObjectMapper\MappedObject;
-use Orisai\ObjectMapper\Options;
 
 interface Processor
 {

@@ -3,7 +3,7 @@
 namespace Orisai\ObjectMapper\Context;
 
 use Orisai\ObjectMapper\Meta\MetaLoader;
-use Orisai\ObjectMapper\Options;
+use Orisai\ObjectMapper\Processing\Options;
 use Orisai\ObjectMapper\Processing\Processor;
 use Orisai\ObjectMapper\Rules\RuleManager;
 use Orisai\ObjectMapper\Types\StructureType;

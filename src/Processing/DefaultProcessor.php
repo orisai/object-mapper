@@ -28,7 +28,6 @@ use Orisai\ObjectMapper\Meta\Runtime\SharedNodeRuntimeMeta;
 use Orisai\ObjectMapper\Modifiers\FieldNameModifier;
 use Orisai\ObjectMapper\Modifiers\SkippedModifier;
 use Orisai\ObjectMapper\NoValue;
-use Orisai\ObjectMapper\Options;
 use Orisai\ObjectMapper\Rules\RuleManager;
 use Orisai\ObjectMapper\Rules\StructureArgs;
 use Orisai\ObjectMapper\Rules\StructureRule;

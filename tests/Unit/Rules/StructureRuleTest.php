@@ -3,7 +3,7 @@
 namespace Tests\Orisai\ObjectMapper\Unit\Rules;
 
 use Orisai\ObjectMapper\Exception\InvalidData;
-use Orisai\ObjectMapper\Options;
+use Orisai\ObjectMapper\Processing\Options;
 use Orisai\ObjectMapper\Rules\StructureArgs;
 use Orisai\ObjectMapper\Rules\StructureRule;
 use Tests\Orisai\ObjectMapper\Doubles\DefaultsVO;
