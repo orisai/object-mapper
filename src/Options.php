@@ -6,7 +6,7 @@ use Orisai\Exceptions\Logic\InvalidState;
 use Orisai\ObjectMapper\Processing\RequiredFields;
 use function sprintf;
 
-class Options
+final class Options
 {
 
 	private RequiredFields $requiredFields;
@@ -23,12 +23,12 @@ class Options
 		$this->requiredFields = RequiredFields::nonDefault();
 	}
 
-	final public function setRequiredFields(RequiredFields $fields): void
+	public function setRequiredFields(RequiredFields $fields): void
 	{
 		$this->requiredFields = $fields;
 	}
 
-	final public function getRequiredFields(): RequiredFields
+	public function getRequiredFields(): RequiredFields
 	{
 		return $this->requiredFields;
 	}
@@ -38,12 +38,12 @@ class Options
 	 * Used only if objects are not initialized (array is returned, not VO)
 	 * Used only if default values are not required to be sent (by RequiredFields::all())
 	 */
-	final public function setPreFillDefaultValues(bool $preFillDefaultValues = true): void
+	public function setPreFillDefaultValues(bool $preFillDefaultValues = true): void
 	{
 		$this->preFillDefaultValues = $preFillDefaultValues;
 	}
 
-	final public function isPreFillDefaultValues(): bool
+	public function isPreFillDefaultValues(): bool
 	{
 		return $this->preFillDefaultValues;
 	}
@@ -54,12 +54,12 @@ class Options
 	 * Use only for debug, it may lead to significant raw data grow in bigger hierarchies
 	 * 		 you can set data to a custom property in before class callback, if are always needed
 	 */
-	final public function setFillRawValues(bool $fillRawValues = true): void
+	public function setFillRawValues(bool $fillRawValues = true): void
 	{
 		$this->fillRawValues = $fillRawValues;
 	}
 
-	final public function isFillRawValues(): bool
+	public function isFillRawValues(): bool
 	{
 		return $this->fillRawValues;
 	}
@@ -68,7 +68,7 @@ class Options
 	 * @param array<mixed> $context
 	 * @param class-string $class
 	 */
-	final public function setDynamicContext(string $class, array $context): void
+	public function setDynamicContext(string $class, array $context): void
 	{
 		$this->dynamicContexts[$class] = $context;
 	}
@@ -76,7 +76,7 @@ class Options
 	/**
 	 * @param class-string $class
 	 */
-	final public function removeDynamicContext(string $class): void
+	public function removeDynamicContext(string $class): void
 	{
 		unset($this->dynamicContexts[$class]);
 	}
@@ -84,7 +84,7 @@ class Options
 	/**
 	 * @param class-string $class
 	 */
-	final public function hasDynamicContext(string $class): bool
+	public function hasDynamicContext(string $class): bool
 	{
 		return isset($this->dynamicContexts[$class]);
 	}
@@ -93,7 +93,7 @@ class Options
 	 * @param class-string $class
 	 * @return array<mixed>
 	 */
-	final public function getDynamicContext(string $class): array
+	public function getDynamicContext(string $class): array
 	{
 		if (!$this->hasDynamicContext($class)) {
 			throw InvalidState::create()
