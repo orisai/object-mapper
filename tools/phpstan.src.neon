@@ -45,6 +45,8 @@ parameters:
 		  paths:
 		  	- ../src/Bridge/NetteDI/LazyRuleManager.php
 		  	- ../src/Rules/DefaultRuleManager.php
+		- message: '#^Method (.+)Options\:\:getDynamicContext\(\) should return T of object but returns object\.$#'
+		  path: ../src/Options.php
 		# Generics - phpstan resolves correct class-string as a constant string - but not on test site https://phpstan.org/r/ce7cd979-ab2f-4373-a589-f63bfa01ca33
 		- message: '#^Method (.+)(Before|After)\:\:getType\(\) should return class-string\<(.+)Callback\<(.+)Args\>\> but returns ''(.+)Callback''\.$#'
 		  paths:

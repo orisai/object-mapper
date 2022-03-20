@@ -22,8 +22,6 @@ use function array_key_exists;
 final class CallbacksVO extends MappedObject
 {
 
-	public const STRUCTURE_CLASS = 'structure_class';
-
 	private string $constructorGivenValue;
 
 	/**
@@ -49,7 +47,7 @@ final class CallbacksVO extends MappedObject
 	public MappedObject $structure;
 
 	/** @StringValue() */
-	public string $overridenDefaultValue = 'defaultValue_before_override';
+	public string $overriddenDefaultValue = 'defaultValue_before_override';
 
 	/**
 	 * @StringValue()
@@ -90,7 +88,7 @@ final class CallbacksVO extends MappedObject
 		// Override default and required value to ensure data set before validation pass even if they were not sent by user
 		// Note: if we define 'before' callback for 'requiredValue' and value not available by moment of callback
 		// 		 call then callback is not called at all
-		$data['overridenDefaultValue'] = 'overriddenValue';
+		$data['overriddenDefaultValue'] = 'overriddenValue';
 		$data['requiredValue'] = 'overriddenValue';
 
 		return $data;
@@ -148,7 +146,7 @@ final class CallbacksVO extends MappedObject
 	{
 		$processor = $context->getProcessor();
 		$options = $context->getOptions();
-		$class = $options->getDynamicContext(self::class)[self::STRUCTURE_CLASS];
+		$class = $options->getDynamicContext(CallbacksVoContext::class)->getDynamicStructureType();
 
 		return $context->isInitializeObjects()
 			? $processor->process($structure, $class, $options)

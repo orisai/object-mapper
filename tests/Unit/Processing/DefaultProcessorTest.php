@@ -18,6 +18,7 @@ use Tests\Orisai\ObjectMapper\Doubles\AfterClassCallbackNewTypeInvalidDataVO;
 use Tests\Orisai\ObjectMapper\Doubles\AfterClassCallbackValueDoesNotMatchVO;
 use Tests\Orisai\ObjectMapper\Doubles\BeforeClassCallbackValueDoesNotMatchVO;
 use Tests\Orisai\ObjectMapper\Doubles\CallbacksVO;
+use Tests\Orisai\ObjectMapper\Doubles\CallbacksVoContext;
 use Tests\Orisai\ObjectMapper\Doubles\DefaultsVO;
 use Tests\Orisai\ObjectMapper\Doubles\EmptyVO;
 use Tests\Orisai\ObjectMapper\Doubles\FieldNamesVO;
@@ -362,9 +363,7 @@ stringg: Field is unknown, did you mean `string`?',
 	{
 		$options = new Options();
 		$options->setPreFillDefaultValues();
-		$options->setDynamicContext(CallbacksVO::class, [
-			CallbacksVO::STRUCTURE_CLASS => DefaultsVO::class,
-		]);
+		$options->addDynamicContext(new CallbacksVoContext(DefaultsVO::class));
 
 		$data = [
 			'array' => [
@@ -395,7 +394,7 @@ stringg: Field is unknown, did you mean `string`?',
 						'bar' => 'baz',
 					],
 				],
-				'overridenDefaultValue' => 'overriddenValue',
+				'overriddenDefaultValue' => 'overriddenValue',
 				'requiredValue' => 'overriddenValue',
 				'immutableDefaultValue' => 'defaultValue_immutable',
 			],
@@ -412,7 +411,7 @@ stringg: Field is unknown, did you mean `string`?',
 			$vo->array,
 		);
 		self::assertInstanceOf(DefaultsVO::class, $vo->structure);
-		self::assertSame('overriddenValue', $vo->overridenDefaultValue);
+		self::assertSame('overriddenValue', $vo->overriddenDefaultValue);
 		self::assertSame('defaultValue_immutable', $vo->immutableDefaultValue);
 		self::assertSame('overriddenValue', $vo->requiredValue);
 		self::assertSame('givenByConstructor', $vo->callbackSetValue);

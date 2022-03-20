@@ -4,6 +4,7 @@ namespace Orisai\ObjectMapper;
 
 use Orisai\Exceptions\Logic\InvalidState;
 use Orisai\ObjectMapper\Processing\RequiredFields;
+use function get_class;
 use function sprintf;
 
 final class Options
@@ -15,7 +16,7 @@ final class Options
 
 	private bool $fillRawValues = false;
 
-	/** @var array<class-string, array<mixed>> */
+	/** @var array<class-string, object> */
 	private array $dynamicContexts = [];
 
 	public function __construct()
@@ -64,21 +65,9 @@ final class Options
 		return $this->fillRawValues;
 	}
 
-	/**
-	 * @param array<mixed> $context
-	 * @param class-string $class
-	 */
-	public function setDynamicContext(string $class, array $context): void
+	public function addDynamicContext(object $context): void
 	{
-		$this->dynamicContexts[$class] = $context;
-	}
-
-	/**
-	 * @param class-string $class
-	 */
-	public function removeDynamicContext(string $class): void
-	{
-		unset($this->dynamicContexts[$class]);
+		$this->dynamicContexts[get_class($context)] = $context;
 	}
 
 	/**
@@ -90,10 +79,11 @@ final class Options
 	}
 
 	/**
-	 * @param class-string $class
-	 * @return array<mixed>
+	 * @template T of object
+	 * @param class-string<T> $class
+	 * @return T
 	 */
-	public function getDynamicContext(string $class): array
+	public function getDynamicContext(string $class): object
 	{
 		if (!$this->hasDynamicContext($class)) {
 			throw InvalidState::create()
