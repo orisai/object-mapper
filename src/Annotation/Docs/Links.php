@@ -44,7 +44,7 @@ final class Links implements DocumentationAnnotation
 					));
 			}
 
-			$links[$key] = DocMeta::from($link->getType(), $link->getArgs());
+			$links[$key] = new DocMeta($link->getType(), $link->getArgs());
 		}
 
 		return $links;

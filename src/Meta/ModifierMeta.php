@@ -24,15 +24,6 @@ final class ModifierMeta
 	}
 
 	/**
-	 * @param class-string<Modifier> $type
-	 * @param array<mixed>           $args
-	 */
-	public static function from(string $type, array $args): self
-	{
-		return new self($type, $args);
-	}
-
-	/**
 	 * @return class-string<Modifier>
 	 */
 	public function getType(): string

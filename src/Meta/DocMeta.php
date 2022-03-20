@@ -24,15 +24,6 @@ final class DocMeta
 	}
 
 	/**
-	 * @param class-string<Doc> $name
-	 * @param array<mixed>      $args
-	 */
-	public static function from(string $name, array $args): self
-	{
-		return new self($name, $args);
-	}
-
-	/**
 	 * @return class-string<Doc>
 	 */
 	public function getName(): string

@@ -64,7 +64,7 @@ abstract class SharedNodeRuntimeMeta
 		$processed = [];
 
 		foreach ($this->modifiers as $type => $args) {
-			$processed[$type] = ModifierMeta::from($type, $args);
+			$processed[$type] = new ModifierMeta($type, $args);
 		}
 
 		return $this->instModifiers = $processed;

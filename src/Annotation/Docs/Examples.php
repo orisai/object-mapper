@@ -42,7 +42,7 @@ final class Examples implements DocumentationAnnotation
 				));
 			}
 
-			$examples[$key] = DocMeta::from($example->getType(), $example->getArgs());
+			$examples[$key] = new DocMeta($example->getType(), $example->getArgs());
 		}
 
 		return $examples;
