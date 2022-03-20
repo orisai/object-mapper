@@ -21,32 +21,10 @@ final class RuleMeta
 	 * @param class-string<Rule<Args>> $type
 	 * @param array<mixed>             $args
 	 */
-	public function __construct(string $type, array $args)
+	public function __construct(string $type, array $args = [])
 	{
 		$this->type = $type;
 		$this->args = $args;
-	}
-
-	/**
-	 * @param array<mixed> $ruleMeta
-	 */
-	public static function fromArray(array $ruleMeta): self
-	{
-		return new self(
-			$ruleMeta[MetaSource::OPTION_TYPE],
-			$ruleMeta[MetaSource::OPTION_ARGS] ?? [],
-		);
-	}
-
-	/**
-	 * @return array{type: class-string<Rule<Args>>, args: array<mixed>}
-	 */
-	public function toArray(): array
-	{
-		return [
-			MetaSource::OPTION_TYPE => $this->type,
-			MetaSource::OPTION_ARGS => $this->args,
-		];
 	}
 
 	/**
@@ -90,7 +68,7 @@ final class RuleMeta
 			$nodeArgs = $ruleNode->getArgs();
 
 			foreach ($nodeArgs[CompoundRule::RULES] as $nestedRuleMeta) {
-				if ($this->mayContainRuleTypeInternal($types, self::fromArray($nestedRuleMeta))) {
+				if ($this->mayContainRuleTypeInternal($types, $nestedRuleMeta)) {
 					return true;
 				}
 			}

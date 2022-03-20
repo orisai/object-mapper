@@ -7,7 +7,6 @@ use Orisai\Exceptions\Logic\InvalidState;
 use Orisai\Exceptions\Message;
 use Orisai\ObjectMapper\Context\ArgsContext;
 use Orisai\ObjectMapper\Context\RuleArgsContext;
-use Orisai\ObjectMapper\Exception\InvalidMeta;
 use Orisai\ObjectMapper\MappedObject;
 use Orisai\ObjectMapper\Meta\Compile\CompileMeta;
 use Orisai\ObjectMapper\Meta\Compile\PropertyCompileMeta;
@@ -19,7 +18,6 @@ use Orisai\ObjectMapper\Modifiers\FieldNameModifier;
 use Orisai\ObjectMapper\Modifiers\Modifier;
 use Orisai\ObjectMapper\Rules\MixedRule;
 use Orisai\ObjectMapper\Rules\NullRule;
-use Orisai\ObjectMapper\Rules\Rule;
 use Orisai\ObjectMapper\Rules\RuleManager;
 use ReflectionClass;
 use ReflectionProperty;
@@ -28,9 +26,6 @@ use function class_exists;
 use function get_class;
 use function implode;
 use function in_array;
-use function is_array;
-use function is_string;
-use function is_subclass_of;
 use function sprintf;
 
 /**
@@ -124,7 +119,7 @@ final class MetaResolver
 			$this->resolveCallbacksMeta($meta, $context),
 			$this->resolveDocsMeta($meta, $context),
 			$this->resolveModifiersMeta($meta, $context),
-			$this->resolveRuleMetaInternal(
+			$this->resolveRuleMeta(
 				$meta->getRule(),
 				$this->createRuleArgsContext($class, $property),
 			),
@@ -203,39 +198,7 @@ final class MetaResolver
 		return [$type, $args];
 	}
 
-	/**
-	 * @param array<mixed> $meta
-	 * @return array<mixed>
-	 */
-	public function resolveRuleMeta(array $meta, RuleArgsContext $context): array
-	{
-		if (
-			!array_key_exists(MetaSource::OPTION_TYPE, $meta)
-			|| !is_string($meta[MetaSource::OPTION_TYPE])
-			|| !is_subclass_of($meta[MetaSource::OPTION_TYPE], Rule::class)
-		) {
-			throw InvalidMeta::create();
-		}
-
-		$rule = $this->ruleManager->getRule($meta[MetaSource::OPTION_TYPE]);
-
-		if (!array_key_exists(MetaSource::OPTION_ARGS, $meta)) {
-			$meta[MetaSource::OPTION_ARGS] = [];
-		}
-
-		if (!is_array($meta[MetaSource::OPTION_ARGS])) {
-			throw InvalidMeta::create();
-		}
-
-		$meta[MetaSource::OPTION_ARGS] = $rule->resolveArgs($meta[MetaSource::OPTION_ARGS], $context);
-
-		return $this->resolveRuleMetaInternal(
-			new RuleMeta($meta[MetaSource::OPTION_TYPE], $meta[MetaSource::OPTION_ARGS]),
-			$context,
-		)->toArray();
-	}
-
-	private function resolveRuleMetaInternal(RuleMeta $meta, RuleArgsContext $context): RuleMeta
+	public function resolveRuleMeta(RuleMeta $meta, RuleArgsContext $context): RuleMeta
 	{
 		$type = $meta->getType();
 		$rule = $this->ruleManager->getRule($type);

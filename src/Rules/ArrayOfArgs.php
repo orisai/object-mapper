@@ -19,7 +19,7 @@ final class ArrayOfArgs extends MultiValueArgs
 		$self = parent::fromArray($args);
 
 		if (array_key_exists(ArrayOfRule::KEY_RULE, $args) && $args[ArrayOfRule::KEY_RULE] !== null) {
-			$self->keyMeta = RuleMeta::fromArray($args[ArrayOfRule::KEY_RULE]);
+			$self->keyMeta = $args[ArrayOfRule::KEY_RULE];
 		}
 
 		return $self;

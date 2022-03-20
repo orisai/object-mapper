@@ -30,7 +30,7 @@ final class CompoundRuleArgs implements Args
 			$rules = [];
 
 			foreach ($args[CompoundRule::RULES] as $key => $rule) {
-				$rules[$key] = RuleMeta::fromArray($rule);
+				$rules[$key] = $rule;
 			}
 
 			$self->rules = $rules;

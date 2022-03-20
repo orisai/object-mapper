@@ -9,9 +9,9 @@ use Orisai\ObjectMapper\Args\ArgsCreator;
 use Orisai\ObjectMapper\Context\RuleArgsContext;
 use Orisai\ObjectMapper\Context\TypeContext;
 use Orisai\ObjectMapper\Exception\InvalidMeta;
+use Orisai\ObjectMapper\Meta\RuleMeta;
 use Orisai\ObjectMapper\Types\CompoundType;
 use function count;
-use function is_array;
 use function sprintf;
 
 /**
@@ -48,7 +48,7 @@ abstract class CompoundRule implements Rule
 		$resolver = $context->getMetaResolver();
 
 		foreach ($rules as $key => $rule) {
-			if (!is_array($rule)) {
+			if (!$rule instanceof RuleMeta) {
 				throw InvalidMeta::create();
 			}
 

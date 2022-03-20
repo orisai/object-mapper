@@ -9,6 +9,7 @@ use Orisai\ObjectMapper\Context\RuleArgsContext;
 use Orisai\ObjectMapper\Context\TypeContext;
 use Orisai\ObjectMapper\Exception\InvalidData;
 use Orisai\ObjectMapper\Exception\ValueDoesNotMatch;
+use Orisai\ObjectMapper\Meta\RuleMeta;
 use Orisai\ObjectMapper\NoValue;
 use Orisai\ObjectMapper\Types\ArrayType;
 use Orisai\Utils\Arrays\ArrayMerger;
@@ -37,11 +38,11 @@ final class ArrayOfRule extends MultiValueRule
 		$resolver = $context->getMetaResolver();
 
 		$checker->checkRequiredArg(self::ITEM_RULE);
-		$item = $checker->checkArray(self::ITEM_RULE);
+		$item = $checker->checkInstanceOf(self::ITEM_RULE, RuleMeta::class);
 		$args[self::ITEM_RULE] = $resolver->resolveRuleMeta($item, $context);
 
 		if ($checker->hasArg(self::KEY_RULE)) {
-			$key = $checker->checkNullableArray(self::KEY_RULE);
+			$key = $checker->checkNullableInstanceOf(self::KEY_RULE, RuleMeta::class);
 
 			if ($key !== null) {
 				$args[self::KEY_RULE] = $resolver->resolveRuleMeta($key, $context);

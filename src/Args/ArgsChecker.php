@@ -224,6 +224,40 @@ final class ArgsChecker
 	}
 
 	/**
+	 * @template T of object
+	 * @param class-string<T> $className
+	 * @return T
+	 */
+	public function checkInstanceOf(string $argName, string $className): object
+	{
+		$argValue = $this->args[$argName];
+
+		if (!$argValue instanceof $className) {
+			throw InvalidArgument::create()
+				->withMessage($this->formatMessage("instance of $className", $argName, $argValue));
+		}
+
+		return $argValue;
+	}
+
+	/**
+	 * @template T of object
+	 * @param class-string<T> $className
+	 * @return T|null
+	 */
+	public function checkNullableInstanceOf(string $argName, string $className): ?object
+	{
+		$argValue = $this->args[$argName];
+
+		if ($argValue !== null && !$argValue instanceof $className) {
+			throw InvalidArgument::create()
+				->withMessage($this->formatMessage("instance of $className", $argName, $argValue));
+		}
+
+		return $argValue;
+	}
+
+	/**
 	 * @param mixed $argValue
 	 */
 	public function formatMessage(string $type, string $argName, $argValue): string

@@ -5,7 +5,7 @@ namespace Tests\Orisai\ObjectMapper\Unit\Rules;
 use Orisai\ObjectMapper\Exception\ValueDoesNotMatch;
 use Orisai\ObjectMapper\Exception\WithTypeAndValue;
 use Orisai\ObjectMapper\Meta\DefaultValueMeta;
-use Orisai\ObjectMapper\Meta\MetaSource;
+use Orisai\ObjectMapper\Meta\RuleMeta;
 use Orisai\ObjectMapper\NoValue;
 use Orisai\ObjectMapper\Rules\ListOfRule;
 use Orisai\ObjectMapper\Rules\MixedRule;
@@ -36,7 +36,7 @@ final class ListOfRuleTest extends RuleTestCase
 		$processed = $this->rule->processValue(
 			$value,
 			MultiValueArgs::fromArray($this->rule->resolveArgs([
-				ListOfRule::ITEM_RULE => [MetaSource::OPTION_TYPE => MixedRule::class],
+				ListOfRule::ITEM_RULE => new RuleMeta(MixedRule::class),
 			], $this->ruleArgsContext())),
 			$this->fieldContext(DefaultValueMeta::fromValue($defaults)),
 		);
@@ -52,7 +52,7 @@ final class ListOfRuleTest extends RuleTestCase
 		$processed = $this->rule->processValue(
 			$value,
 			MultiValueArgs::fromArray($this->rule->resolveArgs([
-				ListOfRule::ITEM_RULE => [MetaSource::OPTION_TYPE => MixedRule::class],
+				ListOfRule::ITEM_RULE => new RuleMeta(MixedRule::class),
 				ListOfRule::MAX_ITEMS => 5,
 				ListOfRule::MERGE_DEFAULTS => true,
 			], $this->ruleArgsContext())),
@@ -71,7 +71,7 @@ final class ListOfRuleTest extends RuleTestCase
 			$this->rule->processValue(
 				$value,
 				MultiValueArgs::fromArray($this->rule->resolveArgs([
-					ListOfRule::ITEM_RULE => [MetaSource::OPTION_TYPE => MixedRule::class],
+					ListOfRule::ITEM_RULE => new RuleMeta(MixedRule::class),
 				], $this->ruleArgsContext())),
 				$this->fieldContext(),
 			);
@@ -95,7 +95,7 @@ final class ListOfRuleTest extends RuleTestCase
 			$this->rule->processValue(
 				$value,
 				MultiValueArgs::fromArray($this->rule->resolveArgs([
-					ListOfRule::ITEM_RULE => [MetaSource::OPTION_TYPE => StringRule::class],
+					ListOfRule::ITEM_RULE => new RuleMeta(StringRule::class),
 					ListOfRule::MIN_ITEMS => 10,
 				], $this->ruleArgsContext())),
 				$this->fieldContext(),
@@ -129,7 +129,7 @@ final class ListOfRuleTest extends RuleTestCase
 			$this->rule->processValue(
 				$value,
 				MultiValueArgs::fromArray($this->rule->resolveArgs([
-					ListOfRule::ITEM_RULE => [MetaSource::OPTION_TYPE => StringRule::class],
+					ListOfRule::ITEM_RULE => new RuleMeta(StringRule::class),
 					ListOfRule::MAX_ITEMS => 2,
 				], $this->ruleArgsContext())),
 				$this->fieldContext(),
@@ -158,7 +158,7 @@ final class ListOfRuleTest extends RuleTestCase
 			$this->rule->processValue(
 				$value,
 				MultiValueArgs::fromArray($this->rule->resolveArgs([
-					ListOfRule::ITEM_RULE => [MetaSource::OPTION_TYPE => StringRule::class],
+					ListOfRule::ITEM_RULE => new RuleMeta(StringRule::class),
 				], $this->ruleArgsContext())),
 				$this->fieldContext(),
 			);
@@ -181,9 +181,7 @@ final class ListOfRuleTest extends RuleTestCase
 	public function testType(): void
 	{
 		$args = MultiValueArgs::fromArray($this->rule->resolveArgs([
-			ListOfRule::ITEM_RULE => [
-				MetaSource::OPTION_TYPE => MixedRule::class,
-			],
+			ListOfRule::ITEM_RULE => new RuleMeta(MixedRule::class),
 		], $this->ruleArgsContext()));
 
 		$type = $this->rule->createType($args, $this->typeContext);
@@ -200,9 +198,7 @@ final class ListOfRuleTest extends RuleTestCase
 	public function testTypeWithArgs(): void
 	{
 		$args = MultiValueArgs::fromArray($this->rule->resolveArgs([
-			ListOfRule::ITEM_RULE => [
-				MetaSource::OPTION_TYPE => MixedRule::class,
-			],
+			ListOfRule::ITEM_RULE => new RuleMeta(MixedRule::class),
 			ListOfRule::MIN_ITEMS => 10,
 			ListOfRule::MAX_ITEMS => 100,
 		], $this->ruleArgsContext()));

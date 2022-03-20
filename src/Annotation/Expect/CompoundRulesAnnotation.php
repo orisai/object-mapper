@@ -2,15 +2,15 @@
 
 namespace Orisai\ObjectMapper\Annotation\Expect;
 
-use Orisai\ObjectMapper\Annotation\AnnotationMetaExtractor;
 use Orisai\ObjectMapper\Exception\InvalidAnnotation;
+use Orisai\ObjectMapper\Meta\RuleMeta;
 use function count;
 use function sprintf;
 
 abstract class CompoundRulesAnnotation implements RuleAnnotation
 {
 
-	/** @var array<mixed> */
+	/** @var array<RuleMeta> */
 	private array $rules;
 
 	/**
@@ -23,7 +23,7 @@ abstract class CompoundRulesAnnotation implements RuleAnnotation
 
 	/**
 	 * @param array<mixed> $rules
-	 * @return array<mixed>
+	 * @return array<RuleMeta>
 	 */
 	private function resolveRules(array $rules): array
 	{
@@ -46,7 +46,7 @@ abstract class CompoundRulesAnnotation implements RuleAnnotation
 					));
 			}
 
-			$rules[$key] = AnnotationMetaExtractor::extract($rule);
+			$rules[$key] = new RuleMeta($rule->getType(), $rule->getArgs());
 		}
 
 		return $rules;

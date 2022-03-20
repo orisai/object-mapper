@@ -9,10 +9,6 @@ use ReflectionClass;
 interface MetaSource
 {
 
-	public const
-		OPTION_TYPE = 'type',
-		OPTION_ARGS = 'args';
-
 	/**
 	 * @param ReflectionClass<MappedObject> $class
 	 */

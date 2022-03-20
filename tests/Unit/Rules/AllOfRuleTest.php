@@ -4,7 +4,7 @@ namespace Tests\Orisai\ObjectMapper\Unit\Rules;
 
 use Orisai\Exceptions\Logic\InvalidArgument;
 use Orisai\ObjectMapper\Exception\ValueDoesNotMatch;
-use Orisai\ObjectMapper\Meta\MetaSource;
+use Orisai\ObjectMapper\Meta\RuleMeta;
 use Orisai\ObjectMapper\NoValue;
 use Orisai\ObjectMapper\Rules\AllOfRule;
 use Orisai\ObjectMapper\Rules\CompoundRuleArgs;
@@ -38,8 +38,8 @@ final class AllOfRuleTest extends RuleTestCase
 				$this->rule->resolveArgs(
 					[
 						AllOfRule::RULES => [
-							[MetaSource::OPTION_TYPE => MixedRule::class],
-							[MetaSource::OPTION_TYPE => MixedRule::class],
+							new RuleMeta(MixedRule::class),
+							new RuleMeta(MixedRule::class),
 						],
 					],
 					$this->ruleArgsContext(),
@@ -62,9 +62,9 @@ final class AllOfRuleTest extends RuleTestCase
 					$this->rule->resolveArgs(
 						[
 							AllOfRule::RULES => [
-								[MetaSource::OPTION_TYPE => MixedRule::class],
-								[MetaSource::OPTION_TYPE => AlwaysInvalidRule::class],
-								[MetaSource::OPTION_TYPE => MixedRule::class],
+								new RuleMeta(MixedRule::class),
+								new RuleMeta(AlwaysInvalidRule::class),
+								new RuleMeta(MixedRule::class),
 							],
 						],
 						$this->ruleArgsContext(),
@@ -107,11 +107,10 @@ final class AllOfRuleTest extends RuleTestCase
 					$this->rule->resolveArgs(
 						[
 							AllOfRule::RULES => [
-								[
-									MetaSource::OPTION_TYPE => StructureRule::class,
-									MetaSource::OPTION_ARGS => [StructureRule::TYPE => DefaultsVO::class],
-								],
-								[MetaSource::OPTION_TYPE => MixedRule::class],
+								new RuleMeta(StructureRule::class, [
+									StructureRule::TYPE => DefaultsVO::class,
+								]),
+								new RuleMeta(MixedRule::class),
 							],
 						],
 						$this->ruleArgsContext(),
@@ -146,9 +145,9 @@ final class AllOfRuleTest extends RuleTestCase
 			$this->rule->resolveArgs(
 				[
 					AllOfRule::RULES => [
-						[MetaSource::OPTION_TYPE => MixedRule::class],
-						[MetaSource::OPTION_TYPE => MixedRule::class],
-						[MetaSource::OPTION_TYPE => AlwaysInvalidRule::class],
+						new RuleMeta(MixedRule::class),
+						new RuleMeta(MixedRule::class),
+						new RuleMeta(AlwaysInvalidRule::class),
 					],
 				],
 				$this->ruleArgsContext(),
@@ -184,11 +183,10 @@ final class AllOfRuleTest extends RuleTestCase
 		$this->rule->resolveArgs(
 			[
 				AllOfRule::RULES => [
-					[MetaSource::OPTION_TYPE => MixedRule::class],
-					[
-						MetaSource::OPTION_TYPE => MixedRule::class,
-						MetaSource::OPTION_ARGS => ['foo' => 'bar'],
-					],
+					new RuleMeta(MixedRule::class),
+					new RuleMeta(MixedRule::class, [
+						'foo' => 'bar',
+					]),
 				],
 			],
 			$this->ruleArgsContext(),

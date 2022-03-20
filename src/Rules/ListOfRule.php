@@ -9,6 +9,7 @@ use Orisai\ObjectMapper\Context\RuleArgsContext;
 use Orisai\ObjectMapper\Context\TypeContext;
 use Orisai\ObjectMapper\Exception\InvalidData;
 use Orisai\ObjectMapper\Exception\ValueDoesNotMatch;
+use Orisai\ObjectMapper\Meta\RuleMeta;
 use Orisai\ObjectMapper\NoValue;
 use Orisai\ObjectMapper\Types\ListType;
 use Orisai\Utils\Arrays\ArrayMerger;
@@ -35,7 +36,8 @@ final class ListOfRule extends MultiValueRule
 		$resolver = $context->getMetaResolver();
 
 		$checker->checkRequiredArg(self::ITEM_RULE);
-		$item = $checker->checkArray(self::ITEM_RULE);
+
+		$item = $checker->checkInstanceOf(self::ITEM_RULE, RuleMeta::class);
 		$args[self::ITEM_RULE] = $resolver->resolveRuleMeta($item, $context);
 
 		if ($checker->hasArg(self::MIN_ITEMS)) {

@@ -4,7 +4,7 @@ namespace Orisai\ObjectMapper\Annotation\Expect;
 
 use Doctrine\Common\Annotations\Annotation\NamedArgumentConstructor;
 use Doctrine\Common\Annotations\Annotation\Target;
-use Orisai\ObjectMapper\Annotation\AnnotationMetaExtractor;
+use Orisai\ObjectMapper\Meta\RuleMeta;
 use Orisai\ObjectMapper\Rules\ArrayOfRule;
 
 /**
@@ -15,8 +15,7 @@ use Orisai\ObjectMapper\Rules\ArrayOfRule;
 final class ArrayOf extends MultiValueRuleAnnotation
 {
 
-	/** @var array<mixed>|null */
-	private ?array $key;
+	private ?RuleMeta $key;
 
 	public function __construct(
 		RuleAnnotation $item,
@@ -27,7 +26,7 @@ final class ArrayOf extends MultiValueRuleAnnotation
 	)
 	{
 		parent::__construct($item, $minItems, $maxItems, $mergeDefaults);
-		$this->key = $key === null ? null : AnnotationMetaExtractor::extract($key);
+		$this->key = $key === null ? null : new RuleMeta($key->getType(), $key->getArgs());
 	}
 
 	public function getType(): string

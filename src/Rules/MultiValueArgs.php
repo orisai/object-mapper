@@ -33,7 +33,7 @@ class MultiValueArgs implements Args
 		$self = new static();
 
 		if (array_key_exists(MultiValueRule::ITEM_RULE, $args)) {
-			$self->itemMeta = RuleMeta::fromArray($args[MultiValueRule::ITEM_RULE]);
+			$self->itemMeta = $args[MultiValueRule::ITEM_RULE];
 		} else {
 			throw InvalidArgument::create()
 				->withMessage(sprintf('Key "%s" is required', MultiValueRule::ITEM_RULE));
