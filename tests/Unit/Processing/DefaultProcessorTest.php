@@ -11,6 +11,7 @@ use Orisai\ObjectMapper\Formatting\ErrorFormatter;
 use Orisai\ObjectMapper\Formatting\VisualErrorFormatter;
 use Orisai\ObjectMapper\MappedObject;
 use Orisai\ObjectMapper\Options;
+use Orisai\ObjectMapper\Processing\RequiredFields;
 use stdClass;
 use Tests\Orisai\ObjectMapper\Doubles\AfterClassCallbackCurrentTypeInvalidDataVO;
 use Tests\Orisai\ObjectMapper\Doubles\AfterClassCallbackNewTypeInvalidDataVO;
@@ -534,7 +535,7 @@ validationFailed: string',
 	public function testRequiredNonDefaultFields(): void
 	{
 		$options = new Options();
-		$options->setRequiredFields($options::REQUIRE_NON_DEFAULT);
+		$options->setRequiredFields(RequiredFields::nonDefault());
 
 		$vo = $this->processor->process([
 			'required' => null,
@@ -552,7 +553,7 @@ validationFailed: string',
 	public function testRequireAllFields(): void
 	{
 		$options = new Options();
-		$options->setRequiredFields($options::REQUIRE_ALL);
+		$options->setRequiredFields(RequiredFields::all());
 
 		$vo = $this->processor->process([
 			'required' => null,
@@ -572,7 +573,7 @@ validationFailed: string',
 	public function testRequireAllFieldsError(): void
 	{
 		$options = new Options();
-		$options->setRequiredFields($options::REQUIRE_ALL);
+		$options->setRequiredFields(RequiredFields::all());
 
 		$vo = null;
 		$exception = null;
@@ -601,7 +602,7 @@ arrayOfMixed: array<mixed>',
 	public function testRequireNoneFields(): void
 	{
 		$options = new Options();
-		$options->setRequiredFields($options::REQUIRE_NONE);
+		$options->setRequiredFields(RequiredFields::none());
 
 		$vo = $this->processor->process([], PropertiesInitVO::class, $options);
 

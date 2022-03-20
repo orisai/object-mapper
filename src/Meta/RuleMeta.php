@@ -6,7 +6,6 @@ use Orisai\ObjectMapper\Args\Args;
 use Orisai\ObjectMapper\Rules\CompoundRule;
 use Orisai\ObjectMapper\Rules\Rule;
 use function is_a;
-use function is_string;
 
 final class RuleMeta
 {

@@ -386,18 +386,18 @@ class DefaultProcessor implements Processor
 			$defaultMeta = $propertyMeta->getDefault();
 			$missingField = $this->propertyNameToFieldName($missingProperty, $propertyMeta);
 
-			if ($requiredFields === $options::REQUIRE_NON_DEFAULT && $defaultMeta->hasValue()) {
+			if ($requiredFields->name === RequiredFields::nonDefault()->name && $defaultMeta->hasValue()) {
 				// Add default value if defaults are not required and should be used
-				// If VOs are initialized then values are always prefilled - user can work with them in after callback
+				// If VOs are initialized then values are always prefilled - user can work with them in after callback,
 				//   and they are defined by VO anyway
 				if ($fillDefaultValues) {
 					$data[$missingField] = $defaultMeta->getValue();
 				}
 			} elseif (
-				$requiredFields === $options::REQUIRE_NON_DEFAULT
+				$requiredFields->name === RequiredFields::nonDefault()->name
 				&& is_a($propertyMeta->getRule()->getType(), StructureRule::class, true)
 			) {
-				// Try initialize structure from empty array when no data given
+				// Try to initialize structure from empty array when no data given
 				// Structure in compound type is not supported (allOf, anyOf)
 				// Used only in default mode - if all or none values are required then we need differentiate whether user sent value or not
 				$structureArgs = StructureArgs::fromArray($propertyMeta->getRule()->getArgs());
@@ -411,7 +411,7 @@ class DefaultProcessor implements Processor
 						InvalidData::create($exception->getInvalidType(), NoValue::create()),
 					);
 				}
-			} elseif ($requiredFields !== $options::REQUIRE_NONE && !$type->isFieldInvalid($missingField)) {
+			} elseif ($requiredFields->name !== RequiredFields::none()->name && !$type->isFieldInvalid($missingField)) {
 				// Field is missing and have no default value, mark as invalid
 				$propertyRuleMeta = $propertyMeta->getRule();
 				$propertyRule = $this->ruleManager->getRule($propertyRuleMeta->getType());

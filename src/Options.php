@@ -3,18 +3,13 @@
 namespace Orisai\ObjectMapper;
 
 use Orisai\Exceptions\Logic\InvalidState;
+use Orisai\ObjectMapper\Processing\RequiredFields;
 use function sprintf;
 
 class Options
 {
 
-	public const
-		REQUIRE_NON_DEFAULT = 1,
-		REQUIRE_ALL = 2,
-		REQUIRE_NONE = 3;
-
-	/** @phpstan-var self::REQUIRE_* */
-	private int $requiredFields = self::REQUIRE_NON_DEFAULT;
+	private RequiredFields $requiredFields;
 
 	private bool $preFillDefaultValues = false;
 
@@ -23,37 +18,25 @@ class Options
 	/** @var array<class-string, array<mixed>> */
 	private array $dynamicContexts = [];
 
-	/**
-	 * REQUIRE_NON_DEFAULT
-	 * 		- default option, only fields without default value are required
-	 * REQUIRE_ALL
-	 * 		- all fields are required
-	 * 		- defaults are used only by rules which merge them
-	 * 		- useful for PUT request (full entity replace) - user must sent all fields to prevent accidental override by default value
-	 * REQUIRE_NONE
-	 * 		- no fields are required
-	 * 		- fields which are not sent are unset so isset could be used to check if they were sent
-	 * 		- useful for PATCH request (partial entity update) - only fields sent by user are isset to prevent accidental override by default value
-	 *
-	 * @phpstan-param self::REQUIRE_* $fields
-	 */
-	final public function setRequiredFields(int $fields): void
+	public function __construct()
+	{
+		$this->requiredFields = RequiredFields::nonDefault();
+	}
+
+	final public function setRequiredFields(RequiredFields $fields): void
 	{
 		$this->requiredFields = $fields;
 	}
 
-	/**
-	 * @phpstan-return self::REQUIRE_*
-	 */
-	final public function getRequiredFields(): int
+	final public function getRequiredFields(): RequiredFields
 	{
 		return $this->requiredFields;
 	}
 
 	/**
 	 * Add default field value to returned array if none was given
-	 * Note: affect behavior only if objects are not initialized (array is returned, not VO)
-	 * Mote: used only if default values are not required to be sent (REQUIRE_ALL)
+	 * Used only if objects are not initialized (array is returned, not VO)
+	 * Used only if default values are not required to be sent (by RequiredFields::all())
 	 */
 	final public function setPreFillDefaultValues(bool $preFillDefaultValues = true): void
 	{
@@ -67,8 +50,8 @@ class Options
 
 	/**
 	 * Make user-sent values accessible by $mappedObject->getRawValues()
-	 * Note: used only if objects are initialized
-	 * Note: use only for debug, it may lead to significant raw data grow in bigger hierarchies
+	 * Used only if objects are initialized
+	 * Use only for debug, it may lead to significant raw data grow in bigger hierarchies
 	 * 		 you can set data to a custom property in before class callback, if are always needed
 	 */
 	final public function setFillRawValues(bool $fillRawValues = true): void
