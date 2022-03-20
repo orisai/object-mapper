@@ -8,6 +8,9 @@ use Orisai\ObjectMapper\Meta\Runtime\RuleRuntimeMeta;
 use function array_key_exists;
 use function sprintf;
 
+/**
+ * @internal
+ */
 final class CompoundRuleArgs implements Args
 {
 

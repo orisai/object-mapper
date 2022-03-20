@@ -5,6 +5,9 @@ namespace Orisai\ObjectMapper\Rules;
 use Orisai\ObjectMapper\Args\Args;
 use function array_key_exists;
 
+/**
+ * @internal
+ */
 final class FloatArgs implements Args
 {
 

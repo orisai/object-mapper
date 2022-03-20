@@ -9,6 +9,9 @@ use Orisai\ObjectMapper\Args\Args;
 use function array_key_exists;
 use function is_a;
 
+/**
+ * @internal
+ */
 final class DateTimeArgs implements Args
 {
 

@@ -7,6 +7,9 @@ use Orisai\ObjectMapper\Args\Args;
 use function array_key_exists;
 use function sprintf;
 
+/**
+ * @internal
+ */
 final class InstanceArgs implements Args
 {
 

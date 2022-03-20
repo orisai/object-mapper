@@ -5,6 +5,9 @@ namespace Orisai\ObjectMapper\Rules;
 use Orisai\ObjectMapper\Meta\Runtime\RuleRuntimeMeta;
 use function array_key_exists;
 
+/**
+ * @internal
+ */
 final class ArrayOfArgs extends MultiValueArgs
 {
 
