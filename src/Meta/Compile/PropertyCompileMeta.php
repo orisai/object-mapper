@@ -2,23 +2,21 @@
 
 namespace Orisai\ObjectMapper\Meta\Compile;
 
-use Orisai\ObjectMapper\Meta\RuleMeta;
-
 final class PropertyCompileMeta extends SharedNodeCompileMeta
 {
 
-	private RuleMeta $rule;
+	private RuleCompileMeta $rule;
 
 	/**
 	 * {@inheritDoc}
 	 */
-	public function __construct(array $callbacks, array $docs, array $modifiers, RuleMeta $rule)
+	public function __construct(array $callbacks, array $docs, array $modifiers, RuleCompileMeta $rule)
 	{
 		parent::__construct($callbacks, $docs, $modifiers);
 		$this->rule = $rule;
 	}
 
-	public function getRule(): RuleMeta
+	public function getRule(): RuleCompileMeta
 	{
 		return $this->rule;
 	}

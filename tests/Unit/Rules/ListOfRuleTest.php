@@ -4,8 +4,8 @@ namespace Tests\Orisai\ObjectMapper\Unit\Rules;
 
 use Orisai\ObjectMapper\Exception\ValueDoesNotMatch;
 use Orisai\ObjectMapper\Exception\WithTypeAndValue;
+use Orisai\ObjectMapper\Meta\Compile\RuleCompileMeta;
 use Orisai\ObjectMapper\Meta\DefaultValueMeta;
-use Orisai\ObjectMapper\Meta\RuleMeta;
 use Orisai\ObjectMapper\Rules\ListOfRule;
 use Orisai\ObjectMapper\Rules\MixedRule;
 use Orisai\ObjectMapper\Rules\StringRule;
@@ -35,7 +35,7 @@ final class ListOfRuleTest extends RuleTestCase
 		$processed = $this->rule->processValue(
 			$value,
 			$this->rule->resolveArgs([
-				ListOfRule::ITEM_RULE => new RuleMeta(MixedRule::class),
+				ListOfRule::ITEM_RULE => new RuleCompileMeta(MixedRule::class),
 			], $this->ruleArgsContext()),
 			$this->fieldContext(DefaultValueMeta::fromValue($defaults)),
 		);
@@ -51,7 +51,7 @@ final class ListOfRuleTest extends RuleTestCase
 		$processed = $this->rule->processValue(
 			$value,
 			$this->rule->resolveArgs([
-				ListOfRule::ITEM_RULE => new RuleMeta(MixedRule::class),
+				ListOfRule::ITEM_RULE => new RuleCompileMeta(MixedRule::class),
 				ListOfRule::MAX_ITEMS => 5,
 				ListOfRule::MERGE_DEFAULTS => true,
 			], $this->ruleArgsContext()),
@@ -70,7 +70,7 @@ final class ListOfRuleTest extends RuleTestCase
 			$this->rule->processValue(
 				$value,
 				$this->rule->resolveArgs([
-					ListOfRule::ITEM_RULE => new RuleMeta(MixedRule::class),
+					ListOfRule::ITEM_RULE => new RuleCompileMeta(MixedRule::class),
 				], $this->ruleArgsContext()),
 				$this->fieldContext(),
 			);
@@ -94,7 +94,7 @@ final class ListOfRuleTest extends RuleTestCase
 			$this->rule->processValue(
 				$value,
 				$this->rule->resolveArgs([
-					ListOfRule::ITEM_RULE => new RuleMeta(StringRule::class),
+					ListOfRule::ITEM_RULE => new RuleCompileMeta(StringRule::class),
 					ListOfRule::MIN_ITEMS => 10,
 				], $this->ruleArgsContext()),
 				$this->fieldContext(),
@@ -128,7 +128,7 @@ final class ListOfRuleTest extends RuleTestCase
 			$this->rule->processValue(
 				$value,
 				$this->rule->resolveArgs([
-					ListOfRule::ITEM_RULE => new RuleMeta(StringRule::class),
+					ListOfRule::ITEM_RULE => new RuleCompileMeta(StringRule::class),
 					ListOfRule::MAX_ITEMS => 2,
 				], $this->ruleArgsContext()),
 				$this->fieldContext(),
@@ -157,7 +157,7 @@ final class ListOfRuleTest extends RuleTestCase
 			$this->rule->processValue(
 				$value,
 				$this->rule->resolveArgs([
-					ListOfRule::ITEM_RULE => new RuleMeta(StringRule::class),
+					ListOfRule::ITEM_RULE => new RuleCompileMeta(StringRule::class),
 				], $this->ruleArgsContext()),
 				$this->fieldContext(),
 			);
@@ -180,7 +180,7 @@ final class ListOfRuleTest extends RuleTestCase
 	public function testType(): void
 	{
 		$args = $this->rule->resolveArgs([
-			ListOfRule::ITEM_RULE => new RuleMeta(MixedRule::class),
+			ListOfRule::ITEM_RULE => new RuleCompileMeta(MixedRule::class),
 		], $this->ruleArgsContext());
 
 		$type = $this->rule->createType($args, $this->typeContext);
@@ -197,7 +197,7 @@ final class ListOfRuleTest extends RuleTestCase
 	public function testTypeWithArgs(): void
 	{
 		$args = $this->rule->resolveArgs([
-			ListOfRule::ITEM_RULE => new RuleMeta(MixedRule::class),
+			ListOfRule::ITEM_RULE => new RuleCompileMeta(MixedRule::class),
 			ListOfRule::MIN_ITEMS => 10,
 			ListOfRule::MAX_ITEMS => 100,
 		], $this->ruleArgsContext());

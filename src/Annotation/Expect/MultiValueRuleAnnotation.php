@@ -2,12 +2,12 @@
 
 namespace Orisai\ObjectMapper\Annotation\Expect;
 
-use Orisai\ObjectMapper\Meta\RuleMeta;
+use Orisai\ObjectMapper\Meta\Compile\RuleCompileMeta;
 
 abstract class MultiValueRuleAnnotation implements RuleAnnotation
 {
 
-	private RuleMeta $item;
+	private RuleCompileMeta $item;
 
 	private ?int $minItems;
 
@@ -22,7 +22,7 @@ abstract class MultiValueRuleAnnotation implements RuleAnnotation
 		bool $mergeDefaults = false
 	)
 	{
-		$this->item = new RuleMeta($item->getType(), $item->getArgs());
+		$this->item = new RuleCompileMeta($item->getType(), $item->getArgs());
 		$this->minItems = $minItems;
 		$this->maxItems = $maxItems;
 		$this->mergeDefaults = $mergeDefaults;

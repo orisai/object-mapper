@@ -7,7 +7,7 @@ use Orisai\ObjectMapper\Args\Args;
 use Orisai\ObjectMapper\Args\ArgsChecker;
 use Orisai\ObjectMapper\Context\RuleArgsContext;
 use Orisai\ObjectMapper\Context\TypeContext;
-use Orisai\ObjectMapper\Meta\RuleMeta;
+use Orisai\ObjectMapper\Meta\Compile\RuleCompileMeta;
 use Orisai\ObjectMapper\Types\CompoundType;
 use function count;
 use function sprintf;
@@ -43,7 +43,7 @@ abstract class CompoundRule implements Rule
 		$resolver = $context->getMetaResolver();
 
 		foreach ($rules as $key => $rule) {
-			if (!$rule instanceof RuleMeta) {
+			if (!$rule instanceof RuleCompileMeta) {
 				throw InvalidArgument::create();
 			}
 

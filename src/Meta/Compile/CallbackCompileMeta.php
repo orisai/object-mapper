@@ -1,11 +1,11 @@
 <?php declare(strict_types = 1);
 
-namespace Orisai\ObjectMapper\Meta;
+namespace Orisai\ObjectMapper\Meta\Compile;
 
 use Orisai\ObjectMapper\Args\Args;
 use Orisai\ObjectMapper\Callbacks\Callback;
 
-final class CallbackMeta
+final class CallbackCompileMeta
 {
 
 	/** @var class-string<Callback<Args>> */

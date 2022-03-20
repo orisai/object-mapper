@@ -4,7 +4,7 @@ namespace Tests\Orisai\ObjectMapper\Unit\Rules;
 
 use Orisai\Exceptions\Logic\InvalidArgument;
 use Orisai\ObjectMapper\Exception\ValueDoesNotMatch;
-use Orisai\ObjectMapper\Meta\RuleMeta;
+use Orisai\ObjectMapper\Meta\Compile\RuleCompileMeta;
 use Orisai\ObjectMapper\Rules\AllOfRule;
 use Orisai\ObjectMapper\Rules\MixedRule;
 use Orisai\ObjectMapper\Rules\StructureRule;
@@ -36,8 +36,8 @@ final class AllOfRuleTest extends RuleTestCase
 			$this->rule->resolveArgs(
 				[
 					AllOfRule::RULES => [
-						new RuleMeta(MixedRule::class),
-						new RuleMeta(MixedRule::class),
+						new RuleCompileMeta(MixedRule::class),
+						new RuleCompileMeta(MixedRule::class),
 					],
 				],
 				$this->ruleArgsContext(),
@@ -58,9 +58,9 @@ final class AllOfRuleTest extends RuleTestCase
 				$this->rule->resolveArgs(
 					[
 						AllOfRule::RULES => [
-							new RuleMeta(MixedRule::class),
-							new RuleMeta(AlwaysInvalidRule::class),
-							new RuleMeta(MixedRule::class),
+							new RuleCompileMeta(MixedRule::class),
+							new RuleCompileMeta(AlwaysInvalidRule::class),
+							new RuleCompileMeta(MixedRule::class),
 						],
 					],
 					$this->ruleArgsContext(),
@@ -101,10 +101,10 @@ final class AllOfRuleTest extends RuleTestCase
 				$this->rule->resolveArgs(
 					[
 						AllOfRule::RULES => [
-							new RuleMeta(StructureRule::class, [
+							new RuleCompileMeta(StructureRule::class, [
 								StructureRule::TYPE => DefaultsVO::class,
 							]),
-							new RuleMeta(MixedRule::class),
+							new RuleCompileMeta(MixedRule::class),
 						],
 					],
 					$this->ruleArgsContext(),
@@ -137,9 +137,9 @@ final class AllOfRuleTest extends RuleTestCase
 		$args = $this->rule->resolveArgs(
 			[
 				AllOfRule::RULES => [
-					new RuleMeta(MixedRule::class),
-					new RuleMeta(MixedRule::class),
-					new RuleMeta(AlwaysInvalidRule::class),
+					new RuleCompileMeta(MixedRule::class),
+					new RuleCompileMeta(MixedRule::class),
+					new RuleCompileMeta(AlwaysInvalidRule::class),
 				],
 			],
 			$this->ruleArgsContext(),
@@ -174,8 +174,8 @@ final class AllOfRuleTest extends RuleTestCase
 		$this->rule->resolveArgs(
 			[
 				AllOfRule::RULES => [
-					new RuleMeta(MixedRule::class),
-					new RuleMeta(MixedRule::class, [
+					new RuleCompileMeta(MixedRule::class),
+					new RuleCompileMeta(MixedRule::class, [
 						'foo' => 'bar',
 					]),
 				],

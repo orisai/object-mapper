@@ -4,11 +4,11 @@ namespace Tests\Orisai\ObjectMapper\Unit\Meta\Compile;
 
 use Orisai\ObjectMapper\Callbacks\BeforeCallback;
 use Orisai\ObjectMapper\Docs\DescriptionDoc;
-use Orisai\ObjectMapper\Meta\CallbackMeta;
+use Orisai\ObjectMapper\Meta\Compile\CallbackCompileMeta;
 use Orisai\ObjectMapper\Meta\Compile\PropertyCompileMeta;
+use Orisai\ObjectMapper\Meta\Compile\RuleCompileMeta;
 use Orisai\ObjectMapper\Meta\DocMeta;
 use Orisai\ObjectMapper\Meta\ModifierMeta;
-use Orisai\ObjectMapper\Meta\RuleMeta;
 use Orisai\ObjectMapper\Modifiers\FieldNameModifier;
 use Orisai\ObjectMapper\Rules\MixedRule;
 use PHPUnit\Framework\TestCase;
@@ -19,7 +19,7 @@ final class PropertyCompileMetaTest extends TestCase
 	public function test(): void
 	{
 		$callbacks = [
-			new CallbackMeta(BeforeCallback::class, []),
+			new CallbackCompileMeta(BeforeCallback::class, []),
 		];
 		$docs = [
 			new DocMeta(DescriptionDoc::class, []),
@@ -27,7 +27,7 @@ final class PropertyCompileMetaTest extends TestCase
 		$modifiers = [
 			new ModifierMeta(FieldNameModifier::class, []),
 		];
-		$rule = new RuleMeta(MixedRule::class, []);
+		$rule = new RuleCompileMeta(MixedRule::class, []);
 
 		$meta = new PropertyCompileMeta($callbacks, $docs, $modifiers, $rule);
 

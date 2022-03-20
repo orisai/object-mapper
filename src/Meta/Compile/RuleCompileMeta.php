@@ -1,13 +1,13 @@
 <?php declare(strict_types = 1);
 
-namespace Orisai\ObjectMapper\Meta;
+namespace Orisai\ObjectMapper\Meta\Compile;
 
 use Orisai\ObjectMapper\Args\Args;
 use Orisai\ObjectMapper\Rules\CompoundRule;
 use Orisai\ObjectMapper\Rules\Rule;
 use function is_a;
 
-final class RuleMeta
+final class RuleCompileMeta
 {
 
 	/** @var class-string<Rule<Args>> */
@@ -53,7 +53,7 @@ final class RuleMeta
 	/**
 	 * @param array<class-string<Rule<Args>>> $types
 	 */
-	private function containsAnyOfRulesInternal(array $types, RuleMeta $ruleNode): bool
+	private function containsAnyOfRulesInternal(array $types, RuleCompileMeta $ruleNode): bool
 	{
 		$nodeType = $ruleNode->getType();
 

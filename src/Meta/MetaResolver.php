@@ -8,8 +8,10 @@ use Orisai\Exceptions\Message;
 use Orisai\ObjectMapper\Context\ArgsContext;
 use Orisai\ObjectMapper\Context\RuleArgsContext;
 use Orisai\ObjectMapper\MappedObject;
+use Orisai\ObjectMapper\Meta\Compile\CallbackCompileMeta;
 use Orisai\ObjectMapper\Meta\Compile\CompileMeta;
 use Orisai\ObjectMapper\Meta\Compile\PropertyCompileMeta;
+use Orisai\ObjectMapper\Meta\Compile\RuleCompileMeta;
 use Orisai\ObjectMapper\Meta\Compile\SharedNodeCompileMeta;
 use Orisai\ObjectMapper\Meta\Runtime\CallbackRuntimeMeta;
 use Orisai\ObjectMapper\Meta\Runtime\ClassRuntimeMeta;
@@ -142,7 +144,7 @@ final class MetaResolver
 		return $array;
 	}
 
-	private function resolveCallbackMeta(CallbackMeta $meta, ArgsContext $context): CallbackRuntimeMeta
+	private function resolveCallbackMeta(CallbackCompileMeta $meta, ArgsContext $context): CallbackRuntimeMeta
 	{
 		$type = $meta->getType();
 
@@ -200,7 +202,7 @@ final class MetaResolver
 		return [$type, $args];
 	}
 
-	public function resolveRuleMeta(RuleMeta $meta, RuleArgsContext $context): RuleRuntimeMeta
+	public function resolveRuleMeta(RuleCompileMeta $meta, RuleArgsContext $context): RuleRuntimeMeta
 	{
 		$type = $meta->getType();
 		$rule = $this->ruleManager->getRule($type);

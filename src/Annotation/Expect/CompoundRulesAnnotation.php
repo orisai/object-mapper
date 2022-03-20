@@ -3,14 +3,14 @@
 namespace Orisai\ObjectMapper\Annotation\Expect;
 
 use Orisai\Exceptions\Logic\InvalidArgument;
-use Orisai\ObjectMapper\Meta\RuleMeta;
+use Orisai\ObjectMapper\Meta\Compile\RuleCompileMeta;
 use function count;
 use function sprintf;
 
 abstract class CompoundRulesAnnotation implements RuleAnnotation
 {
 
-	/** @var array<RuleMeta> */
+	/** @var array<RuleCompileMeta> */
 	private array $rules;
 
 	/**
@@ -23,7 +23,7 @@ abstract class CompoundRulesAnnotation implements RuleAnnotation
 
 	/**
 	 * @param array<mixed> $rules
-	 * @return array<RuleMeta>
+	 * @return array<RuleCompileMeta>
 	 */
 	private function resolveRules(array $rules): array
 	{
@@ -46,7 +46,7 @@ abstract class CompoundRulesAnnotation implements RuleAnnotation
 					));
 			}
 
-			$rules[$key] = new RuleMeta($rule->getType(), $rule->getArgs());
+			$rules[$key] = new RuleCompileMeta($rule->getType(), $rule->getArgs());
 		}
 
 		return $rules;

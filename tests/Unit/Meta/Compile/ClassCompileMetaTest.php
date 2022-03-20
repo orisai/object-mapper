@@ -4,7 +4,7 @@ namespace Tests\Orisai\ObjectMapper\Unit\Meta\Compile;
 
 use Orisai\ObjectMapper\Callbacks\BeforeCallback;
 use Orisai\ObjectMapper\Docs\DescriptionDoc;
-use Orisai\ObjectMapper\Meta\CallbackMeta;
+use Orisai\ObjectMapper\Meta\Compile\CallbackCompileMeta;
 use Orisai\ObjectMapper\Meta\Compile\ClassCompileMeta;
 use Orisai\ObjectMapper\Meta\DocMeta;
 use Orisai\ObjectMapper\Meta\ModifierMeta;
@@ -17,7 +17,7 @@ final class ClassCompileMetaTest extends TestCase
 	public function test(): void
 	{
 		$callbacks = [
-			new CallbackMeta(BeforeCallback::class, []),
+			new CallbackCompileMeta(BeforeCallback::class, []),
 		];
 		$docs = [
 			new DocMeta(DescriptionDoc::class, []),

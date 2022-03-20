@@ -2,7 +2,6 @@
 
 namespace Orisai\ObjectMapper\Meta\Compile;
 
-use Orisai\ObjectMapper\Meta\CallbackMeta;
 use Orisai\ObjectMapper\Meta\DocMeta;
 use Orisai\ObjectMapper\Meta\ModifierMeta;
 
@@ -12,7 +11,7 @@ use Orisai\ObjectMapper\Meta\ModifierMeta;
 abstract class SharedNodeCompileMeta
 {
 
-	/** @var array<int, CallbackMeta> */
+	/** @var array<int, CallbackCompileMeta> */
 	private array $callbacks;
 
 	/** @var array<int, DocMeta> */
@@ -22,9 +21,9 @@ abstract class SharedNodeCompileMeta
 	private array $modifiers;
 
 	/**
-	 * @param array<int, CallbackMeta> $callbacks
-	 * @param array<int, DocMeta>      $docs
-	 * @param array<int, ModifierMeta> $modifiers
+	 * @param array<int, CallbackCompileMeta> $callbacks
+	 * @param array<int, DocMeta>             $docs
+	 * @param array<int, ModifierMeta>        $modifiers
 	 */
 	public function __construct(array $callbacks, array $docs, array $modifiers)
 	{
@@ -34,7 +33,7 @@ abstract class SharedNodeCompileMeta
 	}
 
 	/**
-	 * @return array<int, CallbackMeta>
+	 * @return array<int, CallbackCompileMeta>
 	 */
 	public function getCallbacks(): array
 	{

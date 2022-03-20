@@ -10,14 +10,14 @@ use Orisai\ObjectMapper\Annotation\Docs\DocumentationAnnotation;
 use Orisai\ObjectMapper\Annotation\Expect\RuleAnnotation;
 use Orisai\ObjectMapper\Annotation\Modifiers\ModifierAnnotation;
 use Orisai\ObjectMapper\MappedObject;
-use Orisai\ObjectMapper\Meta\CallbackMeta;
+use Orisai\ObjectMapper\Meta\Compile\CallbackCompileMeta;
 use Orisai\ObjectMapper\Meta\Compile\ClassCompileMeta;
 use Orisai\ObjectMapper\Meta\Compile\CompileMeta;
 use Orisai\ObjectMapper\Meta\Compile\PropertyCompileMeta;
+use Orisai\ObjectMapper\Meta\Compile\RuleCompileMeta;
 use Orisai\ObjectMapper\Meta\DocMeta;
 use Orisai\ObjectMapper\Meta\MetaSource;
 use Orisai\ObjectMapper\Meta\ModifierMeta;
-use Orisai\ObjectMapper\Meta\RuleMeta;
 use ReflectionClass;
 use function get_class;
 use function sprintf;
@@ -66,7 +66,7 @@ final class AnnotationMetaSource implements MetaSource
 			}
 
 			if ($annotation instanceof CallableAnnotation) {
-				$callbacks[] = new CallbackMeta(
+				$callbacks[] = new CallbackCompileMeta(
 					$annotation->getType(),
 					$annotation->getArgs(),
 				);
@@ -120,12 +120,12 @@ final class AnnotationMetaSource implements MetaSource
 							));
 					}
 
-					$rule = new RuleMeta(
+					$rule = new RuleCompileMeta(
 						$annotation->getType(),
 						$annotation->getArgs(),
 					);
 				} elseif ($annotation instanceof CallableAnnotation) {
-					$callbacks[] = new CallbackMeta(
+					$callbacks[] = new CallbackCompileMeta(
 						$annotation->getType(),
 						$annotation->getArgs(),
 					);
