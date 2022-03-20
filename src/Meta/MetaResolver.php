@@ -11,8 +11,10 @@ use Orisai\ObjectMapper\MappedObject;
 use Orisai\ObjectMapper\Meta\Compile\CompileMeta;
 use Orisai\ObjectMapper\Meta\Compile\PropertyCompileMeta;
 use Orisai\ObjectMapper\Meta\Compile\SharedNodeCompileMeta;
+use Orisai\ObjectMapper\Meta\Runtime\CallbackRuntimeMeta;
 use Orisai\ObjectMapper\Meta\Runtime\ClassRuntimeMeta;
 use Orisai\ObjectMapper\Meta\Runtime\PropertyRuntimeMeta;
+use Orisai\ObjectMapper\Meta\Runtime\RuleRuntimeMeta;
 use Orisai\ObjectMapper\Meta\Runtime\RuntimeMeta;
 use Orisai\ObjectMapper\Modifiers\FieldNameModifier;
 use Orisai\ObjectMapper\Modifiers\Modifier;
@@ -128,7 +130,7 @@ final class MetaResolver
 	}
 
 	/**
-	 * @return array<int, CallbackMeta>
+	 * @return array<int, CallbackRuntimeMeta>
 	 */
 	private function resolveCallbacksMeta(SharedNodeCompileMeta $meta, ArgsContext $context): array
 	{
@@ -140,11 +142,11 @@ final class MetaResolver
 		return $array;
 	}
 
-	private function resolveCallbackMeta(CallbackMeta $meta, ArgsContext $context): CallbackMeta
+	private function resolveCallbackMeta(CallbackMeta $meta, ArgsContext $context): CallbackRuntimeMeta
 	{
 		$type = $meta->getType();
 
-		return new CallbackMeta(
+		return new CallbackRuntimeMeta(
 			$type,
 			$type::resolveArgs($meta->getArgs(), $context),
 		);
@@ -198,7 +200,7 @@ final class MetaResolver
 		return [$type, $args];
 	}
 
-	public function resolveRuleMeta(RuleMeta $meta, RuleArgsContext $context): RuleMeta
+	public function resolveRuleMeta(RuleMeta $meta, RuleArgsContext $context): RuleRuntimeMeta
 	{
 		$type = $meta->getType();
 		$rule = $this->ruleManager->getRule($type);
@@ -224,7 +226,7 @@ final class MetaResolver
 				->withMessage("Class $argsType returned by $ruleClass::getArgsType() must be instantiable.");
 		}
 
-		return new RuleMeta($type, $args);
+		return new RuleRuntimeMeta($type, $args);
 	}
 
 	/**

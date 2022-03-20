@@ -2,7 +2,6 @@
 
 namespace Orisai\ObjectMapper\Meta\Runtime;
 
-use Orisai\ObjectMapper\Meta\CallbackMeta;
 use Orisai\ObjectMapper\Meta\DocMeta;
 use Orisai\ObjectMapper\Meta\ModifierMeta;
 use Orisai\ObjectMapper\Modifiers\Modifier;
@@ -13,7 +12,7 @@ use Orisai\ObjectMapper\Modifiers\Modifier;
 abstract class SharedNodeRuntimeMeta
 {
 
-	/** @var array<int, CallbackMeta> */
+	/** @var array<int, CallbackRuntimeMeta> */
 	private array $callbacks;
 
 	/** @var array<string, DocMeta> */
@@ -26,7 +25,7 @@ abstract class SharedNodeRuntimeMeta
 	private ?array $instModifiers = null;
 
 	/**
-	 * @param array<int, CallbackMeta>                    $callbacks
+	 * @param array<int, CallbackRuntimeMeta>             $callbacks
 	 * @param array<string, DocMeta>                      $docs
 	 * @param array<class-string<Modifier>, array<mixed>> $modifiers
 	 */
@@ -38,7 +37,7 @@ abstract class SharedNodeRuntimeMeta
 	}
 
 	/**
-	 * @return array<int, CallbackMeta>
+	 * @return array<int, CallbackRuntimeMeta>
 	 */
 	public function getCallbacks(): array
 	{

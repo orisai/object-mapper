@@ -25,10 +25,9 @@ final class ArrayOfRule extends MultiValueRule
 	public const KEY_RULE = 'key';
 
 	/**
-	 * @param array<mixed> $args
-	 * @return array<mixed>
+	 * {@inheritDoc}
 	 */
-	public function resolveArgs(array $args, RuleArgsContext $context): array
+	public function resolveArgs(array $args, RuleArgsContext $context): ArrayOfArgs
 	{
 		$checker = new ArgsChecker($args, self::class);
 		$checker->checkAllowedArgs(
@@ -61,7 +60,7 @@ final class ArrayOfRule extends MultiValueRule
 			$checker->checkBool(self::MERGE_DEFAULTS);
 		}
 
-		return $args;
+		return ArrayOfArgs::fromArray($args);
 	}
 
 	public function getArgsType(): string
@@ -97,12 +96,12 @@ final class ArrayOfRule extends MultiValueRule
 
 		$itemMeta = $args->itemMeta;
 		$itemRule = $context->getRule($itemMeta->getType());
-		$itemArgs = $this->createRuleArgsInst($itemRule, $itemMeta);
+		$itemArgs = $itemMeta->getArgs();
 
 		$keyMeta = $args->keyMeta;
 		if ($keyMeta !== null) {
 			$keyRule = $context->getRule($keyMeta->getType());
-			$keyArgs = $this->createRuleArgsInst($keyRule, $keyMeta);
+			$keyArgs = $keyMeta->getArgs();
 		} else {
 			$keyRule = null;
 			$keyArgs = null;
@@ -157,12 +156,12 @@ final class ArrayOfRule extends MultiValueRule
 	{
 		$itemMeta = $args->itemMeta;
 		$itemRule = $context->getRule($itemMeta->getType());
-		$itemArgs = $this->createRuleArgsInst($itemRule, $itemMeta);
+		$itemArgs = $itemMeta->getArgs();
 
 		$keyMeta = $args->keyMeta;
 		if ($keyMeta !== null) {
 			$keyRule = $context->getRule($keyMeta->getType());
-			$keyArgs = $this->createRuleArgsInst($keyRule, $keyMeta);
+			$keyArgs = $keyMeta->getArgs();
 			$keyType = $keyRule->createType($keyArgs, $context);
 		}
 

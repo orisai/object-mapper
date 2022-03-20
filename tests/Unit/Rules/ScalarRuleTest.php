@@ -4,7 +4,6 @@ namespace Tests\Orisai\ObjectMapper\Unit\Rules;
 
 use Generator;
 use Orisai\ObjectMapper\Exception\ValueDoesNotMatch;
-use Orisai\ObjectMapper\Rules\EmptyArgs;
 use Orisai\ObjectMapper\Rules\ScalarRule;
 use Orisai\ObjectMapper\Types\CompoundType;
 use Orisai\ObjectMapper\Types\NoValue;
@@ -32,7 +31,7 @@ final class ScalarRuleTest extends RuleTestCase
 	{
 		$processed = $this->rule->processValue(
 			$value,
-			EmptyArgs::fromArray($this->rule->resolveArgs([], $this->ruleArgsContext())),
+			$this->rule->resolveArgs([], $this->ruleArgsContext()),
 			$this->fieldContext(),
 		);
 
@@ -63,7 +62,7 @@ final class ScalarRuleTest extends RuleTestCase
 		try {
 			$this->rule->processValue(
 				$value,
-				EmptyArgs::fromArray($this->rule->resolveArgs([], $this->ruleArgsContext())),
+				$this->rule->resolveArgs([], $this->ruleArgsContext()),
 				$this->fieldContext(),
 			);
 		} catch (ValueDoesNotMatch $exception) {
@@ -102,7 +101,7 @@ final class ScalarRuleTest extends RuleTestCase
 
 	public function testType(): void
 	{
-		$args = EmptyArgs::fromArray($this->rule->resolveArgs([], $this->ruleArgsContext()));
+		$args = $this->rule->resolveArgs([], $this->ruleArgsContext());
 
 		$type = $this->rule->createType($args, $this->typeContext);
 

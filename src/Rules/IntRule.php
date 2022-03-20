@@ -29,10 +29,9 @@ final class IntRule implements Rule
 		CAST_NUMERIC_STRING = 'castNumericString';
 
 	/**
-	 * @param array<mixed> $args
-	 * @return array<mixed>
+	 * {@inheritDoc}
 	 */
-	public function resolveArgs(array $args, RuleArgsContext $context): array
+	public function resolveArgs(array $args, RuleArgsContext $context): IntArgs
 	{
 		$checker = new ArgsChecker($args, self::class);
 		$checker->checkAllowedArgs([self::MIN, self::MAX, self::UNSIGNED, self::CAST_NUMERIC_STRING]);
@@ -92,7 +91,7 @@ final class IntRule implements Rule
 			}
 		}
 
-		return $args;
+		return IntArgs::fromArray($args);
 	}
 
 	public function getArgsType(): string

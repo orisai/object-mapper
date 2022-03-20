@@ -4,7 +4,6 @@ namespace Tests\Orisai\ObjectMapper\Unit\Rules;
 
 use Generator;
 use Orisai\ObjectMapper\Exception\ValueDoesNotMatch;
-use Orisai\ObjectMapper\Rules\InstanceArgs;
 use Orisai\ObjectMapper\Rules\InstanceRule;
 use Orisai\ObjectMapper\Types\SimpleValueType;
 use stdClass;
@@ -30,9 +29,9 @@ final class InstanceRuleTest extends RuleTestCase
 	{
 		$processed = $this->rule->processValue(
 			$value,
-			InstanceArgs::fromArray($this->rule->resolveArgs([
+			$this->rule->resolveArgs([
 				InstanceRule::TYPE => stdClass::class,
-			], $this->ruleArgsContext())),
+			], $this->ruleArgsContext()),
 			$this->fieldContext(),
 		);
 
@@ -62,9 +61,9 @@ final class InstanceRuleTest extends RuleTestCase
 		try {
 			$this->rule->processValue(
 				$value,
-				InstanceArgs::fromArray($this->rule->resolveArgs([
+				$this->rule->resolveArgs([
 					InstanceRule::TYPE => stdClass::class,
-				], $this->ruleArgsContext())),
+				], $this->ruleArgsContext()),
 				$this->fieldContext(),
 			);
 		} catch (ValueDoesNotMatch $exception) {
@@ -99,9 +98,9 @@ final class InstanceRuleTest extends RuleTestCase
 
 	public function testType(): void
 	{
-		$args = InstanceArgs::fromArray($this->rule->resolveArgs([
+		$args = $this->rule->resolveArgs([
 			InstanceRule::TYPE => stdClass::class,
-		], $this->ruleArgsContext()));
+		], $this->ruleArgsContext());
 
 		$type = $this->rule->createType($args, $this->typeContext);
 

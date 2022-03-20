@@ -5,7 +5,6 @@ namespace Orisai\ObjectMapper\Processing;
 use Nette\Utils\Helpers;
 use Orisai\Exceptions\Logic\InvalidState;
 use Orisai\ObjectMapper\Args\Args;
-use Orisai\ObjectMapper\Args\ArgsCreator;
 use Orisai\ObjectMapper\Callbacks\AfterCallback;
 use Orisai\ObjectMapper\Callbacks\BeforeCallback;
 use Orisai\ObjectMapper\Callbacks\Callback;
@@ -47,8 +46,6 @@ use function sprintf;
 
 class DefaultProcessor implements Processor
 {
-
-	use ArgsCreator;
 
 	protected MetaLoader $metaLoader;
 
@@ -399,7 +396,8 @@ class DefaultProcessor implements Processor
 				// Try to initialize structure from empty array when no data given
 				// Structure in compound type is not supported (allOf, anyOf)
 				// Used only in default mode - if all or none values are required then we need differentiate whether user sent value or not
-				$structureArgs = StructureArgs::fromArray($propertyMeta->getRule()->getArgs());
+				$structureArgs = $propertyMeta->getRule()->getArgs();
+				assert($structureArgs instanceof StructureArgs);
 				try {
 					$data[$missingField] = $initializeObjects
 						? $this->process([], $structureArgs->type, $options)
@@ -418,7 +416,7 @@ class DefaultProcessor implements Processor
 					$missingField,
 					ValueDoesNotMatch::create(
 						$propertyRule->createType(
-							$this->createRuleArgsInst($propertyRule, $propertyRuleMeta),
+							$propertyRuleMeta->getArgs(),
 							$this->getTypeContext(),
 						),
 						NoValue::create(),
@@ -508,7 +506,7 @@ class DefaultProcessor implements Processor
 
 		return $rule->processValue(
 			$value,
-			$this->createRuleArgsInst($rule, $ruleMeta),
+			$ruleMeta->getArgs(),
 			$fieldContext,
 		);
 	}
@@ -577,7 +575,7 @@ class DefaultProcessor implements Processor
 			if ($callback->getType() === $callbackType) {
 				$data = $callbackType::invoke(
 					$data,
-					$this->createCallbackArgsInst($callbackType, $callback),
+					$callback->getArgs(),
 					$holder,
 					$baseFieldContext,
 				);

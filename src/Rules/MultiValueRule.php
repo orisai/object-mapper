@@ -2,16 +2,12 @@
 
 namespace Orisai\ObjectMapper\Rules;
 
-use Orisai\ObjectMapper\Args\ArgsCreator;
-
 /**
  * @phpstan-template T of MultiValueArgs
  * @phpstan-implements Rule<T>
  */
 abstract class MultiValueRule implements Rule
 {
-
-	use ArgsCreator;
 
 	public const
 		ITEM_RULE = 'item',

@@ -4,14 +4,14 @@ namespace Orisai\ObjectMapper\Rules;
 
 use Orisai\Exceptions\Logic\InvalidArgument;
 use Orisai\ObjectMapper\Args\Args;
-use Orisai\ObjectMapper\Meta\RuleMeta;
+use Orisai\ObjectMapper\Meta\Runtime\RuleRuntimeMeta;
 use function array_key_exists;
 use function sprintf;
 
 class MultiValueArgs implements Args
 {
 
-	public RuleMeta $itemMeta;
+	public RuleRuntimeMeta $itemMeta;
 
 	public ?int $minItems = null;
 

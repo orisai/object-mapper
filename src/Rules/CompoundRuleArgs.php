@@ -4,14 +4,14 @@ namespace Orisai\ObjectMapper\Rules;
 
 use Orisai\Exceptions\Logic\InvalidArgument;
 use Orisai\ObjectMapper\Args\Args;
-use Orisai\ObjectMapper\Meta\RuleMeta;
+use Orisai\ObjectMapper\Meta\Runtime\RuleRuntimeMeta;
 use function array_key_exists;
 use function sprintf;
 
 final class CompoundRuleArgs implements Args
 {
 
-	/** @var array<RuleMeta> */
+	/** @var array<RuleRuntimeMeta> */
 	public array $rules;
 
 	private function __construct()

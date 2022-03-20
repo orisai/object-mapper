@@ -23,10 +23,9 @@ final class InstanceRule implements Rule
 	public const TYPE = 'type';
 
 	/**
-	 * @param array<mixed> $args
-	 * @return array<mixed>
+	 * {@inheritDoc}
 	 */
-	public function resolveArgs(array $args, RuleArgsContext $context): array
+	public function resolveArgs(array $args, RuleArgsContext $context): InstanceArgs
 	{
 		$checker = new ArgsChecker($args, self::class);
 		$checker->checkAllowedArgs([self::TYPE]);
@@ -43,7 +42,7 @@ final class InstanceRule implements Rule
 				));
 		}
 
-		return $args;
+		return InstanceArgs::fromArray($args);
 	}
 
 	public function getArgsType(): string

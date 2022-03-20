@@ -25,10 +25,9 @@ final class ListOfRule extends MultiValueRule
 {
 
 	/**
-	 * @param array<mixed> $args
-	 * @return array<mixed>
+	 * {@inheritDoc}
 	 */
-	public function resolveArgs(array $args, RuleArgsContext $context): array
+	public function resolveArgs(array $args, RuleArgsContext $context): MultiValueArgs
 	{
 		$checker = new ArgsChecker($args, self::class);
 		$checker->checkAllowedArgs([self::ITEM_RULE, self::MIN_ITEMS, self::MAX_ITEMS, self::MERGE_DEFAULTS]);
@@ -52,7 +51,7 @@ final class ListOfRule extends MultiValueRule
 			$checker->checkBool(self::MERGE_DEFAULTS);
 		}
 
-		return $args;
+		return MultiValueArgs::fromArray($args);
 	}
 
 	public function getArgsType(): string
@@ -92,7 +91,7 @@ final class ListOfRule extends MultiValueRule
 
 		$itemMeta = $args->itemMeta;
 		$itemRule = $context->getRule($itemMeta->getType());
-		$itemArgs = $this->createRuleArgsInst($itemRule, $itemMeta);
+		$itemArgs = $itemMeta->getArgs();
 
 		foreach ($value as $key => $item) {
 			try {
@@ -129,7 +128,7 @@ final class ListOfRule extends MultiValueRule
 	{
 		$itemMeta = $args->itemMeta;
 		$itemRule = $context->getRule($itemMeta->getType());
-		$itemArgs = $this->createRuleArgsInst($itemRule, $itemMeta);
+		$itemArgs = $itemMeta->getArgs();
 
 		$type = new ListType(
 			$itemRule->createType($itemArgs, $context),

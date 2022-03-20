@@ -3,14 +3,13 @@
 namespace Orisai\ObjectMapper\Meta\Runtime;
 
 use Orisai\ObjectMapper\Meta\DefaultValueMeta;
-use Orisai\ObjectMapper\Meta\RuleMeta;
 
 final class PropertyRuntimeMeta extends SharedNodeRuntimeMeta
 {
 
 	private DefaultValueMeta $default;
 
-	private RuleMeta $rule;
+	private RuleRuntimeMeta $rule;
 
 	/**
 	 * {@inheritDoc}
@@ -19,7 +18,7 @@ final class PropertyRuntimeMeta extends SharedNodeRuntimeMeta
 		array $callbacks,
 		array $docs,
 		array $modifiers,
-		RuleMeta $rule,
+		RuleRuntimeMeta $rule,
 		DefaultValueMeta $default
 	)
 	{
@@ -33,7 +32,7 @@ final class PropertyRuntimeMeta extends SharedNodeRuntimeMeta
 		return $this->default;
 	}
 
-	public function getRule(): RuleMeta
+	public function getRule(): RuleRuntimeMeta
 	{
 		return $this->rule;
 	}

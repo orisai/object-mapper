@@ -30,10 +30,9 @@ final class FloatRule implements Rule
 		CAST_NUMERIC_STRING = 'castNumericString';
 
 	/**
-	 * @param array<mixed> $args
-	 * @return array<mixed>
+	 * {@inheritDoc}
 	 */
-	public function resolveArgs(array $args, RuleArgsContext $context): array
+	public function resolveArgs(array $args, RuleArgsContext $context): FloatArgs
 	{
 		$checker = new ArgsChecker($args, self::class);
 		$checker->checkAllowedArgs([self::MIN, self::MAX, self::UNSIGNED, self::CAST_NUMERIC_STRING]);
@@ -93,7 +92,7 @@ final class FloatRule implements Rule
 			}
 		}
 
-		return $args;
+		return FloatArgs::fromArray($args);
 	}
 
 	public function getArgsType(): string

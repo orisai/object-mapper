@@ -2,13 +2,13 @@
 
 namespace Orisai\ObjectMapper\Rules;
 
-use Orisai\ObjectMapper\Meta\RuleMeta;
+use Orisai\ObjectMapper\Meta\Runtime\RuleRuntimeMeta;
 use function array_key_exists;
 
 final class ArrayOfArgs extends MultiValueArgs
 {
 
-	public ?RuleMeta $keyMeta = null;
+	public ?RuleRuntimeMeta $keyMeta = null;
 
 	/**
 	 * @param array<mixed> $args

@@ -28,10 +28,9 @@ final class ValueEnumRule implements Rule
 		USE_KEYS = 'use_keys';
 
 	/**
-	 * @param array<mixed> $args
-	 * @return array<mixed>
+	 * {@inheritDoc}
 	 */
-	public function resolveArgs(array $args, RuleArgsContext $context): array
+	public function resolveArgs(array $args, RuleArgsContext $context): ValueEnumArgs
 	{
 		$checker = new ArgsChecker($args, self::class);
 		$checker->checkAllowedArgs([self::VALUES, self::USE_KEYS]);
@@ -56,7 +55,7 @@ final class ValueEnumRule implements Rule
 			$checker->checkBool(self::USE_KEYS);
 		}
 
-		return $args;
+		return ValueEnumArgs::fromArray($args);
 	}
 
 	public function getArgsType(): string

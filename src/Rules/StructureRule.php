@@ -4,7 +4,6 @@ namespace Orisai\ObjectMapper\Rules;
 
 use Orisai\ObjectMapper\Args\Args;
 use Orisai\ObjectMapper\Args\ArgsChecker;
-use Orisai\ObjectMapper\Args\ArgsCreator;
 use Orisai\ObjectMapper\Context\FieldContext;
 use Orisai\ObjectMapper\Context\RuleArgsContext;
 use Orisai\ObjectMapper\Context\TypeContext;
@@ -20,15 +19,12 @@ use function array_keys;
 final class StructureRule implements Rule
 {
 
-	use ArgsCreator;
-
 	public const TYPE = 'type';
 
 	/**
-	 * @param array<mixed> $args
-	 * @return array<mixed>
+	 * {@inheritDoc}
 	 */
-	public function resolveArgs(array $args, RuleArgsContext $context): array
+	public function resolveArgs(array $args, RuleArgsContext $context): StructureArgs
 	{
 		$checker = new ArgsChecker($args, self::class);
 
@@ -41,7 +37,7 @@ final class StructureRule implements Rule
 		// Note: Loading as class should be always array cached and in runtime should be metadata resolved only once so it has no performance impact
 		$context->getMetaLoader()->load($args[self::TYPE]);
 
-		return $args;
+		return StructureArgs::fromArray($args);
 	}
 
 	public function getArgsType(): string
@@ -79,7 +75,7 @@ final class StructureRule implements Rule
 			$propertyMeta = $propertiesMeta[$propertyName];
 			$propertyRuleMeta = $propertyMeta->getRule();
 			$propertyRule = $context->getRule($propertyRuleMeta->getType());
-			$propertyArgs = $this->createRuleArgsInst($propertyRule, $propertyRuleMeta);
+			$propertyArgs = $propertyRuleMeta->getArgs();
 
 			$fieldNameMeta = $propertyMeta->getModifier(FieldNameModifier::class);
 			$fieldName = $fieldNameMeta !== null

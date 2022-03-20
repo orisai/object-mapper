@@ -38,10 +38,9 @@ final class DateTimeRule implements Rule
 		FORMAT_ANY = 'any';
 
 	/**
-	 * @param array<mixed> $args
-	 * @return array<mixed>
+	 * {@inheritDoc}
 	 */
-	public function resolveArgs(array $args, RuleArgsContext $context): array
+	public function resolveArgs(array $args, RuleArgsContext $context): DateTimeArgs
 	{
 		$checker = new ArgsChecker($args, self::class);
 		$checker->checkAllowedArgs([self::FORMAT, self::TYPE]);
@@ -67,7 +66,7 @@ final class DateTimeRule implements Rule
 			}
 		}
 
-		return $args;
+		return DateTimeArgs::fromArray($args);
 	}
 
 	public function getArgsType(): string

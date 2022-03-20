@@ -5,7 +5,6 @@ namespace Orisai\ObjectMapper\Rules;
 use Orisai\Exceptions\Logic\InvalidArgument;
 use Orisai\ObjectMapper\Args\Args;
 use Orisai\ObjectMapper\Args\ArgsChecker;
-use Orisai\ObjectMapper\Args\ArgsCreator;
 use Orisai\ObjectMapper\Context\RuleArgsContext;
 use Orisai\ObjectMapper\Context\TypeContext;
 use Orisai\ObjectMapper\Meta\RuleMeta;
@@ -19,15 +18,12 @@ use function sprintf;
 abstract class CompoundRule implements Rule
 {
 
-	use ArgsCreator;
-
 	public const RULES = 'rules';
 
 	/**
-	 * @param array<mixed> $args
-	 * @return array<mixed>
+	 * {@inheritDoc}
 	 */
-	public function resolveArgs(array $args, RuleArgsContext $context): array
+	public function resolveArgs(array $args, RuleArgsContext $context): CompoundRuleArgs
 	{
 		$checker = new ArgsChecker($args, static::class);
 		$checker->checkAllowedArgs([self::RULES]);
@@ -56,7 +52,7 @@ abstract class CompoundRule implements Rule
 
 		$args[self::RULES] = $rules;
 
-		return $args;
+		return CompoundRuleArgs::fromArray($args);
 	}
 
 	public function getArgsType(): string
@@ -73,7 +69,7 @@ abstract class CompoundRule implements Rule
 
 		foreach ($args->rules as $key => $nestedRuleMeta) {
 			$nestedRule = $context->getRule($nestedRuleMeta->getType());
-			$nestedRuleArgs = $this->createRuleArgsInst($nestedRule, $nestedRuleMeta);
+			$nestedRuleArgs = $nestedRuleMeta->getArgs();
 			$type->addSubtype($key, $nestedRule->createType($nestedRuleArgs, $context));
 		}
 

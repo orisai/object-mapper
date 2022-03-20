@@ -17,10 +17,10 @@ interface Rule
 {
 
 	/**
-	 * @param array<mixed> $args
-	 * @return array<mixed>
+	 * @param array<int|string, mixed> $args
+	 * @return T_ARGS
 	 */
-	public function resolveArgs(array $args, RuleArgsContext $context): array;
+	public function resolveArgs(array $args, RuleArgsContext $context): Args;
 
 	/**
 	 * @phpstan-return class-string<T_ARGS>

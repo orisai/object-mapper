@@ -4,7 +4,6 @@ namespace Tests\Orisai\ObjectMapper\Unit\Rules;
 
 use Generator;
 use Orisai\ObjectMapper\Exception\ValueDoesNotMatch;
-use Orisai\ObjectMapper\Rules\BoolArgs;
 use Orisai\ObjectMapper\Rules\BoolRule;
 use Orisai\ObjectMapper\Types\SimpleValueType;
 use stdClass;
@@ -30,7 +29,7 @@ final class BoolRuleTest extends RuleTestCase
 	{
 		$processed = $this->rule->processValue(
 			$value,
-			BoolArgs::fromArray($this->rule->resolveArgs([], $this->ruleArgsContext())),
+			$this->rule->resolveArgs([], $this->ruleArgsContext()),
 			$this->fieldContext(),
 		);
 
@@ -55,9 +54,9 @@ final class BoolRuleTest extends RuleTestCase
 	{
 		$processed = $this->rule->processValue(
 			$value,
-			BoolArgs::fromArray($this->rule->resolveArgs([
+			$this->rule->resolveArgs([
 				BoolRule::CAST_BOOL_LIKE => true,
-			], $this->ruleArgsContext())),
+			], $this->ruleArgsContext()),
 			$this->fieldContext(),
 		);
 
@@ -91,7 +90,7 @@ final class BoolRuleTest extends RuleTestCase
 		try {
 			$this->rule->processValue(
 				$value,
-				BoolArgs::fromArray($this->rule->resolveArgs([], $this->ruleArgsContext())),
+				$this->rule->resolveArgs([], $this->ruleArgsContext()),
 				$this->fieldContext(),
 			);
 		} catch (ValueDoesNotMatch $exception) {
@@ -125,7 +124,7 @@ final class BoolRuleTest extends RuleTestCase
 
 	public function testType(): void
 	{
-		$args = BoolArgs::fromArray($this->rule->resolveArgs([], $this->ruleArgsContext()));
+		$args = $this->rule->resolveArgs([], $this->ruleArgsContext());
 
 		$type = $this->rule->createType($args, $this->typeContext);
 
@@ -140,9 +139,9 @@ final class BoolRuleTest extends RuleTestCase
 
 	public function testTypeWithArgs(): void
 	{
-		$args = BoolArgs::fromArray($this->rule->resolveArgs([
+		$args = $this->rule->resolveArgs([
 			BoolRule::CAST_BOOL_LIKE => true,
-		], $this->ruleArgsContext()));
+		], $this->ruleArgsContext());
 
 		$type = $this->rule->createType($args, $this->typeContext);
 

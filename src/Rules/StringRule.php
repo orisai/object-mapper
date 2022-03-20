@@ -26,10 +26,9 @@ final class StringRule implements Rule
 		NOT_EMPTY = 'notEmpty';
 
 	/**
-	 * @param array<mixed> $args
-	 * @return array<mixed>
+	 * {@inheritDoc}
 	 */
-	public function resolveArgs(array $args, RuleArgsContext $context): array
+	public function resolveArgs(array $args, RuleArgsContext $context): StringArgs
 	{
 		$checker = new ArgsChecker($args, self::class);
 
@@ -51,7 +50,7 @@ final class StringRule implements Rule
 			$checker->checkBool(self::NOT_EMPTY);
 		}
 
-		return $args;
+		return StringArgs::fromArray($args);
 	}
 
 	public function getArgsType(): string

@@ -3,7 +3,6 @@
 namespace Tests\Orisai\ObjectMapper\Unit\Rules;
 
 use Generator;
-use Orisai\ObjectMapper\Rules\EmptyArgs;
 use Orisai\ObjectMapper\Rules\MixedRule;
 use stdClass;
 use Tests\Orisai\ObjectMapper\Toolkit\RuleTestCase;
@@ -28,7 +27,7 @@ final class MixedRuleTest extends RuleTestCase
 	{
 		$processed = $this->rule->processValue(
 			$value,
-			EmptyArgs::fromArray($this->rule->resolveArgs([], $this->ruleArgsContext())),
+			$this->rule->resolveArgs([], $this->ruleArgsContext()),
 			$this->fieldContext(),
 		);
 
@@ -53,7 +52,7 @@ final class MixedRuleTest extends RuleTestCase
 
 	public function testType(): void
 	{
-		$args = EmptyArgs::fromArray($this->rule->resolveArgs([], $this->ruleArgsContext()));
+		$args = $this->rule->resolveArgs([], $this->ruleArgsContext());
 
 		$type = $this->rule->createType($args, $this->typeContext);
 

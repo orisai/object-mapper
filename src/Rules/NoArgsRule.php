@@ -9,15 +9,14 @@ trait NoArgsRule
 {
 
 	/**
-	 * @param array<mixed> $args
-	 * @return array<mixed>
+	 * {@inheritDoc}
 	 */
-	public function resolveArgs(array $args, RuleArgsContext $context): array
+	public function resolveArgs(array $args, RuleArgsContext $context): EmptyArgs
 	{
 		$checker = new ArgsChecker($args, static::class);
 		$checker->checkNoArgs();
 
-		return [];
+		return EmptyArgs::fromArray($args);
 	}
 
 	public function getArgsType(): string

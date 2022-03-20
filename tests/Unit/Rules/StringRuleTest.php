@@ -4,7 +4,6 @@ namespace Tests\Orisai\ObjectMapper\Unit\Rules;
 
 use Generator;
 use Orisai\ObjectMapper\Exception\ValueDoesNotMatch;
-use Orisai\ObjectMapper\Rules\StringArgs;
 use Orisai\ObjectMapper\Rules\StringRule;
 use Orisai\ObjectMapper\Types\SimpleValueType;
 use stdClass;
@@ -30,7 +29,7 @@ final class StringRuleTest extends RuleTestCase
 	{
 		$processed = $this->rule->processValue(
 			$value,
-			StringArgs::fromArray($this->rule->resolveArgs([], $this->ruleArgsContext())),
+			$this->rule->resolveArgs([], $this->ruleArgsContext()),
 			$this->fieldContext(),
 		);
 
@@ -58,7 +57,7 @@ final class StringRuleTest extends RuleTestCase
 		try {
 			$this->rule->processValue(
 				$value,
-				StringArgs::fromArray($this->rule->resolveArgs([], $this->ruleArgsContext())),
+				$this->rule->resolveArgs([], $this->ruleArgsContext()),
 				$this->fieldContext(),
 			);
 		} catch (ValueDoesNotMatch $exception) {
@@ -94,12 +93,12 @@ final class StringRuleTest extends RuleTestCase
 		try {
 			$this->rule->processValue(
 				$value,
-				StringArgs::fromArray($this->rule->resolveArgs([
+				$this->rule->resolveArgs([
 					StringRule::NOT_EMPTY => true,
 					StringRule::MIN_LENGTH => 1,
 					StringRule::MAX_LENGTH => 10,
 					StringRule::PATTERN => '/[\s\S]/',
-				], $this->ruleArgsContext())),
+				], $this->ruleArgsContext()),
 				$this->fieldContext(),
 			);
 		} catch (ValueDoesNotMatch $exception) {
@@ -126,12 +125,12 @@ final class StringRuleTest extends RuleTestCase
 		try {
 			$this->rule->processValue(
 				$value,
-				StringArgs::fromArray($this->rule->resolveArgs([
+				$this->rule->resolveArgs([
 					StringRule::NOT_EMPTY => true,
 					StringRule::MIN_LENGTH => 1,
 					StringRule::MAX_LENGTH => 10,
 					StringRule::PATTERN => '/[\s\S]/',
-				], $this->ruleArgsContext())),
+				], $this->ruleArgsContext()),
 				$this->fieldContext(),
 			);
 		} catch (ValueDoesNotMatch $exception) {
@@ -160,9 +159,9 @@ final class StringRuleTest extends RuleTestCase
 		try {
 			$this->rule->processValue(
 				$value,
-				StringArgs::fromArray($this->rule->resolveArgs([
+				$this->rule->resolveArgs([
 					StringRule::NOT_EMPTY => true,
-				], $this->ruleArgsContext())),
+				], $this->ruleArgsContext()),
 				$this->fieldContext(),
 			);
 		} catch (ValueDoesNotMatch $exception) {
@@ -193,7 +192,7 @@ final class StringRuleTest extends RuleTestCase
 
 	public function testType(): void
 	{
-		$args = StringArgs::fromArray($this->rule->resolveArgs([], $this->ruleArgsContext()));
+		$args = $this->rule->resolveArgs([], $this->ruleArgsContext());
 
 		$type = $this->rule->createType($args, $this->typeContext);
 
@@ -208,12 +207,12 @@ final class StringRuleTest extends RuleTestCase
 
 	public function testTypeWithArgs(): void
 	{
-		$args = StringArgs::fromArray($this->rule->resolveArgs([
+		$args = $this->rule->resolveArgs([
 			StringRule::NOT_EMPTY => true,
 			StringRule::MIN_LENGTH => 1,
 			StringRule::MAX_LENGTH => 10,
 			StringRule::PATTERN => '/[\s\S]/',
-		], $this->ruleArgsContext()));
+		], $this->ruleArgsContext());
 
 		$type = $this->rule->createType($args, $this->typeContext);
 

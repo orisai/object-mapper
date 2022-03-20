@@ -6,7 +6,6 @@ use Orisai\ObjectMapper\Exception\ValueDoesNotMatch;
 use Orisai\ObjectMapper\Exception\WithTypeAndValue;
 use Orisai\ObjectMapper\Meta\DefaultValueMeta;
 use Orisai\ObjectMapper\Meta\RuleMeta;
-use Orisai\ObjectMapper\Rules\ArrayOfArgs;
 use Orisai\ObjectMapper\Rules\ArrayOfRule;
 use Orisai\ObjectMapper\Rules\MixedRule;
 use Orisai\ObjectMapper\Rules\StringRule;
@@ -35,9 +34,9 @@ final class ArrayOfRuleTest extends RuleTestCase
 
 		$processed = $this->rule->processValue(
 			$value,
-			ArrayOfArgs::fromArray($this->rule->resolveArgs([
+			$this->rule->resolveArgs([
 				ArrayOfRule::ITEM_RULE => new RuleMeta(MixedRule::class),
-			], $this->ruleArgsContext())),
+			], $this->ruleArgsContext()),
 			$this->fieldContext(DefaultValueMeta::fromValue($defaults)),
 		);
 
@@ -50,10 +49,10 @@ final class ArrayOfRuleTest extends RuleTestCase
 
 		$processed = $this->rule->processValue(
 			$value,
-			ArrayOfArgs::fromArray($this->rule->resolveArgs([
+			$this->rule->resolveArgs([
 				ArrayOfRule::KEY_RULE => new RuleMeta(StringRule::class),
 				ArrayOfRule::ITEM_RULE => new RuleMeta(MixedRule::class),
-			], $this->ruleArgsContext())),
+			], $this->ruleArgsContext()),
 			$this->fieldContext(),
 		);
 
@@ -67,11 +66,11 @@ final class ArrayOfRuleTest extends RuleTestCase
 
 		$processed = $this->rule->processValue(
 			$value,
-			ArrayOfArgs::fromArray($this->rule->resolveArgs([
+			$this->rule->resolveArgs([
 				ArrayOfRule::ITEM_RULE => new RuleMeta(MixedRule::class),
 				ArrayOfRule::MAX_ITEMS => 5,
 				ArrayOfRule::MERGE_DEFAULTS => true,
-			], $this->ruleArgsContext())),
+			], $this->ruleArgsContext()),
 			$this->fieldContext(DefaultValueMeta::fromValue($defaults)),
 		);
 
@@ -89,9 +88,9 @@ final class ArrayOfRuleTest extends RuleTestCase
 		try {
 			$this->rule->processValue(
 				$value,
-				ArrayOfArgs::fromArray($this->rule->resolveArgs([
+				$this->rule->resolveArgs([
 					ArrayOfRule::ITEM_RULE => new RuleMeta(MixedRule::class),
-				], $this->ruleArgsContext())),
+				], $this->ruleArgsContext()),
 				$this->fieldContext(),
 			);
 		} catch (ValueDoesNotMatch $exception) {
@@ -113,11 +112,11 @@ final class ArrayOfRuleTest extends RuleTestCase
 		try {
 			$this->rule->processValue(
 				$value,
-				ArrayOfArgs::fromArray($this->rule->resolveArgs([
+				$this->rule->resolveArgs([
 					ArrayOfRule::KEY_RULE => new RuleMeta(StringRule::class),
 					ArrayOfRule::ITEM_RULE => new RuleMeta(StringRule::class),
 					ArrayOfRule::MIN_ITEMS => 10,
-				], $this->ruleArgsContext())),
+				], $this->ruleArgsContext()),
 				$this->fieldContext(),
 			);
 		} catch (ValueDoesNotMatch $exception) {
@@ -156,10 +155,10 @@ final class ArrayOfRuleTest extends RuleTestCase
 		try {
 			$this->rule->processValue(
 				$value,
-				ArrayOfArgs::fromArray($this->rule->resolveArgs([
+				$this->rule->resolveArgs([
 					ArrayOfRule::ITEM_RULE => new RuleMeta(StringRule::class),
 					ArrayOfRule::MAX_ITEMS => 2,
-				], $this->ruleArgsContext())),
+				], $this->ruleArgsContext()),
 				$this->fieldContext(),
 			);
 		} catch (ValueDoesNotMatch $exception) {
@@ -184,9 +183,9 @@ final class ArrayOfRuleTest extends RuleTestCase
 		try {
 			$this->rule->processValue(
 				$value,
-				ArrayOfArgs::fromArray($this->rule->resolveArgs([
+				$this->rule->resolveArgs([
 					ArrayOfRule::ITEM_RULE => new RuleMeta(StringRule::class),
-				], $this->ruleArgsContext())),
+				], $this->ruleArgsContext()),
 				$this->fieldContext(),
 			);
 		} catch (ValueDoesNotMatch $exception) {
@@ -206,9 +205,9 @@ final class ArrayOfRuleTest extends RuleTestCase
 
 	public function testType(): void
 	{
-		$args = ArrayOfArgs::fromArray($this->rule->resolveArgs([
+		$args = $this->rule->resolveArgs([
 			ArrayOfRule::ITEM_RULE => new RuleMeta(MixedRule::class),
-		], $this->ruleArgsContext()));
+		], $this->ruleArgsContext());
 
 		$type = $this->rule->createType($args, $this->typeContext);
 
@@ -224,12 +223,12 @@ final class ArrayOfRuleTest extends RuleTestCase
 
 	public function testTypeWithArgs(): void
 	{
-		$args = ArrayOfArgs::fromArray($this->rule->resolveArgs([
+		$args = $this->rule->resolveArgs([
 			ArrayOfRule::ITEM_RULE => new RuleMeta(MixedRule::class),
 			ArrayOfRule::KEY_RULE => new RuleMeta(StringRule::class),
 			ArrayOfRule::MIN_ITEMS => 10,
 			ArrayOfRule::MAX_ITEMS => 100,
-		], $this->ruleArgsContext()));
+		], $this->ruleArgsContext());
 
 		$type = $this->rule->createType($args, $this->typeContext);
 

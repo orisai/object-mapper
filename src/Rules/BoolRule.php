@@ -30,10 +30,9 @@ final class BoolRule implements Rule
 	];
 
 	/**
-	 * @param array<mixed> $args
-	 * @return array<mixed>
+	 * {@inheritDoc}
 	 */
-	public function resolveArgs(array $args, RuleArgsContext $context): array
+	public function resolveArgs(array $args, RuleArgsContext $context): BoolArgs
 	{
 		$checker = new ArgsChecker($args, self::class);
 		$checker->checkAllowedArgs([self::CAST_BOOL_LIKE]);
@@ -42,7 +41,7 @@ final class BoolRule implements Rule
 			$checker->checkBool(self::CAST_BOOL_LIKE);
 		}
 
-		return $args;
+		return BoolArgs::fromArray($args);
 	}
 
 	public function getArgsType(): string

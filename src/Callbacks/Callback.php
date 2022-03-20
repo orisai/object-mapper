@@ -19,10 +19,10 @@ interface Callback
 {
 
 	/**
-	 * @param array<mixed> $args
-	 * @return array<mixed>
+	 * @param array<int|string, mixed> $args
+	 * @return T_ARGS
 	 */
-	public static function resolveArgs(array $args, ArgsContext $context): array;
+	public static function resolveArgs(array $args, ArgsContext $context): Args;
 
 	/**
 	 * @phpstan-return class-string<T_ARGS>

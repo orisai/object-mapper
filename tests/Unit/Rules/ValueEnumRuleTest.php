@@ -4,7 +4,6 @@ namespace Tests\Orisai\ObjectMapper\Unit\Rules;
 
 use Generator;
 use Orisai\ObjectMapper\Exception\ValueDoesNotMatch;
-use Orisai\ObjectMapper\Rules\ValueEnumArgs;
 use Orisai\ObjectMapper\Rules\ValueEnumRule;
 use Orisai\ObjectMapper\Types\EnumType;
 use Tests\Orisai\ObjectMapper\Toolkit\RuleTestCase;
@@ -30,7 +29,7 @@ final class ValueEnumRuleTest extends RuleTestCase
 	{
 		$processed = $this->rule->processValue(
 			$value,
-			ValueEnumArgs::fromArray($this->rule->resolveArgs($args, $this->ruleArgsContext())),
+			$this->rule->resolveArgs($args, $this->ruleArgsContext()),
 			$this->fieldContext(),
 		);
 
@@ -72,7 +71,7 @@ final class ValueEnumRuleTest extends RuleTestCase
 		try {
 			$this->rule->processValue(
 				$value,
-				ValueEnumArgs::fromArray($this->rule->resolveArgs($args, $this->ruleArgsContext())),
+				$this->rule->resolveArgs($args, $this->ruleArgsContext()),
 				$this->fieldContext(),
 			);
 		} catch (ValueDoesNotMatch $exception) {
@@ -111,9 +110,9 @@ final class ValueEnumRuleTest extends RuleTestCase
 
 	public function testType(): void
 	{
-		$args = ValueEnumArgs::fromArray($this->rule->resolveArgs([
+		$args = $this->rule->resolveArgs([
 			ValueEnumRule::VALUES => ['foo', 'bar'],
-		], $this->ruleArgsContext()));
+		], $this->ruleArgsContext());
 
 		$type = $this->rule->createType($args, $this->typeContext);
 

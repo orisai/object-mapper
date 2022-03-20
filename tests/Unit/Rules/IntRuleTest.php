@@ -4,7 +4,6 @@ namespace Tests\Orisai\ObjectMapper\Unit\Rules;
 
 use Generator;
 use Orisai\ObjectMapper\Exception\ValueDoesNotMatch;
-use Orisai\ObjectMapper\Rules\IntArgs;
 use Orisai\ObjectMapper\Rules\IntRule;
 use Orisai\ObjectMapper\Types\SimpleValueType;
 use Tests\Orisai\ObjectMapper\Toolkit\RuleTestCase;
@@ -30,7 +29,7 @@ final class IntRuleTest extends RuleTestCase
 	{
 		$processed = $this->rule->processValue(
 			$value,
-			IntArgs::fromArray($this->rule->resolveArgs($args, $this->ruleArgsContext())),
+			$this->rule->resolveArgs($args, $this->ruleArgsContext()),
 			$this->fieldContext(),
 		);
 
@@ -70,10 +69,10 @@ final class IntRuleTest extends RuleTestCase
 	{
 		$processed = $this->rule->processValue(
 			$value,
-			IntArgs::fromArray($this->rule->resolveArgs([
+			$this->rule->resolveArgs([
 				IntRule::CAST_NUMERIC_STRING => true,
 				IntRule::UNSIGNED => false,
-			], $this->ruleArgsContext())),
+			], $this->ruleArgsContext()),
 			$this->fieldContext(),
 		);
 
@@ -106,7 +105,7 @@ final class IntRuleTest extends RuleTestCase
 		try {
 			$this->rule->processValue(
 				$value,
-				IntArgs::fromArray($this->rule->resolveArgs([], $this->ruleArgsContext())),
+				$this->rule->resolveArgs([], $this->ruleArgsContext()),
 				$this->fieldContext(),
 			);
 		} catch (ValueDoesNotMatch $exception) {
@@ -143,10 +142,10 @@ final class IntRuleTest extends RuleTestCase
 		try {
 			$this->rule->processValue(
 				$value,
-				IntArgs::fromArray($this->rule->resolveArgs([
+				$this->rule->resolveArgs([
 					IntRule::CAST_NUMERIC_STRING => true,
 					IntRule::MAX => 10,
-				], $this->ruleArgsContext())),
+				], $this->ruleArgsContext()),
 				$this->fieldContext(),
 			);
 		} catch (ValueDoesNotMatch $exception) {
@@ -170,11 +169,11 @@ final class IntRuleTest extends RuleTestCase
 		try {
 			$this->rule->processValue(
 				$value,
-				IntArgs::fromArray($this->rule->resolveArgs([
+				$this->rule->resolveArgs([
 					IntRule::CAST_NUMERIC_STRING => true,
 					IntRule::MIN => 10,
 					IntRule::UNSIGNED => true,
-				], $this->ruleArgsContext())),
+				], $this->ruleArgsContext()),
 				$this->fieldContext(),
 			);
 		} catch (ValueDoesNotMatch $exception) {
@@ -193,7 +192,7 @@ final class IntRuleTest extends RuleTestCase
 
 	public function testType(): void
 	{
-		$args = IntArgs::fromArray($this->rule->resolveArgs([], $this->ruleArgsContext()));
+		$args = $this->rule->resolveArgs([], $this->ruleArgsContext());
 
 		$type = $this->rule->createType($args, $this->typeContext);
 
@@ -209,12 +208,12 @@ final class IntRuleTest extends RuleTestCase
 
 	public function testTypeWithArgs(): void
 	{
-		$args = IntArgs::fromArray($this->rule->resolveArgs([
+		$args = $this->rule->resolveArgs([
 			IntRule::UNSIGNED => false,
 			IntRule::MIN => 10,
 			IntRule::MAX => 100,
 			IntRule::CAST_NUMERIC_STRING => true,
-		], $this->ruleArgsContext()));
+		], $this->ruleArgsContext());
 
 		$type = $this->rule->createType($args, $this->typeContext);
 

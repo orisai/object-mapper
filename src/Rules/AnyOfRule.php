@@ -31,7 +31,7 @@ final class AnyOfRule extends CompoundRule
 			}
 
 			$nestedRule = $context->getRule($nestedRuleMeta->getType());
-			$nestedRuleArgs = $this->createRuleArgsInst($nestedRule, $nestedRuleMeta);
+			$nestedRuleArgs = $nestedRuleMeta->getArgs();
 
 			try {
 				$value = $nestedRule->processValue(

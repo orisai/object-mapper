@@ -55,10 +55,9 @@ abstract class BaseCallback implements Callback
 	}
 
 	/**
-	 * @param array<mixed> $args
-	 * @return array<mixed>
+	 * {@inheritDoc}
 	 */
-	public static function resolveArgs(array $args, ArgsContext $context): array
+	public static function resolveArgs(array $args, ArgsContext $context): BaseCallbackArgs
 	{
 		$checker = new ArgsChecker($args, static::class);
 		$checker->checkAllowedArgs([self::METHOD, self::RUNTIME]);
@@ -90,7 +89,7 @@ abstract class BaseCallback implements Callback
 			&& in_array($returnType->getName(), ['void', 'never'], true)
 		);
 
-		return $args;
+		return BaseCallbackArgs::fromArray($args);
 	}
 
 	/**

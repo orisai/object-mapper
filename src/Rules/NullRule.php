@@ -21,10 +21,9 @@ final class NullRule implements Rule
 	public const CAST_EMPTY_STRING = 'castEmptyString';
 
 	/**
-	 * @param array<mixed> $args
-	 * @return array<mixed>
+	 * {@inheritDoc}
 	 */
-	public function resolveArgs(array $args, RuleArgsContext $context): array
+	public function resolveArgs(array $args, RuleArgsContext $context): NullArgs
 	{
 		$checker = new ArgsChecker($args, self::class);
 		$checker->checkAllowedArgs([self::CAST_EMPTY_STRING]);
@@ -33,7 +32,7 @@ final class NullRule implements Rule
 			$checker->checkBool(self::CAST_EMPTY_STRING);
 		}
 
-		return $args;
+		return NullArgs::fromArray($args);
 	}
 
 	public function getArgsType(): string
