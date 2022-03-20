@@ -8,7 +8,6 @@ use Orisai\ObjectMapper\Args\ArgsChecker;
 use Orisai\ObjectMapper\Args\ArgsCreator;
 use Orisai\ObjectMapper\Context\RuleArgsContext;
 use Orisai\ObjectMapper\Context\TypeContext;
-use Orisai\ObjectMapper\Exception\InvalidMeta;
 use Orisai\ObjectMapper\Meta\RuleMeta;
 use Orisai\ObjectMapper\Types\CompoundType;
 use function count;
@@ -49,7 +48,7 @@ abstract class CompoundRule implements Rule
 
 		foreach ($rules as $key => $rule) {
 			if (!$rule instanceof RuleMeta) {
-				throw InvalidMeta::create();
+				throw InvalidArgument::create();
 			}
 
 			$rules[$key] = $resolver->resolveRuleMeta($rule, $context);
