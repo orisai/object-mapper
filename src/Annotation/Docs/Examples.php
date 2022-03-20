@@ -3,8 +3,8 @@
 namespace Orisai\ObjectMapper\Annotation\Docs;
 
 use Doctrine\Common\Annotations\Annotation\NamedArgumentConstructor;
+use Orisai\Exceptions\Logic\InvalidArgument;
 use Orisai\ObjectMapper\Docs\ExamplesDoc;
-use Orisai\ObjectMapper\Exception\InvalidAnnotation;
 use Orisai\ObjectMapper\Meta\DocMeta;
 use function sprintf;
 
@@ -35,7 +35,7 @@ final class Examples implements DocumentationAnnotation
 	{
 		foreach ($examples as $key => $example) {
 			if (!$example instanceof Example) {
-				throw InvalidAnnotation::create()->withMessage(sprintf(
+				throw InvalidArgument::create()->withMessage(sprintf(
 					'%s() expects all values to be subtype of %s',
 					self::class,
 					Example::class,

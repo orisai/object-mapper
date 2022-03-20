@@ -9,7 +9,6 @@ use Orisai\ObjectMapper\Annotation\Callback\CallableAnnotation;
 use Orisai\ObjectMapper\Annotation\Docs\DocumentationAnnotation;
 use Orisai\ObjectMapper\Annotation\Expect\RuleAnnotation;
 use Orisai\ObjectMapper\Annotation\Modifiers\ModifierAnnotation;
-use Orisai\ObjectMapper\Exception\InvalidAnnotation;
 use Orisai\ObjectMapper\MappedObject;
 use Orisai\ObjectMapper\Meta\CallbackMeta;
 use Orisai\ObjectMapper\Meta\Compile\ClassCompileMeta;
@@ -177,7 +176,7 @@ final class AnnotationMetaSource implements MetaSource
 			&& !$annotation instanceof ModifierAnnotation
 			&& !$annotation instanceof RuleAnnotation
 		) {
-			throw InvalidAnnotation::create()
+			throw InvalidArgument::create()
 				->withMessage(sprintf(
 					'Annotation %s (subtype of %s) should implement %s, %s %s or %s',
 					get_class($annotation),

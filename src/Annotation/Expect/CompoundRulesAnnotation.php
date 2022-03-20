@@ -2,7 +2,7 @@
 
 namespace Orisai\ObjectMapper\Annotation\Expect;
 
-use Orisai\ObjectMapper\Exception\InvalidAnnotation;
+use Orisai\Exceptions\Logic\InvalidArgument;
 use Orisai\ObjectMapper\Meta\RuleMeta;
 use function count;
 use function sprintf;
@@ -28,7 +28,7 @@ abstract class CompoundRulesAnnotation implements RuleAnnotation
 	private function resolveRules(array $rules): array
 	{
 		if (count($rules) < 2) {
-			throw InvalidAnnotation::create()
+			throw InvalidArgument::create()
 				->withMessage(sprintf(
 					'%s() should contain array of at least two validation rules (%s)',
 					static::class,
@@ -38,7 +38,7 @@ abstract class CompoundRulesAnnotation implements RuleAnnotation
 
 		foreach ($rules as $key => $rule) {
 			if (!$rule instanceof RuleAnnotation) {
-				throw InvalidAnnotation::create()
+				throw InvalidArgument::create()
 					->withMessage(sprintf(
 						'%s() expects all values to be subtype of %s',
 						static::class,

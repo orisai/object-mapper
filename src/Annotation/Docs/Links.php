@@ -4,8 +4,8 @@ namespace Orisai\ObjectMapper\Annotation\Docs;
 
 use Doctrine\Common\Annotations\Annotation\NamedArgumentConstructor;
 use Doctrine\Common\Annotations\Annotation\Target;
+use Orisai\Exceptions\Logic\InvalidArgument;
 use Orisai\ObjectMapper\Docs\LinksDoc;
-use Orisai\ObjectMapper\Exception\InvalidAnnotation;
 use Orisai\ObjectMapper\Meta\DocMeta;
 use function sprintf;
 
@@ -36,7 +36,7 @@ final class Links implements DocumentationAnnotation
 	{
 		foreach ($links as $key => $link) {
 			if (!$link instanceof Link) {
-				throw InvalidAnnotation::create()
+				throw InvalidArgument::create()
 					->withMessage(sprintf(
 						'%s() expects all values to be subtype of %s',
 						self::class,
