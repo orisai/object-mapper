@@ -3,40 +3,24 @@
 namespace Orisai\ObjectMapper\Callbacks;
 
 use Orisai\ObjectMapper\Args\Args;
-use function array_key_exists;
 
 final class BaseCallbackArgs implements Args
 {
+
+	public string $method;
 
 	public bool $isStatic;
 
 	public bool $returnsValue;
 
-	public string $method;
+	public string $runtime;
 
-	public string $runtime = CallbackRuntime::ALWAYS;
-
-	private function __construct()
+	public function __construct(string $method, bool $isStatic, bool $returnsValue, string $runtime)
 	{
-		// Static constructor is required
-	}
-
-	/**
-	 * @param array<mixed> $args
-	 */
-	public static function fromArray(array $args): self
-	{
-		$self = new self();
-
-		$self->method = $args[BaseCallback::METHOD];
-		$self->isStatic = $args[BaseCallback::METHOD_IS_STATIC];
-		$self->returnsValue = $args[BaseCallback::METHOD_RETURNS_VALUE];
-
-		if (array_key_exists(BaseCallback::RUNTIME, $args)) {
-			$self->runtime = $args[BaseCallback::RUNTIME];
-		}
-
-		return $self;
+		$this->method = $method;
+		$this->isStatic = $isStatic;
+		$this->returnsValue = $returnsValue;
+		$this->runtime = $runtime;
 	}
 
 }

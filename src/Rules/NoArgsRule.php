@@ -16,7 +16,7 @@ trait NoArgsRule
 		$checker = new ArgsChecker($args, static::class);
 		$checker->checkNoArgs();
 
-		return EmptyArgs::fromArray($args);
+		return new EmptyArgs();
 	}
 
 	public function getArgsType(): string

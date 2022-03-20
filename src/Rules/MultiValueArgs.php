@@ -2,11 +2,8 @@
 
 namespace Orisai\ObjectMapper\Rules;
 
-use Orisai\Exceptions\Logic\InvalidArgument;
 use Orisai\ObjectMapper\Args\Args;
 use Orisai\ObjectMapper\Meta\Runtime\RuleRuntimeMeta;
-use function array_key_exists;
-use function sprintf;
 
 /**
  * @internal
@@ -14,47 +11,25 @@ use function sprintf;
 class MultiValueArgs implements Args
 {
 
-	public RuleRuntimeMeta $itemMeta;
+	public RuleRuntimeMeta $itemRuleMeta;
 
-	public ?int $minItems = null;
+	public ?int $minItems;
 
-	public ?int $maxItems = null;
+	public ?int $maxItems;
 
-	public bool $mergeDefaults = false;
+	public bool $mergeDefaults;
 
-	final protected function __construct()
+	public function __construct(
+		RuleRuntimeMeta $itemRuleMeta,
+		?int $minItems,
+		?int $maxItems,
+		bool $mergeDefaults
+	)
 	{
-		// Static constructor is required
-	}
-
-	/**
-	 * @param array<mixed> $args
-	 * @return static
-	 */
-	public static function fromArray(array $args): self
-	{
-		$self = new static();
-
-		if (array_key_exists(MultiValueRule::ITEM_RULE, $args)) {
-			$self->itemMeta = $args[MultiValueRule::ITEM_RULE];
-		} else {
-			throw InvalidArgument::create()
-				->withMessage(sprintf('Key "%s" is required', MultiValueRule::ITEM_RULE));
-		}
-
-		if (array_key_exists(MultiValueRule::MIN_ITEMS, $args)) {
-			$self->minItems = $args[MultiValueRule::MIN_ITEMS];
-		}
-
-		if (array_key_exists(MultiValueRule::MAX_ITEMS, $args)) {
-			$self->maxItems = $args[MultiValueRule::MAX_ITEMS];
-		}
-
-		if (array_key_exists(MultiValueRule::MERGE_DEFAULTS, $args)) {
-			$self->mergeDefaults = $args[MultiValueRule::MERGE_DEFAULTS];
-		}
-
-		return $self;
+		$this->itemRuleMeta = $itemRuleMeta;
+		$this->minItems = $minItems;
+		$this->maxItems = $maxItems;
+		$this->mergeDefaults = $mergeDefaults;
 	}
 
 }

@@ -48,7 +48,7 @@ final class ArrayDefaultValuesFormatterTest extends TestCase
 	private function createType(string $class): StructureType
 	{
 		$type = $this->ruleManager->getRule(StructureRule::class)->createType(
-			StructureArgs::fromClass($class),
+			new StructureArgs($class),
 			new TypeContext($this->metaLoader, $this->ruleManager),
 		);
 		self::assertInstanceOf(StructureType::class, $type);

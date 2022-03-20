@@ -3,7 +3,6 @@
 namespace Orisai\ObjectMapper\Rules;
 
 use Orisai\ObjectMapper\Meta\Runtime\RuleRuntimeMeta;
-use function array_key_exists;
 
 /**
  * @internal
@@ -11,21 +10,18 @@ use function array_key_exists;
 final class ArrayOfArgs extends MultiValueArgs
 {
 
-	public ?RuleRuntimeMeta $keyMeta = null;
+	public ?RuleRuntimeMeta $keyRuleMeta;
 
-	/**
-	 * @param array<mixed> $args
-	 * @return static
-	 */
-	public static function fromArray(array $args): self
+	public function __construct(
+		RuleRuntimeMeta $itemRuleMeta,
+		?RuleRuntimeMeta $keyRuleMeta,
+		?int $minItems,
+		?int $maxItems,
+		bool $mergeDefaults
+	)
 	{
-		$self = parent::fromArray($args);
-
-		if (array_key_exists(ArrayOfRule::KEY_RULE, $args) && $args[ArrayOfRule::KEY_RULE] !== null) {
-			$self->keyMeta = $args[ArrayOfRule::KEY_RULE];
-		}
-
-		return $self;
+		parent::__construct($itemRuleMeta, $minItems, $maxItems, $mergeDefaults);
+		$this->keyRuleMeta = $keyRuleMeta;
 	}
 
 }

@@ -28,11 +28,12 @@ final class NullRule implements Rule
 		$checker = new ArgsChecker($args, self::class);
 		$checker->checkAllowedArgs([self::CAST_EMPTY_STRING]);
 
+		$castEmptyString = false;
 		if ($checker->hasArg(self::CAST_EMPTY_STRING)) {
-			$checker->checkBool(self::CAST_EMPTY_STRING);
+			$castEmptyString = $checker->checkBool(self::CAST_EMPTY_STRING);
 		}
 
-		return NullArgs::fromArray($args);
+		return new NullArgs($castEmptyString);
 	}
 
 	public function getArgsType(): string

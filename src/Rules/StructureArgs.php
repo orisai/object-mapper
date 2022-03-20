@@ -2,11 +2,8 @@
 
 namespace Orisai\ObjectMapper\Rules;
 
-use Orisai\Exceptions\Logic\InvalidArgument;
 use Orisai\ObjectMapper\Args\Args;
 use Orisai\ObjectMapper\MappedObject;
-use function array_key_exists;
-use function sprintf;
 
 /**
  * @internal
@@ -17,37 +14,12 @@ final class StructureArgs implements Args
 	/** @var class-string<MappedObject> */
 	public string $type;
 
-	private function __construct()
-	{
-		// Static constructor is required
-	}
-
 	/**
-	 * @param array<mixed> $args
+	 * @param class-string<MappedObject> $type
 	 */
-	public static function fromArray(array $args): self
+	public function __construct(string $type)
 	{
-		$self = new self();
-
-		if (array_key_exists(StructureRule::TYPE, $args)) {
-			$self->type = $args[StructureRule::TYPE];
-		} else {
-			throw InvalidArgument::create()
-				->withMessage(sprintf('Key "%s" is required', StructureRule::TYPE));
-		}
-
-		return $self;
-	}
-
-	/**
-	 * @param class-string<MappedObject> $class
-	 */
-	public static function fromClass(string $class): self
-	{
-		$self = new self();
-		$self->type = $class;
-
-		return $self;
+		$this->type = $type;
 	}
 
 }

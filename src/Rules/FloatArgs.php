@@ -3,7 +3,6 @@
 namespace Orisai\ObjectMapper\Rules;
 
 use Orisai\ObjectMapper\Args\Args;
-use function array_key_exists;
 
 /**
  * @internal
@@ -11,43 +10,25 @@ use function array_key_exists;
 final class FloatArgs implements Args
 {
 
-	public ?float $min = null;
+	public ?float $min;
 
-	public ?float $max = null;
+	public ?float $max;
 
-	public bool $unsigned = true;
+	public bool $unsigned;
 
-	public bool $castNumericString = false;
+	public bool $castNumericString;
 
-	private function __construct()
+	public function __construct(
+		?float $min,
+		?float $max,
+		bool $unsigned,
+		bool $castNumericString
+	)
 	{
-		// Static constructor is required
-	}
-
-	/**
-	 * @param array<mixed> $args
-	 */
-	public static function fromArray(array $args): self
-	{
-		$self = new self();
-
-		if (array_key_exists(FloatRule::MIN, $args)) {
-			$self->min = $args[FloatRule::MIN];
-		}
-
-		if (array_key_exists(FloatRule::MAX, $args)) {
-			$self->max = $args[FloatRule::MAX];
-		}
-
-		if (array_key_exists(FloatRule::UNSIGNED, $args)) {
-			$self->unsigned = $args[FloatRule::UNSIGNED];
-		}
-
-		if (array_key_exists(FloatRule::CAST_NUMERIC_STRING, $args)) {
-			$self->castNumericString = $args[FloatRule::CAST_NUMERIC_STRING];
-		}
-
-		return $self;
+		$this->min = $min;
+		$this->max = $max;
+		$this->unsigned = $unsigned;
+		$this->castNumericString = $castNumericString;
 	}
 
 }

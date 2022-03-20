@@ -3,7 +3,6 @@
 namespace Orisai\ObjectMapper\Rules;
 
 use Orisai\ObjectMapper\Args\Args;
-use function array_key_exists;
 
 /**
  * @internal
@@ -11,25 +10,11 @@ use function array_key_exists;
 final class BoolArgs implements Args
 {
 
-	public bool $castBoolLike = false;
+	public bool $castBoolLike;
 
-	private function __construct()
+	public function __construct(bool $castBoolLike)
 	{
-		// Static constructor is required
-	}
-
-	/**
-	 * @param array<mixed> $args
-	 */
-	public static function fromArray(array $args): self
-	{
-		$self = new self();
-
-		if (array_key_exists(BoolRule::CAST_BOOL_LIKE, $args)) {
-			$self->castBoolLike = $args[BoolRule::CAST_BOOL_LIKE];
-		}
-
-		return $self;
+		$this->castBoolLike = $castBoolLike;
 	}
 
 }

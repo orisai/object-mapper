@@ -42,7 +42,7 @@ final class InstanceRule implements Rule
 				));
 		}
 
-		return InstanceArgs::fromArray($args);
+		return new InstanceArgs($type);
 	}
 
 	public function getArgsType(): string

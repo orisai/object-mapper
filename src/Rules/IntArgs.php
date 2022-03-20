@@ -3,7 +3,6 @@
 namespace Orisai\ObjectMapper\Rules;
 
 use Orisai\ObjectMapper\Args\Args;
-use function array_key_exists;
 
 /**
  * @internal
@@ -11,43 +10,25 @@ use function array_key_exists;
 final class IntArgs implements Args
 {
 
-	public ?int $min = null;
+	public ?int $min;
 
-	public ?int $max = null;
+	public ?int $max;
 
-	public bool $unsigned = true;
+	public bool $unsigned;
 
-	public bool $castNumericString = false;
+	public bool $castNumericString;
 
-	private function __construct()
+	public function __construct(
+		?int $min,
+		?int $max,
+		bool $unsigned,
+		bool $castNumericString
+	)
 	{
-		// Static constructor is required
-	}
-
-	/**
-	 * @param array<mixed> $args
-	 */
-	public static function fromArray(array $args): self
-	{
-		$self = new self();
-
-		if (array_key_exists(IntRule::MIN, $args)) {
-			$self->min = $args[IntRule::MIN];
-		}
-
-		if (array_key_exists(IntRule::MAX, $args)) {
-			$self->max = $args[IntRule::MAX];
-		}
-
-		if (array_key_exists(IntRule::UNSIGNED, $args)) {
-			$self->unsigned = $args[IntRule::UNSIGNED];
-		}
-
-		if (array_key_exists(IntRule::CAST_NUMERIC_STRING, $args)) {
-			$self->castNumericString = $args[IntRule::CAST_NUMERIC_STRING];
-		}
-
-		return $self;
+		$this->min = $min;
+		$this->max = $max;
+		$this->unsigned = $unsigned;
+		$this->castNumericString = $castNumericString;
 	}
 
 }

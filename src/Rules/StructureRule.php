@@ -12,6 +12,8 @@ use Orisai\ObjectMapper\MappedObject;
 use Orisai\ObjectMapper\Modifiers\FieldNameModifier;
 use Orisai\ObjectMapper\Types\StructureType;
 use function array_keys;
+use function assert;
+use function is_a;
 
 /**
  * @phpstan-implements Rule<StructureArgs>
@@ -31,13 +33,14 @@ final class StructureRule implements Rule
 		$checker->checkAllowedArgs([self::TYPE]);
 
 		$checker->checkRequiredArg(self::TYPE);
-		$checker->checkString(self::TYPE);
+		$type = $checker->checkString(self::TYPE);
 
 		// Load structure to ensure whole hierarchy is valid even if not used
 		// Note: Loading as class should be always array cached and in runtime should be metadata resolved only once so it has no performance impact
 		$context->getMetaLoader()->load($args[self::TYPE]);
+		assert(is_a($type, MappedObject::class, true));
 
-		return StructureArgs::fromArray($args);
+		return new StructureArgs($type);
 	}
 
 	public function getArgsType(): string

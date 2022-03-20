@@ -46,13 +46,14 @@ final class IntRule implements Rule
 			$max = $checker->checkNullableInt(self::MAX);
 		}
 
-		$unsigned = null;
+		$unsigned = true;
 		if ($checker->hasArg(self::UNSIGNED)) {
 			$unsigned = $checker->checkBool(self::UNSIGNED);
 		}
 
+		$castNumericString = false;
 		if ($checker->hasArg(self::CAST_NUMERIC_STRING)) {
-			$checker->checkBool(self::CAST_NUMERIC_STRING);
+			$castNumericString = $checker->checkBool(self::CAST_NUMERIC_STRING);
 		}
 
 		if ($min !== null && $max !== null && $max < $min) {
@@ -91,7 +92,7 @@ final class IntRule implements Rule
 			}
 		}
 
-		return IntArgs::fromArray($args);
+		return new IntArgs($min, $max, $unsigned, $castNumericString);
 	}
 
 	public function getArgsType(): string

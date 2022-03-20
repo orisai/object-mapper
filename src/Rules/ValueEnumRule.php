@@ -51,11 +51,12 @@ final class ValueEnumRule implements Rule
 			}
 		}
 
+		$useKeys = false;
 		if ($checker->hasArg(self::USE_KEYS)) {
-			$checker->checkBool(self::USE_KEYS);
+			$useKeys = $checker->checkBool(self::USE_KEYS);
 		}
 
-		return ValueEnumArgs::fromArray($args);
+		return new ValueEnumArgs($values, $useKeys);
 	}
 
 	public function getArgsType(): string

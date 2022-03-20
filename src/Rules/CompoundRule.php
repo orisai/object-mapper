@@ -50,9 +50,7 @@ abstract class CompoundRule implements Rule
 			$rules[$key] = $resolver->resolveRuleMeta($rule, $context);
 		}
 
-		$args[self::RULES] = $rules;
-
-		return CompoundRuleArgs::fromArray($args);
+		return new CompoundRuleArgs($rules);
 	}
 
 	public function getArgsType(): string

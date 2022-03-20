@@ -2,10 +2,7 @@
 
 namespace Orisai\ObjectMapper\Rules;
 
-use Orisai\Exceptions\Logic\InvalidArgument;
 use Orisai\ObjectMapper\Args\Args;
-use function array_key_exists;
-use function sprintf;
 
 /**
  * @internal
@@ -13,35 +10,18 @@ use function sprintf;
 final class ValueEnumArgs implements Args
 {
 
-	public bool $useKeys = false;
-
-	/** @var array<mixed> */
+	/** @var array<int|string, mixed> */
 	public array $values;
 
-	private function __construct()
-	{
-		// Static constructor is required
-	}
+	public bool $useKeys;
 
 	/**
-	 * @param array<mixed> $args
+	 * @param array<int|string, mixed> $values
 	 */
-	public static function fromArray(array $args): self
+	public function __construct(array $values, bool $useKeys)
 	{
-		$self = new self();
-
-		if (array_key_exists(ValueEnumRule::VALUES, $args)) {
-			$self->values = $args[ValueEnumRule::VALUES];
-		} else {
-			throw InvalidArgument::create()
-				->withMessage(sprintf('Key "%s" is required', ValueEnumRule::VALUES));
-		}
-
-		if (array_key_exists(ValueEnumRule::USE_KEYS, $args)) {
-			$self->useKeys = $args[ValueEnumRule::USE_KEYS];
-		}
-
-		return $self;
+		$this->values = $values;
+		$this->useKeys = $useKeys;
 	}
 
 }

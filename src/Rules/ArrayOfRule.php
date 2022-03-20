@@ -38,29 +38,39 @@ final class ArrayOfRule extends MultiValueRule
 
 		$checker->checkRequiredArg(self::ITEM_RULE);
 		$item = $checker->checkInstanceOf(self::ITEM_RULE, RuleMeta::class);
-		$args[self::ITEM_RULE] = $resolver->resolveRuleMeta($item, $context);
+		$itemRuleMeta = $resolver->resolveRuleMeta($item, $context);
 
+		$keyRuleMeta = null;
 		if ($checker->hasArg(self::KEY_RULE)) {
 			$key = $checker->checkNullableInstanceOf(self::KEY_RULE, RuleMeta::class);
 
 			if ($key !== null) {
-				$args[self::KEY_RULE] = $resolver->resolveRuleMeta($key, $context);
+				$keyRuleMeta = $resolver->resolveRuleMeta($key, $context);
 			}
 		}
 
+		$minItems = null;
 		if ($checker->hasArg(self::MIN_ITEMS)) {
-			$checker->checkNullableInt(self::MIN_ITEMS);
+			$minItems = $checker->checkNullableInt(self::MIN_ITEMS);
 		}
 
+		$maxItems = null;
 		if ($checker->hasArg(self::MAX_ITEMS)) {
-			$checker->checkNullableInt(self::MAX_ITEMS);
+			$maxItems = $checker->checkNullableInt(self::MAX_ITEMS);
 		}
 
+		$mergeDefaults = false;
 		if ($checker->hasArg(self::MERGE_DEFAULTS)) {
-			$checker->checkBool(self::MERGE_DEFAULTS);
+			$mergeDefaults = $checker->checkBool(self::MERGE_DEFAULTS);
 		}
 
-		return ArrayOfArgs::fromArray($args);
+		return new ArrayOfArgs(
+			$itemRuleMeta,
+			$keyRuleMeta,
+			$minItems,
+			$maxItems,
+			$mergeDefaults,
+		);
 	}
 
 	public function getArgsType(): string
@@ -94,11 +104,11 @@ final class ArrayOfRule extends MultiValueRule
 			throw ValueDoesNotMatch::create($type, $value);
 		}
 
-		$itemMeta = $args->itemMeta;
+		$itemMeta = $args->itemRuleMeta;
 		$itemRule = $context->getRule($itemMeta->getType());
 		$itemArgs = $itemMeta->getArgs();
 
-		$keyMeta = $args->keyMeta;
+		$keyMeta = $args->keyRuleMeta;
 		if ($keyMeta !== null) {
 			$keyRule = $context->getRule($keyMeta->getType());
 			$keyArgs = $keyMeta->getArgs();
@@ -154,11 +164,11 @@ final class ArrayOfRule extends MultiValueRule
 	 */
 	public function createType(Args $args, TypeContext $context): ArrayType
 	{
-		$itemMeta = $args->itemMeta;
+		$itemMeta = $args->itemRuleMeta;
 		$itemRule = $context->getRule($itemMeta->getType());
 		$itemArgs = $itemMeta->getArgs();
 
-		$keyMeta = $args->keyMeta;
+		$keyMeta = $args->keyRuleMeta;
 		if ($keyMeta !== null) {
 			$keyRule = $context->getRule($keyMeta->getType());
 			$keyArgs = $keyMeta->getArgs();

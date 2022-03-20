@@ -4,9 +4,7 @@ namespace Orisai\ObjectMapper\Rules;
 
 use DateTime;
 use DateTimeImmutable;
-use DateTimeInterface;
 use Orisai\ObjectMapper\Args\Args;
-use function array_key_exists;
 use function is_a;
 
 /**
@@ -15,32 +13,18 @@ use function is_a;
 final class DateTimeArgs implements Args
 {
 
-	public string $format = DateTimeInterface::ATOM;
+	public string $format;
 
 	/** @var class-string<DateTimeImmutable|DateTime> */
-	public string $type = DateTimeImmutable::class;
-
-	private function __construct()
-	{
-		// Static constructor is required
-	}
+	public string $type;
 
 	/**
-	 * @param array<mixed> $args
+	 * @param class-string<DateTimeImmutable|DateTime> $type
 	 */
-	public static function fromArray(array $args): self
+	public function __construct(string $format, string $type)
 	{
-		$self = new self();
-
-		if (array_key_exists(DateTimeRule::FORMAT, $args)) {
-			$self->format = $args[DateTimeRule::FORMAT];
-		}
-
-		if (array_key_exists(DateTimeRule::TYPE, $args)) {
-			$self->type = $args[DateTimeRule::TYPE];
-		}
-
-		return $self;
+		$this->format = $format;
+		$this->type = $type;
 	}
 
 	public function isImmutable(): bool

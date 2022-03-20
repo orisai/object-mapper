@@ -4,6 +4,7 @@ namespace Orisai\ObjectMapper\Rules;
 
 use DateTime;
 use DateTimeImmutable;
+use DateTimeInterface;
 use Nette\Utils\Validators;
 use Orisai\Exceptions\Logic\InvalidArgument;
 use Orisai\ObjectMapper\Args\Args;
@@ -16,7 +17,7 @@ use Orisai\ObjectMapper\Types\SimpleValueType;
 use ReflectionClass;
 use Throwable;
 use function assert;
-use function class_exists;
+use function is_a;
 use function is_int;
 use function is_string;
 use function sprintf;
@@ -45,14 +46,20 @@ final class DateTimeRule implements Rule
 		$checker = new ArgsChecker($args, self::class);
 		$checker->checkAllowedArgs([self::FORMAT, self::TYPE]);
 
+		$format = DateTimeInterface::ATOM;
 		if ($checker->hasArg(self::FORMAT)) {
-			$checker->checkString(self::FORMAT);
+			$format = $checker->checkString(self::FORMAT);
 		}
 
+		$type = DateTimeImmutable::class;
 		if ($checker->hasArg(self::TYPE)) {
 			$type = $args[self::TYPE];
 
-			if (!is_string($type) || !class_exists($type) || (new ReflectionClass($type))->isAbstract()) {
+			if (
+				!is_string($type)
+				|| !is_a($type, DateTimeInterface::class, true)
+				|| (new ReflectionClass($type))->isAbstract()
+			) {
 				throw InvalidArgument::create()
 					->withMessage($checker->formatMessage(
 						sprintf(
@@ -66,7 +73,7 @@ final class DateTimeRule implements Rule
 			}
 		}
 
-		return DateTimeArgs::fromArray($args);
+		return new DateTimeArgs($format, $type);
 	}
 
 	public function getArgsType(): string
@@ -75,7 +82,7 @@ final class DateTimeRule implements Rule
 	}
 
 	/**
-	 * @param mixed $value
+	 * @param mixed        $value
 	 * @param DateTimeArgs $args
 	 * @return DateTimeImmutable|DateTime|string|int
 	 * @throws ValueDoesNotMatch

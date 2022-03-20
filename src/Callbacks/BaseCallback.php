@@ -65,14 +65,6 @@ abstract class BaseCallback implements Callback
 		$checker->checkRequiredArg(self::METHOD);
 		$checker->checkString(self::METHOD);
 
-		if ($checker->hasArg(self::RUNTIME)) {
-			$checker->checkEnum(self::RUNTIME, [
-				CallbackRuntime::ALWAYS,
-				CallbackRuntime::INITIALIZATION,
-				CallbackRuntime::PROCESSING,
-			]);
-		}
-
 		$class = $context->getClass();
 		$property = $context->getProperty();
 		$methodName = $args[self::METHOD];
@@ -80,16 +72,25 @@ abstract class BaseCallback implements Callback
 		self::validateMethodSignature($method, $class, $property);
 
 		// Should be method called statically?
-		$args[self::METHOD_IS_STATIC] = $method->isStatic();
+		$isStatic = $method->isStatic();
 
 		// Method is expected to return data unless void return type is defined
 		$returnType = $method->getReturnType();
-		$args[self::METHOD_RETURNS_VALUE] = !(
+		$returnsValue = !(
 			$returnType instanceof ReflectionNamedType
 			&& in_array($returnType->getName(), ['void', 'never'], true)
 		);
 
-		return BaseCallbackArgs::fromArray($args);
+		$runtime = CallbackRuntime::ALWAYS;
+		if ($checker->hasArg(self::RUNTIME)) {
+			$runtime = $checker->checkEnum(self::RUNTIME, [
+				CallbackRuntime::ALWAYS,
+				CallbackRuntime::INITIALIZATION,
+				CallbackRuntime::PROCESSING,
+			]);
+		}
+
+		return new BaseCallbackArgs($methodName, $isStatic, $returnsValue, $runtime);
 	}
 
 	/**

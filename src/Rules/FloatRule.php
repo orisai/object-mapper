@@ -47,13 +47,14 @@ final class FloatRule implements Rule
 			$max = $checker->checkNullableFloat(self::MAX);
 		}
 
-		$unsigned = null;
+		$unsigned = true;
 		if ($checker->hasArg(self::UNSIGNED)) {
 			$unsigned = $checker->checkBool(self::UNSIGNED);
 		}
 
+		$castNumericString = false;
 		if ($checker->hasArg(self::CAST_NUMERIC_STRING)) {
-			$checker->checkBool(self::CAST_NUMERIC_STRING);
+			$castNumericString = $checker->checkBool(self::CAST_NUMERIC_STRING);
 		}
 
 		if ($min !== null && $max !== null && $max < $min) {
@@ -92,7 +93,7 @@ final class FloatRule implements Rule
 			}
 		}
 
-		return FloatArgs::fromArray($args);
+		return new FloatArgs($min, $max, $unsigned, $castNumericString);
 	}
 
 	public function getArgsType(): string

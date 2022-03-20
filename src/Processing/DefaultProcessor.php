@@ -143,7 +143,7 @@ class DefaultProcessor implements Processor
 	protected function createStructureType(string $class): StructureType
 	{
 		return $this->ruleManager->getRule(StructureRule::class)->createType(
-			StructureArgs::fromClass($class),
+			new StructureArgs($class),
 			$this->getTypeContext(),
 		);
 	}

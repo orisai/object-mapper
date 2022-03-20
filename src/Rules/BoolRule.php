@@ -37,11 +37,12 @@ final class BoolRule implements Rule
 		$checker = new ArgsChecker($args, self::class);
 		$checker->checkAllowedArgs([self::CAST_BOOL_LIKE]);
 
+		$castBoolLike = false;
 		if ($checker->hasArg(self::CAST_BOOL_LIKE)) {
-			$checker->checkBool(self::CAST_BOOL_LIKE);
+			$castBoolLike = $checker->checkBool(self::CAST_BOOL_LIKE);
 		}
 
-		return BoolArgs::fromArray($args);
+		return new BoolArgs($castBoolLike);
 	}
 
 	public function getArgsType(): string
@@ -50,7 +51,7 @@ final class BoolRule implements Rule
 	}
 
 	/**
-	 * @param mixed $value
+	 * @param mixed    $value
 	 * @param BoolArgs $args
 	 * @throws ValueDoesNotMatch
 	 */

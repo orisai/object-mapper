@@ -32,25 +32,29 @@ final class StringRule implements Rule
 	{
 		$checker = new ArgsChecker($args, self::class);
 
-		$checker->checkAllowedArgs([self::PATTERN, self::MIN_LENGTH, self::MAX_LENGTH, self::NOT_EMPTY]);
+		$checker->checkAllowedArgs([self::PATTERN, self::NOT_EMPTY, self::MIN_LENGTH, self::MAX_LENGTH]);
 
+		$pattern = null;
 		if ($checker->hasArg(self::PATTERN)) {
-			$checker->checkNullableString(self::PATTERN);
+			$pattern = $checker->checkNullableString(self::PATTERN);
 		}
 
-		if ($checker->hasArg(self::MIN_LENGTH)) {
-			$checker->checkNullableInt(self::MIN_LENGTH);
-		}
-
-		if ($checker->hasArg(self::MAX_LENGTH)) {
-			$checker->checkNullableInt(self::MAX_LENGTH);
-		}
-
+		$notEmpty = false;
 		if ($checker->hasArg(self::NOT_EMPTY)) {
-			$checker->checkBool(self::NOT_EMPTY);
+			$notEmpty = $checker->checkBool(self::NOT_EMPTY);
 		}
 
-		return StringArgs::fromArray($args);
+		$minLength = null;
+		if ($checker->hasArg(self::MIN_LENGTH)) {
+			$minLength = $checker->checkNullableInt(self::MIN_LENGTH);
+		}
+
+		$maxLength = null;
+		if ($checker->hasArg(self::MAX_LENGTH)) {
+			$maxLength = $checker->checkNullableInt(self::MAX_LENGTH);
+		}
+
+		return new StringArgs($pattern, $notEmpty, $minLength, $maxLength);
 	}
 
 	public function getArgsType(): string

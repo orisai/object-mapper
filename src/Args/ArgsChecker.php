@@ -81,9 +81,11 @@ final class ArgsChecker
 	}
 
 	/**
-	 * @param array<mixed> $values
+	 * @template T
+	 * @param array<T> $values
+	 * @return T
 	 */
-	public function checkEnum(string $argName, array $values): void
+	public function checkEnum(string $argName, array $values)
 	{
 		if (!in_array($this->args[$argName], $values, true)) {
 			throw InvalidArgument::create()
@@ -94,6 +96,8 @@ final class ArgsChecker
 					implode(', ', $values),
 				));
 		}
+
+		return $this->args[$argName];
 	}
 
 	public function hasArg(string $argName): bool

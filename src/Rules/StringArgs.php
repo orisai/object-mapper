@@ -3,7 +3,6 @@
 namespace Orisai\ObjectMapper\Rules;
 
 use Orisai\ObjectMapper\Args\Args;
-use function array_key_exists;
 
 /**
  * @internal
@@ -11,43 +10,25 @@ use function array_key_exists;
 final class StringArgs implements Args
 {
 
-	public ?string $pattern = null;
+	public ?string $pattern;
 
-	public bool $notEmpty = false;
+	public bool $notEmpty;
 
-	public ?int $minLength = null;
+	public ?int $minLength;
 
-	public ?int $maxLength = null;
+	public ?int $maxLength;
 
-	private function __construct()
+	public function __construct(
+		?string $pattern,
+		bool $notEmpty,
+		?int $minLength,
+		?int $maxLength
+	)
 	{
-		// Static constructor is required
-	}
-
-	/**
-	 * @param array<mixed> $args
-	 */
-	public static function fromArray(array $args): self
-	{
-		$self = new self();
-
-		if (array_key_exists(StringRule::PATTERN, $args)) {
-			$self->pattern = $args[StringRule::PATTERN];
-		}
-
-		if (array_key_exists(StringRule::NOT_EMPTY, $args)) {
-			$self->notEmpty = $args[StringRule::NOT_EMPTY];
-		}
-
-		if (array_key_exists(StringRule::MIN_LENGTH, $args)) {
-			$self->minLength = $args[StringRule::MIN_LENGTH];
-		}
-
-		if (array_key_exists(StringRule::MAX_LENGTH, $args)) {
-			$self->maxLength = $args[StringRule::MAX_LENGTH];
-		}
-
-		return $self;
+		$this->pattern = $pattern;
+		$this->notEmpty = $notEmpty;
+		$this->minLength = $minLength;
+		$this->maxLength = $maxLength;
 	}
 
 }
