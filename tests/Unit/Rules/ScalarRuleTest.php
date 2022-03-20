@@ -4,10 +4,10 @@ namespace Tests\Orisai\ObjectMapper\Unit\Rules;
 
 use Generator;
 use Orisai\ObjectMapper\Exception\ValueDoesNotMatch;
-use Orisai\ObjectMapper\NoValue;
 use Orisai\ObjectMapper\Rules\EmptyArgs;
 use Orisai\ObjectMapper\Rules\ScalarRule;
 use Orisai\ObjectMapper\Types\CompoundType;
+use Orisai\ObjectMapper\Types\NoValue;
 use Orisai\ObjectMapper\Types\SimpleValueType;
 use stdClass;
 use Tests\Orisai\ObjectMapper\Toolkit\RuleTestCase;

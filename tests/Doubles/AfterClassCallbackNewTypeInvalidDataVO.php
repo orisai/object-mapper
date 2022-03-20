@@ -8,8 +8,8 @@ use Orisai\ObjectMapper\Callbacks\CallbackRuntime;
 use Orisai\ObjectMapper\Exception\InvalidData;
 use Orisai\ObjectMapper\Exception\ValueDoesNotMatch;
 use Orisai\ObjectMapper\MappedObject;
-use Orisai\ObjectMapper\NoValue;
 use Orisai\ObjectMapper\Types\MessageType;
+use Orisai\ObjectMapper\Types\NoValue;
 use Orisai\ObjectMapper\Types\StructureType;
 
 /**

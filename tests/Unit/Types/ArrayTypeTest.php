@@ -4,9 +4,9 @@ namespace Tests\Orisai\ObjectMapper\Unit\Types;
 
 use Orisai\Exceptions\Logic\InvalidArgument;
 use Orisai\ObjectMapper\Exception\ValueDoesNotMatch;
-use Orisai\ObjectMapper\NoValue;
 use Orisai\ObjectMapper\Types\ArrayType;
 use Orisai\ObjectMapper\Types\MessageType;
+use Orisai\ObjectMapper\Types\NoValue;
 use PHPUnit\Framework\TestCase;
 
 final class ArrayTypeTest extends TestCase

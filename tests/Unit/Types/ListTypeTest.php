@@ -3,9 +3,9 @@
 namespace Tests\Orisai\ObjectMapper\Unit\Types;
 
 use Orisai\ObjectMapper\Exception\ValueDoesNotMatch;
-use Orisai\ObjectMapper\NoValue;
 use Orisai\ObjectMapper\Types\ListType;
 use Orisai\ObjectMapper\Types\MessageType;
+use Orisai\ObjectMapper\Types\NoValue;
 use Orisai\ObjectMapper\Types\SimpleValueType;
 use PHPUnit\Framework\TestCase;
 

@@ -5,10 +5,10 @@ namespace Tests\Orisai\ObjectMapper\Unit\Types;
 use Orisai\Exceptions\Logic\InvalidArgument;
 use Orisai\Exceptions\Logic\InvalidState;
 use Orisai\ObjectMapper\Exception\ValueDoesNotMatch;
-use Orisai\ObjectMapper\NoValue;
 use Orisai\ObjectMapper\Types\ArrayType;
 use Orisai\ObjectMapper\Types\CompoundType;
 use Orisai\ObjectMapper\Types\MessageType;
+use Orisai\ObjectMapper\Types\NoValue;
 use Orisai\ObjectMapper\Types\SimpleValueType;
 use PHPUnit\Framework\TestCase;
 
