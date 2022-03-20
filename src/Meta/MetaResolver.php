@@ -242,7 +242,7 @@ final class MetaResolver
 			}
 
 			$isPropertyTyped = $class->getProperty($propertyName)->hasType();
-			$containsNullable = $properties[$propertyName]->getRule()->mayContainRuleType(
+			$containsNullable = $properties[$propertyName]->getRule()->containsAnyOfRules(
 				[NullRule::class, MixedRule::class],
 			);
 

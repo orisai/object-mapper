@@ -53,7 +53,7 @@ parameters:
 		- message: '#^Method (.+)\:\:getType\(\) should return class-string\<(.+)Rule\<(.+)Args\>\> but returns ''(.+)Rule''\.$#'
 		  path:
 		  	../src/Annotation/Expect
-		- message: '#^Parameter \#1 \$type of method (.+)RuleMeta\:\:mayContainRuleType\(\) expects array\<class-string\<(.+)Rule(.+)\>\>, array{''(.+)Rule''} given\.$#'
+		- message: '#^Parameter \#1 \$type of method (.+)RuleMeta\:\:containsAnyOfRules\(\) expects array\<class-string\<(.+)Rule(.+)\>\>, array{''(.+)Rule''} given\.$#'
 		  path: ../src/Meta/MetaResolver.php
 		- message: '#^Parameter \#5 \$callbackType of method (.+)\:\:(handleClass|apply)(Callbacks)\(\) expects class-string\<(.+)Callback\<(.+)Args\>\>, ''(.+)Callback'' given\.$#'
 		  path: ../src/Processing/DefaultProcessor.php

@@ -44,17 +44,17 @@ final class RuleMeta
 	}
 
 	/**
-	 * @param class-string<Rule<Args>>|array<class-string<Rule<Args>>> $type
+	 * @param array<class-string<Rule<Args>>> $type
 	 */
-	public function mayContainRuleType($type): bool
+	public function containsAnyOfRules(array $type): bool
 	{
-		return $this->mayContainRuleTypeInternal(is_string($type) ? [$type] : $type, $this);
+		return $this->containsAnyOfRulesInternal($type, $this);
 	}
 
 	/**
 	 * @param array<class-string<Rule<Args>>> $types
 	 */
-	private function mayContainRuleTypeInternal(array $types, RuleMeta $ruleNode): bool
+	private function containsAnyOfRulesInternal(array $types, RuleMeta $ruleNode): bool
 	{
 		$nodeType = $ruleNode->getType();
 
@@ -68,7 +68,7 @@ final class RuleMeta
 			$nodeArgs = $ruleNode->getArgs();
 
 			foreach ($nodeArgs[CompoundRule::RULES] as $nestedRuleMeta) {
-				if ($this->mayContainRuleTypeInternal($types, $nestedRuleMeta)) {
+				if ($this->containsAnyOfRulesInternal($types, $nestedRuleMeta)) {
 					return true;
 				}
 			}
