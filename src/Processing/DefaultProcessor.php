@@ -714,7 +714,7 @@ class DefaultProcessor implements Processor
 						$propertyMeta,
 					);
 				$object->$propertyName = $processed;
-				$skippedPropertiesContext->removeInitializedProperty($propertyName);
+				$skippedPropertiesContext->removeSkippedProperty($propertyName);
 			} catch (ValueDoesNotMatch | InvalidData $exception) {
 				$type->overwriteInvalidField($fieldName, $exception);
 			}

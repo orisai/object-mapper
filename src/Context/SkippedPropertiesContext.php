@@ -36,13 +36,13 @@ class SkippedPropertiesContext
 		$this->skippedProperties[$propertyName] = $context;
 	}
 
-	public function removeInitializedProperty(string $propertyName): void
+	public function removeSkippedProperty(string $propertyName): void
 	{
 		unset($this->skippedProperties[$propertyName]);
 	}
 
 	/**
-	 * @return array<SkippedPropertyContext>
+	 * @return array<string, SkippedPropertyContext>
 	 */
 	public function getSkippedProperties(): array
 	{
