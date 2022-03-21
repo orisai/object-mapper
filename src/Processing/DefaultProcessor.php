@@ -11,7 +11,7 @@ use Orisai\ObjectMapper\Callbacks\Callback;
 use Orisai\ObjectMapper\Context\BaseFieldContext;
 use Orisai\ObjectMapper\Context\FieldContext;
 use Orisai\ObjectMapper\Context\FieldSetContext;
-use Orisai\ObjectMapper\Context\ProcessorRunContext;
+use Orisai\ObjectMapper\Context\ProcessorCallContext;
 use Orisai\ObjectMapper\Context\SkippedPropertiesContext;
 use Orisai\ObjectMapper\Context\SkippedPropertyContext;
 use Orisai\ObjectMapper\Context\TypeContext;
@@ -74,12 +74,12 @@ class DefaultProcessor implements Processor
 		$holder = $this->createHolder($class);
 
 		$fieldSetContext = $this->createFieldSetContext($options, $type, true);
-		$runContext = $this->createProcessorRunContext($class, $holder);
+		$callContext = $this->createProcessorRunContext($class, $holder);
 
-		$processedData = $this->processData($data, $fieldSetContext, $runContext);
+		$processedData = $this->processData($data, $fieldSetContext, $callContext);
 
 		$object = $holder->getInstance();
-		$this->fillObject($object, $processedData, $data, $fieldSetContext, $runContext);
+		$this->fillObject($object, $processedData, $data, $fieldSetContext, $callContext);
 
 		return $object;
 	}
@@ -97,9 +97,9 @@ class DefaultProcessor implements Processor
 		$holder = $this->createHolder($class);
 
 		$fieldSetContext = $this->createFieldSetContext($options, $type, false);
-		$runContext = $this->createProcessorRunContext($class, $holder);
+		$callContext = $this->createProcessorRunContext($class, $holder);
 
-		return $this->processData($data, $fieldSetContext, $runContext);
+		return $this->processData($data, $fieldSetContext, $callContext);
 	}
 
 	protected function getTypeContext(): TypeContext
@@ -116,24 +116,24 @@ class DefaultProcessor implements Processor
 	// /////////////// //
 
 	/**
-	 * @param mixed                             $data
-	 * @param ProcessorRunContext<MappedObject> $runContext
+	 * @param mixed                              $data
+	 * @param ProcessorCallContext<MappedObject> $callContext
 	 * @return array<int|string, mixed>
 	 * @throws InvalidData
 	 */
 	protected function processData(
 		$data,
 		FieldSetContext $fieldSetContext,
-		ProcessorRunContext $runContext
+		ProcessorCallContext $callContext
 	): array
 	{
-		$meta = $runContext->getMeta();
+		$meta = $callContext->getMeta();
 		$classMeta = $meta->getClass();
 
 		$data = $this->ensureDataProcessable($data, $fieldSetContext);
-		$data = $this->handleClassCallbacks($data, $fieldSetContext, $runContext, $classMeta, BeforeCallback::class);
-		$data = $this->handleFields($data, $fieldSetContext, $runContext);
-		$data = $this->handleClassCallbacks($data, $fieldSetContext, $runContext, $classMeta, AfterCallback::class);
+		$data = $this->handleClassCallbacks($data, $fieldSetContext, $callContext, $classMeta, BeforeCallback::class);
+		$data = $this->handleFields($data, $fieldSetContext, $callContext);
+		$data = $this->handleClassCallbacks($data, $fieldSetContext, $callContext, $classMeta, AfterCallback::class);
 
 		return $data;
 	}
@@ -162,13 +162,13 @@ class DefaultProcessor implements Processor
 	 * @template RC of MappedObject
 	 * @param class-string<RC> $class
 	 * @param ObjectHolder<RC> $holder
-	 * @return ProcessorRunContext<RC>
+	 * @return ProcessorCallContext<RC>
 	 */
-	protected function createProcessorRunContext(string $class, ObjectHolder $holder): ProcessorRunContext
+	protected function createProcessorRunContext(string $class, ObjectHolder $holder): ProcessorCallContext
 	{
 		$meta = $this->metaLoader->load($class);
 
-		return new ProcessorRunContext($class, $holder, $meta);
+		return new ProcessorCallContext($class, $holder, $meta);
 	}
 
 	/**
@@ -219,19 +219,19 @@ class DefaultProcessor implements Processor
 	// /////////////////// //
 
 	/**
-	 * @param array<int|string, mixed>          $data
-	 * @param ProcessorRunContext<MappedObject> $runContext
+	 * @param array<int|string, mixed>           $data
+	 * @param ProcessorCallContext<MappedObject> $callContext
 	 * @return array<int|string, mixed>
 	 * @throws InvalidData
 	 */
 	protected function handleFields(
 		array $data,
 		FieldSetContext $fieldSetContext,
-		ProcessorRunContext $runContext
+		ProcessorCallContext $callContext
 	): array
 	{
-		$data = $this->handleSentFields($data, $fieldSetContext, $runContext);
-		$data = $this->handleMissingFields($data, $fieldSetContext, $runContext);
+		$data = $this->handleSentFields($data, $fieldSetContext, $callContext);
+		$data = $this->handleMissingFields($data, $fieldSetContext, $callContext);
 
 		$type = $fieldSetContext->getType();
 
@@ -243,19 +243,19 @@ class DefaultProcessor implements Processor
 	}
 
 	/**
-	 * @param array<int|string, mixed>          $data
-	 * @param ProcessorRunContext<MappedObject> $runContext
+	 * @param array<int|string, mixed>           $data
+	 * @param ProcessorCallContext<MappedObject> $callContext
 	 * @return array<int|string, mixed>
 	 */
 	protected function handleSentFields(
 		array $data,
 		FieldSetContext $fieldSetContext,
-		ProcessorRunContext $runContext
+		ProcessorCallContext $callContext
 	): array
 	{
 		$type = $fieldSetContext->getType();
 
-		$meta = $runContext->getMeta();
+		$meta = $callContext->getMeta();
 		$propertiesMeta = $meta->getProperties();
 		$propertyNames = array_keys($propertiesMeta);
 
@@ -300,7 +300,7 @@ class DefaultProcessor implements Processor
 				$fieldSetContext->isInitializeObjects()
 				&& $propertyMeta->getModifier(SkippedModifier::class) !== null
 			) {
-				$runContext->addSkippedProperty(
+				$callContext->addSkippedProperty(
 					$propertyName,
 					new SkippedPropertyContext($fieldName, $value, false),
 				);
@@ -314,7 +314,7 @@ class DefaultProcessor implements Processor
 				$data[$fieldName] = $this->processProperty(
 					$value,
 					$fieldContext,
-					$runContext,
+					$callContext,
 					$propertyMeta,
 				);
 			} catch (ValueDoesNotMatch | InvalidData $exception) {
@@ -326,13 +326,13 @@ class DefaultProcessor implements Processor
 	}
 
 	/**
-	 * @param array<int|string, mixed>          $data
-	 * @param ProcessorRunContext<MappedObject> $runContext
+	 * @param array<int|string, mixed>           $data
+	 * @param ProcessorCallContext<MappedObject> $callContext
 	 * @return array<string>
 	 */
-	protected function findMissingProperties(array $data, ProcessorRunContext $runContext): array
+	protected function findMissingProperties(array $data, ProcessorCallContext $callContext): array
 	{
-		$meta = $runContext->getMeta();
+		$meta = $callContext->getMeta();
 
 		return array_diff(
 			array_keys($meta->getProperties()),
@@ -344,36 +344,36 @@ class DefaultProcessor implements Processor
 	}
 
 	/**
-	 * @param ProcessorRunContext<MappedObject> $runContext
+	 * @param ProcessorCallContext<MappedObject> $callContext
 	 * @return array<string>
 	 */
-	protected function getSkippedProperties(ProcessorRunContext $runContext): array
+	protected function getSkippedProperties(ProcessorCallContext $callContext): array
 	{
-		return array_keys($runContext->getSkippedProperties());
+		return array_keys($callContext->getSkippedProperties());
 	}
 
 	/**
-	 * @param array<int|string, mixed>          $data
-	 * @param ProcessorRunContext<MappedObject> $runContext
+	 * @param array<int|string, mixed>           $data
+	 * @param ProcessorCallContext<MappedObject> $callContext
 	 * @return array<int|string, mixed>
 	 */
 	protected function handleMissingFields(
 		array $data,
 		FieldSetContext $fieldSetContext,
-		ProcessorRunContext $runContext
+		ProcessorCallContext $callContext
 	): array
 	{
 		$type = $fieldSetContext->getType();
 		$options = $fieldSetContext->getOptions();
 		$initializeObjects = $fieldSetContext->isInitializeObjects();
 
-		$propertiesMeta = $runContext->getMeta()->getProperties();
+		$propertiesMeta = $callContext->getMeta()->getProperties();
 
-		$missingProperties = $this->findMissingProperties($data, $runContext);
+		$missingProperties = $this->findMissingProperties($data, $callContext);
 		$requiredFields = $options->getRequiredFields();
 		$fillDefaultValues = $initializeObjects || $options->isPreFillDefaultValues();
 
-		$skippedProperties = $this->getSkippedProperties($runContext);
+		$skippedProperties = $this->getSkippedProperties($callContext);
 
 		foreach ($missingProperties as $missingProperty) {
 			// Skipped properties are not considered missing, they are just processed later
@@ -433,7 +433,7 @@ class DefaultProcessor implements Processor
 				&& $fieldSetContext->isInitializeObjects()
 				&& $propertyMeta->getModifier(SkippedModifier::class) !== null
 			) {
-				$runContext->addSkippedProperty(
+				$callContext->addSkippedProperty(
 					$missingProperty,
 					new SkippedPropertyContext($missingField, $data[$missingField], true),
 				);
@@ -476,8 +476,8 @@ class DefaultProcessor implements Processor
 	}
 
 	/**
-	 * @param mixed                             $value
-	 * @param ProcessorRunContext<MappedObject> $runContext
+	 * @param mixed                              $value
+	 * @param ProcessorCallContext<MappedObject> $callContext
 	 * @return mixed
 	 * @throws ValueDoesNotMatch
 	 * @throws InvalidData
@@ -485,13 +485,13 @@ class DefaultProcessor implements Processor
 	protected function processProperty(
 		$value,
 		FieldContext $fieldContext,
-		ProcessorRunContext $runContext,
+		ProcessorCallContext $callContext,
 		PropertyRuntimeMeta $meta
 	)
 	{
-		$value = $this->applyCallbacks($value, $fieldContext, $runContext, $meta, BeforeCallback::class);
+		$value = $this->applyCallbacks($value, $fieldContext, $callContext, $meta, BeforeCallback::class);
 		$value = $this->processPropertyRules($value, $fieldContext, $meta);
-		$value = $this->applyCallbacks($value, $fieldContext, $runContext, $meta, AfterCallback::class);
+		$value = $this->applyCallbacks($value, $fieldContext, $callContext, $meta, AfterCallback::class);
 
 		return $value;
 	}
@@ -519,16 +519,16 @@ class DefaultProcessor implements Processor
 	// ///////// //
 
 	/**
-	 * @param array<mixed>                                           $data
-	 * @param ProcessorRunContext<MappedObject>                      $runContext
-	 * @param class-string<Callback<Args>> $callbackType
+	 * @param array<mixed>                       $data
+	 * @param ProcessorCallContext<MappedObject> $callContext
+	 * @param class-string<Callback<Args>>       $callbackType
 	 * @return array<mixed>
 	 * @throws InvalidData
 	 */
 	protected function handleClassCallbacks(
 		array $data,
 		FieldSetContext $fieldSetContext,
-		ProcessorRunContext $runContext,
+		ProcessorCallContext $callContext,
 		ClassRuntimeMeta $meta,
 		string $callbackType
 	): array
@@ -536,7 +536,7 @@ class DefaultProcessor implements Processor
 		$type = $fieldSetContext->getType();
 
 		try {
-			$data = $this->applyCallbacks($data, $fieldSetContext, $runContext, $meta, $callbackType);
+			$data = $this->applyCallbacks($data, $fieldSetContext, $callContext, $meta, $callbackType);
 			assert(is_array($data)); // Class callbacks are forced to define return type
 		} catch (ValueDoesNotMatch | InvalidData $exception) {
 			$caughtType = $exception->getInvalidType();
@@ -555,11 +555,11 @@ class DefaultProcessor implements Processor
 	}
 
 	/**
-	 * @param mixed                                                  $data
-	 * @param FieldContext|FieldSetContext                           $baseFieldContext
-	 * @param ProcessorRunContext<MappedObject>                      $runContext
-	 * @param ClassRuntimeMeta|PropertyRuntimeMeta                   $meta
-	 * @param class-string<Callback<Args>> $callbackType
+	 * @param mixed                                $data
+	 * @param FieldContext|FieldSetContext         $baseFieldContext
+	 * @param ProcessorCallContext<MappedObject>   $callContext
+	 * @param ClassRuntimeMeta|PropertyRuntimeMeta $meta
+	 * @param class-string<Callback<Args>>         $callbackType
 	 * @return mixed
 	 * @throws ValueDoesNotMatch
 	 * @throws InvalidData
@@ -567,12 +567,12 @@ class DefaultProcessor implements Processor
 	protected function applyCallbacks(
 		$data,
 		BaseFieldContext $baseFieldContext,
-		ProcessorRunContext $runContext,
+		ProcessorCallContext $callContext,
 		SharedNodeRuntimeMeta $meta,
 		string $callbackType
 	)
 	{
-		$holder = $runContext->getObjectHolder();
+		$holder = $callContext->getObjectHolder();
 
 		foreach ($meta->getCallbacks() as $callback) {
 			if ($callback->getType() === $callbackType) {
@@ -594,21 +594,21 @@ class DefaultProcessor implements Processor
 	// ///////////// //
 
 	/**
-	 * @param array<int|string, mixed>          $data
-	 * @param array<mixed>                      $rawData
-	 * @param ProcessorRunContext<MappedObject> $runContext
+	 * @param array<int|string, mixed>           $data
+	 * @param array<mixed>                       $rawData
+	 * @param ProcessorCallContext<MappedObject> $callContext
 	 */
 	protected function fillObject(
 		MappedObject $object,
 		array $data,
 		array $rawData,
 		FieldSetContext $fieldSetContext,
-		ProcessorRunContext $runContext
+		ProcessorCallContext $callContext
 	): void
 	{
 		$type = $fieldSetContext->getType();
 		$options = $fieldSetContext->getOptions();
-		$meta = $runContext->getMeta();
+		$meta = $callContext->getMeta();
 
 		// Set raw data
 		if ($options->isFillRawValues()) {
@@ -616,7 +616,7 @@ class DefaultProcessor implements Processor
 		}
 
 		// Reset mapped properties state
-		$propertiesMeta = $runContext->getMeta()->getProperties();
+		$propertiesMeta = $callContext->getMeta()->getProperties();
 		foreach ($propertiesMeta as $propertyName => $propertyMeta) {
 			unset($object->$propertyName);
 		}
@@ -628,7 +628,7 @@ class DefaultProcessor implements Processor
 		}
 
 		// Set skipped properties
-		$skippedProperties = $runContext->getSkippedProperties();
+		$skippedProperties = $callContext->getSkippedProperties();
 		if ($skippedProperties !== []) {
 			$partial = new SkippedPropertiesContext($type, $options);
 			$object->setSkippedPropertiesContext($partial);
@@ -642,7 +642,7 @@ class DefaultProcessor implements Processor
 	/**
 	 * @template H of MappedObject
 	 * @param class-string<H> $class
-	 * @param H|null $object
+	 * @param H|null          $object
 	 * @return ObjectHolder<H>
 	 */
 	protected function createHolder(string $class, ?MappedObject $object = null): ObjectHolder
@@ -684,7 +684,7 @@ class DefaultProcessor implements Processor
 		$skippedProperties = $skippedPropertiesContext->getSkippedProperties();
 
 		$holder = $this->createHolder($class, $object);
-		$runContext = $this->createProcessorRunContext($class, $holder);
+		$callContext = $this->createProcessorRunContext($class, $holder);
 		$propertiesMeta = $this->metaLoader->load($class)->getProperties();
 
 		foreach ($properties as $propertyName) {
@@ -711,7 +711,7 @@ class DefaultProcessor implements Processor
 					: $this->processProperty(
 						$skippedPropertyContext->getValue(),
 						$fieldContext,
-						$runContext,
+						$callContext,
 						$propertyMeta,
 					);
 				$object->$propertyName = $processed;

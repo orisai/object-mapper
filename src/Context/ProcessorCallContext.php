@@ -9,7 +9,7 @@ use Orisai\ObjectMapper\Processing\ObjectHolder;
 /**
  * @template T of MappedObject
  */
-class ProcessorRunContext
+class ProcessorCallContext
 {
 
 	/** @var ObjectHolder<T> */
