@@ -15,7 +15,6 @@ use Orisai\ObjectMapper\Context\ProcessorCallContext;
 use Orisai\ObjectMapper\Context\SkippedPropertiesContext;
 use Orisai\ObjectMapper\Context\SkippedPropertyContext;
 use Orisai\ObjectMapper\Context\TypeContext;
-use Orisai\ObjectMapper\Creation\ObjectCreator;
 use Orisai\ObjectMapper\Exceptions\InvalidData;
 use Orisai\ObjectMapper\Exceptions\ValueDoesNotMatch;
 use Orisai\ObjectMapper\MappedObject;

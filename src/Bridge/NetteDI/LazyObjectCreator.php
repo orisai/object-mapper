@@ -3,8 +3,8 @@
 namespace Orisai\ObjectMapper\Bridge\NetteDI;
 
 use Nette\DI\Container;
-use Orisai\ObjectMapper\Creation\ObjectCreator;
 use Orisai\ObjectMapper\MappedObject;
+use Orisai\ObjectMapper\Processing\ObjectCreator;
 use function assert;
 
 final class LazyObjectCreator implements ObjectCreator

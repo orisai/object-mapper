@@ -3,11 +3,11 @@
 namespace Tests\Orisai\ObjectMapper\Toolkit;
 
 use Orisai\ObjectMapper\Attributes\AnnotationsMetaSource;
-use Orisai\ObjectMapper\Creation\DefaultObjectCreator;
 use Orisai\ObjectMapper\Meta\DefaultMetaResolverFactory;
 use Orisai\ObjectMapper\Meta\DefaultMetaSourceManager;
 use Orisai\ObjectMapper\Meta\MetaLoader;
 use Orisai\ObjectMapper\Meta\MetaResolver;
+use Orisai\ObjectMapper\Processing\DefaultObjectCreator;
 use Orisai\ObjectMapper\Processing\DefaultProcessor;
 use Orisai\ObjectMapper\Processing\Processor;
 use Orisai\ObjectMapper\Rules\DefaultRuleManager;

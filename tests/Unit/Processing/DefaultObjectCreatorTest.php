@@ -1,10 +1,10 @@
 <?php declare(strict_types = 1);
 
-namespace Tests\Orisai\ObjectMapper\Unit\Creation;
+namespace Tests\Orisai\ObjectMapper\Unit\Processing;
 
 use Orisai\Exceptions\Logic\InvalidState;
-use Orisai\ObjectMapper\Creation\DefaultObjectCreator;
-use Orisai\ObjectMapper\Creation\ObjectCreator;
+use Orisai\ObjectMapper\Processing\DefaultObjectCreator;
+use Orisai\ObjectMapper\Processing\ObjectCreator;
 use PHPUnit\Framework\TestCase;
 use Tests\Orisai\ObjectMapper\Doubles\DependentVO;
 use Tests\Orisai\ObjectMapper\Doubles\EmptyVO;
