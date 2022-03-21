@@ -6,26 +6,25 @@ use Orisai\Exceptions\Logic\InvalidState;
 use Orisai\ObjectMapper\Attributes\Callbacks\After;
 use Orisai\ObjectMapper\Attributes\Callbacks\Before;
 use Orisai\ObjectMapper\Attributes\Expect\StringValue;
-use Orisai\ObjectMapper\Callbacks\CallbackRuntime;
 use Orisai\ObjectMapper\Exception\ValueDoesNotMatch;
 use Orisai\ObjectMapper\MappedObject;
 
 /**
- * @Before(method="beforeClass", runtime=CallbackRuntime::ALWAYS)
- * @After(method="afterClass", runtime=CallbackRuntime::ALWAYS)
+ * @Before(method="beforeClass")
+ * @After(method="afterClass")
  */
 final class PropertyCallbacksFailureVO extends MappedObject
 {
 
 	/**
 	 * @StringValue()
-	 * @Before(method="beforeNeverValidated", runtime=CallbackRuntime::ALWAYS)
+	 * @Before(method="beforeNeverValidated")
 	 */
 	public string $neverValidated;
 
 	/**
 	 * @StringValue()
-	 * @After(method="afterValidationFailed", runtime=CallbackRuntime::ALWAYS)
+	 * @After(method="afterValidationFailed")
 	 */
 	public string $validationFailed;
 

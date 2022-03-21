@@ -16,8 +16,8 @@ use Orisai\ObjectMapper\MappedObject;
 use function array_key_exists;
 
 /**
- * @Before(method="beforeClass", runtime=CallbackRuntime::ALWAYS)
- * @After(method="afterClass", runtime=CallbackRuntime::ALWAYS)
+ * @Before(method="beforeClass")
+ * @After(method="afterClass")
  */
 final class CallbacksVO extends MappedObject
 {
@@ -42,7 +42,7 @@ final class CallbacksVO extends MappedObject
 	 * @ArrayOf(
 	 *     @MixedValue()
 	 * )
-	 * @After(method="afterStructure", runtime=CallbackRuntime::ALWAYS)
+	 * @After(method="afterStructure")
 	 */
 	public MappedObject $structure;
 
@@ -51,8 +51,8 @@ final class CallbacksVO extends MappedObject
 
 	/**
 	 * @StringValue()
-	 * @Before(method="beforeImmutableDefaultValue", runtime=CallbackRuntime::ALWAYS)
-	 * @Before(method="afterImmutableDefaultValue", runtime=CallbackRuntime::ALWAYS)
+	 * @Before(method="beforeImmutableDefaultValue")
+	 * @Before(method="afterImmutableDefaultValue")
 	 */
 	public string $immutableDefaultValue = 'defaultValue_immutable';
 
@@ -61,8 +61,8 @@ final class CallbacksVO extends MappedObject
 
 	/**
 	 * @StringValue()
-	 * @Before(method="beforeCallbackSetValue", runtime=CallbackRuntime::ALWAYS)
-	 * @After(method="afterCallbackSetValue", runtime=CallbackRuntime::ALWAYS)
+	 * @Before(method="beforeCallbackSetValue")
+	 * @After(method="afterCallbackSetValue")
 	 */
 	public string $callbackSetValue;
 

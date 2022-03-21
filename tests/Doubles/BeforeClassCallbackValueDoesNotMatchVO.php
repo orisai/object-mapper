@@ -3,12 +3,11 @@
 namespace Tests\Orisai\ObjectMapper\Doubles;
 
 use Orisai\ObjectMapper\Attributes\Callbacks\Before;
-use Orisai\ObjectMapper\Callbacks\CallbackRuntime;
 use Orisai\ObjectMapper\Exception\ValueDoesNotMatch;
 use Orisai\ObjectMapper\MappedObject;
 
 /**
- * @Before(method="before", runtime=CallbackRuntime::ALWAYS)
+ * @Before(method="before")
  */
 final class BeforeClassCallbackValueDoesNotMatchVO extends MappedObject
 {
