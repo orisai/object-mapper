@@ -69,7 +69,6 @@ final class StructureRule implements Rule
 	public function createType(Args $args, TypeContext $context): StructureType
 	{
 		$propertiesMeta = $context->getMeta($args->type)->getProperties();
-		/** @var array<string> $propertyNames */
 		$propertyNames = array_keys($propertiesMeta);
 
 		$type = new StructureType($args->type);

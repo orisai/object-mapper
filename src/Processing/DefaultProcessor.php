@@ -253,7 +253,6 @@ class DefaultProcessor implements Processor
 
 		$meta = $runContext->getMeta();
 		$propertiesMeta = $meta->getProperties();
-		/** @var array<string> $propertyNames */
 		$propertyNames = array_keys($propertiesMeta);
 
 		foreach ($data as $fieldName => $value) {
