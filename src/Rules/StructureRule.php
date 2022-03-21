@@ -61,7 +61,7 @@ final class StructureRule implements Rule
 
 		return $context->isInitializeObjects()
 			? $processor->process($value, $args->type, $context->getOptions())
-			: $processor->processWithoutInitialization($value, $args->type, $context->getOptions());
+			: $processor->processWithoutMapping($value, $args->type, $context->getOptions());
 	}
 
 	/**

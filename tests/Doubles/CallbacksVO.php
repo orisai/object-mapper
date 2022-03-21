@@ -33,8 +33,8 @@ final class CallbacksVO extends MappedObject
 	 *         @MixedValue(),
 	 *     ),
 	 * )
-	 * @After(method="afterArrayInitialization", runtime=CallbackRuntime::INITIALIZATION)
-	 * @After(method="afterArrayProcessing", runtime=CallbackRuntime::PROCESSING)
+	 * @After(method="afterArrayInitialization", runtime=CallbackRuntime::WITH_MAPPING)
+	 * @After(method="afterArrayProcessing", runtime=CallbackRuntime::WITHOUT_MAPPING)
 	 */
 	public array $array;
 
@@ -150,7 +150,7 @@ final class CallbacksVO extends MappedObject
 
 		return $context->isInitializeObjects()
 			? $processor->process($structure, $class, $options)
-			: $processor->processWithoutInitialization($structure, $class, $options);
+			: $processor->processWithoutMapping($structure, $class, $options);
 	}
 
 	public static function beforeImmutableDefaultValue(): void

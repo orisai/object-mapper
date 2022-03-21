@@ -90,7 +90,7 @@ class DefaultProcessor implements Processor
 	 * @return array<int|string, mixed>
 	 * @throws InvalidData
 	 */
-	public function processWithoutInitialization($data, string $class, ?Options $options = null): array
+	public function processWithoutMapping($data, string $class, ?Options $options = null): array
 	{
 		$options ??= new Options();
 		$type = $this->createStructureType($class);
@@ -404,7 +404,7 @@ class DefaultProcessor implements Processor
 				try {
 					$data[$missingField] = $initializeObjects
 						? $this->process([], $structureArgs->type, $options)
-						: $this->processWithoutInitialization([], $structureArgs->type, $options);
+						: $this->processWithoutMapping([], $structureArgs->type, $options);
 				} catch (InvalidData $exception) {
 					$type->overwriteInvalidField(
 						$missingField,

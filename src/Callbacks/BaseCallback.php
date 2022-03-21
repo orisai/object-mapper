@@ -41,12 +41,12 @@ abstract class BaseCallback implements Callback
 
 	private const PROCESSING_RUNTIMES = [
 		CallbackRuntime::ALWAYS,
-		CallbackRuntime::PROCESSING,
+		CallbackRuntime::WITHOUT_MAPPING,
 	];
 
 	private const INITIALIZATION_RUNTIMES = [
 		CallbackRuntime::ALWAYS,
-		CallbackRuntime::INITIALIZATION,
+		CallbackRuntime::WITH_MAPPING,
 	];
 
 	private function __construct()
@@ -85,8 +85,8 @@ abstract class BaseCallback implements Callback
 		if ($checker->hasArg(self::RUNTIME)) {
 			$runtime = $checker->checkEnum(self::RUNTIME, [
 				CallbackRuntime::ALWAYS,
-				CallbackRuntime::INITIALIZATION,
-				CallbackRuntime::PROCESSING,
+				CallbackRuntime::WITH_MAPPING,
+				CallbackRuntime::WITHOUT_MAPPING,
 			]);
 		}
 

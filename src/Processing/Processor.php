@@ -27,7 +27,7 @@ interface Processor
 	 * @return array<int|string, mixed>
 	 * @throws InvalidData
 	 */
-	public function processWithoutInitialization($data, string $class, ?Options $options = null): array;
+	public function processWithoutMapping($data, string $class, ?Options $options = null): array;
 
 	/**
 	 * Validate and initialize MappedObject properties which were skipped due to LateProcessed modifier

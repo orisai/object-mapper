@@ -6,8 +6,8 @@ interface CallbackRuntime
 {
 
 	public const
-		PROCESSING = 'processing',
-		INITIALIZATION = 'initialization',
+		WITHOUT_MAPPING = 'withMapping',
+		WITH_MAPPING = 'withoutMapping',
 		ALWAYS = 'always';
 
 }

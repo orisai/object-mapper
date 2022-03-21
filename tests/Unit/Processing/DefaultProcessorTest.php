@@ -262,13 +262,13 @@ stringg: Field is unknown, did you mean `string`?',
 		);
 
 		// Defaults are not pre-filled by default
-		$processed = $this->processor->processWithoutInitialization($data, DefaultsVO::class);
+		$processed = $this->processor->processWithoutMapping($data, DefaultsVO::class);
 		self::assertSame([], $processed);
 
 		// Pre-fill defaults
 		$options = new Options();
 		$options->setPreFillDefaultValues();
-		$processed = $this->processor->processWithoutInitialization($data, DefaultsVO::class, $options);
+		$processed = $this->processor->processWithoutMapping($data, DefaultsVO::class, $options);
 		self::assertSame(
 			[
 				'string' => 'foo',
@@ -297,7 +297,7 @@ stringg: Field is unknown, did you mean `string`?',
 			'instance' => $instance,
 			'structure' => [],
 		];
-		$processedData = $this->processor->processWithoutInitialization($data, InitializingVO::class, $options);
+		$processedData = $this->processor->processWithoutMapping($data, InitializingVO::class, $options);
 
 		self::assertSame(
 			[
@@ -372,7 +372,7 @@ stringg: Field is unknown, did you mean `string`?',
 			'callbackSetValue' => 'givenByUser',
 		];
 
-		$processedData = $this->processor->processWithoutInitialization($data, CallbacksVO::class, $options);
+		$processedData = $this->processor->processWithoutMapping($data, CallbacksVO::class, $options);
 		$vo = $this->processor->process($data, CallbacksVO::class, $options);
 
 		self::assertSame(
