@@ -3,6 +3,7 @@
 namespace Orisai\ObjectMapper\Rules;
 
 use Orisai\ObjectMapper\Args\ArgsChecker;
+use Orisai\ObjectMapper\Args\EmptyArgs;
 use Orisai\ObjectMapper\Context\RuleArgsContext;
 
 trait NoArgsRule

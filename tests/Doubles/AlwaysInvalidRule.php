@@ -3,10 +3,10 @@
 namespace Tests\Orisai\ObjectMapper\Doubles;
 
 use Orisai\ObjectMapper\Args\Args;
+use Orisai\ObjectMapper\Args\EmptyArgs;
 use Orisai\ObjectMapper\Context\FieldContext;
 use Orisai\ObjectMapper\Context\TypeContext;
 use Orisai\ObjectMapper\Exception\ValueDoesNotMatch;
-use Orisai\ObjectMapper\Rules\EmptyArgs;
 use Orisai\ObjectMapper\Rules\NoArgsRule;
 use Orisai\ObjectMapper\Rules\Rule;
 use Orisai\ObjectMapper\Types\MessageType;
@@ -20,7 +20,7 @@ final class AlwaysInvalidRule implements Rule
 	use NoArgsRule;
 
 	/**
-	 * @param mixed $value
+	 * @param mixed     $value
 	 * @param EmptyArgs $args
 	 * @return mixed
 	 * @throws ValueDoesNotMatch

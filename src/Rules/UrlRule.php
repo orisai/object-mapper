@@ -3,6 +3,7 @@
 namespace Orisai\ObjectMapper\Rules;
 
 use Orisai\ObjectMapper\Args\Args;
+use Orisai\ObjectMapper\Args\EmptyArgs;
 use Orisai\ObjectMapper\Context\FieldContext;
 use Orisai\ObjectMapper\Context\TypeContext;
 use Orisai\ObjectMapper\Exception\ValueDoesNotMatch;
