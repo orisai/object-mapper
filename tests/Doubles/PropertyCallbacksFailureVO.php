@@ -6,7 +6,7 @@ use Orisai\Exceptions\Logic\InvalidState;
 use Orisai\ObjectMapper\Attributes\Callbacks\After;
 use Orisai\ObjectMapper\Attributes\Callbacks\Before;
 use Orisai\ObjectMapper\Attributes\Expect\StringValue;
-use Orisai\ObjectMapper\Exception\ValueDoesNotMatch;
+use Orisai\ObjectMapper\Exceptions\ValueDoesNotMatch;
 use Orisai\ObjectMapper\MappedObject;
 
 /**

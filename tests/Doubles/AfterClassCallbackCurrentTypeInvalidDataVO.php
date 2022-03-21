@@ -5,7 +5,7 @@ namespace Tests\Orisai\ObjectMapper\Doubles;
 use Orisai\ObjectMapper\Attributes\Callbacks\After;
 use Orisai\ObjectMapper\Attributes\Expect\StringValue;
 use Orisai\ObjectMapper\Context\FieldSetContext;
-use Orisai\ObjectMapper\Exception\InvalidData;
+use Orisai\ObjectMapper\Exceptions\InvalidData;
 use Orisai\ObjectMapper\MappedObject;
 
 /**

@@ -2,7 +2,7 @@
 
 namespace Orisai\ObjectMapper\Processing;
 
-use Orisai\ObjectMapper\Exception\InvalidData;
+use Orisai\ObjectMapper\Exceptions\InvalidData;
 use Orisai\ObjectMapper\MappedObject;
 
 interface Processor

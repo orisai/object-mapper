@@ -2,7 +2,7 @@
 
 namespace Orisai\ObjectMapper\Types;
 
-use Orisai\ObjectMapper\Exception\WithTypeAndValue;
+use Orisai\ObjectMapper\Exceptions\WithTypeAndValue;
 use Orisai\ObjectMapper\MappedObject;
 
 final class StructureType implements Type

@@ -3,7 +3,7 @@
 namespace Tests\Orisai\ObjectMapper\Benchmark;
 
 use Generator;
-use Orisai\ObjectMapper\Exception\InvalidData;
+use Orisai\ObjectMapper\Exceptions\InvalidData;
 use PhpBench\Benchmark\Metadata\Annotations\Iterations;
 use PhpBench\Benchmark\Metadata\Annotations\ParamProviders;
 use Tests\Orisai\ObjectMapper\Doubles\ArrayOfIntVO;

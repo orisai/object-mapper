@@ -3,8 +3,8 @@
 namespace Tests\Orisai\ObjectMapper\Unit\Rules;
 
 use Orisai\ObjectMapper\Args\EmptyArgs;
-use Orisai\ObjectMapper\Exception\ValueDoesNotMatch;
-use Orisai\ObjectMapper\Exception\WithTypeAndValue;
+use Orisai\ObjectMapper\Exceptions\ValueDoesNotMatch;
+use Orisai\ObjectMapper\Exceptions\WithTypeAndValue;
 use Orisai\ObjectMapper\Meta\DefaultValueMeta;
 use Orisai\ObjectMapper\Meta\Runtime\RuleRuntimeMeta;
 use Orisai\ObjectMapper\Rules\ListOfRule;

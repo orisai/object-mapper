@@ -3,7 +3,7 @@
 namespace Tests\Orisai\ObjectMapper\Doubles;
 
 use Orisai\ObjectMapper\Attributes\Callbacks\Before;
-use Orisai\ObjectMapper\Exception\ValueDoesNotMatch;
+use Orisai\ObjectMapper\Exceptions\ValueDoesNotMatch;
 use Orisai\ObjectMapper\MappedObject;
 
 /**

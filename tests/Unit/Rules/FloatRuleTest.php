@@ -3,7 +3,7 @@
 namespace Tests\Orisai\ObjectMapper\Unit\Rules;
 
 use Generator;
-use Orisai\ObjectMapper\Exception\ValueDoesNotMatch;
+use Orisai\ObjectMapper\Exceptions\ValueDoesNotMatch;
 use Orisai\ObjectMapper\Rules\FloatArgs;
 use Orisai\ObjectMapper\Rules\FloatRule;
 use Orisai\ObjectMapper\Types\SimpleValueType;

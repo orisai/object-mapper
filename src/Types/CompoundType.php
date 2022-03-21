@@ -4,7 +4,7 @@ namespace Orisai\ObjectMapper\Types;
 
 use Orisai\Exceptions\Logic\InvalidArgument;
 use Orisai\Exceptions\Logic\InvalidState;
-use Orisai\ObjectMapper\Exception\WithTypeAndValue;
+use Orisai\ObjectMapper\Exceptions\WithTypeAndValue;
 use function array_key_exists;
 use function implode;
 use function in_array;

@@ -1,6 +1,6 @@
 <?php declare(strict_types = 1);
 
-namespace Orisai\ObjectMapper\Exception;
+namespace Orisai\ObjectMapper\Exceptions;
 
 use Orisai\Exceptions\Check\CheckedException;
 use Orisai\ObjectMapper\Types\Type;
