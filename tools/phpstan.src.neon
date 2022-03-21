@@ -55,7 +55,15 @@ parameters:
 		- message: '#^Method (.+)\:\:getType\(\) should return class-string\<(.+)Rule\<(.+)Args\>\> but returns ''(.+)Rule''\.$#'
 		  path:
 		  	../src/Annotation/Expect
+		- message: '#^Method (.+)\:\:getType\(\) should return class-string\<(.+)Modifier\<(.+)Args\>\> but returns ''(.+)Modifier''\.$#'
+		  path:
+		  	../src/Annotation/Modifiers
 		- message: '#^Parameter \#1 \$type of method (.+)RuleCompileMeta\:\:containsAnyOfRules\(\) expects array\<class-string\<(.+)Rule(.+)\>\>, array{''(.+)Rule''} given\.$#'
 		  path: ../src/Meta/MetaResolver.php
 		- message: '#^Parameter \#5 \$callbackType of method (.+)\:\:(handleClass|apply)(Callbacks)\(\) expects class-string\<(.+)Callback\<(.+)Args\>\>, ''(.+)Callback'' given\.$#'
 		  path: ../src/Processing/DefaultProcessor.php
+		# Generics - specifying type would cause too many errors like "Strict comparison using === between class-string<Modifier<Args>> and 'FieldNameModifier' will always evaluate to false."
+		- message: '#^Method (.+)ModifierCompileMeta\:\:getType\(\) return type with generic interface (.+)Modifier does not specify its types: T$#'
+		  path: ../src/Meta/Compile/ModifierCompileMeta.php
+		- message: '#^Method (.+)SharedNodeRuntimeMeta\:\:getModifier\(\) has parameter \$type with generic interface (.+)Modifier but does not specify its types: T$#'
+		  path: ../src/Meta/Runtime/SharedNodeRuntimeMeta.php

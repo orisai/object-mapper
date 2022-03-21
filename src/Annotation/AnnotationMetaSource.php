@@ -13,11 +13,11 @@ use Orisai\ObjectMapper\MappedObject;
 use Orisai\ObjectMapper\Meta\Compile\CallbackCompileMeta;
 use Orisai\ObjectMapper\Meta\Compile\ClassCompileMeta;
 use Orisai\ObjectMapper\Meta\Compile\CompileMeta;
+use Orisai\ObjectMapper\Meta\Compile\ModifierCompileMeta;
 use Orisai\ObjectMapper\Meta\Compile\PropertyCompileMeta;
 use Orisai\ObjectMapper\Meta\Compile\RuleCompileMeta;
 use Orisai\ObjectMapper\Meta\DocMeta;
 use Orisai\ObjectMapper\Meta\MetaSource;
-use Orisai\ObjectMapper\Meta\ModifierMeta;
 use ReflectionClass;
 use function get_class;
 use function sprintf;
@@ -76,7 +76,7 @@ final class AnnotationMetaSource implements MetaSource
 					$annotation->getArgs(),
 				);
 			} else {
-				$modifiers[] = new ModifierMeta(
+				$modifiers[] = new ModifierCompileMeta(
 					$annotation->getType(),
 					$annotation->getArgs(),
 				);
@@ -135,7 +135,7 @@ final class AnnotationMetaSource implements MetaSource
 						$annotation->getArgs(),
 					);
 				} else {
-					$modifiers[] = new ModifierMeta(
+					$modifiers[] = new ModifierCompileMeta(
 						$annotation->getType(),
 						$annotation->getArgs(),
 					);

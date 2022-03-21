@@ -6,8 +6,8 @@ use Orisai\ObjectMapper\Callbacks\BeforeCallback;
 use Orisai\ObjectMapper\Docs\DescriptionDoc;
 use Orisai\ObjectMapper\Meta\Compile\CallbackCompileMeta;
 use Orisai\ObjectMapper\Meta\Compile\ClassCompileMeta;
+use Orisai\ObjectMapper\Meta\Compile\ModifierCompileMeta;
 use Orisai\ObjectMapper\Meta\DocMeta;
-use Orisai\ObjectMapper\Meta\ModifierMeta;
 use Orisai\ObjectMapper\Modifiers\FieldNameModifier;
 use PHPUnit\Framework\TestCase;
 
@@ -23,7 +23,7 @@ final class ClassCompileMetaTest extends TestCase
 			new DocMeta(DescriptionDoc::class, []),
 		];
 		$modifiers = [
-			new ModifierMeta(FieldNameModifier::class, []),
+			new ModifierCompileMeta(FieldNameModifier::class, []),
 		];
 
 		$meta = new ClassCompileMeta($callbacks, $docs, $modifiers);

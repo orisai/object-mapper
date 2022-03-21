@@ -1,20 +1,21 @@
 <?php declare(strict_types = 1);
 
-namespace Orisai\ObjectMapper\Meta;
+namespace Orisai\ObjectMapper\Meta\Compile;
 
+use Orisai\ObjectMapper\Args\Args;
 use Orisai\ObjectMapper\Modifiers\Modifier;
 
-final class ModifierMeta
+final class ModifierCompileMeta
 {
 
-	/** @var class-string<Modifier> */
+	/** @var class-string<Modifier<Args>> */
 	private string $type;
 
 	/** @var array<mixed> */
 	private array $args;
 
 	/**
-	 * @param class-string<Modifier> $type
+	 * @param class-string<Modifier<Args>> $type
 	 * @param array<mixed>                 $args
 	 */
 	public function __construct(string $type, array $args)

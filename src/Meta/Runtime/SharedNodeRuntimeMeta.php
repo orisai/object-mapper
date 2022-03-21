@@ -2,8 +2,8 @@
 
 namespace Orisai\ObjectMapper\Meta\Runtime;
 
+use Orisai\ObjectMapper\Args\Args;
 use Orisai\ObjectMapper\Meta\DocMeta;
-use Orisai\ObjectMapper\Meta\ModifierMeta;
 use Orisai\ObjectMapper\Modifiers\Modifier;
 
 /**
@@ -18,16 +18,16 @@ abstract class SharedNodeRuntimeMeta
 	/** @var array<string, DocMeta> */
 	private array $docs;
 
-	/** @var array<class-string<Modifier>, array<mixed>> */
+	/** @var array<class-string<Modifier<Args>>, Args> */
 	private array $modifiers;
 
-	/** @var array<ModifierMeta>|null */
+	/** @var array<class-string<Modifier<Args>>, ModifierRuntimeMeta>|null */
 	private ?array $instModifiers = null;
 
 	/**
-	 * @param array<int, CallbackRuntimeMeta>             $callbacks
-	 * @param array<string, DocMeta>                      $docs
-	 * @param array<class-string<Modifier>, array<mixed>> $modifiers
+	 * @param array<int, CallbackRuntimeMeta>           $callbacks
+	 * @param array<string, DocMeta>                    $docs
+	 * @param array<class-string<Modifier<Args>>, Args> $modifiers
 	 */
 	public function __construct(array $callbacks, array $docs, array $modifiers)
 	{
@@ -53,7 +53,7 @@ abstract class SharedNodeRuntimeMeta
 	}
 
 	/**
-	 * @return array<ModifierMeta>
+	 * @return array<class-string<Modifier<Args>>, ModifierRuntimeMeta>
 	 */
 	public function getModifiers(): array
 	{
@@ -64,7 +64,7 @@ abstract class SharedNodeRuntimeMeta
 		$processed = [];
 
 		foreach ($this->modifiers as $type => $args) {
-			$processed[$type] = new ModifierMeta($type, $args);
+			$processed[$type] = new ModifierRuntimeMeta($type, $args);
 		}
 
 		return $this->instModifiers = $processed;
@@ -73,7 +73,7 @@ abstract class SharedNodeRuntimeMeta
 	/**
 	 * @param class-string<Modifier> $type
 	 */
-	public function getModifier(string $type): ?ModifierMeta
+	public function getModifier(string $type): ?ModifierRuntimeMeta
 	{
 		return $this->getModifiers()[$type] ?? null;
 	}

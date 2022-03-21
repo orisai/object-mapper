@@ -8,16 +8,18 @@ use Orisai\ObjectMapper\Context\ArgsContext;
 use function is_int;
 use function is_string;
 
+/**
+ * @implements Modifier<FieldNameArgs>
+ */
 final class FieldNameModifier implements Modifier
 {
 
 	public const NAME = 'name';
 
 	/**
-	 * @param array<mixed> $args
-	 * @return array<mixed>
+	 * {@inheritDoc}
 	 */
-	public static function resolveArgs(array $args, ArgsContext $context): array
+	public static function resolveArgs(array $args, ArgsContext $context): FieldNameArgs
 	{
 		$checker = new ArgsChecker($args, self::class);
 		$checker->checkAllowedArgs([self::NAME]);
@@ -33,7 +35,7 @@ final class FieldNameModifier implements Modifier
 				));
 		}
 
-		return $args;
+		return new FieldNameArgs($name);
 	}
 
 }

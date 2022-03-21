@@ -5,11 +5,13 @@ namespace Orisai\ObjectMapper\Meta;
 use Orisai\Exceptions\Logic\InvalidArgument;
 use Orisai\Exceptions\Logic\InvalidState;
 use Orisai\Exceptions\Message;
+use Orisai\ObjectMapper\Args\Args;
 use Orisai\ObjectMapper\Context\ArgsContext;
 use Orisai\ObjectMapper\Context\RuleArgsContext;
 use Orisai\ObjectMapper\MappedObject;
 use Orisai\ObjectMapper\Meta\Compile\CallbackCompileMeta;
 use Orisai\ObjectMapper\Meta\Compile\CompileMeta;
+use Orisai\ObjectMapper\Meta\Compile\ModifierCompileMeta;
 use Orisai\ObjectMapper\Meta\Compile\PropertyCompileMeta;
 use Orisai\ObjectMapper\Meta\Compile\RuleCompileMeta;
 use Orisai\ObjectMapper\Meta\Compile\SharedNodeCompileMeta;
@@ -177,7 +179,7 @@ final class MetaResolver
 	}
 
 	/**
-	 * @return array<class-string<Modifier>, array<mixed>>
+	 * @return array<class-string<Modifier<Args>>, Args>
 	 */
 	private function resolveModifiersMeta(SharedNodeCompileMeta $meta, ArgsContext $context): array
 	{
@@ -192,9 +194,9 @@ final class MetaResolver
 	}
 
 	/**
-	 * @return array{class-string<Modifier>, array<mixed>}
+	 * @return array{class-string<Modifier<Args>>, Args}
 	 */
-	private function resolveModifierMeta(ModifierMeta $meta, ArgsContext $context): array
+	private function resolveModifierMeta(ModifierCompileMeta $meta, ArgsContext $context): array
 	{
 		$type = $meta->getType();
 		$args = $type::resolveArgs($meta->getArgs(), $context);

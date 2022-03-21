@@ -3,13 +3,14 @@
 namespace Orisai\ObjectMapper\Annotation\Modifiers;
 
 use Orisai\ObjectMapper\Annotation\BaseAnnotation;
+use Orisai\ObjectMapper\Args\Args;
 use Orisai\ObjectMapper\Modifiers\Modifier;
 
 interface ModifierAnnotation extends BaseAnnotation
 {
 
 	/**
-	 * @return class-string<Modifier>
+	 * @return class-string<Modifier<Args>>
 	 */
 	public function getType(): string;
 

@@ -9,6 +9,7 @@ use Orisai\ObjectMapper\Context\RuleArgsContext;
 use Orisai\ObjectMapper\Context\TypeContext;
 use Orisai\ObjectMapper\Exception\InvalidData;
 use Orisai\ObjectMapper\MappedObject;
+use Orisai\ObjectMapper\Modifiers\FieldNameArgs;
 use Orisai\ObjectMapper\Modifiers\FieldNameModifier;
 use Orisai\ObjectMapper\Types\StructureType;
 use function array_keys;
@@ -49,7 +50,7 @@ final class StructureRule implements Rule
 	}
 
 	/**
-	 * @param mixed $value
+	 * @param mixed         $value
 	 * @param StructureArgs $args
 	 * @return MappedObject|array<mixed>
 	 * @throws InvalidData
@@ -80,9 +81,13 @@ final class StructureRule implements Rule
 			$propertyArgs = $propertyRuleMeta->getArgs();
 
 			$fieldNameMeta = $propertyMeta->getModifier(FieldNameModifier::class);
-			$fieldName = $fieldNameMeta !== null
-				? $fieldNameMeta->getArgs()[FieldNameModifier::NAME]
-				: $propertyName;
+			if ($fieldNameMeta !== null) {
+				$args = $fieldNameMeta->getArgs();
+				assert($args instanceof FieldNameArgs);
+				$fieldName = $args->name;
+			} else {
+				$fieldName = $propertyName;
+			}
 
 			$type->addField(
 				$fieldName,

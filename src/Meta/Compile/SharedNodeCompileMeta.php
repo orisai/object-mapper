@@ -3,7 +3,6 @@
 namespace Orisai\ObjectMapper\Meta\Compile;
 
 use Orisai\ObjectMapper\Meta\DocMeta;
-use Orisai\ObjectMapper\Meta\ModifierMeta;
 
 /**
  * @internal
@@ -17,13 +16,13 @@ abstract class SharedNodeCompileMeta
 	/** @var array<int, DocMeta> */
 	private array $docs;
 
-	/** @var array<int, ModifierMeta> */
+	/** @var array<int, ModifierCompileMeta> */
 	private array $modifiers;
 
 	/**
 	 * @param array<int, CallbackCompileMeta> $callbacks
 	 * @param array<int, DocMeta>             $docs
-	 * @param array<int, ModifierMeta>        $modifiers
+	 * @param array<int, ModifierCompileMeta> $modifiers
 	 */
 	public function __construct(array $callbacks, array $docs, array $modifiers)
 	{
@@ -49,7 +48,7 @@ abstract class SharedNodeCompileMeta
 	}
 
 	/**
-	 * @return array<int, ModifierMeta>
+	 * @return array<int, ModifierCompileMeta>
 	 */
 	public function getModifiers(): array
 	{

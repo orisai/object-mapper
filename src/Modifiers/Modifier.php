@@ -2,15 +2,19 @@
 
 namespace Orisai\ObjectMapper\Modifiers;
 
+use Orisai\ObjectMapper\Args\Args;
 use Orisai\ObjectMapper\Context\ArgsContext;
 
+/**
+ * @template T of Args
+ */
 interface Modifier
 {
 
 	/**
-	 * @param array<mixed> $args
-	 * @return array<mixed>
+	 * @param array<int|string, mixed> $args
+	 * @return T
 	 */
-	public static function resolveArgs(array $args, ArgsContext $context): array;
+	public static function resolveArgs(array $args, ArgsContext $context): Args;
 
 }
