@@ -3,9 +3,9 @@
 namespace Tests\Orisai\ObjectMapper\Doubles;
 
 use DateTimeImmutable;
-use Orisai\ObjectMapper\Annotation\Expect\DateTime;
-use Orisai\ObjectMapper\Annotation\Expect\InstanceValue;
-use Orisai\ObjectMapper\Annotation\Expect\Structure;
+use Orisai\ObjectMapper\Attributes\Expect\DateTime;
+use Orisai\ObjectMapper\Attributes\Expect\InstanceValue;
+use Orisai\ObjectMapper\Attributes\Expect\Structure;
 use Orisai\ObjectMapper\MappedObject;
 use stdClass;
 

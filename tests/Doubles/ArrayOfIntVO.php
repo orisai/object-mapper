@@ -2,8 +2,8 @@
 
 namespace Tests\Orisai\ObjectMapper\Doubles;
 
-use Orisai\ObjectMapper\Annotation\Expect\ArrayOf;
-use Orisai\ObjectMapper\Annotation\Expect\IntValue;
+use Orisai\ObjectMapper\Attributes\Expect\ArrayOf;
+use Orisai\ObjectMapper\Attributes\Expect\IntValue;
 use Orisai\ObjectMapper\MappedObject;
 
 final class ArrayOfIntVO extends MappedObject

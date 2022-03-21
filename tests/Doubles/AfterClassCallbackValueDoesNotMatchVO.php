@@ -2,8 +2,8 @@
 
 namespace Tests\Orisai\ObjectMapper\Doubles;
 
-use Orisai\ObjectMapper\Annotation\Callback\After;
-use Orisai\ObjectMapper\Annotation\Expect\StringValue;
+use Orisai\ObjectMapper\Attributes\Callbacks\After;
+use Orisai\ObjectMapper\Attributes\Expect\StringValue;
 use Orisai\ObjectMapper\Callbacks\CallbackRuntime;
 use Orisai\ObjectMapper\Exception\ValueDoesNotMatch;
 use Orisai\ObjectMapper\MappedObject;

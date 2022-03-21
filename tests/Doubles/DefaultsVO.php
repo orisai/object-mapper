@@ -2,11 +2,11 @@
 
 namespace Tests\Orisai\ObjectMapper\Doubles;
 
-use Orisai\ObjectMapper\Annotation\Expect\AnyOf;
-use Orisai\ObjectMapper\Annotation\Expect\ArrayOf;
-use Orisai\ObjectMapper\Annotation\Expect\MixedValue;
-use Orisai\ObjectMapper\Annotation\Expect\NullValue;
-use Orisai\ObjectMapper\Annotation\Expect\StringValue;
+use Orisai\ObjectMapper\Attributes\Expect\AnyOf;
+use Orisai\ObjectMapper\Attributes\Expect\ArrayOf;
+use Orisai\ObjectMapper\Attributes\Expect\MixedValue;
+use Orisai\ObjectMapper\Attributes\Expect\NullValue;
+use Orisai\ObjectMapper\Attributes\Expect\StringValue;
 use Orisai\ObjectMapper\MappedObject;
 
 final class DefaultsVO extends MappedObject

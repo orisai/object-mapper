@@ -2,10 +2,10 @@
 
 namespace Tests\Orisai\ObjectMapper\Doubles;
 
-use Orisai\ObjectMapper\Annotation\Expect\AnyOf;
-use Orisai\ObjectMapper\Annotation\Expect\NullValue;
-use Orisai\ObjectMapper\Annotation\Expect\StringValue;
-use Orisai\ObjectMapper\Annotation\Expect\Structure;
+use Orisai\ObjectMapper\Attributes\Expect\AnyOf;
+use Orisai\ObjectMapper\Attributes\Expect\NullValue;
+use Orisai\ObjectMapper\Attributes\Expect\StringValue;
+use Orisai\ObjectMapper\Attributes\Expect\Structure;
 use Orisai\ObjectMapper\MappedObject;
 
 final class PropertiesInitVO extends MappedObject

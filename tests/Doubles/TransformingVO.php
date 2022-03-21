@@ -2,12 +2,12 @@
 
 namespace Tests\Orisai\ObjectMapper\Doubles;
 
-use Orisai\ObjectMapper\Annotation\Expect\AnyOf;
-use Orisai\ObjectMapper\Annotation\Expect\BoolValue;
-use Orisai\ObjectMapper\Annotation\Expect\FloatValue;
-use Orisai\ObjectMapper\Annotation\Expect\InstanceValue;
-use Orisai\ObjectMapper\Annotation\Expect\IntValue;
-use Orisai\ObjectMapper\Annotation\Expect\NullValue;
+use Orisai\ObjectMapper\Attributes\Expect\AnyOf;
+use Orisai\ObjectMapper\Attributes\Expect\BoolValue;
+use Orisai\ObjectMapper\Attributes\Expect\FloatValue;
+use Orisai\ObjectMapper\Attributes\Expect\InstanceValue;
+use Orisai\ObjectMapper\Attributes\Expect\IntValue;
+use Orisai\ObjectMapper\Attributes\Expect\NullValue;
 use Orisai\ObjectMapper\MappedObject;
 use stdClass;
 

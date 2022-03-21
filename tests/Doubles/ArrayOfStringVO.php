@@ -2,8 +2,8 @@
 
 namespace Tests\Orisai\ObjectMapper\Doubles;
 
-use Orisai\ObjectMapper\Annotation\Expect\ArrayOf;
-use Orisai\ObjectMapper\Annotation\Expect\StringValue;
+use Orisai\ObjectMapper\Attributes\Expect\ArrayOf;
+use Orisai\ObjectMapper\Attributes\Expect\StringValue;
 use Orisai\ObjectMapper\MappedObject;
 
 final class ArrayOfStringVO extends MappedObject

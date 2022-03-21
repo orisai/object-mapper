@@ -2,10 +2,10 @@
 
 namespace Tests\Orisai\ObjectMapper\Doubles;
 
-use Orisai\ObjectMapper\Annotation\Expect\AnyOf;
-use Orisai\ObjectMapper\Annotation\Expect\ArrayOf;
-use Orisai\ObjectMapper\Annotation\Expect\MixedValue;
-use Orisai\ObjectMapper\Annotation\Expect\Structure;
+use Orisai\ObjectMapper\Attributes\Expect\AnyOf;
+use Orisai\ObjectMapper\Attributes\Expect\ArrayOf;
+use Orisai\ObjectMapper\Attributes\Expect\MixedValue;
+use Orisai\ObjectMapper\Attributes\Expect\Structure;
 use Orisai\ObjectMapper\MappedObject;
 
 final class StructuresVO extends MappedObject

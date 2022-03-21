@@ -2,7 +2,7 @@
 
 namespace Tests\Orisai\ObjectMapper\Toolkit;
 
-use Orisai\ObjectMapper\Annotation\AnnotationMetaSource;
+use Orisai\ObjectMapper\Attributes\AnnotationsMetaSource;
 use Orisai\ObjectMapper\Creation\DefaultObjectCreator;
 use Orisai\ObjectMapper\Meta\DefaultMetaResolverFactory;
 use Orisai\ObjectMapper\Meta\DefaultMetaSourceManager;
@@ -30,7 +30,7 @@ abstract class ProcessingTestCase extends TestCase
 		$this->ruleManager = new DefaultRuleManager();
 
 		$sourceManager = new DefaultMetaSourceManager();
-		$sourceManager->addSource(new AnnotationMetaSource());
+		$sourceManager->addSource(new AnnotationsMetaSource());
 
 		$cache = new TestMetaCache();
 		$resolverFactory = new DefaultMetaResolverFactory($this->ruleManager);
