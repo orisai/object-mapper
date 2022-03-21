@@ -15,7 +15,12 @@ final class BaseCallbackArgs implements Args
 
 	public string $runtime;
 
-	public function __construct(string $method, bool $isStatic, bool $returnsValue, string $runtime)
+	public function __construct(
+		string $method,
+		bool $isStatic,
+		bool $returnsValue,
+		string $runtime = CallbackRuntime::ALWAYS
+	)
 	{
 		$this->method = $method;
 		$this->isStatic = $isStatic;

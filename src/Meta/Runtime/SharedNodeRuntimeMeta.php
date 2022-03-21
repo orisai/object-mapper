@@ -18,16 +18,13 @@ abstract class SharedNodeRuntimeMeta
 	/** @var array<string, DocMeta> */
 	private array $docs;
 
-	/** @var array<class-string<Modifier<Args>>, Args> */
+	/** @var array<class-string<Modifier<Args>>, ModifierRuntimeMeta> */
 	private array $modifiers;
 
-	/** @var array<class-string<Modifier<Args>>, ModifierRuntimeMeta>|null */
-	private ?array $instModifiers = null;
-
 	/**
-	 * @param array<int, CallbackRuntimeMeta>           $callbacks
-	 * @param array<string, DocMeta>                    $docs
-	 * @param array<class-string<Modifier<Args>>, Args> $modifiers
+	 * @param array<int, CallbackRuntimeMeta>                          $callbacks
+	 * @param array<string, DocMeta>                                   $docs
+	 * @param array<class-string<Modifier<Args>>, ModifierRuntimeMeta> $modifiers
 	 */
 	public function __construct(array $callbacks, array $docs, array $modifiers)
 	{
@@ -57,17 +54,7 @@ abstract class SharedNodeRuntimeMeta
 	 */
 	public function getModifiers(): array
 	{
-		if ($this->instModifiers !== null) {
-			return $this->instModifiers;
-		}
-
-		$processed = [];
-
-		foreach ($this->modifiers as $type => $args) {
-			$processed[$type] = new ModifierRuntimeMeta($type, $args);
-		}
-
-		return $this->instModifiers = $processed;
+		return $this->modifiers;
 	}
 
 	/**

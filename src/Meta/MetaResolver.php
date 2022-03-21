@@ -17,6 +17,7 @@ use Orisai\ObjectMapper\Meta\Compile\RuleCompileMeta;
 use Orisai\ObjectMapper\Meta\Compile\SharedNodeCompileMeta;
 use Orisai\ObjectMapper\Meta\Runtime\CallbackRuntimeMeta;
 use Orisai\ObjectMapper\Meta\Runtime\ClassRuntimeMeta;
+use Orisai\ObjectMapper\Meta\Runtime\ModifierRuntimeMeta;
 use Orisai\ObjectMapper\Meta\Runtime\PropertyRuntimeMeta;
 use Orisai\ObjectMapper\Meta\Runtime\RuleRuntimeMeta;
 use Orisai\ObjectMapper\Meta\Runtime\RuntimeMeta;
@@ -162,7 +163,6 @@ final class MetaResolver
 	private function resolveDocsMeta(SharedNodeCompileMeta $meta, ArgsContext $context): array
 	{
 		$array = [];
-
 		foreach ($meta->getDocs() as $doc) {
 			$array[$doc->getName()::getUniqueName()] = $this->resolveDocMeta($doc, $context);
 		}
@@ -179,29 +179,24 @@ final class MetaResolver
 	}
 
 	/**
-	 * @return array<class-string<Modifier<Args>>, Args>
+	 * @return array<class-string<Modifier<Args>>, ModifierRuntimeMeta>
 	 */
 	private function resolveModifiersMeta(SharedNodeCompileMeta $meta, ArgsContext $context): array
 	{
-		$optimized = [];
-
+		$array = [];
 		foreach ($meta->getModifiers() as $modifier) {
-			[$type, $args] = $this->resolveModifierMeta($modifier, $context);
-			$optimized[$type] = $args;
+			$array[$modifier->getType()] = $this->resolveModifierMeta($modifier, $context);
 		}
 
-		return $optimized;
+		return $array;
 	}
 
-	/**
-	 * @return array{class-string<Modifier<Args>>, Args}
-	 */
-	private function resolveModifierMeta(ModifierCompileMeta $meta, ArgsContext $context): array
+	private function resolveModifierMeta(ModifierCompileMeta $meta, ArgsContext $context): ModifierRuntimeMeta
 	{
 		$type = $meta->getType();
 		$args = $type::resolveArgs($meta->getArgs(), $context);
 
-		return [$type, $args];
+		return new ModifierRuntimeMeta($type, $args);
 	}
 
 	public function resolveRuleMeta(RuleCompileMeta $meta, RuleArgsContext $context): RuleRuntimeMeta
