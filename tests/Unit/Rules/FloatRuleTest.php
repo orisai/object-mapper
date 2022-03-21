@@ -4,6 +4,7 @@ namespace Tests\Orisai\ObjectMapper\Unit\Rules;
 
 use Generator;
 use Orisai\ObjectMapper\Exception\ValueDoesNotMatch;
+use Orisai\ObjectMapper\Rules\FloatArgs;
 use Orisai\ObjectMapper\Rules\FloatRule;
 use Orisai\ObjectMapper\Types\SimpleValueType;
 use Tests\Orisai\ObjectMapper\Toolkit\RuleTestCase;
@@ -21,15 +22,14 @@ final class FloatRuleTest extends RuleTestCase
 
 	/**
 	 * @param mixed $value
-	 * @param array<mixed> $args
 	 *
 	 * @dataProvider provideValidValues
 	 */
-	public function testProcessValid($value, float $expected, array $args = []): void
+	public function testProcessValid($value, float $expected, ?FloatArgs $args = null): void
 	{
 		$processed = $this->rule->processValue(
 			$value,
-			$this->rule->resolveArgs($args, $this->ruleArgsContext()),
+			$args ?? new FloatArgs(),
 			$this->fieldContext(),
 		);
 
@@ -48,37 +48,25 @@ final class FloatRuleTest extends RuleTestCase
 		yield [
 			100,
 			100.0,
-			[
-				FloatRule::UNSIGNED => false,
-				FloatRule::MIN => 100,
-				FloatRule::MAX => 100,
-			],
+			new FloatArgs(100, 100, false),
 		];
 
 		yield [
 			100.12,
 			100.12,
-			[
-				FloatRule::UNSIGNED => false,
-				FloatRule::MIN => 100.12,
-				FloatRule::MAX => 100.12,
-			],
+			new FloatArgs(100.12, 100.12, false),
 		];
 
 		yield [
 			-100,
 			-100.0,
-			[
-				FloatRule::UNSIGNED => false,
-			],
+			new FloatArgs(null, null, false),
 		];
 
 		yield [
 			-100.12,
 			-100.12,
-			[
-				FloatRule::UNSIGNED => false,
-			],
+			new FloatArgs(null, null, false),
 		];
 	}
 
@@ -91,10 +79,7 @@ final class FloatRuleTest extends RuleTestCase
 	{
 		$processed = $this->rule->processValue(
 			$value,
-			$this->rule->resolveArgs([
-				FloatRule::CAST_NUMERIC_STRING => true,
-				FloatRule::UNSIGNED => false,
-			], $this->ruleArgsContext()),
+			new FloatArgs(null, null, false, true),
 			$this->fieldContext(),
 		);
 
@@ -134,7 +119,7 @@ final class FloatRuleTest extends RuleTestCase
 		try {
 			$this->rule->processValue(
 				$value,
-				$this->rule->resolveArgs([], $this->ruleArgsContext()),
+				new FloatArgs(),
 				$this->fieldContext(),
 			);
 		} catch (ValueDoesNotMatch $exception) {
@@ -170,10 +155,7 @@ final class FloatRuleTest extends RuleTestCase
 		try {
 			$this->rule->processValue(
 				$value,
-				$this->rule->resolveArgs([
-					FloatRule::CAST_NUMERIC_STRING => true,
-					FloatRule::MAX => 10,
-				], $this->ruleArgsContext()),
+				new FloatArgs(null, 10, true, true),
 				$this->fieldContext(),
 			);
 		} catch (ValueDoesNotMatch $exception) {
@@ -197,11 +179,7 @@ final class FloatRuleTest extends RuleTestCase
 		try {
 			$this->rule->processValue(
 				$value,
-				$this->rule->resolveArgs([
-					FloatRule::CAST_NUMERIC_STRING => true,
-					FloatRule::MIN => 10,
-					FloatRule::UNSIGNED => true,
-				], $this->ruleArgsContext()),
+				new FloatArgs(10, null, true, true),
 				$this->fieldContext(),
 			);
 		} catch (ValueDoesNotMatch $exception) {
@@ -237,12 +215,7 @@ final class FloatRuleTest extends RuleTestCase
 
 	public function testTypeWithArgs(): void
 	{
-		$args = $this->rule->resolveArgs([
-			FloatRule::UNSIGNED => false,
-			FloatRule::MIN => 10,
-			FloatRule::MAX => 100,
-			FloatRule::CAST_NUMERIC_STRING => true,
-		], $this->ruleArgsContext());
+		$args = new FloatArgs(10, 100, false, true);
 
 		$type = $this->rule->createType($args, $this->typeContext);
 

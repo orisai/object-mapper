@@ -21,9 +21,9 @@ class MultiValueArgs implements Args
 
 	public function __construct(
 		RuleRuntimeMeta $itemRuleMeta,
-		?int $minItems,
-		?int $maxItems,
-		bool $mergeDefaults
+		?int $minItems = null,
+		?int $maxItems = null,
+		bool $mergeDefaults = false
 	)
 	{
 		$this->itemRuleMeta = $itemRuleMeta;

@@ -12,7 +12,7 @@ final class BoolArgs implements Args
 
 	public bool $castBoolLike;
 
-	public function __construct(bool $castBoolLike)
+	public function __construct(bool $castBoolLike = false)
 	{
 		$this->castBoolLike = $castBoolLike;
 	}

@@ -4,6 +4,7 @@ namespace Tests\Orisai\ObjectMapper\Unit\Rules;
 
 use Generator;
 use Orisai\ObjectMapper\Exception\ValueDoesNotMatch;
+use Orisai\ObjectMapper\Rules\NullArgs;
 use Orisai\ObjectMapper\Rules\NullRule;
 use Orisai\ObjectMapper\Types\SimpleValueType;
 use stdClass;
@@ -24,7 +25,7 @@ final class NullRuleTest extends RuleTestCase
 	{
 		$processed = $this->rule->processValue(
 			null,
-			$this->rule->resolveArgs([], $this->ruleArgsContext()),
+			new NullArgs(),
 			$this->fieldContext(),
 		);
 
@@ -38,9 +39,7 @@ final class NullRuleTest extends RuleTestCase
 	{
 		$processed = $this->rule->processValue(
 			$value,
-			$this->rule->resolveArgs([
-				NullRule::CAST_EMPTY_STRING => true,
-			], $this->ruleArgsContext()),
+			new NullArgs(true),
 			$this->fieldContext(),
 		);
 
@@ -69,7 +68,7 @@ final class NullRuleTest extends RuleTestCase
 		try {
 			$this->rule->processValue(
 				$value,
-				$this->rule->resolveArgs([], $this->ruleArgsContext()),
+				new NullArgs(),
 				$this->fieldContext(),
 			);
 		} catch (ValueDoesNotMatch $exception) {
@@ -104,7 +103,7 @@ final class NullRuleTest extends RuleTestCase
 
 	public function testType(): void
 	{
-		$args = $this->rule->resolveArgs([], $this->ruleArgsContext());
+		$args = new NullArgs();
 
 		$type = $this->rule->createType($args, $this->typeContext);
 
@@ -119,9 +118,7 @@ final class NullRuleTest extends RuleTestCase
 
 	public function testTypeWithArgs(): void
 	{
-		$args = $this->rule->resolveArgs([
-			NullRule::CAST_EMPTY_STRING => true,
-		], $this->ruleArgsContext());
+		$args = new NullArgs(true);
 
 		$type = $this->rule->createType($args, $this->typeContext);
 

@@ -19,10 +19,10 @@ final class IntArgs implements Args
 	public bool $castNumericString;
 
 	public function __construct(
-		?int $min,
-		?int $max,
-		bool $unsigned,
-		bool $castNumericString
+		?int $min = null,
+		?int $max = null,
+		bool $unsigned = true,
+		bool $castNumericString = false
 	)
 	{
 		$this->min = $min;

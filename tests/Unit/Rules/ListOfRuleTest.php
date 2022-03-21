@@ -2,12 +2,15 @@
 
 namespace Tests\Orisai\ObjectMapper\Unit\Rules;
 
+use Orisai\ObjectMapper\Args\EmptyArgs;
 use Orisai\ObjectMapper\Exception\ValueDoesNotMatch;
 use Orisai\ObjectMapper\Exception\WithTypeAndValue;
-use Orisai\ObjectMapper\Meta\Compile\RuleCompileMeta;
 use Orisai\ObjectMapper\Meta\DefaultValueMeta;
+use Orisai\ObjectMapper\Meta\Runtime\RuleRuntimeMeta;
 use Orisai\ObjectMapper\Rules\ListOfRule;
 use Orisai\ObjectMapper\Rules\MixedRule;
+use Orisai\ObjectMapper\Rules\MultiValueArgs;
+use Orisai\ObjectMapper\Rules\StringArgs;
 use Orisai\ObjectMapper\Rules\StringRule;
 use Orisai\ObjectMapper\Types\ListType;
 use Orisai\ObjectMapper\Types\NoValue;
@@ -34,9 +37,9 @@ final class ListOfRuleTest extends RuleTestCase
 
 		$processed = $this->rule->processValue(
 			$value,
-			$this->rule->resolveArgs([
-				ListOfRule::ITEM_RULE => new RuleCompileMeta(MixedRule::class),
-			], $this->ruleArgsContext()),
+			new MultiValueArgs(
+				new RuleRuntimeMeta(MixedRule::class, new EmptyArgs()),
+			),
 			$this->fieldContext(DefaultValueMeta::fromValue($defaults)),
 		);
 
@@ -50,11 +53,12 @@ final class ListOfRuleTest extends RuleTestCase
 
 		$processed = $this->rule->processValue(
 			$value,
-			$this->rule->resolveArgs([
-				ListOfRule::ITEM_RULE => new RuleCompileMeta(MixedRule::class),
-				ListOfRule::MAX_ITEMS => 5,
-				ListOfRule::MERGE_DEFAULTS => true,
-			], $this->ruleArgsContext()),
+			new MultiValueArgs(
+				new RuleRuntimeMeta(MixedRule::class, new EmptyArgs()),
+				null,
+				5,
+				true,
+			),
 			$this->fieldContext(DefaultValueMeta::fromValue($defaults)),
 		);
 
@@ -69,9 +73,9 @@ final class ListOfRuleTest extends RuleTestCase
 		try {
 			$this->rule->processValue(
 				$value,
-				$this->rule->resolveArgs([
-					ListOfRule::ITEM_RULE => new RuleCompileMeta(MixedRule::class),
-				], $this->ruleArgsContext()),
+				new MultiValueArgs(
+					new RuleRuntimeMeta(MixedRule::class, new EmptyArgs()),
+				),
 				$this->fieldContext(),
 			);
 		} catch (ValueDoesNotMatch $exception) {
@@ -93,10 +97,10 @@ final class ListOfRuleTest extends RuleTestCase
 		try {
 			$this->rule->processValue(
 				$value,
-				$this->rule->resolveArgs([
-					ListOfRule::ITEM_RULE => new RuleCompileMeta(StringRule::class),
-					ListOfRule::MIN_ITEMS => 10,
-				], $this->ruleArgsContext()),
+				new MultiValueArgs(
+					new RuleRuntimeMeta(StringRule::class, new StringArgs()),
+					10,
+				),
 				$this->fieldContext(),
 			);
 		} catch (ValueDoesNotMatch $exception) {
@@ -127,10 +131,11 @@ final class ListOfRuleTest extends RuleTestCase
 		try {
 			$this->rule->processValue(
 				$value,
-				$this->rule->resolveArgs([
-					ListOfRule::ITEM_RULE => new RuleCompileMeta(StringRule::class),
-					ListOfRule::MAX_ITEMS => 2,
-				], $this->ruleArgsContext()),
+				new MultiValueArgs(
+					new RuleRuntimeMeta(StringRule::class, new StringArgs()),
+					null,
+					2,
+				),
 				$this->fieldContext(),
 			);
 		} catch (ValueDoesNotMatch $exception) {
@@ -156,9 +161,9 @@ final class ListOfRuleTest extends RuleTestCase
 		try {
 			$this->rule->processValue(
 				$value,
-				$this->rule->resolveArgs([
-					ListOfRule::ITEM_RULE => new RuleCompileMeta(StringRule::class),
-				], $this->ruleArgsContext()),
+				new MultiValueArgs(
+					new RuleRuntimeMeta(StringRule::class, new StringArgs()),
+				),
 				$this->fieldContext(),
 			);
 		} catch (ValueDoesNotMatch $exception) {
@@ -179,9 +184,9 @@ final class ListOfRuleTest extends RuleTestCase
 
 	public function testType(): void
 	{
-		$args = $this->rule->resolveArgs([
-			ListOfRule::ITEM_RULE => new RuleCompileMeta(MixedRule::class),
-		], $this->ruleArgsContext());
+		$args = new MultiValueArgs(
+			new RuleRuntimeMeta(MixedRule::class, new EmptyArgs()),
+		);
 
 		$type = $this->rule->createType($args, $this->typeContext);
 
@@ -196,11 +201,11 @@ final class ListOfRuleTest extends RuleTestCase
 
 	public function testTypeWithArgs(): void
 	{
-		$args = $this->rule->resolveArgs([
-			ListOfRule::ITEM_RULE => new RuleCompileMeta(MixedRule::class),
-			ListOfRule::MIN_ITEMS => 10,
-			ListOfRule::MAX_ITEMS => 100,
-		], $this->ruleArgsContext());
+		$args = new MultiValueArgs(
+			new RuleRuntimeMeta(MixedRule::class, new EmptyArgs()),
+			10,
+			100,
+		);
 
 		$type = $this->rule->createType($args, $this->typeContext);
 

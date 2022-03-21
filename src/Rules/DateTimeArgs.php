@@ -4,6 +4,7 @@ namespace Orisai\ObjectMapper\Rules;
 
 use DateTime;
 use DateTimeImmutable;
+use DateTimeInterface;
 use Orisai\ObjectMapper\Args\Args;
 use function is_a;
 
@@ -21,7 +22,7 @@ final class DateTimeArgs implements Args
 	/**
 	 * @param class-string<DateTimeImmutable|DateTime> $type
 	 */
-	public function __construct(string $format, string $type)
+	public function __construct(string $format = DateTimeInterface::ATOM, string $type = DateTimeImmutable::class)
 	{
 		$this->format = $format;
 		$this->type = $type;

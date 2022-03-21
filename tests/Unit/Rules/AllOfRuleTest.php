@@ -3,10 +3,14 @@
 namespace Tests\Orisai\ObjectMapper\Unit\Rules;
 
 use Orisai\Exceptions\Logic\InvalidArgument;
+use Orisai\ObjectMapper\Args\EmptyArgs;
 use Orisai\ObjectMapper\Exception\ValueDoesNotMatch;
 use Orisai\ObjectMapper\Meta\Compile\RuleCompileMeta;
+use Orisai\ObjectMapper\Meta\Runtime\RuleRuntimeMeta;
 use Orisai\ObjectMapper\Rules\AllOfRule;
+use Orisai\ObjectMapper\Rules\CompoundRuleArgs;
 use Orisai\ObjectMapper\Rules\MixedRule;
+use Orisai\ObjectMapper\Rules\StructureArgs;
 use Orisai\ObjectMapper\Rules\StructureRule;
 use Orisai\ObjectMapper\Types\CompoundType;
 use Orisai\ObjectMapper\Types\MessageType;
@@ -33,15 +37,10 @@ final class AllOfRuleTest extends RuleTestCase
 	{
 		$processed = $this->rule->processValue(
 			'value',
-			$this->rule->resolveArgs(
-				[
-					AllOfRule::RULES => [
-						new RuleCompileMeta(MixedRule::class),
-						new RuleCompileMeta(MixedRule::class),
-					],
-				],
-				$this->ruleArgsContext(),
-			),
+			new CompoundRuleArgs([
+				new RuleRuntimeMeta(MixedRule::class, new EmptyArgs()),
+				new RuleRuntimeMeta(MixedRule::class, new EmptyArgs()),
+			]),
 			$this->fieldContext(),
 		);
 
@@ -55,16 +54,11 @@ final class AllOfRuleTest extends RuleTestCase
 		try {
 			$this->rule->processValue(
 				'value',
-				$this->rule->resolveArgs(
-					[
-						AllOfRule::RULES => [
-							new RuleCompileMeta(MixedRule::class),
-							new RuleCompileMeta(AlwaysInvalidRule::class),
-							new RuleCompileMeta(MixedRule::class),
-						],
-					],
-					$this->ruleArgsContext(),
-				),
+				new CompoundRuleArgs([
+					new RuleRuntimeMeta(MixedRule::class, new EmptyArgs()),
+					new RuleRuntimeMeta(AlwaysInvalidRule::class, new EmptyArgs()),
+					new RuleRuntimeMeta(MixedRule::class, new EmptyArgs()),
+				]),
 				$this->fieldContext(),
 			);
 		} catch (ValueDoesNotMatch $exception) {
@@ -98,17 +92,12 @@ final class AllOfRuleTest extends RuleTestCase
 		try {
 			$this->rule->processValue(
 				null,
-				$this->rule->resolveArgs(
-					[
-						AllOfRule::RULES => [
-							new RuleCompileMeta(StructureRule::class, [
-								StructureRule::TYPE => DefaultsVO::class,
-							]),
-							new RuleCompileMeta(MixedRule::class),
-						],
-					],
-					$this->ruleArgsContext(),
-				),
+				new CompoundRuleArgs([
+					new RuleRuntimeMeta(StructureRule::class, new StructureArgs(
+						DefaultsVO::class,
+					)),
+					new RuleRuntimeMeta(MixedRule::class, new EmptyArgs()),
+				]),
 				$this->fieldContext(),
 			);
 		} catch (ValueDoesNotMatch $exception) {
@@ -134,16 +123,11 @@ final class AllOfRuleTest extends RuleTestCase
 
 	public function testType(): void
 	{
-		$args = $this->rule->resolveArgs(
-			[
-				AllOfRule::RULES => [
-					new RuleCompileMeta(MixedRule::class),
-					new RuleCompileMeta(MixedRule::class),
-					new RuleCompileMeta(AlwaysInvalidRule::class),
-				],
-			],
-			$this->ruleArgsContext(),
-		);
+		$args = new CompoundRuleArgs([
+			new RuleRuntimeMeta(MixedRule::class, new EmptyArgs()),
+			new RuleRuntimeMeta(MixedRule::class, new EmptyArgs()),
+			new RuleRuntimeMeta(AlwaysInvalidRule::class, new EmptyArgs()),
+		]);
 
 		$type = $this->rule->createType($args, $this->typeContext);
 

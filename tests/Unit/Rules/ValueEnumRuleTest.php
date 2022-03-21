@@ -4,6 +4,7 @@ namespace Tests\Orisai\ObjectMapper\Unit\Rules;
 
 use Generator;
 use Orisai\ObjectMapper\Exception\ValueDoesNotMatch;
+use Orisai\ObjectMapper\Rules\ValueEnumArgs;
 use Orisai\ObjectMapper\Rules\ValueEnumRule;
 use Orisai\ObjectMapper\Types\EnumType;
 use Tests\Orisai\ObjectMapper\Toolkit\RuleTestCase;
@@ -21,15 +22,14 @@ final class ValueEnumRuleTest extends RuleTestCase
 
 	/**
 	 * @param mixed $value
-	 * @param array<mixed> $args
 	 *
 	 * @dataProvider provideValidValues
 	 */
-	public function testProcessValid($value, array $args): void
+	public function testProcessValid($value, ValueEnumArgs $args): void
 	{
 		$processed = $this->rule->processValue(
 			$value,
-			$this->rule->resolveArgs($args, $this->ruleArgsContext()),
+			$args,
 			$this->fieldContext(),
 		);
 
@@ -43,35 +43,29 @@ final class ValueEnumRuleTest extends RuleTestCase
 	{
 		yield [
 			'foo',
-			[
-				ValueEnumRule::VALUES => ['foo', 'bar'],
-			],
+			new ValueEnumArgs(['foo', 'bar']),
 		];
 
 		yield [
 			'foo',
-			[
-				ValueEnumRule::VALUES => ['foo' => 123, 'bar' => 456],
-				ValueEnumRule::USE_KEYS => true,
-			],
+			new ValueEnumArgs(['foo' => 123, 'bar' => 456], true),
 		];
 	}
 
 	/**
-	 * @param mixed $value
-	 * @param array<mixed> $args
+	 * @param mixed        $value
 	 * @param array<mixed> $expectedValues
 	 *
 	 * @dataProvider provideInvalidValues
 	 */
-	public function testProcessInvalid($value, array $args, array $expectedValues): void
+	public function testProcessInvalid($value, ValueEnumArgs $args, array $expectedValues): void
 	{
 		$exception = null;
 
 		try {
 			$this->rule->processValue(
 				$value,
-				$this->rule->resolveArgs($args, $this->ruleArgsContext()),
+				$args,
 				$this->fieldContext(),
 			);
 		} catch (ValueDoesNotMatch $exception) {
@@ -92,27 +86,20 @@ final class ValueEnumRuleTest extends RuleTestCase
 	{
 		yield [
 			0,
-			[
-				ValueEnumRule::VALUES => ['foo', 'bar'],
-			],
+			new ValueEnumArgs(['foo', 'bar']),
 			['foo', 'bar'],
 		];
 
 		yield [
 			123,
-			[
-				ValueEnumRule::VALUES => ['foo' => 123, 'bar' => 456],
-				ValueEnumRule::USE_KEYS => true,
-			],
+			new ValueEnumArgs(['foo' => 123, 'bar' => 456], true),
 			['foo', 'bar'],
 		];
 	}
 
 	public function testType(): void
 	{
-		$args = $this->rule->resolveArgs([
-			ValueEnumRule::VALUES => ['foo', 'bar'],
-		], $this->ruleArgsContext());
+		$args = new ValueEnumArgs(['foo', 'bar']);
 
 		$type = $this->rule->createType($args, $this->typeContext);
 

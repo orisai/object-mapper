@@ -7,6 +7,7 @@ use DateTimeImmutable;
 use DateTimeInterface;
 use Generator;
 use Orisai\ObjectMapper\Exception\ValueDoesNotMatch;
+use Orisai\ObjectMapper\Rules\DateTimeArgs;
 use Orisai\ObjectMapper\Rules\DateTimeRule;
 use Orisai\ObjectMapper\Types\SimpleValueType;
 use Tests\Orisai\ObjectMapper\Toolkit\RuleTestCase;
@@ -32,9 +33,7 @@ final class DateTimeRuleTest extends RuleTestCase
 	{
 		$processed = $this->rule->processValue(
 			$value,
-			$this->rule->resolveArgs([
-				DateTimeRule::FORMAT => $format,
-			], $this->ruleArgsContext()),
+			new DateTimeArgs($format),
 			$this->fieldContext(),
 		);
 
@@ -42,9 +41,7 @@ final class DateTimeRuleTest extends RuleTestCase
 
 		$instantiated = $this->rule->processValue(
 			$value,
-			$this->rule->resolveArgs([
-				DateTimeRule::FORMAT => $format,
-			], $this->ruleArgsContext()),
+			new DateTimeArgs($format),
 			$this->fieldContext(null, null, true),
 		);
 
@@ -52,10 +49,7 @@ final class DateTimeRuleTest extends RuleTestCase
 
 		$instantiatedType = $this->rule->processValue(
 			$value,
-			$this->rule->resolveArgs([
-				DateTimeRule::FORMAT => $format,
-				DateTimeRule::TYPE => DateTime::class,
-			], $this->ruleArgsContext()),
+			new DateTimeArgs($format, DateTime::class),
 			$this->fieldContext(null, null, true),
 		);
 
@@ -96,9 +90,7 @@ final class DateTimeRuleTest extends RuleTestCase
 		try {
 			$this->rule->processValue(
 				$value,
-				$this->rule->resolveArgs([
-					DateTimeRule::FORMAT => $format,
-				], $this->ruleArgsContext()),
+				new DateTimeArgs($format),
 				$this->fieldContext(),
 			);
 		} catch (ValueDoesNotMatch $exception) {
@@ -159,7 +151,7 @@ final class DateTimeRuleTest extends RuleTestCase
 
 	public function testType(): void
 	{
-		$args = $this->rule->resolveArgs([], $this->ruleArgsContext());
+		$args = new DateTimeArgs();
 
 		$type = $this->rule->createType($args, $this->typeContext);
 
@@ -176,9 +168,7 @@ final class DateTimeRuleTest extends RuleTestCase
 
 	public function testTypeWithTimestamp(): void
 	{
-		$args = $this->rule->resolveArgs([
-			DateTimeRule::FORMAT => DateTimeRule::FORMAT_TIMESTAMP,
-		], $this->ruleArgsContext());
+		$args = new DateTimeArgs(DateTimeRule::FORMAT_TIMESTAMP);
 
 		$type = $this->rule->createType($args, $this->typeContext);
 
@@ -193,9 +183,7 @@ final class DateTimeRuleTest extends RuleTestCase
 
 	public function testTypeWithArgs(): void
 	{
-		$args = $this->rule->resolveArgs([
-			DateTimeRule::FORMAT => DateTimeInterface::COOKIE,
-		], $this->ruleArgsContext());
+		$args = new DateTimeArgs(DateTimeInterface::COOKIE);
 
 		$type = $this->rule->createType($args, $this->typeContext);
 

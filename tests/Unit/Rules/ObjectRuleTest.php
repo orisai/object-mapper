@@ -3,6 +3,7 @@
 namespace Tests\Orisai\ObjectMapper\Unit\Rules;
 
 use Generator;
+use Orisai\ObjectMapper\Args\EmptyArgs;
 use Orisai\ObjectMapper\Exception\ValueDoesNotMatch;
 use Orisai\ObjectMapper\Rules\ObjectRule;
 use Orisai\ObjectMapper\Types\SimpleValueType;
@@ -29,7 +30,7 @@ final class ObjectRuleTest extends RuleTestCase
 	{
 		$processed = $this->rule->processValue(
 			$value,
-			$this->rule->resolveArgs([], $this->ruleArgsContext()),
+			new EmptyArgs(),
 			$this->fieldContext(),
 		);
 
@@ -63,7 +64,7 @@ final class ObjectRuleTest extends RuleTestCase
 		try {
 			$this->rule->processValue(
 				$value,
-				$this->rule->resolveArgs([], $this->ruleArgsContext()),
+				new EmptyArgs(),
 				$this->fieldContext(),
 			);
 		} catch (ValueDoesNotMatch $exception) {
@@ -95,7 +96,7 @@ final class ObjectRuleTest extends RuleTestCase
 
 	public function testType(): void
 	{
-		$args = $this->rule->resolveArgs([], $this->ruleArgsContext());
+		$args = new EmptyArgs();
 
 		$type = $this->rule->createType($args, $this->typeContext);
 

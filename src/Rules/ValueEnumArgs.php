@@ -18,7 +18,7 @@ final class ValueEnumArgs implements Args
 	/**
 	 * @param array<int|string, mixed> $values
 	 */
-	public function __construct(array $values, bool $useKeys)
+	public function __construct(array $values, bool $useKeys = false)
 	{
 		$this->values = $values;
 		$this->useKeys = $useKeys;
