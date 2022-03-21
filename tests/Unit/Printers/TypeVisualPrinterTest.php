@@ -1,9 +1,9 @@
 <?php declare(strict_types = 1);
 
-namespace Tests\Orisai\ObjectMapper\Unit\Formatting;
+namespace Tests\Orisai\ObjectMapper\Unit\Printers;
 
-use Orisai\ObjectMapper\Formatting\VisualTypeFormatter;
 use Orisai\ObjectMapper\MappedObject;
+use Orisai\ObjectMapper\Printers\TypeVisualPrinter;
 use Orisai\ObjectMapper\Types\ArrayType;
 use Orisai\ObjectMapper\Types\CompoundType;
 use Orisai\ObjectMapper\Types\EnumType;
@@ -16,14 +16,14 @@ use PHPUnit\Framework\TestCase;
 /**
  * @todo - test all options, check levels (may be not used) and separators usage (improvements)
  */
-final class VisualTypeFormatterTest extends TestCase
+final class TypeVisualPrinterTest extends TestCase
 {
 
-	private VisualTypeFormatter $formatter;
+	private TypeVisualPrinter $formatter;
 
 	protected function setUp(): void
 	{
-		$this->formatter = new VisualTypeFormatter();
+		$this->formatter = new TypeVisualPrinter();
 	}
 
 	public function testMessage(): void

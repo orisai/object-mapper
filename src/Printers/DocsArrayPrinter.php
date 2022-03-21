@@ -1,6 +1,6 @@
 <?php declare(strict_types = 1);
 
-namespace Orisai\ObjectMapper\Formatting;
+namespace Orisai\ObjectMapper\Printers;
 
 use Orisai\ObjectMapper\Meta\MetaLoader;
 use Orisai\ObjectMapper\Meta\Runtime\SharedNodeRuntimeMeta;
@@ -11,24 +11,24 @@ use Orisai\ObjectMapper\Types\StructureType;
 use Orisai\ObjectMapper\Types\Type;
 use function array_key_exists;
 
-class ArrayDocsFormatter implements StructureFormatter
+class DocsArrayPrinter implements StructurePrinter
 {
 
 	private MetaLoader $metaLoader;
 
-	private TypeFormatter $typeFormatter;
+	private TypePrinter $typePrinter;
 
-	private ArrayDefaultValuesFormatter $defaultsFormatter;
+	private DefaultValuesArrayPrinter $defaultsPrinter;
 
 	public function __construct(
 		MetaLoader $metaLoader,
-		?TypeFormatter $typeFormatter = null,
-		?ArrayDefaultValuesFormatter $defaultsFormatter = null
+		?TypePrinter $typePrinter = null,
+		?DefaultValuesArrayPrinter $defaultsPrinter = null
 	)
 	{
 		$this->metaLoader = $metaLoader;
-		$this->typeFormatter = $typeFormatter ?? new VisualTypeFormatter();
-		$this->defaultsFormatter = $defaultsFormatter ?? new ArrayDefaultValuesFormatter($metaLoader);
+		$this->typePrinter = $typePrinter ?? new TypeVisualPrinter();
+		$this->defaultsPrinter = $defaultsPrinter ?? new DefaultValuesArrayPrinter($metaLoader);
 	}
 
 	/**
@@ -68,7 +68,7 @@ class ArrayDocsFormatter implements StructureFormatter
 		$propertiesMeta = $meta->getProperties();
 
 		$fields = [];
-		$defaults = $this->defaultsFormatter->formatType($type);
+		$defaults = $this->defaultsPrinter->formatType($type);
 
 		foreach ($type->getFields() as $fieldName => $fieldType) {
 			$propertyMeta = $propertiesMeta[$fieldName];
@@ -126,7 +126,7 @@ class ArrayDocsFormatter implements StructureFormatter
 
 		return [
 			'type' => 'compound',
-			'short' => $this->typeFormatter->formatType($type),
+			'short' => $this->typePrinter->formatType($type),
 			'subtypes' => $subtypes,
 		];
 	}
@@ -154,7 +154,7 @@ class ArrayDocsFormatter implements StructureFormatter
 	{
 		return [
 			'type' => 'simple',
-			'value' => $this->typeFormatter->formatType($type),
+			'value' => $this->typePrinter->formatType($type),
 		];
 	}
 

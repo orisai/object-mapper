@@ -3,7 +3,7 @@
 namespace Orisai\ObjectMapper\Exception;
 
 use Orisai\Exceptions\DomainException;
-use Orisai\ObjectMapper\Formatting\ErrorFormatter;
+use Orisai\ObjectMapper\Printers\ErrorPrinter;
 use Orisai\ObjectMapper\Types\StructureType;
 
 final class InvalidData extends DomainException implements WithTypeAndValue
@@ -24,9 +24,9 @@ final class InvalidData extends DomainException implements WithTypeAndValue
 		$self->invalidType = $invalidType;
 
 		$selfClass = self::class;
-		$formatterClass = ErrorFormatter::class;
+		$printerClass = ErrorPrinter::class;
 		$self->withMessage(
-			"Get validation errors from `$selfClass` with an `$formatterClass`",
+			"Get validation errors from `$selfClass` with an `$printerClass`",
 		);
 
 		return $self;

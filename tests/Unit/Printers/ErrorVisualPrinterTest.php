@@ -1,11 +1,11 @@
 <?php declare(strict_types = 1);
 
-namespace Tests\Orisai\ObjectMapper\Unit\Formatting;
+namespace Tests\Orisai\ObjectMapper\Unit\Printers;
 
 use Orisai\ObjectMapper\Exception\InvalidData;
 use Orisai\ObjectMapper\Exception\ValueDoesNotMatch;
-use Orisai\ObjectMapper\Formatting\VisualErrorFormatter;
 use Orisai\ObjectMapper\MappedObject;
+use Orisai\ObjectMapper\Printers\ErrorVisualPrinter;
 use Orisai\ObjectMapper\Types\ArrayType;
 use Orisai\ObjectMapper\Types\CompoundType;
 use Orisai\ObjectMapper\Types\EnumType;
@@ -19,14 +19,14 @@ use PHPUnit\Framework\TestCase;
 /**
  * @todo - test all options, check levels (may be not used) and separators usage (improvements)
  */
-final class VisualErrorFormatterTest extends TestCase
+final class ErrorVisualPrinterTest extends TestCase
 {
 
-	private VisualErrorFormatter $formatter;
+	private ErrorVisualPrinter $formatter;
 
 	protected function setUp(): void
 	{
-		$this->formatter = new VisualErrorFormatter();
+		$this->formatter = new ErrorVisualPrinter();
 	}
 
 	public function testMessage(): void

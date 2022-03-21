@@ -1,12 +1,12 @@
 <?php declare(strict_types = 1);
 
-namespace Orisai\ObjectMapper\Formatting;
+namespace Orisai\ObjectMapper\Printers;
 
 use Orisai\Exceptions\Logic\InvalidState;
 use function array_key_first;
 use function array_key_last;
 
-class FormattingScopes
+class PrinterScopes
 {
 
 	private bool $isOpen = false;

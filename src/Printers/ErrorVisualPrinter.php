@@ -1,6 +1,6 @@
 <?php declare(strict_types = 1);
 
-namespace Orisai\ObjectMapper\Formatting;
+namespace Orisai\ObjectMapper\Printers;
 
 use Orisai\Exceptions\Logic\InvalidArgument;
 use Orisai\ObjectMapper\Exception\InvalidData;
@@ -21,7 +21,7 @@ use function str_repeat;
 use function str_replace;
 use const PHP_EOL;
 
-class VisualErrorFormatter implements ErrorFormatter, TypeFormatter
+class ErrorVisualPrinter implements ErrorPrinter, TypePrinter
 {
 
 	/**
@@ -64,7 +64,7 @@ class VisualErrorFormatter implements ErrorFormatter, TypeFormatter
 	 */
 	public string $itemsIndentation = "\t";
 
-	protected FormattingScopes $scopes;
+	protected PrinterScopes $scopes;
 
 	public function __construct()
 	{
@@ -509,9 +509,9 @@ class VisualErrorFormatter implements ErrorFormatter, TypeFormatter
 		return $level === null ? '' : str_repeat($this->itemsIndentation, $level);
 	}
 
-	protected function createScopes(): FormattingScopes
+	protected function createScopes(): PrinterScopes
 	{
-		return new FormattingScopes();
+		return new PrinterScopes();
 	}
 
 }

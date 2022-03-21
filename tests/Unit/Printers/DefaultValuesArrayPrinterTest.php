@@ -1,14 +1,14 @@
 <?php declare(strict_types = 1);
 
-namespace Tests\Orisai\ObjectMapper\Unit\Formatting;
+namespace Tests\Orisai\ObjectMapper\Unit\Printers;
 
 use Orisai\ObjectMapper\Annotation\AnnotationMetaSource;
 use Orisai\ObjectMapper\Context\TypeContext;
-use Orisai\ObjectMapper\Formatting\ArrayDefaultValuesFormatter;
 use Orisai\ObjectMapper\MappedObject;
 use Orisai\ObjectMapper\Meta\DefaultMetaResolverFactory;
 use Orisai\ObjectMapper\Meta\DefaultMetaSourceManager;
 use Orisai\ObjectMapper\Meta\MetaLoader;
+use Orisai\ObjectMapper\Printers\DefaultValuesArrayPrinter;
 use Orisai\ObjectMapper\Rules\DefaultRuleManager;
 use Orisai\ObjectMapper\Rules\RuleManager;
 use Orisai\ObjectMapper\Rules\StructureArgs;
@@ -20,10 +20,10 @@ use Tests\Orisai\ObjectMapper\Doubles\NoDefaultsVO;
 use Tests\Orisai\ObjectMapper\Doubles\StructuresVO;
 use Tests\Orisai\ObjectMapper\Doubles\TestMetaCache;
 
-final class ArrayDefaultValuesFormatterTest extends TestCase
+final class DefaultValuesArrayPrinterTest extends TestCase
 {
 
-	private ArrayDefaultValuesFormatter $formatter;
+	private DefaultValuesArrayPrinter $formatter;
 
 	private RuleManager $ruleManager;
 
@@ -39,7 +39,7 @@ final class ArrayDefaultValuesFormatterTest extends TestCase
 		$cache = new TestMetaCache();
 		$resolverFactory = new DefaultMetaResolverFactory($this->ruleManager);
 		$this->metaLoader = new MetaLoader($cache, $sourceManager, $this->ruleManager, $resolverFactory);
-		$this->formatter = new ArrayDefaultValuesFormatter($this->metaLoader);
+		$this->formatter = new DefaultValuesArrayPrinter($this->metaLoader);
 	}
 
 	/**

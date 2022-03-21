@@ -1,10 +1,10 @@
 <?php declare(strict_types = 1);
 
-namespace Orisai\ObjectMapper\Formatting;
+namespace Orisai\ObjectMapper\Printers;
 
 use Orisai\ObjectMapper\Types\Type;
 
-interface TypeFormatter extends StructureFormatter
+interface TypePrinter extends StructurePrinter
 {
 
 	/**

@@ -1,10 +1,10 @@
 <?php declare(strict_types = 1);
 
-namespace Orisai\ObjectMapper\Formatting;
+namespace Orisai\ObjectMapper\Printers;
 
 use Orisai\ObjectMapper\Exception\InvalidData;
 
-interface ErrorFormatter
+interface ErrorPrinter
 {
 
 	/**

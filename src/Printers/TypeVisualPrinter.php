@@ -1,6 +1,6 @@
 <?php declare(strict_types = 1);
 
-namespace Orisai\ObjectMapper\Formatting;
+namespace Orisai\ObjectMapper\Printers;
 
 use Orisai\Exceptions\Logic\InvalidArgument;
 use Orisai\ObjectMapper\Types\ArrayType;
@@ -19,7 +19,7 @@ use function str_repeat;
 use function str_replace;
 use const PHP_EOL;
 
-class VisualTypeFormatter implements TypeFormatter
+class TypeVisualPrinter implements TypePrinter
 {
 
 	/**

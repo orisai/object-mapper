@@ -1,20 +1,20 @@
 <?php declare(strict_types = 1);
 
-namespace Tests\Orisai\ObjectMapper\Unit\Formatting;
+namespace Tests\Orisai\ObjectMapper\Unit\Printers;
 
 use Orisai\Exceptions\Logic\InvalidState;
-use Orisai\ObjectMapper\Formatting\FormattingScopes;
+use Orisai\ObjectMapper\Printers\PrinterScopes;
 use PHPUnit\Framework\TestCase;
 
-final class FormattingScopesTest extends TestCase
+final class PrinterScopesTest extends TestCase
 {
 
-	private FormattingScopes $scopes;
+	private PrinterScopes $scopes;
 
 	protected function setUp(): void
 	{
 		parent::setUp();
-		$this->scopes = new FormattingScopes();
+		$this->scopes = new PrinterScopes();
 	}
 
 	/**

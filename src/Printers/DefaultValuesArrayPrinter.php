@@ -1,11 +1,11 @@
 <?php declare(strict_types = 1);
 
-namespace Orisai\ObjectMapper\Formatting;
+namespace Orisai\ObjectMapper\Printers;
 
 use Orisai\ObjectMapper\Meta\MetaLoader;
 use Orisai\ObjectMapper\Types\StructureType;
 
-class ArrayDefaultValuesFormatter implements StructureFormatter
+class DefaultValuesArrayPrinter implements StructurePrinter
 {
 
 	private MetaLoader $metaLoader;

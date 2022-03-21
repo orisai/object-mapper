@@ -7,9 +7,9 @@ use DateTimeInterface;
 use Orisai\Exceptions\Logic\InvalidArgument;
 use Orisai\Exceptions\Logic\InvalidState;
 use Orisai\ObjectMapper\Exception\InvalidData;
-use Orisai\ObjectMapper\Formatting\ErrorFormatter;
-use Orisai\ObjectMapper\Formatting\VisualErrorFormatter;
 use Orisai\ObjectMapper\MappedObject;
+use Orisai\ObjectMapper\Printers\ErrorPrinter;
+use Orisai\ObjectMapper\Printers\ErrorVisualPrinter;
 use Orisai\ObjectMapper\Processing\Options;
 use Orisai\ObjectMapper\Processing\RequiredFields;
 use stdClass;
@@ -35,12 +35,12 @@ use function sprintf;
 final class DefaultProcessorTest extends ProcessingTestCase
 {
 
-	private ErrorFormatter $formatter;
+	private ErrorPrinter $formatter;
 
 	protected function setUp(): void
 	{
 		parent::setUp();
-		$this->formatter = new VisualErrorFormatter();
+		$this->formatter = new ErrorVisualPrinter();
 	}
 
 	public function testMissingRequiredValues(): void
