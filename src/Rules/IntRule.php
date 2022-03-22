@@ -101,7 +101,7 @@ final class IntRule implements Rule
 	}
 
 	/**
-	 * @param mixed $value
+	 * @param mixed   $value
 	 * @param IntArgs $args
 	 * @throws ValueDoesNotMatch
 	 */
@@ -109,8 +109,8 @@ final class IntRule implements Rule
 	{
 		$initValue = $value;
 
-		if (!is_int($value)) {
-			$value = $this->tryConvert($value, $args);
+		if ($args->castNumericString && is_string($value)) {
+			$value = $this->tryConvert($value);
 		}
 
 		if (!is_int($value)) {
@@ -168,18 +168,15 @@ final class IntRule implements Rule
 	}
 
 	/**
-	 * @param mixed $value
-	 * @return mixed
+	 * @return int|string
 	 */
-	private function tryConvert($value, IntArgs $args)
+	private function tryConvert(string $value)
 	{
-		if ($args->castNumericString && is_string($value)) {
-			// Remove regular spaces
-			$value = str_replace(' ', '', $value);
+		// Remove regular spaces
+		$value = str_replace(' ', '', $value);
 
-			if (preg_match('#^[+-]?[0-9]+\z#', $value) === 1) {
-				return (int) $value;
-			}
+		if (preg_match('#^[+-]?[0-9]+\z#', $value) === 1) {
+			return (int) $value;
 		}
 
 		return $value;

@@ -102,7 +102,7 @@ final class FloatRule implements Rule
 	}
 
 	/**
-	 * @param mixed $value
+	 * @param mixed     $value
 	 * @param FloatArgs $args
 	 * @throws ValueDoesNotMatch
 	 */
@@ -112,10 +112,8 @@ final class FloatRule implements Rule
 
 		if (is_int($value)) {
 			$value = (float) $value;
-		}
-
-		if (!is_float($value)) {
-			$value = $this->tryConvert($value, $args);
+		} elseif ($args->castNumericString && is_string($value)) {
+			$value = $this->tryConvert($value);
 		}
 
 		if (!is_float($value)) {
@@ -173,19 +171,16 @@ final class FloatRule implements Rule
 	}
 
 	/**
-	 * @param mixed $value
-	 * @return mixed
+	 * @return float|string
 	 */
-	private function tryConvert($value, FloatArgs $args)
+	private function tryConvert(string $value)
 	{
-		if ($args->castNumericString && is_string($value)) {
-			// 1. Normalize commas to dots (decimals separator)
-			// 2. Remove regular spaces
-			$value = str_replace([',', ' '], ['.', ''], $value);
+		// 1. Normalize commas to dots (decimals separator)
+		// 2. Remove regular spaces
+		$value = str_replace([',', ' '], ['.', ''], $value);
 
-			if (preg_match('#^[+-]?[0-9]*[.]?[0-9]+\z#', $value) === 1) {
-				return (float) $value;
-			}
+		if (preg_match('#^[+-]?[0-9]*[.]?[0-9]+\z#', $value) === 1) {
+			return (float) $value;
 		}
 
 		return $value;
