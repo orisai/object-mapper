@@ -49,14 +49,20 @@ final class ArrayTypeTest extends TestCase
 		$type->addInvalidPair($key3, $invalidKey3, $invalidItem3);
 
 		self::assertTrue($type->hasInvalidPairs());
-		self::assertSame(
-			[
-				$key1 => [$invalidKey1, $invalidItem1],
-				$key2 => [$invalidKey2, $invalidItem2],
-				$key3 => [$invalidKey3, $invalidItem3],
-			],
-			$type->getInvalidPairs(),
-		);
+		$pairs = $type->getInvalidPairs();
+		self::assertCount(3, $pairs);
+
+		$pair1 = $pairs[$key1];
+		self::assertSame($invalidKey1, $pair1->getKey());
+		self::assertSame($invalidItem1, $pair1->getValue());
+
+		$pair2 = $pairs[$key2];
+		self::assertNull($pair2->getKey());
+		self::assertSame($invalidItem2, $pair2->getValue());
+
+		$pair3 = $pairs[$key3];
+		self::assertSame($invalidKey3, $pair3->getKey());
+		self::assertNull($pair3->getValue());
 	}
 
 	public function testInvalidPairFailure(): void

@@ -136,17 +136,17 @@ final class ArrayOfRuleTest extends RuleTestCase
 			$invalidPairs = $type->getInvalidPairs();
 			self::assertCount(3, $invalidPairs);
 
-			[$pairKey, $pairValue] = $invalidPairs['baz'];
-			self::assertNull($pairKey);
-			self::assertInstanceOf(WithTypeAndValue::class, $pairValue);
+			$pair = $invalidPairs['baz'];
+			self::assertNull($pair->getKey());
+			self::assertInstanceOf(WithTypeAndValue::class, $pair->getValue());
 
-			[$pairKey, $pairValue] = $invalidPairs[10];
-			self::assertInstanceOf(WithTypeAndValue::class, $pairKey);
-			self::assertInstanceOf(WithTypeAndValue::class, $pairValue);
+			$pair = $invalidPairs[10];
+			self::assertInstanceOf(WithTypeAndValue::class, $pair->getKey());
+			self::assertInstanceOf(WithTypeAndValue::class, $pair->getValue());
 
-			[$pairKey, $pairValue] = $invalidPairs[11];
-			self::assertInstanceOf(WithTypeAndValue::class, $pairKey);
-			self::assertNull($pairValue);
+			$pair = $invalidPairs[11];
+			self::assertInstanceOf(WithTypeAndValue::class, $pair->getKey());
+			self::assertNull($pair->getValue());
 		}
 
 		self::assertNotNull($exception);

@@ -10,10 +10,7 @@ final class ArrayType extends MultiValueType
 
 	private ?Type $keyType;
 
-	/**
-	 * @var array<array<WithTypeAndValue|null>>
-	 * @phpstan-var array<array{?WithTypeAndValue, ?WithTypeAndValue}>
-	 */
+	/** @var array<int|string, KeyValueErrorPair> */
 	private array $invalidPairs = [];
 
 	public function __construct(?Type $keyType, Type $itemType)
@@ -37,7 +34,7 @@ final class ArrayType extends MultiValueType
 				->withMessage('At least one of key type and item type of invalid pair should not be null');
 		}
 
-		$this->invalidPairs[$key] = [$keyTypeAndValue, $itemTypeAndValue];
+		$this->invalidPairs[$key] = new KeyValueErrorPair($keyTypeAndValue, $itemTypeAndValue);
 	}
 
 	public function hasInvalidPairs(): bool
@@ -46,8 +43,7 @@ final class ArrayType extends MultiValueType
 	}
 
 	/**
-	 * @return array<array<WithTypeAndValue|null>>
-	 * @phpstan-return array<array{?WithTypeAndValue, ?WithTypeAndValue}>
+	 * @return array<int|string, KeyValueErrorPair>
 	 */
 	public function getInvalidPairs(): array
 	{

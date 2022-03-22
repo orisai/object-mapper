@@ -286,14 +286,16 @@ class ErrorVisualPrinter implements ErrorPrinter, TypePrinter
 		$this->scopes->openScope(true);
 
 		//TODO - otestovat, že se z nevalidních itemů nevypisuje nic navíc
-		foreach ($invalidPairs as $key => [$pairKeyType, $pairItemType]) {
+		foreach ($invalidPairs as $key => $pair) {
 			$invalidPairString = sprintf('%s%s', $this->valueToString($key, false), $this->pathAndTypeSeparator);
 
+			$pairKeyType = $pair->getKey();
 			if ($pairKeyType !== null) {
 				$invalidPairString .= $this->format($pairKeyType->getInvalidType(), null);
 				$invalidPairString .= ' => ';
 			}
 
+			$pairItemType = $pair->getValue();
 			if ($pairItemType !== null) {
 				$invalidPairString .= $this->format($pairItemType->getInvalidType(), $innerLevel);
 			} else {
