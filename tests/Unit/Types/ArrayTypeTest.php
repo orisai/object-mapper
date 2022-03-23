@@ -65,6 +65,46 @@ final class ArrayTypeTest extends TestCase
 		self::assertNull($pair3->getValue());
 	}
 
+	public function testInvalidKeyThenValue(): void
+	{
+		$itemType = new MessageType('test');
+		$type = new ArrayType(null, $itemType);
+
+		$invalidKey = ValueDoesNotMatch::create(new MessageType('test'), NoValue::create());
+		$type->addInvalidKey(1, $invalidKey);
+
+		$pair = $type->getInvalidPairs()[1];
+		self::assertSame($invalidKey, $pair->getKey());
+		self::assertNull($pair->getValue());
+
+		$invalidValue = ValueDoesNotMatch::create(new MessageType('test'), NoValue::create());
+		$type->addInvalidValue(1, $invalidValue);
+		$pair = $type->getInvalidPairs()[1];
+
+		self::assertSame($invalidKey, $pair->getKey());
+		self::assertSame($invalidValue, $pair->getValue());
+	}
+
+	public function testInvalidValueThenKey(): void
+	{
+		$itemType = new MessageType('test');
+		$type = new ArrayType(null, $itemType);
+
+		$invalidValue = ValueDoesNotMatch::create(new MessageType('test'), NoValue::create());
+		$type->addInvalidValue(1, $invalidValue);
+
+		$pair = $type->getInvalidPairs()[1];
+		self::assertNull($pair->getKey());
+		self::assertSame($invalidValue, $pair->getValue());
+
+		$invalidKey = ValueDoesNotMatch::create(new MessageType('test'), NoValue::create());
+		$type->addInvalidKey(1, $invalidKey);
+
+		$pair = $type->getInvalidPairs()[1];
+		self::assertSame($invalidKey, $pair->getKey());
+		self::assertSame($invalidValue, $pair->getValue());
+	}
+
 	public function testInvalidPairFailure(): void
 	{
 		$this->expectException(InvalidArgument::class);

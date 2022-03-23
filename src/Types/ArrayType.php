@@ -25,7 +25,7 @@ final class ArrayType extends MultiValueType
 	}
 
 	/**
-	 * @param string|int $key
+	 * @param int|string $key
 	 */
 	public function addInvalidPair($key, ?WithTypeAndValue $keyTypeAndValue, ?WithTypeAndValue $itemTypeAndValue): void
 	{
@@ -35,6 +35,28 @@ final class ArrayType extends MultiValueType
 		}
 
 		$this->invalidPairs[$key] = new KeyValueErrorPair($keyTypeAndValue, $itemTypeAndValue);
+	}
+
+	/**
+	 * @param int|string $key
+	 */
+	public function addInvalidKey($key, ?WithTypeAndValue $keyTypeAndValue): void
+	{
+		$previous = $this->invalidPairs[$key] ?? null;
+		$this->invalidPairs[$key] = $previous !== null
+			? new KeyValueErrorPair($keyTypeAndValue, $previous->getValue())
+			: new KeyValueErrorPair($keyTypeAndValue, null);
+	}
+
+	/**
+	 * @param int|string $key
+	 */
+	public function addInvalidValue($key, ?WithTypeAndValue $itemTypeAndValue): void
+	{
+		$previous = $this->invalidPairs[$key] ?? null;
+		$this->invalidPairs[$key] = $previous !== null
+			? new KeyValueErrorPair($previous->getKey(), $itemTypeAndValue)
+			: new KeyValueErrorPair(null, $itemTypeAndValue);
 	}
 
 	public function hasInvalidPairs(): bool
