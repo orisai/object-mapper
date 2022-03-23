@@ -63,9 +63,8 @@ final class DbQueryingExample3 extends MappedObject
 			try {
 				$examples[] = $processor->process($rawExample, DbQueryingExample1::class);
 			} catch (InvalidData $exception) {
-				$type->addInvalidPair(
+				$type->addInvalidValue(
 					$key,
-					null,
 					$exception
 				);
 			}

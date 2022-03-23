@@ -51,9 +51,8 @@ final class DbQueryingExample2 extends MappedObject
 
 		foreach ($ids as $key => $id) {
 			if (!in_array($id, $existingIds, true)) {
-				$type->addInvalidPair(
+				$type->addInvalidValue(
 					$key,
-					null,
 					ValueDoesNotMatch::createFromString("User with ID $id not found.")
 				);
 			}
