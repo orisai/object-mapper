@@ -30,7 +30,7 @@ TODO
 	- explicit/implicit null
 	- other defaults
 
-## ValueObject
+## MappedObject
 
 TODO
 - mapped fields (properties)
@@ -60,13 +60,13 @@ Expects all rules to match
 - Rules are executed from first to last
 
 ```php
-use Orisai\ObjectMapper\Annotation\Expect\AllOf;
-use Orisai\ObjectMapper\Annotation\Expect\IntValue;
-use Orisai\ObjectMapper\Annotation\Expect\NullValue;
-use Orisai\ObjectMapper\Annotation\Expect\StringValue;
-use Orisai\ObjectMapper\ValueObject;
+use Orisai\ObjectMapper\Attributes\Expect\AllOf;
+use Orisai\ObjectMapper\Attributes\Expect\IntValue;
+use Orisai\ObjectMapper\Attributes\Expect\NullValue;
+use Orisai\ObjectMapper\Attributes\Expect\StringValue;
+use Orisai\ObjectMapper\MappedObject;
 
-class VO extends ValueObject
+class VO extends MappedObject
 {
 
     /**
@@ -94,13 +94,13 @@ Expects any of rules to match
 - Result of first rule which match is used, other rules are skipped
 
 ```php
-use Orisai\ObjectMapper\Annotation\Expect\AnyOf;
-use Orisai\ObjectMapper\Annotation\Expect\IntValue;
-use Orisai\ObjectMapper\Annotation\Expect\NullValue;
-use Orisai\ObjectMapper\Annotation\Expect\StringValue;
-use Orisai\ObjectMapper\ValueObject;
+use Orisai\ObjectMapper\Attributes\Expect\AnyOf;
+use Orisai\ObjectMapper\Attributes\Expect\IntValue;
+use Orisai\ObjectMapper\Attributes\Expect\NullValue;
+use Orisai\ObjectMapper\Attributes\Expect\StringValue;
+use Orisai\ObjectMapper\MappedObject;
 
-class VO extends ValueObject
+class VO extends MappedObject
 {
 
     /**
@@ -126,13 +126,13 @@ Parameters:
 Expects array
 
 ```php
-use Orisai\ObjectMapper\Annotation\Expect\ArrayOf;
-use Orisai\ObjectMapper\Annotation\Expect\IntValue;
-use Orisai\ObjectMapper\Annotation\Expect\MixedValue;
-use Orisai\ObjectMapper\Annotation\Expect\StringValue;
-use Orisai\ObjectMapper\ValueObject;
+use Orisai\ObjectMapper\Attributes\Expect\ArrayOf;
+use Orisai\ObjectMapper\Attributes\Expect\IntValue;
+use Orisai\ObjectMapper\Attributes\Expect\MixedValue;
+use Orisai\ObjectMapper\Attributes\Expect\StringValue;
+use Orisai\ObjectMapper\MappedObject;
 
-class VO extends ValueObject
+class VO extends MappedObject
 {
 
     /**
@@ -180,10 +180,10 @@ Parameters:
 Expects bool
 
 ```php
-use Orisai\ObjectMapper\Annotation\Expect\BoolValue;
-use Orisai\ObjectMapper\ValueObject;
+use Orisai\ObjectMapper\Attributes\Expect\BoolValue;
+use Orisai\ObjectMapper\MappedObject;
 
-class VO extends ValueObject
+class VO extends MappedObject
 {
 
     /** @BoolValue() */
@@ -205,10 +205,10 @@ Expects datetime as a string or int
 
 ```php
 use DateTimeImmutable;
-use Orisai\ObjectMapper\Annotation\Expect\DateTime;
-use Orisai\ObjectMapper\ValueObject;
+use Orisai\ObjectMapper\Attributes\Expect\DateTime;
+use Orisai\ObjectMapper\MappedObject;
 
-class VO extends ValueObject
+class VO extends MappedObject
 {
 
     /** @DateTime() */
@@ -231,10 +231,10 @@ Expects float or int
 - Int is casted to float
 
 ```php
-use Orisai\ObjectMapper\Annotation\Expect\FloatValue;
-use Orisai\ObjectMapper\ValueObject;
+use Orisai\ObjectMapper\Attributes\Expect\FloatValue;
+use Orisai\ObjectMapper\MappedObject;
 
-class VO extends ValueObject
+class VO extends MappedObject
 {
 
     /** @FloatValue() */
@@ -267,11 +267,11 @@ Expects an instance of class
 - Use ObjectRule to accept any object
 
 ```php
-use Orisai\ObjectMapper\Annotation\Expect\InstanceValue;
-use Orisai\ObjectMapper\ValueObject;
+use Orisai\ObjectMapper\Attributes\Expect\InstanceValue;
+use Orisai\ObjectMapper\MappedObject;
 use stdClass;
 
-class VO extends ValueObject
+class VO extends MappedObject
 {
 
     /** @InstanceValue(stdClass::class) */
@@ -291,10 +291,10 @@ Parameters:
 Expects int
 
 ```php
-use Orisai\ObjectMapper\Annotation\Expect\IntValue;
-use Orisai\ObjectMapper\ValueObject;
+use Orisai\ObjectMapper\Attributes\Expect\IntValue;
+use Orisai\ObjectMapper\MappedObject;
 
-class VO extends ValueObject
+class VO extends MappedObject
 {
 
     /** @IntValue() */
@@ -327,11 +327,11 @@ Expects list
 - All keys must be incremental integers
 
 ```php
-use Orisai\ObjectMapper\Annotation\Expect\ListOf;
-use Orisai\ObjectMapper\Annotation\Expect\MixedValue;
-use Orisai\ObjectMapper\ValueObject;
+use Orisai\ObjectMapper\Attributes\Expect\ListOf;
+use Orisai\ObjectMapper\Attributes\Expect\MixedValue;
+use Orisai\ObjectMapper\MappedObject;
 
-class VO extends ValueObject
+class VO extends MappedObject
 {
 
     /**
@@ -367,10 +367,10 @@ Parameters:
 Expects any value
 
 ```php
-use Orisai\ObjectMapper\Annotation\Expect\MixedValue;
-use Orisai\ObjectMapper\ValueObject;
+use Orisai\ObjectMapper\Attributes\Expect\MixedValue;
+use Orisai\ObjectMapper\MappedObject;
 
-class VO extends ValueObject
+class VO extends MappedObject
 {
 
     /**
@@ -390,10 +390,10 @@ Parameters:
 Expects null
 
 ```php
-use Orisai\ObjectMapper\Annotation\Expect\NullValue;
-use Orisai\ObjectMapper\ValueObject;
+use Orisai\ObjectMapper\Attributes\Expect\NullValue;
+use Orisai\ObjectMapper\MappedObject;
 
-class VO extends ValueObject
+class VO extends MappedObject
 {
 
     /**
@@ -418,10 +418,10 @@ Expects any object
 - Use InstanceRule to accept instance of specific type
 
 ```php
-use Orisai\ObjectMapper\Annotation\Expect\ObjectValue;
-use Orisai\ObjectMapper\ValueObject;
+use Orisai\ObjectMapper\Attributes\Expect\ObjectValue;
+use Orisai\ObjectMapper\MappedObject;
 
-class VO extends ValueObject
+class VO extends MappedObject
 {
 
     /** @ObjectValue() */
@@ -438,10 +438,10 @@ Parameters:
 Expects any scalar value - int|float|string|bool
 
 ```php
-use Orisai\ObjectMapper\Annotation\Expect\ScalarValue;
-use Orisai\ObjectMapper\ValueObject;
+use Orisai\ObjectMapper\Attributes\Expect\ScalarValue;
+use Orisai\ObjectMapper\MappedObject;
 
-class VO extends ValueObject
+class VO extends MappedObject
 {
 
     /**
@@ -461,10 +461,10 @@ Parameters:
 Expects string
 
 ```php
-use Orisai\ObjectMapper\Annotation\Expect\StringValue;
-use Orisai\ObjectMapper\ValueObject;
+use Orisai\ObjectMapper\Attributes\Expect\StringValue;
+use Orisai\ObjectMapper\MappedObject;
 
-class VO extends ValueObject
+class VO extends MappedObject
 {
 
     /** @StringValue() */
@@ -494,17 +494,17 @@ Parameters:
 #### StructureRule
 
 Expects array with predefined structure
-- Returns instance of `ValueObject`
+- Returns instance of `MappedObject`
 - Works even if value was not sent at all, so value objects which fields all have default values could be initialized
   and only errors for required fields are displayed.
 	- TODO - pouze pokud není v rámci složeného typu a pokud se používá defaultní mód
 
 ```php
-use Orisai\ObjectMapper\Annotation\Expect\MixedValue;
-use Orisai\ObjectMapper\Annotation\Expect\Structure;
-use Orisai\ObjectMapper\ValueObject;
+use Orisai\ObjectMapper\Attributes\Expect\MixedValue;
+use Orisai\ObjectMapper\Attributes\Expect\Structure;
+use Orisai\ObjectMapper\MappedObject;
 
-class VO extends ValueObject
+class VO extends MappedObject
 {
 
     /** @Structure(InnerVO::class) */
@@ -512,7 +512,7 @@ class VO extends ValueObject
 
 }
 
-class InnerVO extends ValueObject
+class InnerVO extends MappedObject
 {
 
     /**
@@ -526,7 +526,7 @@ class InnerVO extends ValueObject
 
 Parameters:
 - `type`
-	- subclass of `ValueObject` which should be created
+	- subclass of `MappedObject` which should be created
 	- required
 
 #### ValueEnumRule
@@ -534,10 +534,10 @@ Parameters:
 Expects any of values from given list
 
 ```php
-use Orisai\ObjectMapper\Annotation\Expect\ValueEnum;
-use Orisai\ObjectMapper\ValueObject;
+use Orisai\ObjectMapper\Attributes\Expect\ValueEnum;
+use Orisai\ObjectMapper\MappedObject;
 
-class VO extends ValueObject
+class VO extends MappedObject
 {
 
     public const ENUM_VALUES = [
@@ -565,10 +565,10 @@ Parameters:
 Expects valid url address
 
 ```php
-use Orisai\ObjectMapper\Annotation\Expect\Url;
-use Orisai\ObjectMapper\ValueObject;
+use Orisai\ObjectMapper\Attributes\Expect\Url;
+use Orisai\ObjectMapper\MappedObject;
 
-class VO extends ValueObject
+class VO extends MappedObject
 {
 
     /** @Url() */
@@ -622,11 +622,11 @@ Object mapper infers whether value is returned from method return type.
 With `void` value is not expected, with every other type including no type value is expected.
 
 ```php
-use Orisai\ObjectMapper\Annotation\Callback\Before;
-use Orisai\ObjectMapper\Annotation\Expect\StringValue;
-use Orisai\ObjectMapper\ValueObject;
+use Orisai\ObjectMapper\Attributes\Callback\Before;
+use Orisai\ObjectMapper\Attributes\Expect\StringValue;
+use Orisai\ObjectMapper\MappedObject;
 
-class DTO extends ValueObject
+class DTO extends MappedObject
 {
 
 	/**
@@ -670,13 +670,13 @@ Object mapper initializes value object and injects services via `ObjectCreator`.
 > Do not change mapped properties values directly, `Processor` will always override them after "after class" callback
 
 ```php
-use Orisai\ObjectMapper\Annotation\Callback\Before;
-use Orisai\ObjectMapper\ValueObject;
+use Orisai\ObjectMapper\Attributes\Callback\Before;
+use Orisai\ObjectMapper\MappedObject;
 
 /**
  * @Before("beforeClass")
  */
-class DTO extends ValueObject
+class DTO extends MappedObject
 {
 
 	private MyService $service;
@@ -722,12 +722,12 @@ Set one of the `CallbackRuntime`s
 - `CallbackRuntime::PROCESSING` - run callback for `processWithoutInitialization()`
 
 ```php
-use Orisai\ObjectMapper\Annotation\Callback\After;
-use Orisai\ObjectMapper\Annotation\Expect\StringValue;
+use Orisai\ObjectMapper\Attributes\Callback\After;
+use Orisai\ObjectMapper\Attributes\Expect\StringValue;
 use Orisai\ObjectMapper\Callbacks\CallbackRuntime;
-use Orisai\ObjectMapper\ValueObject;
+use Orisai\ObjectMapper\MappedObject;
 
-class DTO extends ValueObject
+class DTO extends MappedObject
 {
 
 	/**
@@ -747,13 +747,13 @@ class DTO extends ValueObject
 Callbacks can also differentiate behavior internally based on context
 
 ```php
-use Orisai\ObjectMapper\Annotation\Callback\After;
-use Orisai\ObjectMapper\Annotation\Expect\StringValue;
+use Orisai\ObjectMapper\Attributes\Callback\After;
+use Orisai\ObjectMapper\Attributes\Expect\StringValue;
 use Orisai\ObjectMapper\Callbacks\CallbackRuntime;
 use Orisai\ObjectMapper\Context\FieldContext;
-use Orisai\ObjectMapper\ValueObject;
+use Orisai\ObjectMapper\MappedObject;
 
-class DTO extends ValueObject
+class DTO extends MappedObject
 {
 
 	/**
