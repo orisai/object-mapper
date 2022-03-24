@@ -51,7 +51,9 @@ parameters:
 		- message: '#^Method (.+)(Before|After)\:\:getType\(\) should return class-string\<(.+)Callback\<(.+)Args\>\> but returns ''(.+)Callback''\.$#'
 		  path: ../src/Attributes/Callbacks
 		- message: '#^Method (.+)\:\:getType\(\) should return class-string\<(.+)Rule\<(.+)Args\>\> but returns ''(.+)Rule''\.$#'
-		  path: ../src/Attributes/Expect
+		  paths:
+		  	- ../src/Attributes/Expect
+		  	- ../src/Bridge/NextrasOrm/EntityFromId.php
 		- message: '#^Method (.+)\:\:getType\(\) should return class-string\<(.+)Modifier\<(.+)Args\>\> but returns ''(.+)Modifier''\.$#'
 		  path: ../src/Attributes/Modifiers
 		- message: '#^Parameter \#1 \$type of method (.+)RuleCompileMeta\:\:containsAnyOfRules\(\) expects array\<class-string\<(.+)Rule(.+)\>\>, array{''(.+)Rule''} given\.$#'

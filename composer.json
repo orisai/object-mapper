@@ -29,6 +29,7 @@
 		"infection/infection": "^0.26.0",
 		"nette/caching": "^3.0",
 		"nette/di": "^3.0.0",
+		"nextras/orm": "^4.0.0",
 		"orisai/coding-standard": "^2.0.0",
 		"phpbench/phpbench": "^1.0.0",
 		"phpstan/extension-installer": "^1.0.0",
