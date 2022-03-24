@@ -10,6 +10,7 @@ use Orisai\ObjectMapper\Exceptions\ValueDoesNotMatch;
 use Orisai\ObjectMapper\Rules\NoArgsRule;
 use Orisai\ObjectMapper\Rules\Rule;
 use Orisai\ObjectMapper\Types\MessageType;
+use Orisai\ObjectMapper\Types\Value;
 
 /**
  * @phpstan-implements Rule<EmptyArgs>
@@ -27,7 +28,7 @@ final class AlwaysInvalidRule implements Rule
 	 */
 	public function processValue($value, Args $args, FieldContext $context)
 	{
-		throw ValueDoesNotMatch::create($this->createType($args, $context), $value);
+		throw ValueDoesNotMatch::create($this->createType($args, $context), Value::of($value));
 	}
 
 	/**

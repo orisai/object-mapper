@@ -8,6 +8,7 @@ use Orisai\ObjectMapper\Context\FieldContext;
 use Orisai\ObjectMapper\Context\TypeContext;
 use Orisai\ObjectMapper\Exceptions\ValueDoesNotMatch;
 use Orisai\ObjectMapper\Types\SimpleValueType;
+use Orisai\ObjectMapper\Types\Value;
 use function is_object;
 
 /**
@@ -26,7 +27,7 @@ final class ObjectRule implements Rule
 	public function processValue($value, Args $args, FieldContext $context): object
 	{
 		if (!is_object($value)) {
-			throw ValueDoesNotMatch::create($this->createType($args, $context), $value);
+			throw ValueDoesNotMatch::create($this->createType($args, $context), Value::of($value));
 		}
 
 		return $value;

@@ -10,6 +10,7 @@ use Orisai\ObjectMapper\Context\RuleArgsContext;
 use Orisai\ObjectMapper\Context\TypeContext;
 use Orisai\ObjectMapper\Exceptions\ValueDoesNotMatch;
 use Orisai\ObjectMapper\Types\SimpleValueType;
+use Orisai\ObjectMapper\Types\Value;
 use function is_float;
 use function is_int;
 use function is_string;
@@ -117,7 +118,7 @@ final class FloatRule implements Rule
 		}
 
 		if (!is_float($value)) {
-			throw ValueDoesNotMatch::create($this->createType($args, $context), $value);
+			throw ValueDoesNotMatch::create($this->createType($args, $context), Value::of($value));
 		}
 
 		$invalidParameters = [];
@@ -138,7 +139,7 @@ final class FloatRule implements Rule
 			$type = $this->createType($args, $context);
 			$type->markParametersInvalid($invalidParameters);
 
-			throw ValueDoesNotMatch::create($type, $initValue);
+			throw ValueDoesNotMatch::create($type, Value::of($initValue));
 		}
 
 		return $value;

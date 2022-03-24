@@ -58,10 +58,10 @@ final class StructureRuleTest extends RuleTestCase
 				$this->fieldContext(),
 			);
 		} catch (InvalidData $exception) {
-			$type = $exception->getInvalidType();
+			$type = $exception->getType();
 
 			self::assertTrue($type->isInvalid());
-			self::assertSame($value, $exception->getInvalidValue());
+			self::assertSame($value, $exception->getValue()->get());
 		}
 
 		self::assertNotNull($exception);

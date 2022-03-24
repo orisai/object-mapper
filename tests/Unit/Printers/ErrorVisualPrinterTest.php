@@ -11,9 +11,9 @@ use Orisai\ObjectMapper\Types\CompoundType;
 use Orisai\ObjectMapper\Types\EnumType;
 use Orisai\ObjectMapper\Types\ListType;
 use Orisai\ObjectMapper\Types\MessageType;
-use Orisai\ObjectMapper\Types\NoValue;
 use Orisai\ObjectMapper\Types\SimpleValueType;
 use Orisai\ObjectMapper\Types\StructureType;
+use Orisai\ObjectMapper\Types\Value;
 use PHPUnit\Framework\TestCase;
 
 /**
@@ -140,9 +140,12 @@ final class ErrorVisualPrinterTest extends TestCase
 
 		$type5Key->overwriteInvalidSubtype(
 			0,
-			ValueDoesNotMatch::create(new SimpleValueType('string'), NoValue::create()),
+			ValueDoesNotMatch::create(new SimpleValueType('string'), Value::none()),
 		);
-		$type5Key->overwriteInvalidSubtype(1, ValueDoesNotMatch::create(new SimpleValueType('int'), NoValue::create()));
+		$type5Key->overwriteInvalidSubtype(
+			1,
+			ValueDoesNotMatch::create(new SimpleValueType('int'), Value::none()),
+		);
 		self::assertSame(
 			'string|int',
 			$this->formatter->formatType($type5Key),
@@ -164,13 +167,24 @@ final class ErrorVisualPrinterTest extends TestCase
 		$type7->addKeyValueParameter('first', 'value');
 		$type7->addKeyParameter('second');
 		$type7->addKeyParameter('third');
-		$type7->addInvalidPair('test', ValueDoesNotMatch::create(new SimpleValueType('string'), null), null);
+		$type7->addInvalidPair(
+			'test',
+			ValueDoesNotMatch::create(
+				new SimpleValueType('string'),
+				Value::of(null),
+			),
+			null,
+		);
 		$type7invalidValue2 = new SimpleValueType('int');
 		$type7invalidValue2->addKeyValueParameter('first', 'value');
 		$type7invalidValue2->addKeyParameter('second');
 		$type7invalidValue2->addKeyParameter('third');
 		$type7invalidValue2->markParameterInvalid('second');
-		$type7->addInvalidPair(0, null, ValueDoesNotMatch::create($type7invalidValue2, NoValue::create()));
+		$type7->addInvalidPair(
+			0,
+			null,
+			ValueDoesNotMatch::create($type7invalidValue2, Value::none()),
+		);
 		$type7invalidValue3 = new SimpleValueType('int');
 		$type7invalidValue3->addKeyValueParameter('first', 'value');
 		$type7invalidValue3->addKeyParameter('second');
@@ -178,8 +192,8 @@ final class ErrorVisualPrinterTest extends TestCase
 		$type7invalidValue3->markParameterInvalid('first');
 		$type7->addInvalidPair(
 			123,
-			ValueDoesNotMatch::create(new SimpleValueType('string'), NoValue::create()),
-			ValueDoesNotMatch::create($type7invalidValue3, NoValue::create()),
+			ValueDoesNotMatch::create(new SimpleValueType('string'), Value::none()),
+			ValueDoesNotMatch::create($type7invalidValue3, Value::none()),
 		);
 
 		self::assertSame(
@@ -228,9 +242,18 @@ final class ErrorVisualPrinterTest extends TestCase
 		);
 
 		$type5 = new ListType(new SimpleValueType('string'));
-		$type5->addInvalidItem(0, ValueDoesNotMatch::create(new SimpleValueType('string'), NoValue::create()));
-		$type5->addInvalidItem(1, ValueDoesNotMatch::create(new SimpleValueType('string'), NoValue::create()));
-		$type5->addInvalidItem('test', ValueDoesNotMatch::create(new SimpleValueType('string'), NoValue::create()));
+		$type5->addInvalidItem(
+			0,
+			ValueDoesNotMatch::create(new SimpleValueType('string'), Value::none()),
+		);
+		$type5->addInvalidItem(
+			1,
+			ValueDoesNotMatch::create(new SimpleValueType('string'), Value::none()),
+		);
+		$type5->addInvalidItem(
+			'test',
+			ValueDoesNotMatch::create(new SimpleValueType('string'), Value::none()),
+		);
 
 		self::assertSame(
 			'list{
@@ -247,24 +270,39 @@ final class ErrorVisualPrinterTest extends TestCase
 		//TODO - brackets
 		$subtype1 = new CompoundType(CompoundType::OPERATOR_AND);
 		$subtype1->addSubtype(0, new SimpleValueType('int'));
-		$subtype1->overwriteInvalidSubtype(0, ValueDoesNotMatch::create(new SimpleValueType('int'), NoValue::create()));
+		$subtype1->overwriteInvalidSubtype(
+			0,
+			ValueDoesNotMatch::create(new SimpleValueType('int'), Value::none()),
+		);
 		$subtype1->addSubtype(1, new SimpleValueType('float'));
 		$subtype1->overwriteInvalidSubtype(
 			1,
-			ValueDoesNotMatch::create(new SimpleValueType('float'), NoValue::create()),
+			ValueDoesNotMatch::create(new SimpleValueType('float'), Value::none()),
 		);
 
 		$subtype2 = new CompoundType(CompoundType::OPERATOR_AND);
 		$subtype2->addSubtype(0, new SimpleValueType('foo'));
-		$subtype2->overwriteInvalidSubtype(0, ValueDoesNotMatch::create(new SimpleValueType('foo'), NoValue::create()));
+		$subtype2->overwriteInvalidSubtype(
+			0,
+			ValueDoesNotMatch::create(new SimpleValueType('foo'), Value::none()),
+		);
 		$subtype2->addSubtype(1, new SimpleValueType('bar'));
-		$subtype2->overwriteInvalidSubtype(1, ValueDoesNotMatch::create(new SimpleValueType('bar'), NoValue::create()));
+		$subtype2->overwriteInvalidSubtype(
+			1,
+			ValueDoesNotMatch::create(new SimpleValueType('bar'), Value::none()),
+		);
 
 		$type1 = new CompoundType(CompoundType::OPERATOR_OR);
 		$type1->addSubtype(0, $subtype1);
-		$type1->overwriteInvalidSubtype(0, ValueDoesNotMatch::create($subtype1, NoValue::create()));
+		$type1->overwriteInvalidSubtype(
+			0,
+			ValueDoesNotMatch::create($subtype1, Value::none()),
+		);
 		$type1->addSubtype(1, $subtype2);
-		$type1->overwriteInvalidSubtype(1, ValueDoesNotMatch::create($subtype2, NoValue::create()));
+		$type1->overwriteInvalidSubtype(
+			1,
+			ValueDoesNotMatch::create($subtype2, Value::none()),
+		);
 
 		self::assertSame(
 			'int&float|foo&bar',
@@ -298,7 +336,7 @@ final class ErrorVisualPrinterTest extends TestCase
 		$type1->addField('b', $fieldType1);
 		$type1->addError(ValueDoesNotMatch::create(
 			new MessageType('Whole structure is invalid'),
-			NoValue::create(),
+			Value::none(),
 		));
 		$type1->markInvalid();
 
@@ -322,7 +360,10 @@ path > to > error > b: structure[
 	bar: t
 ]
 path > to > error > Whole structure is invalid',
-			$this->formatter->formatError(InvalidData::create($type1, NoValue::create()), ['path', 'to', 'error']),
+			$this->formatter->formatError(
+				InvalidData::create($type1, Value::none()),
+				['path', 'to', 'error'],
+			),
 		);
 		self::assertSame(
 			'0: t
@@ -332,7 +373,7 @@ b: structure[
 	bar: t
 ]
 Whole structure is invalid',
-			$this->formatter->formatError(InvalidData::create($type1, NoValue::create())),
+			$this->formatter->formatError(InvalidData::create($type1, Value::none())),
 		);
 	}
 
@@ -347,7 +388,7 @@ Whole structure is invalid',
 		$fieldType1Invalid->addField('bar', new SimpleValueType('t'));
 		$fieldType1Invalid->overwriteInvalidField(
 			'foo',
-			ValueDoesNotMatch::create(new SimpleValueType('overwritten'), NoValue::create()),
+			ValueDoesNotMatch::create(new SimpleValueType('overwritten'), Value::none()),
 		);
 
 		$type1 = new StructureType(MappedObject::class);
@@ -356,13 +397,16 @@ Whole structure is invalid',
 		$type1->addField('b', $fieldType1);
 		$type1->addError(ValueDoesNotMatch::create(
 			new MessageType('Random error'),
-			NoValue::create(),
+			Value::none(),
 		));
 		$type1->overwriteInvalidField(
 			'0',
-			ValueDoesNotMatch::create(new SimpleValueType('overwritten'), NoValue::create()),
+			ValueDoesNotMatch::create(new SimpleValueType('overwritten'), Value::none()),
 		);
-		$type1->overwriteInvalidField('b', ValueDoesNotMatch::create($fieldType1Invalid, NoValue::create()));
+		$type1->overwriteInvalidField(
+			'b',
+			ValueDoesNotMatch::create($fieldType1Invalid, Value::none()),
+		);
 
 		$this->formatter->pathNodeSeparator = ' -_- ';
 
@@ -382,7 +426,10 @@ path -_- to -_- error -_- b: structure[
 	foo: overwritten
 ]
 path -_- to -_- error -_- Random error',
-			$this->formatter->formatError(InvalidData::create($type1, NoValue::create()), ['path', 'to', 'error']),
+			$this->formatter->formatError(
+				InvalidData::create($type1, Value::none()),
+				['path', 'to', 'error'],
+			),
 		);
 		self::assertSame(
 			'0: overwritten
@@ -390,7 +437,7 @@ b: structure[
 	foo: overwritten
 ]
 Random error',
-			$this->formatter->formatError(InvalidData::create($type1, NoValue::create())),
+			$this->formatter->formatError(InvalidData::create($type1, Value::none())),
 		);
 	}
 

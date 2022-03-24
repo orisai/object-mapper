@@ -8,6 +8,7 @@ use Orisai\ObjectMapper\Context\FieldContext;
 use Orisai\ObjectMapper\Context\TypeContext;
 use Orisai\ObjectMapper\Exceptions\ValueDoesNotMatch;
 use Orisai\ObjectMapper\Types\SimpleValueType;
+use Orisai\ObjectMapper\Types\Value;
 use function is_string;
 use function parse_url;
 
@@ -30,7 +31,7 @@ final class UrlRule implements Rule
 			return $value;
 		}
 
-		throw ValueDoesNotMatch::create($this->createType($args, $context), $value);
+		throw ValueDoesNotMatch::create($this->createType($args, $context), Value::of($value));
 	}
 
 	/**

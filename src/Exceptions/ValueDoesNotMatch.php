@@ -5,46 +5,40 @@ namespace Orisai\ObjectMapper\Exceptions;
 use Orisai\Exceptions\DomainException;
 use Orisai\ObjectMapper\Types\MessageType;
 use Orisai\ObjectMapper\Types\Type;
+use Orisai\ObjectMapper\Types\Value;
 
 final class ValueDoesNotMatch extends DomainException implements WithTypeAndValue
 {
 
-	/** @var mixed */
-	private $invalidValue;
+	private Type $type;
 
-	private Type $invalidType;
+	private Value $value;
 
-	/**
-	 * @param mixed $invalidValue
-	 */
-	public static function create(Type $invalidType, $invalidValue): self
+	private function __construct(Type $type, Value $value)
 	{
-		$self = new self();
-		$self->invalidValue = $invalidValue;
-		$self->invalidType = $invalidType;
-
-		return $self;
+		parent::__construct();
+		$this->type = $type;
+		$this->value = $value;
 	}
 
-	public static function createFromString(string $message): self
+	public static function create(Type $type, Value $value): self
 	{
-		$self = new self();
-		$self->invalidType = new MessageType($message);
-
-		return $self;
+		return new self($type, $value);
 	}
 
-	public function getInvalidType(): Type
+	public static function createFromString(string $message, Value $value): self
 	{
-		return $this->invalidType;
+		return new self(new MessageType($message), $value);
 	}
 
-	/**
-	 * @return mixed
-	 */
-	public function getInvalidValue()
+	public function getType(): Type
 	{
-		return $this->invalidValue;
+		return $this->type;
+	}
+
+	public function getValue(): Value
+	{
+		return $this->value;
 	}
 
 }

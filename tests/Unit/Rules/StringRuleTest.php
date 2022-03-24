@@ -62,11 +62,11 @@ final class StringRuleTest extends RuleTestCase
 				$this->fieldContext(),
 			);
 		} catch (ValueDoesNotMatch $exception) {
-			$type = $exception->getInvalidType();
+			$type = $exception->getType();
 			self::assertInstanceOf(SimpleValueType::class, $type);
 
 			self::assertSame('string', $type->getName());
-			self::assertSame($value, $exception->getInvalidValue());
+			self::assertSame($value, $exception->getValue()->get());
 		}
 
 		self::assertNotNull($exception);
@@ -98,7 +98,7 @@ final class StringRuleTest extends RuleTestCase
 				$this->fieldContext(),
 			);
 		} catch (ValueDoesNotMatch $exception) {
-			$type = $exception->getInvalidType();
+			$type = $exception->getType();
 			self::assertInstanceOf(SimpleValueType::class, $type);
 
 			self::assertSame('string', $type->getName());
@@ -107,7 +107,7 @@ final class StringRuleTest extends RuleTestCase
 			self::assertTrue($type->getParameter(StringRule::MIN_LENGTH)->isInvalid());
 			self::assertTrue($type->getParameter(StringRule::PATTERN)->isInvalid());
 			self::assertFalse($type->getParameter(StringRule::MAX_LENGTH)->isInvalid());
-			self::assertSame($value, $exception->getInvalidValue());
+			self::assertSame($value, $exception->getValue()->get());
 		}
 
 		self::assertNotNull($exception);
@@ -125,7 +125,7 @@ final class StringRuleTest extends RuleTestCase
 				$this->fieldContext(),
 			);
 		} catch (ValueDoesNotMatch $exception) {
-			$type = $exception->getInvalidType();
+			$type = $exception->getType();
 			self::assertInstanceOf(SimpleValueType::class, $type);
 
 			self::assertSame('string', $type->getName());
@@ -134,7 +134,7 @@ final class StringRuleTest extends RuleTestCase
 			self::assertFalse($type->getParameter(StringRule::MIN_LENGTH)->isInvalid());
 			self::assertFalse($type->getParameter(StringRule::PATTERN)->isInvalid());
 			self::assertTrue($type->getParameter(StringRule::MAX_LENGTH)->isInvalid());
-			self::assertSame($value, $exception->getInvalidValue());
+			self::assertSame($value, $exception->getValue()->get());
 		}
 
 		self::assertNotNull($exception);
@@ -154,7 +154,7 @@ final class StringRuleTest extends RuleTestCase
 				$this->fieldContext(),
 			);
 		} catch (ValueDoesNotMatch $exception) {
-			$type = $exception->getInvalidType();
+			$type = $exception->getType();
 			self::assertInstanceOf(SimpleValueType::class, $type);
 
 			self::assertSame('string', $type->getName());
@@ -163,7 +163,7 @@ final class StringRuleTest extends RuleTestCase
 			self::assertFalse($type->hasParameter(StringRule::MIN_LENGTH));
 			self::assertFalse($type->hasParameter(StringRule::PATTERN));
 			self::assertFalse($type->hasParameter(StringRule::MAX_LENGTH));
-			self::assertSame($value, $exception->getInvalidValue());
+			self::assertSame($value, $exception->getValue()->get());
 		}
 
 		self::assertNotNull($exception);

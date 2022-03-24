@@ -94,11 +94,11 @@ final class DateTimeRuleTest extends RuleTestCase
 				$this->fieldContext(),
 			);
 		} catch (ValueDoesNotMatch $exception) {
-			$type = $exception->getInvalidType();
+			$type = $exception->getType();
 			self::assertInstanceOf(SimpleValueType::class, $type);
 
 			self::assertSame($expectedType, $type->getName());
-			self::assertSame($value, $exception->getInvalidValue());
+			self::assertSame($value, $exception->getValue()->get());
 
 			$parameters = [];
 			foreach ($type->getParameters() as $parameter) {

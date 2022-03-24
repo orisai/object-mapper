@@ -10,6 +10,7 @@ use Orisai\ObjectMapper\Context\RuleArgsContext;
 use Orisai\ObjectMapper\Context\TypeContext;
 use Orisai\ObjectMapper\Exceptions\ValueDoesNotMatch;
 use Orisai\ObjectMapper\Types\SimpleValueType;
+use Orisai\ObjectMapper\Types\Value;
 use function class_exists;
 use function interface_exists;
 use function is_string;
@@ -61,7 +62,7 @@ final class InstanceRule implements Rule
 			return $value;
 		}
 
-		throw ValueDoesNotMatch::create($this->createType($args, $context), $value);
+		throw ValueDoesNotMatch::create($this->createType($args, $context), Value::of($value));
 	}
 
 	/**

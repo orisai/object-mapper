@@ -80,7 +80,7 @@ class ErrorVisualPrinter implements ErrorPrinter, TypePrinter
 
 		$rootPath = implode($this->pathNodeSeparator, $pathNodes);
 		$formatted = '';
-		$type = $exception->getInvalidType();
+		$type = $exception->getType();
 
 		$errors = $type->getErrors();
 		$fields = $this->filterFields($type);
@@ -115,7 +115,7 @@ class ErrorVisualPrinter implements ErrorPrinter, TypePrinter
 			$formatted .= sprintf(
 				'%s%s%s',
 				$rootPath !== '' ? $rootPath . $this->pathNodeSeparator : '',
-				$this->format($error->getInvalidType(), 0),
+				$this->format($error->getType(), 0),
 				$fieldSeparator,
 			);
 		}
@@ -201,7 +201,7 @@ class ErrorVisualPrinter implements ErrorPrinter, TypePrinter
 		$this->scopes->openScope(false);
 
 		foreach ($errors as $errorKey => $error) {
-			$formattedError = $this->format($error->getInvalidType(), $innerLevel);
+			$formattedError = $this->format($error->getType(), $innerLevel);
 			$formatted .= $this->formatComplexTypeInnerLine($formattedError, $innerLevel, $errorKey === $lastErrorKey);
 		}
 
@@ -291,13 +291,13 @@ class ErrorVisualPrinter implements ErrorPrinter, TypePrinter
 
 			$pairKeyType = $pair->getKey();
 			if ($pairKeyType !== null) {
-				$invalidPairString .= $this->format($pairKeyType->getInvalidType(), null);
+				$invalidPairString .= $this->format($pairKeyType->getType(), null);
 				$invalidPairString .= ' => ';
 			}
 
 			$pairItemType = $pair->getValue();
 			if ($pairItemType !== null) {
-				$invalidPairString .= $this->format($pairItemType->getInvalidType(), $innerLevel);
+				$invalidPairString .= $this->format($pairItemType->getType(), $innerLevel);
 			} else {
 				$invalidPairString .= 'value';
 			}
@@ -361,7 +361,7 @@ class ErrorVisualPrinter implements ErrorPrinter, TypePrinter
 
 		foreach ($invalidItems as $key => $invalidItem) {
 			$invalidItemString = sprintf('%s%s', $this->valueToString($key, false), $this->pathAndTypeSeparator);
-			$invalidItemString .= $this->format($invalidItem->getInvalidType(), $innerLevel);
+			$invalidItemString .= $this->format($invalidItem->getType(), $innerLevel);
 			$invalidItemsString .= $this->formatComplexTypeInnerLine(
 				$invalidItemString,
 				$innerLevel,

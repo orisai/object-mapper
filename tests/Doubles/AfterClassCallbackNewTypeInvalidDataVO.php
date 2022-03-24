@@ -8,8 +8,8 @@ use Orisai\ObjectMapper\Exceptions\InvalidData;
 use Orisai\ObjectMapper\Exceptions\ValueDoesNotMatch;
 use Orisai\ObjectMapper\MappedObject;
 use Orisai\ObjectMapper\Types\MessageType;
-use Orisai\ObjectMapper\Types\NoValue;
 use Orisai\ObjectMapper\Types\StructureType;
+use Orisai\ObjectMapper\Types\Value;
 
 /**
  * @After(method="after")
@@ -29,11 +29,11 @@ final class AfterClassCallbackNewTypeInvalidDataVO extends MappedObject
 		$type->addError(
 			ValueDoesNotMatch::create(
 				new MessageType('test'),
-				NoValue::create(),
+				Value::none(),
 			),
 		);
 
-		throw InvalidData::create($type, NoValue::create());
+		throw InvalidData::create($type, Value::none());
 	}
 
 }

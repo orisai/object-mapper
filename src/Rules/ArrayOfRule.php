@@ -11,7 +11,7 @@ use Orisai\ObjectMapper\Exceptions\InvalidData;
 use Orisai\ObjectMapper\Exceptions\ValueDoesNotMatch;
 use Orisai\ObjectMapper\Meta\Compile\RuleCompileMeta;
 use Orisai\ObjectMapper\Types\ArrayType;
-use Orisai\ObjectMapper\Types\NoValue;
+use Orisai\ObjectMapper\Types\Value;
 use Orisai\Utils\Arrays\ArrayMerger;
 use function count;
 use function is_array;
@@ -91,7 +91,7 @@ final class ArrayOfRule extends MultiValueRule
 		if (!is_array($value)) {
 			$type->markInvalid();
 
-			throw ValueDoesNotMatch::create($type, $value);
+			throw ValueDoesNotMatch::create($type, Value::of($value));
 		}
 
 		if ($args->minItems !== null && count($value) < $args->minItems) {
@@ -101,7 +101,7 @@ final class ArrayOfRule extends MultiValueRule
 		if ($args->maxItems !== null && count($value) > $args->maxItems) {
 			$type->markParameterInvalid(self::MAX_ITEMS);
 
-			throw ValueDoesNotMatch::create($type, $value);
+			throw ValueDoesNotMatch::create($type, Value::of($value));
 		}
 
 		$itemMeta = $args->itemRuleMeta;
@@ -148,7 +148,7 @@ final class ArrayOfRule extends MultiValueRule
 		if ($hasInvalidParameters || $type->hasInvalidPairs()) {
 			throw ValueDoesNotMatch::create(
 				$type,
-				$hasInvalidParameters ? $value : NoValue::create(),
+				$hasInvalidParameters ? Value::of($value) : Value::none(),
 			);
 		}
 

@@ -123,11 +123,11 @@ final class FloatRuleTest extends RuleTestCase
 				$this->fieldContext(),
 			);
 		} catch (ValueDoesNotMatch $exception) {
-			$type = $exception->getInvalidType();
+			$type = $exception->getType();
 			self::assertInstanceOf(SimpleValueType::class, $type);
 
 			self::assertSame('float', $type->getName());
-			self::assertSame($value, $exception->getInvalidValue());
+			self::assertSame($value, $exception->getValue()->get());
 		}
 
 		self::assertNotNull($exception);
@@ -159,13 +159,13 @@ final class FloatRuleTest extends RuleTestCase
 				$this->fieldContext(),
 			);
 		} catch (ValueDoesNotMatch $exception) {
-			$type = $exception->getInvalidType();
+			$type = $exception->getType();
 			self::assertInstanceOf(SimpleValueType::class, $type);
 
 			self::assertSame('float', $type->getName());
 			self::assertTrue($type->hasInvalidParameters());
 			self::assertTrue($type->getParameter(FloatRule::MAX)->isInvalid());
-			self::assertSame($value, $exception->getInvalidValue());
+			self::assertSame($value, $exception->getValue()->get());
 		}
 
 		self::assertNotNull($exception);
@@ -183,14 +183,14 @@ final class FloatRuleTest extends RuleTestCase
 				$this->fieldContext(),
 			);
 		} catch (ValueDoesNotMatch $exception) {
-			$type = $exception->getInvalidType();
+			$type = $exception->getType();
 			self::assertInstanceOf(SimpleValueType::class, $type);
 
 			self::assertSame('float', $type->getName());
 			self::assertTrue($type->hasInvalidParameters());
 			self::assertTrue($type->getParameter(FloatRule::MIN)->isInvalid());
 			self::assertTrue($type->getParameter(FloatRule::UNSIGNED)->isInvalid());
-			self::assertSame($value, $exception->getInvalidValue());
+			self::assertSame($value, $exception->getValue()->get());
 		}
 
 		self::assertNotNull($exception);

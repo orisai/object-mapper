@@ -8,8 +8,8 @@ use Orisai\ObjectMapper\Context\FieldContext;
 use Orisai\ObjectMapper\Context\TypeContext;
 use Orisai\ObjectMapper\Exceptions\ValueDoesNotMatch;
 use Orisai\ObjectMapper\Types\CompoundType;
-use Orisai\ObjectMapper\Types\NoValue;
 use Orisai\ObjectMapper\Types\SimpleValueType;
+use Orisai\ObjectMapper\Types\Value;
 use function is_scalar;
 
 /**
@@ -36,11 +36,11 @@ final class ScalarRule implements Rule
 		foreach ($this->getSubtypes() as $key => $subtype) {
 			$type->overwriteInvalidSubtype(
 				$key,
-				ValueDoesNotMatch::create($subtype, NoValue::create()),
+				ValueDoesNotMatch::create($subtype, Value::none()),
 			);
 		}
 
-		throw ValueDoesNotMatch::create($type, $value);
+		throw ValueDoesNotMatch::create($type, Value::of($value));
 	}
 
 	/**

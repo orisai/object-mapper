@@ -30,8 +30,8 @@ use Orisai\ObjectMapper\Rules\RuleManager;
 use Orisai\ObjectMapper\Rules\StructureArgs;
 use Orisai\ObjectMapper\Rules\StructureRule;
 use Orisai\ObjectMapper\Types\MessageType;
-use Orisai\ObjectMapper\Types\NoValue;
 use Orisai\ObjectMapper\Types\StructureType;
+use Orisai\ObjectMapper\Types\Value;
 use function array_diff;
 use function array_key_exists;
 use function array_keys;
@@ -181,7 +181,7 @@ class DefaultProcessor implements Processor
 			$type = $context->getType();
 			$type->markInvalid();
 
-			throw InvalidData::create($type, $data);
+			throw InvalidData::create($type, Value::of($data));
 		}
 
 		return $data;
@@ -235,7 +235,7 @@ class DefaultProcessor implements Processor
 		$type = $fieldSetContext->getType();
 
 		if ($type->hasInvalidFields()) {
-			throw InvalidData::create($type, NoValue::create());
+			throw InvalidData::create($type, Value::none());
 		}
 
 		return $data;
@@ -284,7 +284,7 @@ class DefaultProcessor implements Processor
 					$fieldName,
 					ValueDoesNotMatch::create(
 						new MessageType(sprintf('Field is unknown%s', $hint)),
-						$value,
+						Value::of($value),
 					),
 				);
 
@@ -407,7 +407,7 @@ class DefaultProcessor implements Processor
 				} catch (InvalidData $exception) {
 					$type->overwriteInvalidField(
 						$missingField,
-						InvalidData::create($exception->getInvalidType(), NoValue::create()),
+						InvalidData::create($exception->getType(), Value::none()),
 					);
 				}
 			} elseif ($requiredFields->name !== RequiredFields::none()->name && !$type->isFieldInvalid($missingField)) {
@@ -421,7 +421,7 @@ class DefaultProcessor implements Processor
 							$propertyRuleMeta->getArgs(),
 							$this->getTypeContext(),
 						),
-						NoValue::create(),
+						Value::none(),
 					),
 				);
 			}
@@ -538,16 +538,16 @@ class DefaultProcessor implements Processor
 			$data = $this->applyCallbacks($data, $fieldSetContext, $callContext, $meta, $callbackType);
 			assert(is_array($data)); // Class callbacks are forced to define return type
 		} catch (ValueDoesNotMatch | InvalidData $exception) {
-			$caughtType = $exception->getInvalidType();
+			$caughtType = $exception->getType();
 
 			// User thrown type is not the actual type from FieldSetContext
 			if ($caughtType !== $type) {
 				$type->addError($exception);
 
-				throw InvalidData::create($type, NoValue::create());
+				throw InvalidData::create($type, Value::none());
 			}
 
-			throw InvalidData::create($type, $data);
+			throw InvalidData::create($type, Value::of($data));
 		}
 
 		return $data;
@@ -722,7 +722,7 @@ class DefaultProcessor implements Processor
 
 		// If any of fields is invalid, throw error
 		if ($type->hasInvalidFields()) {
-			throw InvalidData::create($type, NoValue::create());
+			throw InvalidData::create($type, Value::none());
 		}
 
 		// Object is fully initialized, remove partial context

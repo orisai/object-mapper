@@ -7,7 +7,6 @@ use Orisai\ObjectMapper\Args\EmptyArgs;
 use Orisai\ObjectMapper\Exceptions\ValueDoesNotMatch;
 use Orisai\ObjectMapper\Rules\ScalarRule;
 use Orisai\ObjectMapper\Types\CompoundType;
-use Orisai\ObjectMapper\Types\NoValue;
 use Orisai\ObjectMapper\Types\SimpleValueType;
 use stdClass;
 use Tests\Orisai\ObjectMapper\Toolkit\RuleTestCase;
@@ -67,7 +66,7 @@ final class ScalarRuleTest extends RuleTestCase
 				$this->fieldContext(),
 			);
 		} catch (ValueDoesNotMatch $exception) {
-			$type = $exception->getInvalidType();
+			$type = $exception->getType();
 			self::assertInstanceOf(CompoundType::class, $type);
 
 			$subtypes = $type->getSubtypes();
@@ -79,11 +78,11 @@ final class ScalarRuleTest extends RuleTestCase
 			$invalidSubtypes = $type->getInvalidSubtypes();
 			self::assertCount(4, $invalidSubtypes);
 			foreach ($invalidSubtypes as $key => $invalidSubtype) {
-				self::assertSame($invalidSubtype->getInvalidType(), $subtypes[$key]);
-				self::assertInstanceOf(NoValue::class, $invalidSubtype->getInvalidValue());
+				self::assertSame($invalidSubtype->getType(), $subtypes[$key]);
+				self::assertFalse($invalidSubtype->getValue()->has());
 			}
 
-			self::assertSame($value, $exception->getInvalidValue());
+			self::assertSame($value, $exception->getValue()->get());
 		}
 
 		self::assertNotNull($exception);

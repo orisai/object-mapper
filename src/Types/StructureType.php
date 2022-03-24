@@ -51,7 +51,7 @@ final class StructureType implements Type
 	 */
 	public function overwriteInvalidField($field, WithTypeAndValue $typeAndValue): void
 	{
-		$this->fields[$field] = $typeAndValue->getInvalidType();
+		$this->fields[$field] = $typeAndValue->getType();
 		$this->invalidFields[$field] = $typeAndValue;
 	}
 

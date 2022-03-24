@@ -6,6 +6,7 @@ use Orisai\ObjectMapper\Attributes\Callbacks\After;
 use Orisai\ObjectMapper\Attributes\Expect\StringValue;
 use Orisai\ObjectMapper\Exceptions\ValueDoesNotMatch;
 use Orisai\ObjectMapper\MappedObject;
+use Orisai\ObjectMapper\Types\Value;
 
 /**
  * @After(method="after")
@@ -22,7 +23,7 @@ final class AfterClassCallbackValueDoesNotMatchVO extends MappedObject
 	 */
 	public static function after(array $data): void
 	{
-		throw ValueDoesNotMatch::createFromString('Error after class');
+		throw ValueDoesNotMatch::createFromString('Error after class', Value::none());
 	}
 
 }

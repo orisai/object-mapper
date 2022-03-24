@@ -9,6 +9,7 @@ use Orisai\ObjectMapper\Context\RuleArgsContext;
 use Orisai\ObjectMapper\Context\TypeContext;
 use Orisai\ObjectMapper\Exceptions\ValueDoesNotMatch;
 use Orisai\ObjectMapper\Types\SimpleValueType;
+use Orisai\ObjectMapper\Types\Value;
 use function is_bool;
 use function is_int;
 use function is_string;
@@ -65,7 +66,7 @@ final class BoolRule implements Rule
 			return $value;
 		}
 
-		throw ValueDoesNotMatch::create($this->createType($args, $context), $value);
+		throw ValueDoesNotMatch::create($this->createType($args, $context), Value::of($value));
 	}
 
 	/**

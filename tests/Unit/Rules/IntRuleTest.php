@@ -100,11 +100,11 @@ final class IntRuleTest extends RuleTestCase
 				$this->fieldContext(),
 			);
 		} catch (ValueDoesNotMatch $exception) {
-			$type = $exception->getInvalidType();
+			$type = $exception->getType();
 			self::assertInstanceOf(SimpleValueType::class, $type);
 
 			self::assertSame('int', $type->getName());
-			self::assertSame($value, $exception->getInvalidValue());
+			self::assertSame($value, $exception->getValue()->get());
 		}
 
 		self::assertNotNull($exception);
@@ -137,13 +137,13 @@ final class IntRuleTest extends RuleTestCase
 				$this->fieldContext(),
 			);
 		} catch (ValueDoesNotMatch $exception) {
-			$type = $exception->getInvalidType();
+			$type = $exception->getType();
 			self::assertInstanceOf(SimpleValueType::class, $type);
 
 			self::assertSame('int', $type->getName());
 			self::assertTrue($type->hasInvalidParameters());
 			self::assertTrue($type->getParameter(IntRule::MAX)->isInvalid());
-			self::assertSame($value, $exception->getInvalidValue());
+			self::assertSame($value, $exception->getValue()->get());
 		}
 
 		self::assertNotNull($exception);
@@ -161,14 +161,14 @@ final class IntRuleTest extends RuleTestCase
 				$this->fieldContext(),
 			);
 		} catch (ValueDoesNotMatch $exception) {
-			$type = $exception->getInvalidType();
+			$type = $exception->getType();
 			self::assertInstanceOf(SimpleValueType::class, $type);
 
 			self::assertSame('int', $type->getName());
 			self::assertTrue($type->hasInvalidParameters());
 			self::assertTrue($type->getParameter(IntRule::MIN)->isInvalid());
 			self::assertTrue($type->getParameter(IntRule::UNSIGNED)->isInvalid());
-			self::assertSame($value, $exception->getInvalidValue());
+			self::assertSame($value, $exception->getValue()->get());
 		}
 
 		self::assertNotNull($exception);

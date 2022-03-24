@@ -131,7 +131,7 @@ final class CompoundType implements Type
 				);
 		}
 
-		$this->subtypes[$key] = $withTypeAndValue->getInvalidType();
+		$this->subtypes[$key] = $withTypeAndValue->getType();
 		$this->invalidSubtypes[$key] = $withTypeAndValue;
 	}
 

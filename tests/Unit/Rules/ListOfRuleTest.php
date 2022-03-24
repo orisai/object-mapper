@@ -13,7 +13,6 @@ use Orisai\ObjectMapper\Rules\MultiValueArgs;
 use Orisai\ObjectMapper\Rules\StringArgs;
 use Orisai\ObjectMapper\Rules\StringRule;
 use Orisai\ObjectMapper\Types\ListType;
-use Orisai\ObjectMapper\Types\NoValue;
 use Orisai\ObjectMapper\Types\SimpleValueType;
 use Tests\Orisai\ObjectMapper\Doubles\AlwaysInvalidRule;
 use Tests\Orisai\ObjectMapper\Toolkit\RuleTestCase;
@@ -79,11 +78,11 @@ final class ListOfRuleTest extends RuleTestCase
 				$this->fieldContext(),
 			);
 		} catch (ValueDoesNotMatch $exception) {
-			$type = $exception->getInvalidType();
+			$type = $exception->getType();
 			self::assertInstanceOf(ListType::class, $type);
 
 			self::assertTrue($type->isInvalid());
-			self::assertSame($value, $exception->getInvalidValue());
+			self::assertSame($value, $exception->getValue()->get());
 		}
 
 		self::assertNotNull($exception);
@@ -104,13 +103,13 @@ final class ListOfRuleTest extends RuleTestCase
 				$this->fieldContext(),
 			);
 		} catch (ValueDoesNotMatch $exception) {
-			$type = $exception->getInvalidType();
+			$type = $exception->getType();
 			self::assertInstanceOf(ListType::class, $type);
 
 			self::assertFalse($type->isInvalid());
 			self::assertTrue($type->areKeysInvalid());
 			self::assertTrue($type->getParameter(ListOfRule::MIN_ITEMS)->isInvalid());
-			self::assertSame($value, $exception->getInvalidValue());
+			self::assertSame($value, $exception->getValue()->get());
 
 			self::assertTrue($type->hasInvalidItems());
 			$invalidItems = $type->getInvalidItems();
@@ -139,7 +138,7 @@ final class ListOfRuleTest extends RuleTestCase
 				$this->fieldContext(),
 			);
 		} catch (ValueDoesNotMatch $exception) {
-			$type = $exception->getInvalidType();
+			$type = $exception->getType();
 			self::assertInstanceOf(ListType::class, $type);
 
 			self::assertFalse($type->isInvalid());
@@ -147,7 +146,7 @@ final class ListOfRuleTest extends RuleTestCase
 			self::assertFalse($type->hasParameter(ListOfRule::MIN_ITEMS));
 			self::assertTrue($type->getParameter(ListOfRule::MAX_ITEMS)->isInvalid());
 			self::assertFalse($type->hasInvalidItems());
-			self::assertSame($value, $exception->getInvalidValue());
+			self::assertSame($value, $exception->getValue()->get());
 		}
 
 		self::assertNotNull($exception);
@@ -167,14 +166,14 @@ final class ListOfRuleTest extends RuleTestCase
 				$this->fieldContext(),
 			);
 		} catch (ValueDoesNotMatch $exception) {
-			$type = $exception->getInvalidType();
+			$type = $exception->getType();
 			self::assertInstanceOf(ListType::class, $type);
 
 			self::assertFalse($type->isInvalid());
 			self::assertFalse($type->areKeysInvalid());
 			self::assertFalse($type->hasInvalidParameters());
 			self::assertTrue($type->hasInvalidItems());
-			self::assertInstanceOf(NoValue::class, $exception->getInvalidValue());
+			self::assertFalse($exception->getValue()->has());
 
 			self::assertCount(2, $type->getInvalidItems());
 		}

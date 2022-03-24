@@ -14,6 +14,7 @@ use Orisai\ObjectMapper\Context\RuleArgsContext;
 use Orisai\ObjectMapper\Context\TypeContext;
 use Orisai\ObjectMapper\Exceptions\ValueDoesNotMatch;
 use Orisai\ObjectMapper\Types\SimpleValueType;
+use Orisai\ObjectMapper\Types\Value;
 use ReflectionClass;
 use Throwable;
 use function assert;
@@ -90,7 +91,7 @@ final class DateTimeRule implements Rule
 	public function processValue($value, Args $args, FieldContext $context)
 	{
 		if (!is_string($value) && !is_int($value)) {
-			throw ValueDoesNotMatch::create($this->createType($args, $context), $value);
+			throw ValueDoesNotMatch::create($this->createType($args, $context), Value::of($value));
 		}
 
 		$format = $args->format;
@@ -125,7 +126,7 @@ final class DateTimeRule implements Rule
 				$type->addKeyParameter($message);
 				$type->markParameterInvalid($message);
 
-				throw ValueDoesNotMatch::create($type, $value);
+				throw ValueDoesNotMatch::create($type, Value::of($value));
 			}
 		} else {
 			$datetime = $classType::createFromFormat($format, $stringValue);
@@ -147,7 +148,7 @@ final class DateTimeRule implements Rule
 				$type->markParameterInvalid($error);
 			}
 
-			throw ValueDoesNotMatch::create($type, $value);
+			throw ValueDoesNotMatch::create($type, Value::of($value));
 		}
 
 		return $context->isInitializeObjects()

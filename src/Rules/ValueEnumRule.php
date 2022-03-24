@@ -10,6 +10,7 @@ use Orisai\ObjectMapper\Context\RuleArgsContext;
 use Orisai\ObjectMapper\Context\TypeContext;
 use Orisai\ObjectMapper\Exceptions\ValueDoesNotMatch;
 use Orisai\ObjectMapper\Types\EnumType;
+use Orisai\ObjectMapper\Types\Value;
 use function array_keys;
 use function array_values;
 use function gettype;
@@ -76,7 +77,7 @@ final class ValueEnumRule implements Rule
 			return $value;
 		}
 
-		throw ValueDoesNotMatch::create($this->createType($args, $context), $value);
+		throw ValueDoesNotMatch::create($this->createType($args, $context), Value::of($value));
 	}
 
 	/**

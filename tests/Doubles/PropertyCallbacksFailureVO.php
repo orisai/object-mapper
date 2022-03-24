@@ -8,6 +8,7 @@ use Orisai\ObjectMapper\Attributes\Callbacks\Before;
 use Orisai\ObjectMapper\Attributes\Expect\StringValue;
 use Orisai\ObjectMapper\Exceptions\ValueDoesNotMatch;
 use Orisai\ObjectMapper\MappedObject;
+use Orisai\ObjectMapper\Types\Value;
 
 /**
  * @Before(method="beforeClass")
@@ -46,7 +47,10 @@ final class PropertyCallbacksFailureVO extends MappedObject
 	 */
 	public static function beforeNeverValidated($neverValidated): void
 	{
-		throw ValueDoesNotMatch::createFromString('Check before validation failed, field was never validated');
+		throw ValueDoesNotMatch::createFromString(
+			'Check before validation failed, field was never validated',
+			Value::none(),
+		);
 	}
 
 	/**

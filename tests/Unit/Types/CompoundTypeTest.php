@@ -8,8 +8,8 @@ use Orisai\ObjectMapper\Exceptions\ValueDoesNotMatch;
 use Orisai\ObjectMapper\Types\ArrayType;
 use Orisai\ObjectMapper\Types\CompoundType;
 use Orisai\ObjectMapper\Types\MessageType;
-use Orisai\ObjectMapper\Types\NoValue;
 use Orisai\ObjectMapper\Types\SimpleValueType;
+use Orisai\ObjectMapper\Types\Value;
 use PHPUnit\Framework\TestCase;
 
 final class CompoundTypeTest extends TestCase
@@ -63,7 +63,7 @@ final class CompoundTypeTest extends TestCase
 		self::assertTrue($type->isSubtypeValid($key1));
 		self::assertFalse($type->isSubtypeInvalid($key1));
 
-		$invalid1Exception = ValueDoesNotMatch::create($invalid1, NoValue::create());
+		$invalid1Exception = ValueDoesNotMatch::create($invalid1, Value::none());
 		$type->overwriteInvalidSubtype($key1, $invalid1Exception);
 		self::assertFalse($type->isSubtypeValid($key1));
 		self::assertTrue($type->isSubtypeInvalid($key1));
@@ -119,7 +119,10 @@ final class CompoundTypeTest extends TestCase
 		);
 
 		$type = new CompoundType(CompoundType::OPERATOR_AND);
-		$type->overwriteInvalidSubtype(1, ValueDoesNotMatch::create(new MessageType('f'), NoValue::create()));
+		$type->overwriteInvalidSubtype(
+			1,
+			ValueDoesNotMatch::create(new MessageType('f'), Value::none()),
+		);
 	}
 
 	public function testIsSkippedAndCannotBeOverwritten(): void
@@ -130,7 +133,10 @@ final class CompoundTypeTest extends TestCase
 		$type = new CompoundType(CompoundType::OPERATOR_AND);
 		$type->addSubtype(1, new MessageType('t'));
 		$type->setSubtypeSkipped(1);
-		$type->overwriteInvalidSubtype(1, ValueDoesNotMatch::create(new MessageType('t'), NoValue::create()));
+		$type->overwriteInvalidSubtype(
+			1,
+			ValueDoesNotMatch::create(new MessageType('t'), Value::none()),
+		);
 	}
 
 	public function testIsOverwrittenAndCannotBeSkipped(): void
@@ -142,7 +148,10 @@ final class CompoundTypeTest extends TestCase
 
 		$type = new CompoundType(CompoundType::OPERATOR_AND);
 		$type->addSubtype(1, new MessageType('t'));
-		$type->overwriteInvalidSubtype(1, ValueDoesNotMatch::create(new MessageType('t'), NoValue::create()));
+		$type->overwriteInvalidSubtype(
+			1,
+			ValueDoesNotMatch::create(new MessageType('t'), Value::none()),
+		);
 		$type->setSubtypeSkipped(1);
 	}
 

@@ -4,15 +4,13 @@ namespace Orisai\ObjectMapper\Exceptions;
 
 use Orisai\Exceptions\Check\CheckedException;
 use Orisai\ObjectMapper\Types\Type;
+use Orisai\ObjectMapper\Types\Value;
 
 interface WithTypeAndValue extends CheckedException
 {
 
-	public function getInvalidType(): Type;
+	public function getType(): Type;
 
-	/**
-	 * @return mixed
-	 */
-	public function getInvalidValue();
+	public function getValue(): Value;
 
 }

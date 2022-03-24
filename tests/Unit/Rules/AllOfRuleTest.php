@@ -14,7 +14,6 @@ use Orisai\ObjectMapper\Rules\StructureArgs;
 use Orisai\ObjectMapper\Rules\StructureRule;
 use Orisai\ObjectMapper\Types\CompoundType;
 use Orisai\ObjectMapper\Types\MessageType;
-use Orisai\ObjectMapper\Types\NoValue;
 use Orisai\ObjectMapper\Types\SimpleValueType;
 use Tests\Orisai\ObjectMapper\Doubles\AlwaysInvalidRule;
 use Tests\Orisai\ObjectMapper\Doubles\DefaultsVO;
@@ -62,7 +61,7 @@ final class AllOfRuleTest extends RuleTestCase
 				$this->fieldContext(),
 			);
 		} catch (ValueDoesNotMatch $exception) {
-			$type = $exception->getInvalidType();
+			$type = $exception->getType();
 			self::assertInstanceOf(CompoundType::class, $type);
 
 			self::assertSame('&', $type->getOperator());
@@ -79,7 +78,7 @@ final class AllOfRuleTest extends RuleTestCase
 			self::assertFalse($type->isSubtypeInvalid(2));
 			self::assertTrue($type->isSubtypeSkipped(2));
 
-			self::assertInstanceOf(NoValue::class, $exception->getInvalidValue());
+			self::assertFalse($exception->getValue()->has());
 		}
 
 		self::assertNotNull($exception);
@@ -101,7 +100,7 @@ final class AllOfRuleTest extends RuleTestCase
 				$this->fieldContext(),
 			);
 		} catch (ValueDoesNotMatch $exception) {
-			$type = $exception->getInvalidType();
+			$type = $exception->getType();
 			self::assertInstanceOf(CompoundType::class, $type);
 
 			self::assertSame('&', $type->getOperator());
@@ -115,7 +114,7 @@ final class AllOfRuleTest extends RuleTestCase
 			self::assertFalse($type->isSubtypeInvalid(1));
 			self::assertTrue($type->isSubtypeSkipped(1));
 
-			self::assertInstanceOf(NoValue::class, $exception->getInvalidValue());
+			self::assertFalse($exception->getValue()->has());
 		}
 
 		self::assertNotNull($exception);

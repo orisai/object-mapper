@@ -9,6 +9,7 @@ use Orisai\ObjectMapper\Context\RuleArgsContext;
 use Orisai\ObjectMapper\Context\TypeContext;
 use Orisai\ObjectMapper\Exceptions\ValueDoesNotMatch;
 use Orisai\ObjectMapper\Types\SimpleValueType;
+use Orisai\ObjectMapper\Types\Value;
 use function is_string;
 use function mb_strlen;
 use function preg_match;
@@ -70,7 +71,7 @@ final class StringRule implements Rule
 	public function processValue($value, Args $args, FieldContext $context): string
 	{
 		if (!is_string($value)) {
-			throw ValueDoesNotMatch::create($this->createType($args, $context), $value);
+			throw ValueDoesNotMatch::create($this->createType($args, $context), Value::of($value));
 		}
 
 		$invalidParameters = [];
@@ -95,7 +96,7 @@ final class StringRule implements Rule
 			$type = $this->createType($args, $context);
 			$type->markParametersInvalid($invalidParameters);
 
-			throw ValueDoesNotMatch::create($type, $value);
+			throw ValueDoesNotMatch::create($type, Value::of($value));
 		}
 
 		return $value;
