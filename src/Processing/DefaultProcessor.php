@@ -296,7 +296,7 @@ class DefaultProcessor implements Processor
 
 			// Skip skipped property
 			if (
-				$fieldSetContext->isInitializeObjects()
+				$fieldSetContext->shouldMapDataToObjects()
 				&& $propertyMeta->getModifier(SkippedModifier::class) !== null
 			) {
 				$callContext->addSkippedProperty(
@@ -364,7 +364,7 @@ class DefaultProcessor implements Processor
 	{
 		$type = $fieldSetContext->getType();
 		$options = $fieldSetContext->getOptions();
-		$initializeObjects = $fieldSetContext->isInitializeObjects();
+		$initializeObjects = $fieldSetContext->shouldMapDataToObjects();
 
 		$propertiesMeta = $callContext->getMeta()->getProperties();
 
@@ -429,7 +429,7 @@ class DefaultProcessor implements Processor
 			// Return skipped property separately
 			if (
 				array_key_exists($missingField, $data)
-				&& $fieldSetContext->isInitializeObjects()
+				&& $fieldSetContext->shouldMapDataToObjects()
 				&& $propertyMeta->getModifier(SkippedModifier::class) !== null
 			) {
 				$callContext->addSkippedProperty(
@@ -468,7 +468,7 @@ class DefaultProcessor implements Processor
 			$fieldSetContext->getOptions(),
 			$parentType->getFields()[$fieldName],
 			$meta->getDefault(),
-			$fieldSetContext->isInitializeObjects(),
+			$fieldSetContext->shouldMapDataToObjects(),
 			$fieldName,
 			$propertyName,
 		);

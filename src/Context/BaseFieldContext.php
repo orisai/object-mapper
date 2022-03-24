@@ -40,7 +40,7 @@ abstract class BaseFieldContext extends TypeContext
 		return $this->options;
 	}
 
-	public function isInitializeObjects(): bool
+	public function shouldMapDataToObjects(): bool
 	{
 		return $this->initializeObjects;
 	}

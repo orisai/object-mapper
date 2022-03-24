@@ -59,7 +59,7 @@ final class StructureRule implements Rule
 	{
 		$processor = $context->getProcessor();
 
-		return $context->isInitializeObjects()
+		return $context->shouldMapDataToObjects()
 			? $processor->process($value, $args->type, $context->getOptions())
 			: $processor->processWithoutMapping($value, $args->type, $context->getOptions());
 	}

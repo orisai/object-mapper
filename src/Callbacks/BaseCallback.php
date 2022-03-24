@@ -255,7 +255,7 @@ abstract class BaseCallback implements Callback
 	public static function invoke($data, Args $args, ObjectHolder $holder, BaseFieldContext $context)
 	{
 		// Callback is skipped for unsupported runtime
-		$runtimes = $context->isInitializeObjects() ? self::INITIALIZATION_RUNTIMES : self::PROCESSING_RUNTIMES;
+		$runtimes = $context->shouldMapDataToObjects() ? self::INITIALIZATION_RUNTIMES : self::PROCESSING_RUNTIMES;
 		if (!in_array($args->runtime, $runtimes, true)) {
 			return $data;
 		}

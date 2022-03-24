@@ -151,7 +151,7 @@ final class DateTimeRule implements Rule
 			throw ValueDoesNotMatch::create($type, Value::of($value));
 		}
 
-		return $context->isInitializeObjects()
+		return $context->shouldMapDataToObjects()
 			? $datetime
 			: $value;
 	}

@@ -104,7 +104,7 @@ final class EntityFromIdRule implements Rule
 			throw ValueDoesNotMatch::create($this->createType($args, $context), Value::of($value));
 		}
 
-		return $context->isInitializeObjects()
+		return $context->shouldMapDataToObjects()
 			? $entity
 			: $value;
 	}

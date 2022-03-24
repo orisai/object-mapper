@@ -77,7 +77,7 @@ final class CallbacksVO extends MappedObject
 	 */
 	public static function beforeClass(array $data, FieldSetContext $context): array
 	{
-		$data['array']['beforeClassCallback'][] = $context->isInitializeObjects();
+		$data['array']['beforeClassCallback'][] = $context->shouldMapDataToObjects();
 
 		// Set default value, processor don't know it's going to be structure and thinks value is required
 		//TODO - pravidlo na inicializaci z contextu? při inicializaci chceme vědět, že půjde o strukturu a ideálně i co nejpřesněji o jakou
@@ -100,14 +100,14 @@ final class CallbacksVO extends MappedObject
 	 */
 	public static function afterClass(array $data, FieldSetContext $context): array
 	{
-		$data['array']['afterClassCallback'][] = $context->isInitializeObjects();
+		$data['array']['afterClassCallback'][] = $context->shouldMapDataToObjects();
 
-		if ($context->isInitializeObjects() && !$data['structure'] instanceof MappedObject) {
+		if ($context->shouldMapDataToObjects() && !$data['structure'] instanceof MappedObject) {
 			throw InvalidState::create()
 				->withMessage('Instance should be initialized by that moment');
 		}
 
-		if (!$context->isInitializeObjects() && $data['structure'] instanceof MappedObject) {
+		if (!$context->shouldMapDataToObjects() && $data['structure'] instanceof MappedObject) {
 			throw InvalidState::create()
 				->withMessage('Instance should not be initialized, context is not set to initialize object');
 		}
@@ -121,7 +121,7 @@ final class CallbacksVO extends MappedObject
 	 */
 	public static function afterArrayProcessing(array $array, FieldContext $context): array
 	{
-		$array['afterArrayProcessingCallback'][] = $context->isInitializeObjects();
+		$array['afterArrayProcessingCallback'][] = $context->shouldMapDataToObjects();
 
 		return $array;
 	}
@@ -132,7 +132,7 @@ final class CallbacksVO extends MappedObject
 	 */
 	public static function afterArrayInitialization(array $array, FieldContext $context): array
 	{
-		$array['afterArrayInitializationCallback'][] = $context->isInitializeObjects();
+		$array['afterArrayInitializationCallback'][] = $context->shouldMapDataToObjects();
 
 		return $array;
 	}
@@ -148,7 +148,7 @@ final class CallbacksVO extends MappedObject
 		$options = $context->getOptions();
 		$class = $options->getDynamicContext(CallbacksVoContext::class)->getDynamicStructureType();
 
-		return $context->isInitializeObjects()
+		return $context->shouldMapDataToObjects()
 			? $processor->process($structure, $class, $options)
 			: $processor->processWithoutMapping($structure, $class, $options);
 	}
