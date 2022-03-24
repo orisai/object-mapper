@@ -10,6 +10,7 @@ use Orisai\ObjectMapper\Exceptions\ValueDoesNotMatch;
 use Orisai\ObjectMapper\MappedObject;
 use Orisai\ObjectMapper\Types\ArrayType;
 use Orisai\ObjectMapper\Types\NoValue;
+use Orisai\ObjectMapper\Types\Value;
 
 /**
  * Initialize array of entities from array of IDs
@@ -53,13 +54,13 @@ final class DbQueryingExample2 extends MappedObject
 			if (!in_array($id, $existingIds, true)) {
 				$type->addInvalidValue(
 					$key,
-					ValueDoesNotMatch::createFromString("User with ID $id not found.")
+					ValueDoesNotMatch::createFromString("User with ID $id not found.", Value::of($key))
 				);
 			}
 		}
 
 		if ($type->hasInvalidPairs()) {
-			throw ValueDoesNotMatch::create($type, NoValue::create());
+			throw ValueDoesNotMatch::create($type, Value::none());
 		}
 
 		return $users->fetchAll();

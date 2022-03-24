@@ -7,6 +7,7 @@ use Orisai\ObjectMapper\Attributes\Expect\IntValue;
 use Orisai\ObjectMapper\Attributes\Modifiers\FieldName;
 use Orisai\ObjectMapper\Exceptions\ValueDoesNotMatch;
 use Orisai\ObjectMapper\MappedObject;
+use Orisai\ObjectMapper\Types\Value;
 
 /**
  * Initialize single entity from ID
@@ -36,7 +37,7 @@ final class DbQueryingExample1 extends MappedObject
 		$user = $this->userRepository->getById($id);
 
 		if ($user === null) {
-			throw ValueDoesNotMatch::createFromString("User with ID $id not found.");
+			throw ValueDoesNotMatch::createFromString("User with ID $id not found.", Value::of($id));
 		}
 
 		return $user;
