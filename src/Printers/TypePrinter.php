@@ -10,6 +10,6 @@ interface TypePrinter extends StructurePrinter
 	/**
 	 * @return mixed
 	 */
-	public function formatType(Type $type);
+	public function printType(Type $type);
 
 }

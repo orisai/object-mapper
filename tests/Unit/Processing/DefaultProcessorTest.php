@@ -71,7 +71,7 @@ manyStructures: array<int(unsigned), structure[
 	untypedNull: null
 	arrayOfMixed: array<mixed>
 ]>',
-			$this->formatter->formatError($exception),
+			$this->formatter->printError($exception),
 		);
 	}
 
@@ -109,7 +109,7 @@ manyStructures: array<int(unsigned), structure[
 	untypedNull: null
 	arrayOfMixed: array<mixed>
 ]>',
-			$this->formatter->formatError($exception),
+			$this->formatter->printError($exception),
 		);
 	}
 
@@ -151,7 +151,7 @@ manyStructures: array<int(unsigned), structure[
 		string: string
 	]
 }',
-			$this->formatter->formatError($exception),
+			$this->formatter->printError($exception),
 		);
 	}
 
@@ -239,7 +239,7 @@ manyStructures: array<int(unsigned), structure[
 			'unknown: Field is unknown.
 123: Field is unknown.
 stringg: Field is unknown, did you mean `string`?',
-			$this->formatter->formatError($exception),
+			$this->formatter->printError($exception),
 		);
 	}
 
@@ -435,7 +435,7 @@ stringg: Field is unknown, did you mean `string`?',
 		self::assertSame(
 			'neverValidated: Check before validation failed, field was never validated
 validationFailed: string',
-			$this->formatter->formatError($exception),
+			$this->formatter->printError($exception),
 		);
 	}
 
@@ -456,7 +456,7 @@ validationFailed: string',
 
 		self::assertSame(
 			'Error before class',
-			$this->formatter->formatError($exception),
+			$this->formatter->printError($exception),
 		);
 	}
 
@@ -479,7 +479,7 @@ validationFailed: string',
 
 		self::assertSame(
 			'Error after class',
-			$this->formatter->formatError($exception),
+			$this->formatter->printError($exception),
 		);
 	}
 
@@ -502,7 +502,7 @@ validationFailed: string',
 
 		self::assertSame(
 			'string: string',
-			$this->formatter->formatError($exception),
+			$this->formatter->printError($exception),
 		);
 	}
 
@@ -527,7 +527,7 @@ validationFailed: string',
 			'structure[
 	test
 ]',
-			$this->formatter->formatError($exception),
+			$this->formatter->printError($exception),
 		);
 	}
 
@@ -594,7 +594,7 @@ nullableString: string|null
 untypedNullableString: string|null
 untypedNull: null
 arrayOfMixed: array<mixed>',
-			$this->formatter->formatError($exception),
+			$this->formatter->printError($exception),
 		);
 	}
 
@@ -680,7 +680,7 @@ arrayOfMixed: array<mixed>',
 
 		self::assertSame(
 			'requiredSkipped: string',
-			$this->formatter->formatError($exception),
+			$this->formatter->printError($exception),
 		);
 	}
 
@@ -703,7 +703,7 @@ arrayOfMixed: array<mixed>',
 		self::assertInstanceOf(InvalidData::class, $exception);
 		self::assertSame(
 			'requiredSkipped: string',
-			$this->formatter->formatError($exception),
+			$this->formatter->printError($exception),
 		);
 	}
 

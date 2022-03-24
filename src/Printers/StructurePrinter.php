@@ -10,6 +10,6 @@ interface StructurePrinter
 	/**
 	 * @return mixed
 	 */
-	public function formatType(StructureType $type);
+	public function printType(StructureType $type);
 
 }

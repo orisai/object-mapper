@@ -71,7 +71,7 @@ final class DefaultValuesArrayPrinterTest extends TestCase
 					'bar' => 'baz',
 				],
 			],
-			$this->formatter->formatType($type),
+			$this->formatter->printType($type),
 		);
 	}
 
@@ -92,7 +92,7 @@ final class DefaultValuesArrayPrinterTest extends TestCase
 					],
 				],
 			],
-			$this->formatter->formatType($type),
+			$this->formatter->printType($type),
 		);
 
 		$this->formatter->requiredValuePlaceholder = '__REQUIRED__';
@@ -115,7 +115,7 @@ final class DefaultValuesArrayPrinterTest extends TestCase
 				],
 				'manyStructures' => '__REQUIRED__',
 			],
-			$this->formatter->formatType($type),
+			$this->formatter->printType($type),
 		);
 	}
 
@@ -136,7 +136,7 @@ final class DefaultValuesArrayPrinterTest extends TestCase
 					],
 				],
 			],
-			$this->formatter->formatType($type),
+			$this->formatter->printType($type),
 		);
 
 		$this->formatter->requiredValuePlaceholder = '__REQUIRED__';
@@ -157,7 +157,7 @@ final class DefaultValuesArrayPrinterTest extends TestCase
 				'anotherStructureOrArray' => '__REQUIRED__',
 				'manyStructures' => '__REQUIRED__',
 			],
-			$this->formatter->formatType($type),
+			$this->formatter->printType($type),
 		);
 	}
 

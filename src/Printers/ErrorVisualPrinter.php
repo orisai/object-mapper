@@ -74,7 +74,7 @@ class ErrorVisualPrinter implements ErrorPrinter, TypePrinter
 	/**
 	 * @param array<string> $pathNodes
 	 */
-	public function formatError(InvalidData $exception, array $pathNodes = []): string
+	public function printError(InvalidData $exception, array $pathNodes = []): string
 	{
 		$this->scopes->open();
 
@@ -100,7 +100,7 @@ class ErrorVisualPrinter implements ErrorPrinter, TypePrinter
 				$rootPath !== '' ? $rootPath . $this->pathNodeSeparator : '',
 				$fieldName,
 				$this->pathAndTypeSeparator,
-				$this->format($fieldType, 0),
+				$this->print($fieldType, 0),
 				$fieldSeparator,
 			);
 
@@ -115,7 +115,7 @@ class ErrorVisualPrinter implements ErrorPrinter, TypePrinter
 			$formatted .= sprintf(
 				'%s%s%s',
 				$rootPath !== '' ? $rootPath . $this->pathNodeSeparator : '',
-				$this->format($error->getType(), 0),
+				$this->print($error->getType(), 0),
 				$fieldSeparator,
 			);
 		}
@@ -127,50 +127,50 @@ class ErrorVisualPrinter implements ErrorPrinter, TypePrinter
 		return $formatted;
 	}
 
-	public function formatType(Type $type): string
+	public function printType(Type $type): string
 	{
 		$this->scopes->open();
-		$formatted = $this->format($type, 0);
+		$formatted = $this->print($type, 0);
 		$this->scopes->close();
 
 		return $formatted;
 	}
 
-	protected function format(Type $type, ?int $level): string
+	protected function print(Type $type, ?int $level): string
 	{
 		if ($type instanceof StructureType) {
-			return $this->formatStructureType($type, $level);
+			return $this->printStructureType($type, $level);
 		}
 
 		if ($type instanceof CompoundType) {
-			return $this->formatCompoundType($type, $level);
+			return $this->printCompoundType($type, $level);
 		}
 
 		if ($type instanceof ArrayType) {
-			return $this->formatArrayType($type, $level);
+			return $this->printArrayType($type, $level);
 		}
 
 		if ($type instanceof ListType) {
-			return $this->formatListType($type, $level);
+			return $this->printListType($type, $level);
 		}
 
 		if ($type instanceof SimpleValueType) {
-			return $this->formatSimpleValueType($type, $level);
+			return $this->printSimpleValueType($type, $level);
 		}
 
 		if ($type instanceof EnumType) {
-			return $this->formatEnumType($type, $level);
+			return $this->printEnumType($type, $level);
 		}
 
 		if ($type instanceof MessageType) {
-			return $this->formatMessageType($type);
+			return $this->printMessageType($type);
 		}
 
 		throw InvalidArgument::create()
 			->withMessage(sprintf('Unsupported type %s', get_class($type)));
 	}
 
-	protected function formatStructureType(StructureType $type, ?int $level): string
+	protected function printStructureType(StructureType $type, ?int $level): string
 	{
 		$formatted = '';
 		$innerLevel = $this->getInnerIndentationLevelCount($level);
@@ -186,9 +186,9 @@ class ErrorVisualPrinter implements ErrorPrinter, TypePrinter
 				'%s%s%s',
 				$fieldName,
 				$this->pathAndTypeSeparator,
-				$this->format($fieldType, $innerLevel),
+				$this->print($fieldType, $innerLevel),
 			);
-			$formatted .= $this->formatComplexTypeInnerLine(
+			$formatted .= $this->printComplexTypeInnerLine(
 				$formattedField,
 				$innerLevel,
 				$errors === [] && $fieldName === $lastFieldKey,
@@ -201,8 +201,8 @@ class ErrorVisualPrinter implements ErrorPrinter, TypePrinter
 		$this->scopes->openScope(false);
 
 		foreach ($errors as $errorKey => $error) {
-			$formattedError = $this->format($error->getType(), $innerLevel);
-			$formatted .= $this->formatComplexTypeInnerLine($formattedError, $innerLevel, $errorKey === $lastErrorKey);
+			$formattedError = $this->print($error->getType(), $innerLevel);
+			$formatted .= $this->printComplexTypeInnerLine($formattedError, $innerLevel, $errorKey === $lastErrorKey);
 		}
 
 		$this->scopes->closeScope();
@@ -210,9 +210,9 @@ class ErrorVisualPrinter implements ErrorPrinter, TypePrinter
 		$formatted = sprintf(
 			'structure%s%s%s%s',
 			$this->typeAndParametersSeparator,
-			$this->formatComplexTypeLeftBracket('[', $level),
+			$this->printComplexTypeLeftBracket('[', $level),
 			$formatted,
-			$this->formatComplexTypeRightBracket(']', $level),
+			$this->printComplexTypeRightBracket(']', $level),
 		);
 
 		return $formatted;
@@ -238,7 +238,7 @@ class ErrorVisualPrinter implements ErrorPrinter, TypePrinter
 		return $filtered;
 	}
 
-	protected function formatCompoundType(CompoundType $type, ?int $level): string
+	protected function printCompoundType(CompoundType $type, ?int $level): string
 	{
 		$subtypes = [];
 
@@ -265,7 +265,7 @@ class ErrorVisualPrinter implements ErrorPrinter, TypePrinter
 			$this->scopes->openScope(!$mustBeRendered, $mustBeRendered);
 
 			$separator = $key === $lastKey ? '' : $operator;
-			$formatted .= sprintf('%s%s', $this->format($subtype, $level), $separator);
+			$formatted .= sprintf('%s%s', $this->print($subtype, $level), $separator);
 
 			$this->scopes->closeScope();
 		}
@@ -273,7 +273,7 @@ class ErrorVisualPrinter implements ErrorPrinter, TypePrinter
 		return $formatted;
 	}
 
-	protected function formatArrayType(ArrayType $type, ?int $level): string
+	protected function printArrayType(ArrayType $type, ?int $level): string
 	{
 		$keyType = $type->getKeyType();
 		$itemType = $type->getItemType();
@@ -291,18 +291,18 @@ class ErrorVisualPrinter implements ErrorPrinter, TypePrinter
 
 			$pairKeyType = $pair->getKey();
 			if ($pairKeyType !== null) {
-				$invalidPairString .= $this->format($pairKeyType->getType(), null);
+				$invalidPairString .= $this->print($pairKeyType->getType(), null);
 				$invalidPairString .= ' => ';
 			}
 
 			$pairItemType = $pair->getValue();
 			if ($pairItemType !== null) {
-				$invalidPairString .= $this->format($pairItemType->getType(), $innerLevel);
+				$invalidPairString .= $this->print($pairItemType->getType(), $innerLevel);
 			} else {
 				$invalidPairString .= 'value';
 			}
 
-			$invalidPairsString .= $this->formatComplexTypeInnerLine(
+			$invalidPairsString .= $this->printComplexTypeInnerLine(
 				$invalidPairString,
 				$innerLevel,
 				$key === $lastKey,
@@ -312,7 +312,7 @@ class ErrorVisualPrinter implements ErrorPrinter, TypePrinter
 		$this->scopes->closeScope();
 
 		$this->scopes->openScope($type->isInvalid() ? false : !$this->scopes->shouldRenderValid());
-		$parameters = $this->formatParameters($type, $level);
+		$parameters = $this->printParameters($type, $level);
 		$this->scopes->closeScope();
 
 		$formatted = 'array';
@@ -328,11 +328,11 @@ class ErrorVisualPrinter implements ErrorPrinter, TypePrinter
 			$formatted .= $keyType !== null
 				? sprintf(
 					'<%s%s%s>',
-					$this->format($keyType, null),
+					$this->print($keyType, null),
 					$this->parameterSeparator,
-					$this->format($itemType, 0),
+					$this->print($itemType, 0),
 				)
-				: sprintf('<%s>', $this->format($itemType, 0));
+				: sprintf('<%s>', $this->print($itemType, 0));
 
 			$this->scopes->closeScope();
 		}
@@ -340,16 +340,16 @@ class ErrorVisualPrinter implements ErrorPrinter, TypePrinter
 		if ($invalidPairs !== []) {
 			$formatted .= sprintf(
 				'%s%s%s',
-				$this->formatComplexTypeLeftBracket('{', $level),
+				$this->printComplexTypeLeftBracket('{', $level),
 				$invalidPairsString,
-				$this->formatComplexTypeRightBracket('}', $level),
+				$this->printComplexTypeRightBracket('}', $level),
 			);
 		}
 
 		return $formatted;
 	}
 
-	protected function formatListType(ListType $type, ?int $level): string
+	protected function printListType(ListType $type, ?int $level): string
 	{
 		$invalidItemsString = '';
 		$invalidItems = $type->getInvalidItems();
@@ -361,8 +361,8 @@ class ErrorVisualPrinter implements ErrorPrinter, TypePrinter
 
 		foreach ($invalidItems as $key => $invalidItem) {
 			$invalidItemString = sprintf('%s%s', $this->valueToString($key, false), $this->pathAndTypeSeparator);
-			$invalidItemString .= $this->format($invalidItem->getType(), $innerLevel);
-			$invalidItemsString .= $this->formatComplexTypeInnerLine(
+			$invalidItemString .= $this->print($invalidItem->getType(), $innerLevel);
+			$invalidItemsString .= $this->printComplexTypeInnerLine(
 				$invalidItemString,
 				$innerLevel,
 				$key === $lastKey,
@@ -372,7 +372,7 @@ class ErrorVisualPrinter implements ErrorPrinter, TypePrinter
 		$this->scopes->closeScope();
 
 		$this->scopes->openScope($type->isInvalid() ? false : !$this->scopes->shouldRenderValid());
-		$parameters = $this->formatParameters($type, $level);
+		$parameters = $this->printParameters($type, $level);
 		$this->scopes->closeScope();
 
 		//TODO - invalid keys?
@@ -386,7 +386,7 @@ class ErrorVisualPrinter implements ErrorPrinter, TypePrinter
 			//TODO - otestovat, že se vypíše celý složený (structure) type, pokud je celá struktura nevalidní
 			$this->scopes->openScope(false, true);
 
-			$formatted .= sprintf('<%s>', $this->format($type->getItemType(), 0));
+			$formatted .= sprintf('<%s>', $this->print($type->getItemType(), 0));
 
 			$this->scopes->closeScope();
 		}
@@ -394,21 +394,21 @@ class ErrorVisualPrinter implements ErrorPrinter, TypePrinter
 		if ($invalidItems !== []) {
 			$formatted .= sprintf(
 				'%s%s%s',
-				$this->formatComplexTypeLeftBracket('{', $level),
+				$this->printComplexTypeLeftBracket('{', $level),
 				$invalidItemsString,
-				$this->formatComplexTypeRightBracket('}', $level),
+				$this->printComplexTypeRightBracket('}', $level),
 			);
 		}
 
 		return $formatted;
 	}
 
-	protected function formatSimpleValueType(SimpleValueType $type, ?int $level): string
+	protected function printSimpleValueType(SimpleValueType $type, ?int $level): string
 	{
-		return sprintf('%s%s', $type->getName(), $this->formatParameters($type, $level));
+		return sprintf('%s%s', $type->getName(), $this->printParameters($type, $level));
 	}
 
-	protected function formatEnumType(EnumType $type, ?int $level): string
+	protected function printEnumType(EnumType $type, ?int $level): string
 	{
 		$inlineValues = '';
 		$values = $type->getValues();
@@ -422,12 +422,12 @@ class ErrorVisualPrinter implements ErrorPrinter, TypePrinter
 		return sprintf('enum(%s)', $inlineValues);
 	}
 
-	protected function formatMessageType(MessageType $type): string
+	protected function printMessageType(MessageType $type): string
 	{
 		return $type->getMessage();
 	}
 
-	protected function formatParameters(ParametrizedType $type, ?int $level): string
+	protected function printParameters(ParametrizedType $type, ?int $level): string
 	{
 		$parameters = $type->getParameters();
 
@@ -477,22 +477,22 @@ class ErrorVisualPrinter implements ErrorPrinter, TypePrinter
 		]);
 	}
 
-	protected function formatComplexTypeInnerLine(string $inner, ?int $level, bool $isLast): string
+	protected function printComplexTypeInnerLine(string $inner, ?int $level, bool $isLast): string
 	{
 		return sprintf('%s%s%s', $this->levelToIndent($level), $inner, $isLast ? '' : $this->itemsSeparator);
 	}
 
-	protected function formatComplexTypeInnerBlock(string $inner, ?int $level): string
+	protected function printComplexTypeInnerBlock(string $inner, ?int $level): string
 	{
 		return str_replace($this->itemsSeparator, $this->itemsSeparator . $this->levelToIndent($level), $inner);
 	}
 
-	protected function formatComplexTypeLeftBracket(string $bracket, ?int $level): string
+	protected function printComplexTypeLeftBracket(string $bracket, ?int $level): string
 	{
 		return sprintf('%s%s', $bracket, $this->aroundItemsSeparator);
 	}
 
-	protected function formatComplexTypeRightBracket(string $bracket, ?int $level): string
+	protected function printComplexTypeRightBracket(string $bracket, ?int $level): string
 	{
 		$leftIndentation = $level === null ? '' : str_repeat($this->itemsIndentation, $level);
 

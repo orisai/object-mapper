@@ -23,15 +23,15 @@ class DefaultValuesArrayPrinter implements StructurePrinter
 	/**
 	 * @return array<mixed>
 	 */
-	public function formatType(StructureType $type): array
+	public function printType(StructureType $type): array
 	{
-		return $this->formatStructureType($type);
+		return $this->printStructureType($type);
 	}
 
 	/**
 	 * @return array<mixed>
 	 */
-	protected function formatStructureType(StructureType $type): array
+	protected function printStructureType(StructureType $type): array
 	{
 		$meta = $this->metaLoader->load($type->getClass())->getProperties();
 		$formatted = [];
@@ -41,7 +41,7 @@ class DefaultValuesArrayPrinter implements StructurePrinter
 			$defaultMeta = $meta[$fieldName]->getDefault();
 
 			if ($fieldType instanceof StructureType) {
-				$value = $this->formatStructureType($fieldType);
+				$value = $this->printStructureType($fieldType);
 			} elseif ($defaultMeta->hasValue()) {
 				$value = $defaultMeta->getValue();
 			} elseif ($this->requiredValuePlaceholder !== null) {

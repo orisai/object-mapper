@@ -62,46 +62,46 @@ class TypeVisualPrinter implements TypePrinter
 	 */
 	public string $itemsIndentation = "\t";
 
-	public function formatType(Type $type): string
+	public function printType(Type $type): string
 	{
-		return $this->format($type, 0);
+		return $this->print($type, 0);
 	}
 
-	protected function format(Type $type, ?int $level): string
+	protected function print(Type $type, ?int $level): string
 	{
 		if ($type instanceof StructureType) {
-			return $this->formatStructureType($type, $level);
+			return $this->printStructureType($type, $level);
 		}
 
 		if ($type instanceof CompoundType) {
-			return $this->formatCompoundType($type, $level);
+			return $this->printCompoundType($type, $level);
 		}
 
 		if ($type instanceof ArrayType) {
-			return $this->formatArrayType($type, $level);
+			return $this->printArrayType($type, $level);
 		}
 
 		if ($type instanceof ListType) {
-			return $this->formatListType($type, $level);
+			return $this->printListType($type, $level);
 		}
 
 		if ($type instanceof SimpleValueType) {
-			return $this->formatSimpleValueType($type, $level);
+			return $this->printSimpleValueType($type, $level);
 		}
 
 		if ($type instanceof EnumType) {
-			return $this->formatEnumType($type, $level);
+			return $this->printEnumType($type, $level);
 		}
 
 		if ($type instanceof MessageType) {
-			return $this->formatMessageType($type);
+			return $this->printMessageType($type);
 		}
 
 		throw InvalidArgument::create()
 			->withMessage(sprintf('Unsupported type %s', get_class($type)));
 	}
 
-	protected function formatStructureType(StructureType $type, ?int $level): string
+	protected function printStructureType(StructureType $type, ?int $level): string
 	{
 		$formatted = '';
 		$innerLevel = $this->getInnerIndentationLevelCount($level);
@@ -114,17 +114,17 @@ class TypeVisualPrinter implements TypePrinter
 				'%s%s%s',
 				$fieldName,
 				$this->pathAndTypeSeparator,
-				$this->format($fieldType, $innerLevel),
+				$this->print($fieldType, $innerLevel),
 			);
-			$formatted .= $this->formatComplexTypeInnerLine($formattedField, $innerLevel, $fieldName === $lastFieldKey);
+			$formatted .= $this->printComplexTypeInnerLine($formattedField, $innerLevel, $fieldName === $lastFieldKey);
 		}
 
 		$formatted = sprintf(
 			'structure%s%s%s%s',
 			$this->typeAndParametersSeparator,
-			$this->formatComplexTypeLeftBracket('[', $level),
+			$this->printComplexTypeLeftBracket('[', $level),
 			$formatted,
-			$this->formatComplexTypeRightBracket(']', $level),
+			$this->printComplexTypeRightBracket(']', $level),
 		);
 
 		return $formatted;
@@ -138,7 +138,7 @@ class TypeVisualPrinter implements TypePrinter
 		return $type->getFields();
 	}
 
-	protected function formatCompoundType(CompoundType $type, ?int $level): string
+	protected function printCompoundType(CompoundType $type, ?int $level): string
 	{
 		$formatted = '';
 		$subtypes = $type->getSubtypes();
@@ -146,43 +146,43 @@ class TypeVisualPrinter implements TypePrinter
 
 		foreach ($subtypes as $key => $subtype) {
 			$separator = $key === $lastKey ? '' : $type->getOperator();
-			$formatted .= sprintf('%s%s', $this->format($subtype, $level), $separator);
+			$formatted .= sprintf('%s%s', $this->print($subtype, $level), $separator);
 		}
 
 		return $formatted;
 	}
 
-	protected function formatArrayType(ArrayType $type, ?int $level): string
+	protected function printArrayType(ArrayType $type, ?int $level): string
 	{
 		$keyType = $type->getKeyType();
 		$itemType = $type->getItemType();
 
-		$parameters = $this->formatParameters($type, $level);
+		$parameters = $this->printParameters($type, $level);
 
 		$formatted = sprintf('array%s%s', $this->typeAndParametersSeparator, $parameters);
 		$formatted .= $keyType !== null
-			? sprintf('<%s%s%s>', $this->format($keyType, null), $this->parameterSeparator, $this->format($itemType, 0))
-			: sprintf('<%s>', $this->format($itemType, 0));
+			? sprintf('<%s%s%s>', $this->print($keyType, null), $this->parameterSeparator, $this->print($itemType, 0))
+			: sprintf('<%s>', $this->print($itemType, 0));
 
 		return $formatted;
 	}
 
-	protected function formatListType(ListType $type, ?int $level): string
+	protected function printListType(ListType $type, ?int $level): string
 	{
-		$parameters = $this->formatParameters($type, $level);
+		$parameters = $this->printParameters($type, $level);
 
 		$formatted = sprintf('list%s%s', $this->typeAndParametersSeparator, $parameters);
-		$formatted .= sprintf('<%s>', $this->format($type->getItemType(), 0));
+		$formatted .= sprintf('<%s>', $this->print($type->getItemType(), 0));
 
 		return $formatted;
 	}
 
-	protected function formatSimpleValueType(SimpleValueType $type, ?int $level): string
+	protected function printSimpleValueType(SimpleValueType $type, ?int $level): string
 	{
-		return sprintf('%s%s', $type->getName(), $this->formatParameters($type, $level));
+		return sprintf('%s%s', $type->getName(), $this->printParameters($type, $level));
 	}
 
-	protected function formatEnumType(EnumType $type, ?int $level): string
+	protected function printEnumType(EnumType $type, ?int $level): string
 	{
 		$inlineValues = '';
 		$values = $type->getValues();
@@ -196,12 +196,12 @@ class TypeVisualPrinter implements TypePrinter
 		return sprintf('enum(%s)', $inlineValues);
 	}
 
-	protected function formatMessageType(MessageType $type): string
+	protected function printMessageType(MessageType $type): string
 	{
 		return $type->getMessage();
 	}
 
-	protected function formatParameters(ParametrizedType $type, ?int $level): string
+	protected function printParameters(ParametrizedType $type, ?int $level): string
 	{
 		$parameters = $type->getParameters();
 
@@ -241,22 +241,22 @@ class TypeVisualPrinter implements TypePrinter
 		]);
 	}
 
-	protected function formatComplexTypeInnerLine(string $inner, ?int $level, bool $isLast): string
+	protected function printComplexTypeInnerLine(string $inner, ?int $level, bool $isLast): string
 	{
 		return sprintf('%s%s%s', $this->levelToIndent($level), $inner, $isLast ? '' : $this->itemsSeparator);
 	}
 
-	protected function formatComplexTypeInnerBlock(string $inner, ?int $level): string
+	protected function printComplexTypeInnerBlock(string $inner, ?int $level): string
 	{
 		return str_replace($this->itemsSeparator, $this->itemsSeparator . $this->levelToIndent($level), $inner);
 	}
 
-	protected function formatComplexTypeLeftBracket(string $bracket, ?int $level): string
+	protected function printComplexTypeLeftBracket(string $bracket, ?int $level): string
 	{
 		return sprintf('%s%s', $bracket, $this->aroundItemsSeparator);
 	}
 
-	protected function formatComplexTypeRightBracket(string $bracket, ?int $level): string
+	protected function printComplexTypeRightBracket(string $bracket, ?int $level): string
 	{
 		$leftIndentation = $level === null ? '' : str_repeat($this->itemsIndentation, $level);
 

@@ -35,7 +35,7 @@ final class ErrorVisualPrinterTest extends TestCase
 
 		self::assertSame(
 			'test',
-			$this->formatter->formatType($type),
+			$this->formatter->printType($type),
 		);
 	}
 
@@ -45,7 +45,7 @@ final class ErrorVisualPrinterTest extends TestCase
 
 		self::assertSame(
 			'string',
-			$this->formatter->formatType($type1),
+			$this->formatter->printType($type1),
 		);
 
 		$type2 = new SimpleValueType('int');
@@ -54,7 +54,7 @@ final class ErrorVisualPrinterTest extends TestCase
 
 		self::assertSame(
 			'int',
-			$this->formatter->formatType($type2),
+			$this->formatter->printType($type2),
 		);
 
 		$type3 = new SimpleValueType('int');
@@ -65,7 +65,7 @@ final class ErrorVisualPrinterTest extends TestCase
 
 		self::assertSame(
 			"int(first: 'value', second)",
-			$this->formatter->formatType($type3),
+			$this->formatter->printType($type3),
 		);
 	}
 
@@ -83,7 +83,7 @@ final class ErrorVisualPrinterTest extends TestCase
 
 		self::assertSame(
 			'enum(foo, bar, 123, 123.456, true, false)',
-			$this->formatter->formatType($type),
+			$this->formatter->printType($type),
 		);
 	}
 
@@ -93,7 +93,7 @@ final class ErrorVisualPrinterTest extends TestCase
 
 		self::assertSame(
 			'array',
-			$this->formatter->formatType($type1),
+			$this->formatter->printType($type1),
 		);
 
 		$type2Value = new SimpleValueType('test');
@@ -103,7 +103,7 @@ final class ErrorVisualPrinterTest extends TestCase
 
 		self::assertSame(
 			'array<test(parameter)>',
-			$this->formatter->formatType($type2),
+			$this->formatter->printType($type2),
 		);
 
 		$type3 = new ArrayType(new SimpleValueType('string'), new SimpleValueType('test'));
@@ -111,7 +111,7 @@ final class ErrorVisualPrinterTest extends TestCase
 
 		self::assertSame(
 			'array<string, test>',
-			$this->formatter->formatType($type3),
+			$this->formatter->printType($type3),
 		);
 
 		$type4 = new ArrayType(new SimpleValueType('string'), new SimpleValueType('test'));
@@ -121,7 +121,7 @@ final class ErrorVisualPrinterTest extends TestCase
 
 		self::assertSame(
 			"array(foo: 'bar', baz: 123)<string, test>",
-			$this->formatter->formatType($type4),
+			$this->formatter->printType($type4),
 		);
 
 		$type5Key = new CompoundType(CompoundType::OPERATOR_OR);
@@ -135,7 +135,7 @@ final class ErrorVisualPrinterTest extends TestCase
 
 		self::assertSame(
 			'array<string|int, array<string, test>>',
-			$this->formatter->formatType($type5),
+			$this->formatter->printType($type5),
 		);
 
 		$type5Key->overwriteInvalidSubtype(
@@ -148,7 +148,7 @@ final class ErrorVisualPrinterTest extends TestCase
 		);
 		self::assertSame(
 			'string|int',
-			$this->formatter->formatType($type5Key),
+			$this->formatter->printType($type5Key),
 		);
 
 		$type6 = new ArrayType(new SimpleValueType('string'), new SimpleValueType('int'));
@@ -160,7 +160,7 @@ final class ErrorVisualPrinterTest extends TestCase
 
 		self::assertSame(
 			"array(first: 'value', second)",
-			$this->formatter->formatType($type6),
+			$this->formatter->printType($type6),
 		);
 
 		$type7 = new ArrayType(new SimpleValueType('string'), new SimpleValueType('int'));
@@ -202,7 +202,7 @@ final class ErrorVisualPrinterTest extends TestCase
 	0: int(second)
 	123: string => int(first: 'value')
 }",
-			$this->formatter->formatType($type7),
+			$this->formatter->printType($type7),
 		);
 	}
 
@@ -212,7 +212,7 @@ final class ErrorVisualPrinterTest extends TestCase
 
 		self::assertSame(
 			'list',
-			$this->formatter->formatType($type1),
+			$this->formatter->printType($type1),
 		);
 
 		$type2 = new ListType(new SimpleValueType('string'));
@@ -220,7 +220,7 @@ final class ErrorVisualPrinterTest extends TestCase
 
 		self::assertSame(
 			'list<string>',
-			$this->formatter->formatType($type2),
+			$this->formatter->printType($type2),
 		);
 
 		$type3 = new ListType(new SimpleValueType('string'));
@@ -229,7 +229,7 @@ final class ErrorVisualPrinterTest extends TestCase
 
 		self::assertSame(
 			"list(foo: 'bar')<string>",
-			$this->formatter->formatType($type3),
+			$this->formatter->printType($type3),
 		);
 
 		$type4 = new ListType(new SimpleValueType('string'));
@@ -238,7 +238,7 @@ final class ErrorVisualPrinterTest extends TestCase
 
 		self::assertSame(
 			"list(foo: 'bar')",
-			$this->formatter->formatType($type4),
+			$this->formatter->printType($type4),
 		);
 
 		$type5 = new ListType(new SimpleValueType('string'));
@@ -261,7 +261,7 @@ final class ErrorVisualPrinterTest extends TestCase
 	1: string
 	test: string
 }',
-			$this->formatter->formatType($type5),
+			$this->formatter->printType($type5),
 		);
 	}
 
@@ -306,7 +306,7 @@ final class ErrorVisualPrinterTest extends TestCase
 
 		self::assertSame(
 			'int&float|foo&bar',
-			$this->formatter->formatType($type1),
+			$this->formatter->printType($type1),
 		);
 	}
 
@@ -320,7 +320,7 @@ final class ErrorVisualPrinterTest extends TestCase
 			'structure[
 
 ]',
-			$this->formatter->formatType($type1),
+			$this->formatter->printType($type1),
 		);
 	}
 
@@ -350,7 +350,7 @@ final class ErrorVisualPrinterTest extends TestCase
 	]
 	Whole structure is invalid
 ]',
-			$this->formatter->formatType($type1),
+			$this->formatter->printType($type1),
 		);
 		self::assertSame(
 			'path > to > error > 0: t
@@ -360,7 +360,7 @@ path > to > error > b: structure[
 	bar: t
 ]
 path > to > error > Whole structure is invalid',
-			$this->formatter->formatError(
+			$this->formatter->printError(
 				InvalidData::create($type1, Value::none()),
 				['path', 'to', 'error'],
 			),
@@ -373,7 +373,7 @@ b: structure[
 	bar: t
 ]
 Whole structure is invalid',
-			$this->formatter->formatError(InvalidData::create($type1, Value::none())),
+			$this->formatter->printError(InvalidData::create($type1, Value::none())),
 		);
 	}
 
@@ -418,7 +418,7 @@ Whole structure is invalid',
 	]
 	Random error
 ]',
-			$this->formatter->formatType($type1),
+			$this->formatter->printType($type1),
 		);
 		self::assertSame(
 			'path -_- to -_- error -_- 0: overwritten
@@ -426,7 +426,7 @@ path -_- to -_- error -_- b: structure[
 	foo: overwritten
 ]
 path -_- to -_- error -_- Random error',
-			$this->formatter->formatError(
+			$this->formatter->printError(
 				InvalidData::create($type1, Value::none()),
 				['path', 'to', 'error'],
 			),
@@ -437,7 +437,7 @@ b: structure[
 	foo: overwritten
 ]
 Random error',
-			$this->formatter->formatError(InvalidData::create($type1, Value::none())),
+			$this->formatter->printError(InvalidData::create($type1, Value::none())),
 		);
 	}
 

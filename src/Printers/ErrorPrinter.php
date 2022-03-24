@@ -11,6 +11,6 @@ interface ErrorPrinter
 	 * @param array<string> $pathNodes
 	 * @return mixed
 	 */
-	public function formatError(InvalidData $exception, array $pathNodes = []);
+	public function printError(InvalidData $exception, array $pathNodes = []);
 
 }

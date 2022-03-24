@@ -34,48 +34,48 @@ class DocsArrayPrinter implements StructurePrinter
 	/**
 	 * @return array<mixed>
 	 */
-	public function formatType(StructureType $type): array
+	public function printType(StructureType $type): array
 	{
-		return $this->formatStructureType($type);
+		return $this->printStructureType($type);
 	}
 
 	/**
 	 * @return array<mixed>
 	 */
-	private function format(Type $type): array
+	private function print(Type $type): array
 	{
 		if ($type instanceof StructureType) {
-			return $this->formatStructureType($type);
+			return $this->printStructureType($type);
 		}
 
 		if ($type instanceof MultiValueType) {
-			return $this->formatMultiType($type);
+			return $this->printMultiType($type);
 		}
 
 		if ($type instanceof CompoundType) {
-			return $this->formatCompoundType($type);
+			return $this->printCompoundType($type);
 		}
 
-		return $this->formatDefault($type);
+		return $this->printDefault($type);
 	}
 
 	/**
 	 * @return array<mixed>
 	 */
-	private function formatStructureType(StructureType $type): array
+	private function printStructureType(StructureType $type): array
 	{
 		$meta = $this->metaLoader->load($type->getClass());
 		$propertiesMeta = $meta->getProperties();
 
 		$fields = [];
-		$defaults = $this->defaultsPrinter->formatType($type);
+		$defaults = $this->defaultsPrinter->printType($type);
 
 		foreach ($type->getFields() as $fieldName => $fieldType) {
 			$propertyMeta = $propertiesMeta[$fieldName];
 
 			$formattedField = [
-				'docs' => $this->formatDocs($propertyMeta),
-				'value' => $this->format($fieldType),
+				'docs' => $this->printDocs($propertyMeta),
+				'value' => $this->print($fieldType),
 			];
 
 			if (array_key_exists($fieldName, $defaults) && !$fieldType instanceof StructureType) {
@@ -88,7 +88,7 @@ class DocsArrayPrinter implements StructurePrinter
 		return [
 			'type' => 'structure',
 			'sourceClass' => $type->getClass(),
-			'docs' => $this->formatDocs($meta->getClass()),
+			'docs' => $this->printDocs($meta->getClass()),
 			'fields' => $fields,
 		];
 	}
@@ -96,7 +96,7 @@ class DocsArrayPrinter implements StructurePrinter
 	/**
 	 * @return array<mixed>
 	 */
-	private function formatDocs(SharedNodeRuntimeMeta $meta): array
+	private function printDocs(SharedNodeRuntimeMeta $meta): array
 	{
 		$docs = [];
 
@@ -112,21 +112,21 @@ class DocsArrayPrinter implements StructurePrinter
 	/**
 	 * @return array<mixed>
 	 */
-	private function formatCompoundType(CompoundType $type): array
+	private function printCompoundType(CompoundType $type): array
 	{
 		if (!$this->compoundContainsStructures($type)) {
-			return $this->formatDefault($type);
+			return $this->printDefault($type);
 		}
 
 		$subtypes = [];
 
 		foreach ($type->getSubtypes() as $subtype) {
-			$subtypes[] = $this->format($subtype);
+			$subtypes[] = $this->print($subtype);
 		}
 
 		return [
 			'type' => 'compound',
-			'short' => $this->typePrinter->formatType($type),
+			'short' => $this->typePrinter->printType($type),
 			'subtypes' => $subtypes,
 		];
 	}
@@ -134,7 +134,7 @@ class DocsArrayPrinter implements StructurePrinter
 	/**
 	 * @return array<mixed>
 	 */
-	private function formatMultiType(MultiValueType $type): array
+	private function printMultiType(MultiValueType $type): array
 	{
 		$keyType = $type instanceof ArrayType
 			? $type->getKeyType()
@@ -142,19 +142,19 @@ class DocsArrayPrinter implements StructurePrinter
 
 		return [
 			'type' => 'array',
-			'key' => $keyType !== null ? $this->format($keyType) : null,
-			'item' => $this->format($type->getItemType()),
+			'key' => $keyType !== null ? $this->print($keyType) : null,
+			'item' => $this->print($type->getItemType()),
 		];
 	}
 
 	/**
 	 * @return array<mixed>
 	 */
-	private function formatDefault(Type $type): array
+	private function printDefault(Type $type): array
 	{
 		return [
 			'type' => 'simple',
-			'value' => $this->typePrinter->formatType($type),
+			'value' => $this->typePrinter->printType($type),
 		];
 	}
 
