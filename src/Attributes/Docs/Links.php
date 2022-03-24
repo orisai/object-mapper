@@ -56,7 +56,7 @@ final class Links implements DocumentationAttribute
 	}
 
 	/**
-	 * @return array<mixed>
+	 * {@inheritDoc}
 	 */
 	public function getArgs(): array
 	{

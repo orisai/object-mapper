@@ -54,7 +54,7 @@ final class Examples implements DocumentationAttribute
 	}
 
 	/**
-	 * @return array<mixed>
+	 * {@inheritDoc}
 	 */
 	public function getArgs(): array
 	{

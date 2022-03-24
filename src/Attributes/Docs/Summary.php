@@ -28,7 +28,7 @@ final class Summary implements DocumentationAttribute
 	}
 
 	/**
-	 * @return array<mixed>
+	 * {@inheritDoc}
 	 */
 	public function getArgs(): array
 	{

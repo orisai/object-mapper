@@ -29,7 +29,7 @@ abstract class MultiValueRuleAttribute implements RuleAttribute
 	}
 
 	/**
-	 * @return array<mixed>
+	 * {@inheritDoc}
 	 */
 	public function getArgs(): array
 	{

@@ -19,7 +19,7 @@ final class Skipped implements ModifierAttribute
 	}
 
 	/**
-	 * @return array<mixed>
+	 * {@inheritDoc}
 	 */
 	public function getArgs(): array
 	{

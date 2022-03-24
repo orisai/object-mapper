@@ -36,7 +36,7 @@ final class DateTime implements RuleAttribute
 	}
 
 	/**
-	 * @return array<mixed>
+	 * {@inheritDoc}
 	 */
 	public function getArgs(): array
 	{

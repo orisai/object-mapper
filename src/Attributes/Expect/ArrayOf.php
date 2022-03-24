@@ -35,7 +35,7 @@ final class ArrayOf extends MultiValueRuleAttribute
 	}
 
 	/**
-	 * @return array<mixed>
+	 * {@inheritDoc}
 	 */
 	public function getArgs(): array
 	{

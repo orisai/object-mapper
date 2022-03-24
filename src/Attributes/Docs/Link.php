@@ -30,7 +30,7 @@ final class Link implements DocumentationAttribute
 	}
 
 	/**
-	 * @return array<mixed>
+	 * {@inheritDoc}
 	 */
 	public function getArgs(): array
 	{

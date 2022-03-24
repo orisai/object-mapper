@@ -27,7 +27,7 @@ final class BoolValue implements RuleAttribute
 	}
 
 	/**
-	 * @return array<mixed>
+	 * {@inheritDoc}
 	 */
 	public function getArgs(): array
 	{
