@@ -6,7 +6,7 @@ use DateTimeImmutable;
 use DateTimeInterface;
 use Orisai\Exceptions\Logic\InvalidArgument;
 use Orisai\Exceptions\Logic\InvalidState;
-use Orisai\ObjectMapper\Exceptions\InvalidData;
+use Orisai\ObjectMapper\Exception\InvalidData;
 use Orisai\ObjectMapper\MappedObject;
 use Orisai\ObjectMapper\Printers\ErrorPrinter;
 use Orisai\ObjectMapper\Printers\ErrorVisualPrinter;

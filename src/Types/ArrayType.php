@@ -3,7 +3,7 @@
 namespace Orisai\ObjectMapper\Types;
 
 use Orisai\Exceptions\Logic\InvalidArgument;
-use Orisai\ObjectMapper\Exceptions\WithTypeAndValue;
+use Orisai\ObjectMapper\Exception\WithTypeAndValue;
 
 final class ArrayType extends MultiValueType
 {

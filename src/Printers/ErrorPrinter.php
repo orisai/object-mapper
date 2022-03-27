@@ -2,7 +2,7 @@
 
 namespace Orisai\ObjectMapper\Printers;
 
-use Orisai\ObjectMapper\Exceptions\InvalidData;
+use Orisai\ObjectMapper\Exception\InvalidData;
 
 interface ErrorPrinter
 {

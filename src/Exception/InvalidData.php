@@ -1,6 +1,6 @@
 <?php declare(strict_types = 1);
 
-namespace Orisai\ObjectMapper\Exceptions;
+namespace Orisai\ObjectMapper\Exception;
 
 use Orisai\Exceptions\DomainException;
 use Orisai\ObjectMapper\Printers\ErrorPrinter;

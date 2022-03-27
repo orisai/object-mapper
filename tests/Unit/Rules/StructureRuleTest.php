@@ -2,7 +2,7 @@
 
 namespace Tests\Orisai\ObjectMapper\Unit\Rules;
 
-use Orisai\ObjectMapper\Exceptions\InvalidData;
+use Orisai\ObjectMapper\Exception\InvalidData;
 use Orisai\ObjectMapper\Processing\Options;
 use Orisai\ObjectMapper\Rules\StructureArgs;
 use Orisai\ObjectMapper\Rules\StructureRule;

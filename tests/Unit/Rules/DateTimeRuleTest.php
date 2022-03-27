@@ -6,7 +6,7 @@ use DateTime;
 use DateTimeImmutable;
 use DateTimeInterface;
 use Generator;
-use Orisai\ObjectMapper\Exceptions\ValueDoesNotMatch;
+use Orisai\ObjectMapper\Exception\ValueDoesNotMatch;
 use Orisai\ObjectMapper\Rules\DateTimeArgs;
 use Orisai\ObjectMapper\Rules\DateTimeRule;
 use Orisai\ObjectMapper\Types\SimpleValueType;

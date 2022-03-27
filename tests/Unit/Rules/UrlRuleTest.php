@@ -4,7 +4,7 @@ namespace Tests\Orisai\ObjectMapper\Unit\Rules;
 
 use Generator;
 use Orisai\ObjectMapper\Args\EmptyArgs;
-use Orisai\ObjectMapper\Exceptions\ValueDoesNotMatch;
+use Orisai\ObjectMapper\Exception\ValueDoesNotMatch;
 use Orisai\ObjectMapper\Rules\UrlRule;
 use Orisai\ObjectMapper\Types\SimpleValueType;
 use stdClass;

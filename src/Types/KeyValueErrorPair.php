@@ -2,7 +2,7 @@
 
 namespace Orisai\ObjectMapper\Types;
 
-use Orisai\ObjectMapper\Exceptions\WithTypeAndValue;
+use Orisai\ObjectMapper\Exception\WithTypeAndValue;
 
 final class KeyValueErrorPair
 {
