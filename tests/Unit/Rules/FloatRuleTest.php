@@ -208,14 +208,12 @@ final class FloatRuleTest extends RuleTestCase
 		);
 
 		self::assertSame('float', $type->getName());
-		self::assertCount(1, $type->getParameters());
-		self::assertTrue($type->hasParameter('unsigned'));
-		self::assertFalse($type->getParameter('unsigned')->hasValue());
+		self::assertCount(0, $type->getParameters());
 	}
 
 	public function testTypeWithArgs(): void
 	{
-		$args = new FloatArgs(10, 100, false, true);
+		$args = new FloatArgs(10, 100, true, true);
 
 		$type = $this->rule->createType($args, $this->typeContext);
 
@@ -226,11 +224,13 @@ final class FloatRuleTest extends RuleTestCase
 
 		self::assertSame('float', $type->getName());
 
-		self::assertCount(3, $type->getParameters());
+		self::assertCount(4, $type->getParameters());
 		self::assertTrue($type->hasParameter(FloatRule::MIN));
 		self::assertSame(10.0, $type->getParameter(FloatRule::MIN)->getValue());
 		self::assertTrue($type->hasParameter(FloatRule::MAX));
 		self::assertSame(100.0, $type->getParameter(FloatRule::MAX)->getValue());
+		self::assertTrue($type->hasParameter('unsigned'));
+		self::assertFalse($type->getParameter('unsigned')->hasValue());
 		self::assertTrue($type->hasParameter('acceptsNumericString'));
 		self::assertFalse($type->getParameter('acceptsNumericString')->hasValue());
 	}

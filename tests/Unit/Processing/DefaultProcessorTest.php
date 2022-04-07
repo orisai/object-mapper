@@ -102,7 +102,7 @@ structure: structure[
 	untypedNull: null
 	arrayOfMixed: array<mixed>
 ]
-manyStructures: array<int(unsigned), structure[
+manyStructures: array<int, structure[
 	string: string
 	nullableString: string|null
 	untypedNullableString: string|null

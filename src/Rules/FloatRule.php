@@ -48,7 +48,7 @@ final class FloatRule implements Rule
 			$max = $checker->checkNullableFloat(self::MAX);
 		}
 
-		$unsigned = true;
+		$unsigned = false;
 		if ($checker->hasArg(self::UNSIGNED)) {
 			$unsigned = $checker->checkBool(self::UNSIGNED);
 		}

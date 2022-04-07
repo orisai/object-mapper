@@ -186,13 +186,12 @@ final class IntRuleTest extends RuleTestCase
 		);
 
 		self::assertSame('int', $type->getName());
-		self::assertCount(1, $type->getParameters());
-		self::assertTrue($type->hasParameter('unsigned'));
+		self::assertCount(0, $type->getParameters());
 	}
 
 	public function testTypeWithArgs(): void
 	{
-		$args = new IntArgs(10, 100, false, true);
+		$args = new IntArgs(10, 100, true, true);
 
 		$type = $this->rule->createType($args, $this->typeContext);
 
@@ -203,11 +202,13 @@ final class IntRuleTest extends RuleTestCase
 
 		self::assertSame('int', $type->getName());
 
-		self::assertCount(3, $type->getParameters());
+		self::assertCount(4, $type->getParameters());
 		self::assertTrue($type->hasParameter(IntRule::MIN));
 		self::assertSame(10, $type->getParameter(IntRule::MIN)->getValue());
 		self::assertTrue($type->hasParameter(IntRule::MAX));
 		self::assertSame(100, $type->getParameter(IntRule::MAX)->getValue());
+		self::assertTrue($type->hasParameter('unsigned'));
+		self::assertFalse($type->getParameter('unsigned')->hasValue());
 		self::assertTrue($type->hasParameter('acceptsNumericString'));
 		self::assertFalse($type->getParameter('acceptsNumericString')->hasValue());
 	}

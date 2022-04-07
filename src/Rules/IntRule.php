@@ -47,7 +47,7 @@ final class IntRule implements Rule
 			$max = $checker->checkNullableInt(self::MAX);
 		}
 
-		$unsigned = true;
+		$unsigned = false;
 		if ($checker->hasArg(self::UNSIGNED)) {
 			$unsigned = $checker->checkBool(self::UNSIGNED);
 		}

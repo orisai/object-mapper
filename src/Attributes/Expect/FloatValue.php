@@ -25,7 +25,7 @@ final class FloatValue implements RuleAttribute
 	public function __construct(
 		?float $min = null,
 		?float $max = null,
-		bool $unsigned = true,
+		bool $unsigned = false,
 		bool $castNumericString = false
 	)
 	{

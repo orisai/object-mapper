@@ -25,7 +25,7 @@ final class IntValue implements RuleAttribute
 	public function __construct(
 		?int $min = null,
 		?int $max = null,
-		bool $unsigned = true,
+		bool $unsigned = false,
 		bool $castNumericString = false
 	)
 	{
