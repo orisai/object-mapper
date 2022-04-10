@@ -24,6 +24,9 @@ Raw data mapping to validated objects
 	- [Enum from values](#enum-from-values-rule)
 - [Optional fields and default values](#optional-fields-and-default-values)
 - [Mapping field names to properties](#mapping-field-names-to-properties)
+- [Processing modes](#processing-modes)
+	- [All fields are required](#all-fields-are-required)
+	- [No fields are required](#no-fields-are-required)
 
 ## Rules
 
@@ -919,4 +922,88 @@ $data = [
 	'customFieldName' => 'anything',
 ];
 $processor->process($data, Input::class); // Input
+```
+
+## Processing modes
+
+Processor requires all fields with no default value to be sent. We may change that and require all fields to be sent or
+require no fields at all.
+
+Following mapped object has one required and one optional field (
+see [default values](#optional-fields-and-default-values)). By default, you have to send only required field:
+
+```php
+use Orisai\ObjectMapper\Attributes\Expect\BoolValue;
+use Orisai\ObjectMapper\MappedObject;
+
+final class ModesExampleInput extends MappedObject
+{
+
+    /** @BoolValue() */
+    public bool $required;
+
+    /** @BoolValue() */
+    public bool $optional = true;
+
+}
+```
+
+```php
+$data = [
+	'required' => true,
+];
+
+$input = $processor->process($data, ModesExampleInput::class); // ModesExampleInput
+
+$input->required; // true
+$input->optional; // true, default
+```
+
+### All fields are required
+
+Send all fields, including these with default values and (with default
+mode) [auto-initialized](#structure--mapped-object-rule) mapped objects .
+
+```php
+use Orisai\ObjectMapper\Processing\Options;
+use Orisai\ObjectMapper\Processing\RequiredFields;
+
+$data = [
+	'required' => true,
+	'optional' => true,
+];
+$options = new Options();
+$options->setRequiredFields(RequiredFields::all());
+
+$input = $processor->process($data, ModesExampleInput::class, $options); // ModesExampleInput
+
+$input->required; // true
+$input->optional; // true
+```
+
+### No fields are required
+
+We can make all fields optional. This is useful for partial updates, like PATCH requests in REST APIs. Only changed
+fields are sent, and we have to check which ones are available with `$mappedObject->isInitialized('property');`.
+
+Unlike with default mode, mapped object are not auto-initialized as described
+under [mapped object rule](#structure--mapped-object-rule). At least empty array (`[]`) should be sent to initialize
+them.
+
+Even default values, when not sent, are not initialized - they are unset before assigning sent data.
+
+```php
+use Orisai\ObjectMapper\Processing\Options;
+use Orisai\ObjectMapper\Processing\RequiredFields;
+
+$data = [];
+$options = new Options();
+$options->setRequiredFields(RequiredFields::none());
+
+$input = $processor->process($data, ModesExampleInput::class, $options); // ModesExampleInput
+
+$input->isInitialized('required'); // false
+$input->required; // Error, property is not set
+$input->isInitialized('optional'); // false
+$input->optional; // Error, property is not set
 ```
