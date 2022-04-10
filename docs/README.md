@@ -22,6 +22,7 @@ Raw data mapping to validated objects
 	- [Structure / Mapped object](#structure--mapped-object-rule)
 	- [Url](#url-rule)
 	- [Enum from values](#enum-from-values-rule)
+- [Mapping field names to properties](#mapping-field-names-to-properties)
 
 ## Rules
 
@@ -755,3 +756,58 @@ Parameters:
 	- use keys for enumeration instead of values
 	- default `false` - values are used for enumeration
 
+## Mapping field names to properties
+
+Keys from input data (fields) are mapped to object properties of the same name, like shown in following example:
+
+```php
+use Orisai\ObjectMapper\Attributes\Expect\MixedValue;
+use Orisai\ObjectMapper\MappedObject;
+
+final class Input extends MappedObject
+{
+
+    /**
+     * @var mixed
+     * @MixedValue()
+     */
+    public $field;
+
+}
+```
+
+```php
+$data = [
+	'field' => 'anything',
+];
+$processor->process($data, Input::class); // Input
+```
+
+We may change that by defining field name for property:
+
+```php
+use Orisai\ObjectMapper\Attributes\Expect\MixedValue;
+use Orisai\ObjectMapper\Attributes\Modifiers\FieldName;
+use Orisai\ObjectMapper\MappedObject;
+
+final class Input extends MappedObject
+{
+
+    /**
+     * @var mixed
+     * @MixedValue()
+     * @FieldName("customFieldName")
+     */
+    public $field;
+
+}
+```
+
+We then have to send key from `@FieldName` instead of property name:
+
+```php
+$data = [
+	'customFieldName' => 'anything',
+];
+$processor->process($data, Input::class); // Input
+```
