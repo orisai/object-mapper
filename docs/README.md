@@ -22,6 +22,7 @@ Raw data mapping to validated objects
 	- [Structure / Mapped object](#structure--mapped-object-rule)
 	- [Url](#url-rule)
 	- [Enum from values](#enum-from-values-rule)
+- [Optional fields and default values](#optional-fields-and-default-values)
 - [Mapping field names to properties](#mapping-field-names-to-properties)
 
 ## Rules
@@ -755,6 +756,114 @@ Parameters:
 - `useKeys`
 	- use keys for enumeration instead of values
 	- default `false` - values are used for enumeration
+
+## Optional fields and default values
+
+Each field can be made optional by assigning default value to property:
+
+```php
+use Orisai\ObjectMapper\Attributes\Expect\StringValue;
+use Orisai\ObjectMapper\MappedObject;
+
+final class Input extends MappedObject
+{
+
+    /** @StringValue() */
+    public string $field = 'default value';
+
+}
+```
+
+Default values are *never validated by rules* and will not appear in validation errors. We may then assign defaults
+which are impossible to send:
+
+```php
+use Orisai\ObjectMapper\Attributes\Expect\StringValue;
+use Orisai\ObjectMapper\MappedObject;
+
+final class Input extends MappedObject
+{
+
+    /** @StringValue() */
+    public ?string $field = null;
+
+}
+```
+
+Properties without type and with no explicit default value always have `null` value by default in PHP. Due to this
+object mapper cannot distinguish whether untyped property was meant to have default value of `null` or not just from the
+property. Whether field should be required or not is therefore detected from used rules:
+
+```php
+use Orisai\ObjectMapper\Attributes\Expect\AllOf;
+use Orisai\ObjectMapper\Attributes\Expect\AnyOf;
+use Orisai\ObjectMapper\Attributes\Expect\MixedValue;
+use Orisai\ObjectMapper\Attributes\Expect\NullValue;
+use Orisai\ObjectMapper\Attributes\Expect\StringValue;
+use Orisai\ObjectMapper\MappedObject;
+
+final class Input extends MappedObject
+{
+
+    /**
+     * OPTIONAL - Field allows null
+     *
+     * @var null
+     * @NullValue()
+     */
+    public $implicitNull;
+
+    /**
+     * OPTIONAL - Field allows null
+     *          - Identical with $implicitNull - untyped properties are null by default
+     *
+     * @var null
+     * @NullValue()
+     */
+    public $explicitNull = null;
+
+    /**
+     * OPTIONAL - Field allows mixed which includes null
+     *
+     * @var mixed
+     * @MixedValue()
+     */
+    public $mixed;
+
+    /**
+     * OPTIONAL - Field allows null
+     *          - MixedValue and multiple levels of AnyOf and AllOf work as well
+     *
+     * @var string|null
+     * @AnyOf({
+     *     @StringValue(),
+     *     @NullValue(),
+     * })
+     */
+    public $anyOf;
+
+    /**
+     * OPTIONAL - Field allows null
+     *          - MixedValue and multiple levels of AnyOf and AllOf work as well
+     *
+     * @var null
+     * @AllOf({
+     *     @StringValue(),
+     *     @NullValue(castEmptyString=true),
+     * })
+     */
+    public $allOf;
+
+    /**
+     * REQUIRED - Field does not allow null
+     *
+     * @var string
+     * @StringValue()
+     */
+    public $string;
+
+}
+```
 
 ## Mapping field names to properties
 
