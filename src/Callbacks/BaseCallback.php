@@ -160,17 +160,30 @@ abstract class BaseCallback implements Callback
 		$returnType = $method->getReturnType();
 
 		if ($property === null) { // Class method
-			// beforeClass(array $data, FieldSetContext $context): array|void|never
+			// beforeClass(<nothing>|mixed $data, FieldSetContext $context): <anything>
 			// afterClass(array $data, FieldSetContext $context): array|void|never
 
-			if ($paramData !== null && ($type = self::getTypeName($paramData->getType())) !== 'array') {
-				throw InvalidArgument::create()
-					->withMessage(sprintf(
-						'First parameter of class callback method %s::%s should have "array" type instead of %s',
-						$class->getName(),
-						$method->getName(),
-						$type ?? 'none',
-					));
+			if ($paramData !== null) {
+				$type = self::getTypeName($paramData->getType());
+				if (static::class === BeforeCallback::class && !in_array($type, ['mixed', null], true)) {
+					throw InvalidArgument::create()
+						->withMessage(sprintf(
+							'First parameter of class callback method %s::%s should have "mixed" or none type instead of %s',
+							$class->getName(),
+							$method->getName(),
+							$type,
+						));
+				}
+
+				if (static::class === AfterCallback::class && $type !== 'array') {
+					throw InvalidArgument::create()
+						->withMessage(sprintf(
+							'First parameter of class callback method %s::%s should have "array" type instead of %s',
+							$class->getName(),
+							$method->getName(),
+							$type ?? 'none',
+						));
+				}
 			}
 
 			if ($paramContext !== null && (
@@ -188,7 +201,10 @@ abstract class BaseCallback implements Callback
 					));
 			}
 
-			if (!in_array(($type = self::getTypeName($returnType)), ['array', 'void', 'never'], true)) {
+			if (
+				static::class === AfterCallback::class
+				&& !in_array(($type = self::getTypeName($returnType)), ['array', 'void', 'never'], true)
+			) {
 				throw InvalidArgument::create()
 					->withMessage(sprintf(
 						'Return type of class callback method %s::%s should be "array", "void" or "never" instead of %s',
@@ -247,8 +263,8 @@ abstract class BaseCallback implements Callback
 	}
 
 	/**
-	 * @param mixed $data
-	 * @param BaseCallbackArgs $args
+	 * @param mixed                        $data
+	 * @param BaseCallbackArgs             $args
 	 * @param FieldContext|FieldSetContext $context
 	 * @return mixed
 	 */

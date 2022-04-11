@@ -14,10 +14,10 @@ final class BeforeClassCallbackValueDoesNotMatchVO extends MappedObject
 {
 
 	/**
-	 * @param array<mixed> $data
+	 * @param mixed $data
 	 * @throws ValueDoesNotMatch
 	 */
-	public static function before(array $data): void
+	public static function before($data): void
 	{
 		throw ValueDoesNotMatch::createFromString('Error before class', Value::none());
 	}

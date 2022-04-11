@@ -16,6 +16,7 @@ use stdClass;
 use Tests\Orisai\ObjectMapper\Doubles\AfterClassCallbackCurrentTypeInvalidDataVO;
 use Tests\Orisai\ObjectMapper\Doubles\AfterClassCallbackNewTypeInvalidDataVO;
 use Tests\Orisai\ObjectMapper\Doubles\AfterClassCallbackValueDoesNotMatchVO;
+use Tests\Orisai\ObjectMapper\Doubles\BeforeClassCallbackMixedValueVO;
 use Tests\Orisai\ObjectMapper\Doubles\BeforeClassCallbackValueDoesNotMatchVO;
 use Tests\Orisai\ObjectMapper\Doubles\CallbacksVO;
 use Tests\Orisai\ObjectMapper\Doubles\CallbacksVoContext;
@@ -437,6 +438,31 @@ stringg: Field is unknown, did you mean `string`?',
 validationFailed: string',
 			$this->formatter->printError($exception),
 		);
+	}
+
+	public function testBeforeClassCallbackMixedValue(): void
+	{
+		$options = new Options();
+		$options->setFillRawValues();
+
+		$vo = null;
+		$exception = null;
+
+		try {
+			$vo = $this->processor->process(false, BeforeClassCallbackMixedValueVO::class, $options);
+		} catch (InvalidData $exception) {
+			// Checked bellow
+		}
+
+		self::assertNull($vo);
+		self::assertInstanceOf(InvalidData::class, $exception);
+
+		self::assertSame(
+			'',
+			$this->formatter->printError($exception),
+		);
+		$vo = $this->processor->process(true, BeforeClassCallbackMixedValueVO::class, $options);
+		self::assertTrue($vo->getRawValues());
 	}
 
 	public function testBeforeClassCallbackRuleException(): void

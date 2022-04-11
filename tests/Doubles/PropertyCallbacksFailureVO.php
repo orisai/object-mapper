@@ -9,6 +9,7 @@ use Orisai\ObjectMapper\Attributes\Expect\StringValue;
 use Orisai\ObjectMapper\Exception\ValueDoesNotMatch;
 use Orisai\ObjectMapper\MappedObject;
 use Orisai\ObjectMapper\Types\Value;
+use function is_array;
 
 /**
  * @Before(method="beforeClass")
@@ -30,11 +31,15 @@ final class PropertyCallbacksFailureVO extends MappedObject
 	public string $validationFailed;
 
 	/**
-	 * @param array<mixed> $data
-	 * @return array<mixed>
+	 * @param mixed $data
+	 * @return mixed
 	 */
-	public static function beforeClass(array $data): array
+	public static function beforeClass($data)
 	{
+		if (!is_array($data)) {
+			return $data;
+		}
+
 		$data['neverValidated'] = 123;
 		$data['validationFailed'] = 123;
 

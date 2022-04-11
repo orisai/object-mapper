@@ -18,8 +18,10 @@ abstract class MappedObject
 
 	private ?SkippedPropertiesContext $skippedPropertiesContext = null;
 
-	/** @var array<mixed> */
-	private array $rawValues;
+	private bool $hasRawValues = false;
+
+	/** @var mixed */
+	private $rawValues;
 
 	public function setSkippedPropertiesContext(?SkippedPropertiesContext $partialContext): void
 	{
@@ -42,19 +44,20 @@ abstract class MappedObject
 	}
 
 	/**
-	 * @param array<mixed> $values
+	 * @param mixed $values
 	 */
-	public function setRawValues(array $values): void
+	public function setRawValues($values): void
 	{
+		$this->hasRawValues = true;
 		$this->rawValues = $values;
 	}
 
 	/**
-	 * @return array<mixed>
+	 * @return mixed
 	 */
-	public function getRawValues(): array
+	public function getRawValues()
 	{
-		if (!isset($this->rawValues)) {
+		if (!$this->hasRawValues) {
 			throw InvalidState::create()
 				->withMessage(sprintf(
 					'Cannot get raw values as they were never set. You may achieve it by setting %s::setFillRawValues(true)',

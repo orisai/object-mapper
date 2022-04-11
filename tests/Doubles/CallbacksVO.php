@@ -14,6 +14,7 @@ use Orisai\ObjectMapper\Context\FieldSetContext;
 use Orisai\ObjectMapper\Exception\InvalidData;
 use Orisai\ObjectMapper\MappedObject;
 use function array_key_exists;
+use function is_array;
 
 /**
  * @Before(method="beforeClass")
@@ -72,11 +73,15 @@ final class CallbacksVO extends MappedObject
 	}
 
 	/**
-	 * @param array<mixed> $data
-	 * @return array<mixed>
+	 * @param mixed $data
+	 * @return mixed
 	 */
-	public static function beforeClass(array $data, FieldSetContext $context): array
+	public static function beforeClass($data, FieldSetContext $context)
 	{
+		if (!is_array($data)) {
+			return $data;
+		}
+
 		$data['array']['beforeClassCallback'][] = $context->shouldMapDataToObjects();
 
 		// Set default value, processor don't know it's going to be structure and thinks value is required

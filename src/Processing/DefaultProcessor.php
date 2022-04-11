@@ -129,10 +129,11 @@ class DefaultProcessor implements Processor
 		$meta = $callContext->getMeta();
 		$classMeta = $meta->getClass();
 
-		$data = $this->ensureDataProcessable($data, $fieldSetContext);
 		$data = $this->handleClassCallbacks($data, $fieldSetContext, $callContext, $classMeta, BeforeCallback::class);
+		$data = $this->ensureDataProcessable($data, $fieldSetContext);
 		$data = $this->handleFields($data, $fieldSetContext, $callContext);
 		$data = $this->handleClassCallbacks($data, $fieldSetContext, $callContext, $classMeta, AfterCallback::class);
+		assert(is_array($data)); // After class callbacks are forced to return array
 
 		return $data;
 	}
@@ -518,25 +519,24 @@ class DefaultProcessor implements Processor
 	// ///////// //
 
 	/**
-	 * @param array<mixed>                       $data
+	 * @param mixed                              $data
 	 * @param ProcessorCallContext<MappedObject> $callContext
 	 * @param class-string<Callback<Args>>       $callbackType
-	 * @return array<mixed>
+	 * @return mixed
 	 * @throws InvalidData
 	 */
 	protected function handleClassCallbacks(
-		array $data,
+		$data,
 		FieldSetContext $fieldSetContext,
 		ProcessorCallContext $callContext,
 		ClassRuntimeMeta $meta,
 		string $callbackType
-	): array
+	)
 	{
 		$type = $fieldSetContext->getType();
 
 		try {
 			$data = $this->applyCallbacks($data, $fieldSetContext, $callContext, $meta, $callbackType);
-			assert(is_array($data)); // Class callbacks are forced to define return type
 		} catch (ValueDoesNotMatch | InvalidData $exception) {
 			$caughtType = $exception->getType();
 
@@ -594,13 +594,13 @@ class DefaultProcessor implements Processor
 
 	/**
 	 * @param array<int|string, mixed>           $data
-	 * @param array<mixed>                       $rawData
+	 * @param mixed                              $rawData
 	 * @param ProcessorCallContext<MappedObject> $callContext
 	 */
 	protected function fillObject(
 		MappedObject $object,
 		array $data,
-		array $rawData,
+		$rawData,
 		FieldSetContext $fieldSetContext,
 		ProcessorCallContext $callContext
 	): void
