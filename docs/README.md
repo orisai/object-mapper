@@ -27,6 +27,13 @@ Raw data mapping to validated objects
 - [Processing modes](#processing-modes)
 	- [All fields are required](#all-fields-are-required)
 	- [No fields are required](#no-fields-are-required)
+- [Callbacks](#callbacks)
+	- [Structure / mapped object callbacks](#structure--mapped-object-callbacks)
+	- [Field callbacks](#field-callbacks)
+	- [Returned value](#returned-value)
+	- [Dependencies](#dependencies)
+	- [Context](#callback-context)
+- [Object creator](#object-creator)
 
 ## Rules
 
@@ -1007,3 +1014,311 @@ $input->required; // Error, property is not set
 $input->isInitialized('optional'); // false
 $input->optional; // Error, property is not set
 ```
+
+## Callbacks
+
+Define callbacks before and after mapped objects and their fields:
+
+```php
+use Orisai\ObjectMapper\MappedObject;
+use Orisai\ObjectMapper\Attributes\Callbacks\After;
+use Orisai\ObjectMapper\Attributes\Expect\StringValue;
+use Orisai\ObjectMapper\Context\FieldContext;
+
+final class WithCallbackInput extends MappedObject
+{
+
+	/**
+     * @StringValue()
+	 * @After("afterField")
+	 */
+	public string $field;
+
+	public static function afterField(string $value, FieldContext $context): string
+	{
+		return $value;
+	}
+
+}
+```
+
+**Never** write to mapped object properties directly in callbacks. Object mapper writes to all properties after all
+callbacks are called and overwrites any of set values.
+
+In all callbacks are used [field names](#mapping-field-names-to-properties), not property names.
+In [field callbacks](#field-callbacks), current field name can be accessed via [context](#callback-context).
+
+Callbacks can be both static and non-static, object mapper initializes object to call non-static callbacks when needed.
+
+### Structure / mapped object callbacks
+
+Modify and check data before and after processing fields with their rules
+
+Before mapped object
+
+- invoked before processing fields
+- accepts raw value, as received from `process()` call
+- allowed value types - none, `mixed`
+- allowed return types - any
+
+After mapped object
+
+- invoked after processing fields and before mapping fields to properties
+- accepts value already processed by rules
+- allowed value types - `array`
+- allowed return types - `array`, `void`, `never`
+- [default values](#optional-fields-and-default-values) of fields are available
+
+```php
+use Orisai\ObjectMapper\MappedObject;
+use Orisai\ObjectMapper\Attributes\Callbacks\Before;
+use Orisai\ObjectMapper\Attributes\Callbacks\After;
+use Orisai\ObjectMapper\Context\FieldSetContext;
+
+/**
+ * @Before("beforeObject")
+ * @After("afterObject")
+ */
+final class WithMappedObjectCallbacksInput extends MappedObject
+{
+
+	/**
+     * @param mixed $value
+     * @return mixed
+     */
+	public static function beforeObject($value, FieldSetContext $context)
+	{
+		return $value;
+	}
+
+	/**
+     * @param array<int|string, mixed> $value
+     * @return array<int|string, mixed>
+     */
+	public static function afterObject(array $value, FieldSetContext $context): array
+	{
+		return $value;
+	}
+
+}
+```
+
+### Field callbacks
+
+Modify and check data before and after processing field with its rule
+
+Before field
+
+- invoked before processing field by its rule
+- accepts raw value, possibly modified by "before mapped object" callback
+- allowed value types - none, `mixed`
+- allowed return types - any
+
+After field
+
+- invoked after processing field by its rule
+- accepts value already processed by field rule
+- allowed value types - any - should be compatible with value returned by rule
+- allowed return types - any - should be compatible with property type
+
+```php
+use Orisai\ObjectMapper\MappedObject;
+use Orisai\ObjectMapper\Attributes\Callbacks\Before;
+use Orisai\ObjectMapper\Attributes\Callbacks\After;
+use Orisai\ObjectMapper\Attributes\Expect\StringValue;
+use Orisai\ObjectMapper\Context\FieldContext;
+
+final class WithFieldCallbacksInput extends MappedObject
+{
+
+	/**
+	 * @Before("beforeField")
+     * @StringValue()
+	 * @After("afterField")
+	 */
+	public string $field;
+
+	/**
+     * @param mixed $value
+     * @return mixed
+     */
+	public static function beforeField($value, FieldContext $context)
+	{
+		return $value;
+	}
+
+	public static function afterField(string $value, FieldContext $context): string
+	{
+		return $value;
+	}
+
+}
+```
+
+Field callbacks are called only when field is sent. Callback is not invoked for default value.
+
+```php
+use Orisai\ObjectMapper\MappedObject;
+use Orisai\ObjectMapper\Attributes\Callbacks\After;
+use Orisai\ObjectMapper\Attributes\Expect\StringValue;
+use Orisai\ObjectMapper\Context\FieldContext;
+
+final class WithNotInvokedCallbackInput extends MappedObject
+{
+
+	/**
+     * @StringValue()
+	 * @After("afterField")
+	 */
+	public string $field = 'default';
+
+	public static function afterField(string $value, FieldContext $context): string
+	{
+		return $value;
+	}
+
+}
+```
+
+```php
+// Callback IS NOT invoked
+$processor->process([], WithNotInvokedCallbackInput::class);
+// Callback IS invoked
+$processor->process(['field' => 'new value'], WithNotInvokedCallbackInput::class);
+```
+
+### Returned value
+
+Callbacks are by default expected to return a value:
+
+```php
+use Orisai\ObjectMapper\MappedObject;
+use Orisai\ObjectMapper\Attributes\Callbacks\After;
+use Orisai\ObjectMapper\Attributes\Expect\MixedValue;
+
+final class WithReturningCallbackInput extends MappedObject
+{
+
+	/**
+     * @var mixed
+     * @MixedValue()
+     * @After("afterField")
+     */
+	public $field;
+
+	/**
+     * @param mixed $value
+     * @return mixed
+     */
+	public static function afterField($value)
+	{
+		return $value;
+	}
+
+}
+```
+
+We may change that by defining `void` or `never` return type:
+
+```php
+use Orisai\ObjectMapper\MappedObject;
+use Orisai\ObjectMapper\Attributes\Callbacks\After;
+use Orisai\ObjectMapper\Attributes\Expect\StringValue;
+use Orisai\ObjectMapper\Exception\ValueDoesNotMatch;
+use Orisai\ObjectMapper\Types\Value;
+
+final class WithNotReturningCallbackInput extends MappedObject
+{
+
+	/**
+     * @StringValue()
+     * @After("afterRemoved")
+     */
+	public string $removed;
+
+	public static function afterRemoved(string $value): void
+	{
+		throw ValueDoesNotMatch::createFromString('Field is removed', Value::of($value));
+	}
+
+}
+```
+
+### Dependencies
+
+> To use this feature, check [object creator](#object-creator)
+
+Mapped objects can request dependencies in constructor for extended validation in callbacks:
+
+```php
+use Orisai\ObjectMapper\MappedObject;
+use Orisai\ObjectMapper\Attributes\Callbacks\After;
+use Orisai\ObjectMapper\Attributes\Expect\MixedValue;
+use Orisai\ObjectMapper\Exception\ValueDoesNotMatch;
+use Orisai\ObjectMapper\Types\Value;
+
+final class WithComplexCallbackInput extends MappedObject
+{
+
+	private ExampleService $service;
+
+	public function __construct(ExampleService $service)
+	{
+		$this->service = $service;
+	}
+
+	/**
+     * @MixedValue()
+     * @After("afterField")
+     */
+	public $field;
+
+	/**
+     * @param mixed $value
+     * @return mixed
+     */
+	public function afterField($value)
+	{
+		if (!$this->service->valueMatchesCriteria($value)) {
+			throw ValueDoesNotMatch::createFromString('Value does not match criteria ABC.', Value::of($value))
+		}
+
+		return $value;
+	}
+
+}
+```
+
+### Callback context
+
+Both [mapped object callbacks](#structure--mapped-object-callbacks) and [field callbacks](#field-callbacks) have
+additional context available as a second parameter, for extended processing:
+
+Mapped object and field contexts
+
+```php
+$context->getProcessor(); // Processor
+$context->getOptions(); // Options
+$context->shouldMapDataToObjects(); // bool
+$context->getType(); // Type
+```
+
+Field context
+
+```php
+$context->hasDefaultValue(); // bool
+$context->getDefaultValue(); // mixed|exception
+$context->getFieldName(); // int|string
+$context->getPropertyName(); // string
+```
+
+## Object creator
+
+Class responsible for creating objects and injecting [dependencies](#dependencies)
+is `Orisai\ObjectMapper\Processing\ObjectCreator`. Default
+implementation `Orisai\ObjectMapper\Processing\DefaultObjectCreator` does not have ability to inject dependencies, and
+we have to use different one for that use-case:
+
+- `Orisai\ObjectMapper\Bridge\NetteDI\LazyObjectCreator` - injects autowired dependencies
+  from [Nette DIC](https://github.com/nette/di)
+- Implement `Orisai\ObjectMapper\Processing\ObjectCreator` ourself
