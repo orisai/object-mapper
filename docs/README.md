@@ -50,7 +50,7 @@ Expects bool
 use Orisai\ObjectMapper\Attributes\Expect\BoolValue;
 use Orisai\ObjectMapper\MappedObject;
 
-final class Input extends MappedObject
+final class BoolInput extends MappedObject
 {
 
     /** @BoolValue() */
@@ -67,7 +67,7 @@ $data = [
 	'field' => true,
 	'anotherField' => 1,
 ];
-$processor->process($data, Input::class); // Input
+$processor->process($data, BoolInput::class); // BoolInput
 ```
 
 Parameters:
@@ -85,7 +85,7 @@ Expects any of values from given list
 use Orisai\ObjectMapper\Attributes\Expect\ArrayEnumValue;
 use Orisai\ObjectMapper\MappedObject;
 
-final class Input extends MappedObject
+final class ArrayEnumInput extends MappedObject
 {
 
     public const VALUES = [
@@ -112,7 +112,7 @@ $data = [
 	'field' => 1,
 	'anotherField' => 'first',
 ];
-$processor->process($data, Input::class); // Input
+$processor->process($data, ArrayEnumInput::class); // ArrayEnumInput
 ```
 
 Parameters:
@@ -131,7 +131,7 @@ Expects float or int
 use Orisai\ObjectMapper\Attributes\Expect\FloatValue;
 use Orisai\ObjectMapper\MappedObject;
 
-final class Input extends MappedObject
+final class FloatInput extends MappedObject
 {
 
     /** @FloatValue() */
@@ -151,7 +151,7 @@ $data = [
 	'field' => 666.666,
 	'anotherField' => '6.66',
 ];
-$processor->process($data, Input::class); // Input
+$processor->process($data, FloatInput::class); // FloatInput
 ```
 
 Parameters:
@@ -177,14 +177,14 @@ Parameters:
 
 Expects an instance of specified class or interface
 
-- Use [Object rule](#object-rule) to accept any object
+- Use [object rule](#object-rule) to accept any object
 
 ```php
 use Orisai\ObjectMapper\Attributes\Expect\InstanceOfValue;
 use Orisai\ObjectMapper\MappedObject;
 use stdClass;
 
-final class Input extends MappedObject
+final class InstanceofInput extends MappedObject
 {
 
     /** @InstanceOfValue(stdClass::class) */
@@ -197,7 +197,7 @@ final class Input extends MappedObject
 $data = [
 	'field' => new stdClass(),
 ];
-$processor->process($data, Input::class); // Input
+$processor->process($data, InstanceofInput::class); // InstanceofInput
 ```
 
 Parameters:
@@ -215,7 +215,7 @@ Expects int
 use Orisai\ObjectMapper\Attributes\Expect\IntValue;
 use Orisai\ObjectMapper\MappedObject;
 
-final class Input extends MappedObject
+final class IntInput extends MappedObject
 {
 
     /** @IntValue() */
@@ -235,7 +235,7 @@ $data = [
 	'field' => 666,
 	'anotherField' => '42',
 ];
-$processor->process($data, Input::class); // Input
+$processor->process($data, IntInput::class); // IntInput
 ```
 
 Parameters:
@@ -265,7 +265,7 @@ Expects any value
 use Orisai\ObjectMapper\Attributes\Expect\MixedValue;
 use Orisai\ObjectMapper\MappedObject;
 
-final class Input extends MappedObject
+final class MixedInput extends MappedObject
 {
 
     /**
@@ -281,7 +281,7 @@ final class Input extends MappedObject
 $data = [
 	'field' => 'anything',
 ];
-$processor->process($data, Input::class); // Input
+$processor->process($data, MixedInput::class); // MixedInput
 ```
 
 Parameters:
@@ -296,7 +296,7 @@ Expects null
 use Orisai\ObjectMapper\Attributes\Expect\NullValue;
 use Orisai\ObjectMapper\MappedObject;
 
-final class Input extends MappedObject
+final class NullInput extends MappedObject
 {
 
     /**
@@ -319,7 +319,7 @@ $data = [
 	'field' => null,
 	'anotherField' => '',
 ];
-$processor->process($data, Input::class); // Input
+$processor->process($data, NullInput::class); // NullInput
 ```
 
 Parameters:
@@ -340,7 +340,7 @@ Expects any object
 use Orisai\ObjectMapper\Attributes\Expect\ObjectValue;
 use Orisai\ObjectMapper\MappedObject;
 
-final class Input extends MappedObject
+final class ObjectInput extends MappedObject
 {
 
     /** @ObjectValue() */
@@ -353,7 +353,7 @@ final class Input extends MappedObject
 $data = [
 	'field' => $anyObject,
 ];
-$processor->process($data, Input::class); // Input
+$processor->process($data, ObjectInput::class); // ObjectInput
 ```
 
 Parameters:
@@ -368,7 +368,7 @@ Expects any scalar value - int|float|string|bool
 use Orisai\ObjectMapper\Attributes\Expect\ScalarValue;
 use Orisai\ObjectMapper\MappedObject;
 
-final class Input extends MappedObject
+final class ScalarInput extends MappedObject
 {
 
     /**
@@ -384,7 +384,7 @@ final class Input extends MappedObject
 $data = [
 	'field' => 'any scalar value',
 ];
-$processor->process($data, Input::class); // Input
+$processor->process($data, ScalarInput::class); // ScalarInput
 ```
 
 Parameters:
@@ -399,7 +399,7 @@ Expects string
 use Orisai\ObjectMapper\Attributes\Expect\StringValue;
 use Orisai\ObjectMapper\MappedObject;
 
-final class Input extends MappedObject
+final class StringInput extends MappedObject
 {
 
     /** @StringValue() */
@@ -419,7 +419,7 @@ $data = [
 	'field' => 'string',
 	'anotherField' => 'abcdef',
 ];
-$processor->process($data, Input::class); // Input
+$processor->process($data, StringInput::class); // StringInput
 ```
 
 Parameters:
@@ -458,7 +458,7 @@ use Orisai\ObjectMapper\Attributes\Expect\StringValue;
 use Orisai\ObjectMapper\Attributes\Expect\Url;
 use Orisai\ObjectMapper\MappedObject;
 
-final class Input extends MappedObject
+final class AllOfInput extends MappedObject
 {
 
     /**
@@ -473,7 +473,7 @@ final class Input extends MappedObject
 ```
 
 ```php
-$processor->process(['field' => 'https://example.com'], Input::class); // Input
+$processor->process(['field' => 'https://example.com'], AllOfInput::class); // AllOfInput
 ```
 
 Parameters:
@@ -497,7 +497,7 @@ use Orisai\ObjectMapper\Attributes\Expect\NullValue;
 use Orisai\ObjectMapper\Attributes\Expect\StringValue;
 use Orisai\ObjectMapper\MappedObject;
 
-final class Input extends MappedObject
+final class AnyOfInput extends MappedObject
 {
 
     /**
@@ -514,9 +514,9 @@ final class Input extends MappedObject
 ```
 
 ```php
-$processor->process(['field' => 'string'], Input::class); // Input
-$processor->process(['field' => 123], Input::class); // Input
-$processor->process(['field' => null], Input::class); // Input
+$processor->process(['field' => 'string'], AnyOfInput::class); // AnyOfInput
+$processor->process(['field' => 123], AnyOfInput::class); // AnyOfInput
+$processor->process(['field' => null], AnyOfInput::class); // AnyOfInput
 ```
 
 Parameters:
@@ -536,7 +536,7 @@ use Orisai\ObjectMapper\Attributes\Expect\MixedValue;
 use Orisai\ObjectMapper\Attributes\Expect\StringValue;
 use Orisai\ObjectMapper\MappedObject;
 
-final class Input extends MappedObject
+final class ArrayOfInput extends MappedObject
 {
 
     /**
@@ -567,7 +567,7 @@ $data = [
 	'field' => ['anything', 1234, true, null],
 	'anotherField' => ['key1' => 1, 'key2' => 2],
 ];
-$processor->process($data, Input::class); // Input
+$processor->process($data, ArrayOfInput::class); // ArrayOfInput
 ```
 
 Parameters:
@@ -604,7 +604,7 @@ use Orisai\ObjectMapper\Attributes\Expect\StringValue;
 use Orisai\ObjectMapper\Attributes\Expect\MixedValue;
 use Orisai\ObjectMapper\MappedObject;
 
-final class Input extends MappedObject
+final class ListOfInput extends MappedObject
 {
 
     /**
@@ -634,7 +634,7 @@ $data = [
 	'field' => ['anything', 1234, true, null],
 	'anotherField' => ['one', 'two'],
 ];
-$processor->process($data, Input::class); // Input
+$processor->process($data, ListOfInput::class); // ListOfInput
 ```
 
 Parameters:
@@ -670,7 +670,7 @@ use DateTimeImmutable;
 use Orisai\ObjectMapper\Attributes\Expect\DateTimeValue;
 use Orisai\ObjectMapper\MappedObject;
 
-final class Input extends MappedObject
+final class DateTimeInput extends MappedObject
 {
 
     /** @DateTimeValue() */
@@ -687,7 +687,7 @@ $data = [
 	'field' => '2013-04-12T16:40:00-04:00',
 	'anotherField' => 1365799200,
 ];
-$processor->process($data, Input::class); // Input
+$processor->process($data, DateTimeInput::class); // DateTimeInput
 ```
 
 Parameters:
@@ -720,7 +720,7 @@ use Orisai\ObjectMapper\Attributes\Expect\MappedObjectValue;
 use Orisai\ObjectMapper\Attributes\Expect\StringValue;
 use Orisai\ObjectMapper\MappedObject;
 
-final class Input extends MappedObject
+final class MappedObjectInput extends MappedObject
 {
 
     /** @MappedObjectValue(InnerInput::class) */
@@ -745,7 +745,7 @@ $data = [
 		'field' => 'string',
 	],
 ];
-$processor->process($data, Input::class); // Input
+$processor->process($data, MappedObjectInput::class); // MappedObjectInput
 ```
 
 Parameters:
@@ -762,7 +762,7 @@ Expects valid url address
 use Orisai\ObjectMapper\Attributes\Expect\Url;
 use Orisai\ObjectMapper\MappedObject;
 
-final class Input extends MappedObject
+final class UrlInput extends MappedObject
 {
 
     /** @Url() */
@@ -775,7 +775,7 @@ final class Input extends MappedObject
 $data = [
 	'field' => 'https://example.com',
 ];
-$processor->process($data, Input::class); // Input
+$processor->process($data, UrlInput::class); // UrlInput
 ```
 
 Parameters:
@@ -790,7 +790,7 @@ Each field can be made optional by assigning default value to property:
 use Orisai\ObjectMapper\Attributes\Expect\StringValue;
 use Orisai\ObjectMapper\MappedObject;
 
-final class Input extends MappedObject
+final class OptionalInput extends MappedObject
 {
 
     /** @StringValue() */
@@ -806,7 +806,7 @@ which are impossible to send:
 use Orisai\ObjectMapper\Attributes\Expect\StringValue;
 use Orisai\ObjectMapper\MappedObject;
 
-final class Input extends MappedObject
+final class AnotherOptionalInput extends MappedObject
 {
 
     /** @StringValue() */
@@ -827,7 +827,7 @@ use Orisai\ObjectMapper\Attributes\Expect\NullValue;
 use Orisai\ObjectMapper\Attributes\Expect\StringValue;
 use Orisai\ObjectMapper\MappedObject;
 
-final class Input extends MappedObject
+final class NullableVariantsInput extends MappedObject
 {
 
     /**
@@ -898,7 +898,7 @@ Keys from input data (fields) are mapped to object properties of the same name, 
 use Orisai\ObjectMapper\Attributes\Expect\MixedValue;
 use Orisai\ObjectMapper\MappedObject;
 
-final class Input extends MappedObject
+final class DefaultMappingInput extends MappedObject
 {
 
     /**
@@ -914,7 +914,7 @@ final class Input extends MappedObject
 $data = [
 	'field' => 'anything',
 ];
-$processor->process($data, Input::class); // Input
+$processor->process($data, DefaultMappingInput::class); // DefaultMappingInput
 ```
 
 We may change that by defining field name for property:
@@ -924,7 +924,7 @@ use Orisai\ObjectMapper\Attributes\Expect\MixedValue;
 use Orisai\ObjectMapper\Attributes\Modifiers\FieldName;
 use Orisai\ObjectMapper\MappedObject;
 
-final class Input extends MappedObject
+final class CustomMappingInput extends MappedObject
 {
 
     /**
@@ -943,7 +943,7 @@ We then have to send key from `@FieldName` instead of property name:
 $data = [
 	'customFieldName' => 'anything',
 ];
-$processor->process($data, Input::class); // Input
+$processor->process($data, CustomMappingInput::class); // CustomMappingInput
 ```
 
 ## Processing modes
