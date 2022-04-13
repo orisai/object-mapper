@@ -4,14 +4,14 @@ namespace Orisai\ObjectMapper\Attributes\Expect;
 
 use Doctrine\Common\Annotations\Annotation\NamedArgumentConstructor;
 use Doctrine\Common\Annotations\Annotation\Target;
-use Orisai\ObjectMapper\Rules\ValueEnumRule;
+use Orisai\ObjectMapper\Rules\ArrayEnumRule;
 
 /**
  * @Annotation
  * @NamedArgumentConstructor()
  * @Target({"PROPERTY", "ANNOTATION"})
  */
-final class ValueEnum implements RuleAttribute
+final class ArrayEnumValue implements RuleAttribute
 {
 
 	/** @var array<mixed> */
@@ -30,7 +30,7 @@ final class ValueEnum implements RuleAttribute
 
 	public function getType(): string
 	{
-		return ValueEnumRule::class;
+		return ArrayEnumRule::class;
 	}
 
 	/**

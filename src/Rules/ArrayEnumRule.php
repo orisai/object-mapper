@@ -19,9 +19,9 @@ use function is_scalar;
 use function sprintf;
 
 /**
- * @phpstan-implements Rule<ValueEnumArgs>
+ * @phpstan-implements Rule<ArrayEnumArgs>
  */
-final class ValueEnumRule implements Rule
+final class ArrayEnumRule implements Rule
 {
 
 	public const
@@ -31,7 +31,7 @@ final class ValueEnumRule implements Rule
 	/**
 	 * {@inheritDoc}
 	 */
-	public function resolveArgs(array $args, RuleArgsContext $context): ValueEnumArgs
+	public function resolveArgs(array $args, RuleArgsContext $context): ArrayEnumArgs
 	{
 		$checker = new ArgsChecker($args, self::class);
 		$checker->checkAllowedArgs([self::VALUES, self::USE_KEYS]);
@@ -57,17 +57,17 @@ final class ValueEnumRule implements Rule
 			$useKeys = $checker->checkBool(self::USE_KEYS);
 		}
 
-		return new ValueEnumArgs($values, $useKeys);
+		return new ArrayEnumArgs($values, $useKeys);
 	}
 
 	public function getArgsType(): string
 	{
-		return ValueEnumArgs::class;
+		return ArrayEnumArgs::class;
 	}
 
 	/**
-	 * @param mixed $value
-	 * @param ValueEnumArgs $args
+	 * @param mixed         $value
+	 * @param ArrayEnumArgs $args
 	 * @return mixed
 	 * @throws ValueDoesNotMatch
 	 */
@@ -81,7 +81,7 @@ final class ValueEnumRule implements Rule
 	}
 
 	/**
-	 * @param ValueEnumArgs $args
+	 * @param ArrayEnumArgs $args
 	 */
 	public function createType(Args $args, TypeContext $context): EnumType
 	{
@@ -91,7 +91,7 @@ final class ValueEnumRule implements Rule
 	/**
 	 * @return array<mixed>
 	 */
-	private function getEnumValues(ValueEnumArgs $args): array
+	private function getEnumValues(ArrayEnumArgs $args): array
 	{
 		return $args->useKeys
 			? array_keys($args->values)

@@ -7,7 +7,7 @@ use Orisai\ObjectMapper\Args\Args;
 /**
  * @internal
  */
-final class ValueEnumArgs implements Args
+final class ArrayEnumArgs implements Args
 {
 
 	/** @var array<int|string, mixed> */

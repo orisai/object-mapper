@@ -22,7 +22,7 @@ interface RuleManager
 		ScalarRule::class,
 		StringRule::class,
 		UrlRule::class,
-		ValueEnumRule::class,
+		ArrayEnumRule::class,
 	];
 
 	/**

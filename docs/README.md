@@ -82,7 +82,7 @@ Parameters:
 Expects any of values from given list
 
 ```php
-use Orisai\ObjectMapper\Attributes\Expect\ValueEnum;
+use Orisai\ObjectMapper\Attributes\Expect\ArrayEnumValue;
 use Orisai\ObjectMapper\MappedObject;
 
 final class Input extends MappedObject
@@ -95,12 +95,12 @@ final class Input extends MappedObject
     ];
 
     /**
-     * @ValueEnum(Input::VALUES)
+     * @ArrayEnumValue(Input::VALUES)
      */
     public int $field;
 
     /**
-     * @ValueEnum(values=Input::VALUES, useKeys=true)
+     * @ArrayEnumValue(values=Input::VALUES, useKeys=true)
      */
     public string $anotherField;
 
