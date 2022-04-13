@@ -5,7 +5,7 @@ namespace Tests\Orisai\ObjectMapper\Doubles;
 use Orisai\ObjectMapper\Attributes\Expect\AnyOf;
 use Orisai\ObjectMapper\Attributes\Expect\BoolValue;
 use Orisai\ObjectMapper\Attributes\Expect\FloatValue;
-use Orisai\ObjectMapper\Attributes\Expect\InstanceValue;
+use Orisai\ObjectMapper\Attributes\Expect\InstanceOfValue;
 use Orisai\ObjectMapper\Attributes\Expect\IntValue;
 use Orisai\ObjectMapper\Attributes\Expect\NullValue;
 use Orisai\ObjectMapper\MappedObject;
@@ -25,7 +25,7 @@ final class TransformingVO extends MappedObject
 
 	/**
 	 * @AnyOf({
-	 *     @InstanceValue(stdClass::class),
+	 *     @InstanceOfValue(stdClass::class),
 	 *     @NullValue(castEmptyString=true)
 	 * })
 	 */

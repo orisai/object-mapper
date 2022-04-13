@@ -11,7 +11,7 @@ use Orisai\ObjectMapper\Rules\InstanceRule;
  * @NamedArgumentConstructor()
  * @Target({"PROPERTY", "ANNOTATION"})
  */
-final class InstanceValue implements RuleAttribute
+final class InstanceOfValue implements RuleAttribute
 {
 
 	/** @var class-string */

@@ -4,7 +4,7 @@ namespace Tests\Orisai\ObjectMapper\Doubles;
 
 use DateTimeImmutable;
 use Orisai\ObjectMapper\Attributes\Expect\DateTimeValue;
-use Orisai\ObjectMapper\Attributes\Expect\InstanceValue;
+use Orisai\ObjectMapper\Attributes\Expect\InstanceOfValue;
 use Orisai\ObjectMapper\Attributes\Expect\MappedObjectValue;
 use Orisai\ObjectMapper\MappedObject;
 use stdClass;
@@ -15,7 +15,7 @@ final class InitializingVO extends MappedObject
 	/** @DateTimeValue() */
 	public DateTimeImmutable $datetime;
 
-	/** @InstanceValue(type=stdClass::class) */
+	/** @InstanceOfValue(type=stdClass::class) */
 	public stdClass $instance;
 
 	/** @MappedObjectValue(DefaultsVO::class) */

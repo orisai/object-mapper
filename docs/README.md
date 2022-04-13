@@ -180,14 +180,14 @@ Expects an instance of specified class or interface
 - Use [Object rule](#object-rule) to accept any object
 
 ```php
-use Orisai\ObjectMapper\Attributes\Expect\InstanceValue;
+use Orisai\ObjectMapper\Attributes\Expect\InstanceOfValue;
 use Orisai\ObjectMapper\MappedObject;
 use stdClass;
 
 final class Input extends MappedObject
 {
 
-    /** @InstanceValue(stdClass::class) */
+    /** @InstanceOfValue(stdClass::class) */
     public stdClass $field;
 
 }
