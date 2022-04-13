@@ -4,7 +4,7 @@ namespace Orisai\ObjectMapper\Printers;
 
 use Orisai\ObjectMapper\Types\Type;
 
-interface TypePrinter extends StructurePrinter
+interface TypePrinter extends MappedObjectPrinter
 {
 
 	/**

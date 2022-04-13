@@ -5,14 +5,14 @@ namespace Orisai\ObjectMapper\Attributes\Expect;
 use Doctrine\Common\Annotations\Annotation\NamedArgumentConstructor;
 use Doctrine\Common\Annotations\Annotation\Target;
 use Orisai\ObjectMapper\MappedObject;
-use Orisai\ObjectMapper\Rules\StructureRule;
+use Orisai\ObjectMapper\Rules\MappedObjectRule;
 
 /**
  * @Annotation
  * @NamedArgumentConstructor()
  * @Target({"PROPERTY", "ANNOTATION"})
  */
-final class Structure implements RuleAttribute
+final class MappedObjectValue implements RuleAttribute
 {
 
 	/** @var class-string<MappedObject> */
@@ -28,7 +28,7 @@ final class Structure implements RuleAttribute
 
 	public function getType(): string
 	{
-		return StructureRule::class;
+		return MappedObjectRule::class;
 	}
 
 	/**

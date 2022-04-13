@@ -5,7 +5,7 @@ namespace Orisai\ObjectMapper\Types;
 use Orisai\ObjectMapper\Exception\WithTypeAndValue;
 use Orisai\ObjectMapper\MappedObject;
 
-final class StructureType implements Type
+final class MappedObjectType implements Type
 {
 
 	private bool $isInvalid = false;

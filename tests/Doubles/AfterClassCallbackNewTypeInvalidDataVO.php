@@ -7,8 +7,8 @@ use Orisai\ObjectMapper\Attributes\Expect\StringValue;
 use Orisai\ObjectMapper\Exception\InvalidData;
 use Orisai\ObjectMapper\Exception\ValueDoesNotMatch;
 use Orisai\ObjectMapper\MappedObject;
+use Orisai\ObjectMapper\Types\MappedObjectType;
 use Orisai\ObjectMapper\Types\MessageType;
-use Orisai\ObjectMapper\Types\StructureType;
 use Orisai\ObjectMapper\Types\Value;
 
 /**
@@ -25,7 +25,7 @@ final class AfterClassCallbackNewTypeInvalidDataVO extends MappedObject
 	 */
 	public static function after(): void
 	{
-		$type = new StructureType(EmptyVO::class);
+		$type = new MappedObjectType(EmptyVO::class);
 		$type->addError(
 			ValueDoesNotMatch::create(
 				new MessageType('test'),

@@ -11,15 +11,15 @@ use Orisai\ObjectMapper\Exception\InvalidData;
 use Orisai\ObjectMapper\MappedObject;
 use Orisai\ObjectMapper\Modifiers\FieldNameArgs;
 use Orisai\ObjectMapper\Modifiers\FieldNameModifier;
-use Orisai\ObjectMapper\Types\StructureType;
+use Orisai\ObjectMapper\Types\MappedObjectType;
 use function array_keys;
 use function assert;
 use function is_a;
 
 /**
- * @phpstan-implements Rule<StructureArgs>
+ * @phpstan-implements Rule<MappedObjectArgs>
  */
-final class StructureRule implements Rule
+final class MappedObjectRule implements Rule
 {
 
 	public const TYPE = 'type';
@@ -27,7 +27,7 @@ final class StructureRule implements Rule
 	/**
 	 * {@inheritDoc}
 	 */
-	public function resolveArgs(array $args, RuleArgsContext $context): StructureArgs
+	public function resolveArgs(array $args, RuleArgsContext $context): MappedObjectArgs
 	{
 		$checker = new ArgsChecker($args, self::class);
 
@@ -36,22 +36,22 @@ final class StructureRule implements Rule
 		$checker->checkRequiredArg(self::TYPE);
 		$type = $checker->checkString(self::TYPE);
 
-		// Load structure to ensure whole hierarchy is valid even if not used
+		// Load object to ensure whole hierarchy is valid even if not used
 		// Note: Loading as class should be always array cached and in runtime should be metadata resolved only once so it has no performance impact
 		$context->getMetaLoader()->load($args[self::TYPE]);
 		assert(is_a($type, MappedObject::class, true));
 
-		return new StructureArgs($type);
+		return new MappedObjectArgs($type);
 	}
 
 	public function getArgsType(): string
 	{
-		return StructureArgs::class;
+		return MappedObjectArgs::class;
 	}
 
 	/**
-	 * @param mixed         $value
-	 * @param StructureArgs $args
+	 * @param mixed            $value
+	 * @param MappedObjectArgs $args
 	 * @return MappedObject|array<mixed>
 	 * @throws InvalidData
 	 */
@@ -65,14 +65,14 @@ final class StructureRule implements Rule
 	}
 
 	/**
-	 * @param StructureArgs $args
+	 * @param MappedObjectArgs $args
 	 */
-	public function createType(Args $args, TypeContext $context): StructureType
+	public function createType(Args $args, TypeContext $context): MappedObjectType
 	{
 		$propertiesMeta = $context->getMeta($args->type)->getProperties();
 		$propertyNames = array_keys($propertiesMeta);
 
-		$type = new StructureType($args->type);
+		$type = new MappedObjectType($args->type);
 
 		foreach ($propertyNames as $propertyName) {
 			$propertyMeta = $propertiesMeta[$propertyName];

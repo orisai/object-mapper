@@ -8,9 +8,9 @@ use Orisai\ObjectMapper\Types\ArrayType;
 use Orisai\ObjectMapper\Types\CompoundType;
 use Orisai\ObjectMapper\Types\EnumType;
 use Orisai\ObjectMapper\Types\ListType;
+use Orisai\ObjectMapper\Types\MappedObjectType;
 use Orisai\ObjectMapper\Types\MessageType;
 use Orisai\ObjectMapper\Types\SimpleValueType;
-use Orisai\ObjectMapper\Types\StructureType;
 use PHPUnit\Framework\TestCase;
 
 /**
@@ -159,7 +159,7 @@ final class TypeVisualPrinterTest extends TestCase
 
 	public function testStructure(): void
 	{
-		$type1 = new StructureType(MappedObject::class);
+		$type1 = new MappedObjectType(MappedObject::class);
 		$type1->addField('0', new SimpleValueType('t'));
 		$type1->addField('a', new SimpleValueType('t'));
 

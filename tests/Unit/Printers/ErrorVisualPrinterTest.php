@@ -10,9 +10,9 @@ use Orisai\ObjectMapper\Types\ArrayType;
 use Orisai\ObjectMapper\Types\CompoundType;
 use Orisai\ObjectMapper\Types\EnumType;
 use Orisai\ObjectMapper\Types\ListType;
+use Orisai\ObjectMapper\Types\MappedObjectType;
 use Orisai\ObjectMapper\Types\MessageType;
 use Orisai\ObjectMapper\Types\SimpleValueType;
-use Orisai\ObjectMapper\Types\StructureType;
 use Orisai\ObjectMapper\Types\Value;
 use PHPUnit\Framework\TestCase;
 
@@ -312,7 +312,7 @@ final class ErrorVisualPrinterTest extends TestCase
 
 	public function testStructureValid(): void
 	{
-		$type1 = new StructureType(MappedObject::class);
+		$type1 = new MappedObjectType(MappedObject::class);
 		$type1->addField('0', new SimpleValueType('t'));
 		$type1->addField('a', new SimpleValueType('t'));
 
@@ -326,11 +326,11 @@ final class ErrorVisualPrinterTest extends TestCase
 
 	public function testStructureInvalid(): void
 	{
-		$fieldType1 = new StructureType(MappedObject::class);
+		$fieldType1 = new MappedObjectType(MappedObject::class);
 		$fieldType1->addField('foo', new SimpleValueType('t'));
 		$fieldType1->addField('bar', new SimpleValueType('t'));
 
-		$type1 = new StructureType(MappedObject::class);
+		$type1 = new MappedObjectType(MappedObject::class);
 		$type1->addField('0', new SimpleValueType('t'));
 		$type1->addField('a', new SimpleValueType('t'));
 		$type1->addField('b', $fieldType1);
@@ -379,11 +379,11 @@ Whole structure is invalid',
 
 	public function testStructureFieldsInvalid(): void
 	{
-		$fieldType1 = new StructureType(MappedObject::class);
+		$fieldType1 = new MappedObjectType(MappedObject::class);
 		$fieldType1->addField('foo', new SimpleValueType('t'));
 		$fieldType1->addField('bar', new SimpleValueType('t'));
 
-		$fieldType1Invalid = new StructureType(MappedObject::class);
+		$fieldType1Invalid = new MappedObjectType(MappedObject::class);
 		$fieldType1Invalid->addField('foo', new SimpleValueType('t'));
 		$fieldType1Invalid->addField('bar', new SimpleValueType('t'));
 		$fieldType1Invalid->overwriteInvalidField(
@@ -391,7 +391,7 @@ Whole structure is invalid',
 			ValueDoesNotMatch::create(new SimpleValueType('overwritten'), Value::none()),
 		);
 
-		$type1 = new StructureType(MappedObject::class);
+		$type1 = new MappedObjectType(MappedObject::class);
 		$type1->addField('0', new SimpleValueType('t'));
 		$type1->addField('a', new SimpleValueType('t'));
 		$type1->addField('b', $fieldType1);

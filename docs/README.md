@@ -14,12 +14,12 @@ Raw data mapping to validated objects
 	- [Instance of type](#instance-of-type-rule)
 	- [Int](#int-rule)
 	- [List of items](#list-of-items-rule)
+	- [Mapped object](#mapped-object-rule)
 	- [Mixed](#mixed-rule)
 	- [Null](#null-rule)
 	- [Object](#object-rule)
 	- [Scalar](#scalar-rule)
 	- [String](#string-rule)
-	- [Structure / Mapped object](#structure--mapped-object-rule)
 	- [Url](#url-rule)
 	- [Enum from values](#enum-from-values-rule)
 - [Optional fields and default values](#optional-fields-and-default-values)
@@ -28,7 +28,7 @@ Raw data mapping to validated objects
 	- [All fields are required](#all-fields-are-required)
 	- [No fields are required](#no-fields-are-required)
 - [Callbacks](#callbacks)
-	- [Structure / mapped object callbacks](#structure--mapped-object-callbacks)
+	- [Mapped object callbacks](#mapped-object-callbacks)
 	- [Field callbacks](#field-callbacks)
 	- [Returned value](#returned-value)
 	- [Dependencies](#dependencies)
@@ -461,6 +461,56 @@ Parameters:
 	- merge default value into array after it is validated
 	- default `false` - default is not merged
 
+### Mapped object rule
+
+Expects array with structure defined by a mapped object
+
+- Returns instance of `MappedObject`
+- Mapped object is initialized even when field is not sent at all. It tries to initialize object with an empty
+  array (`[]`) to auto-initialize object whose fields are all optional.
+	- Object inside a compound rule ([all of](#all-of-rules), [any of](#any-of-rules)) is not auto-initialized.
+	- Object is also not auto-initialized when [processing mode](#processing-modes) requires none of values or all
+	  values to be sent
+
+```php
+use Orisai\ObjectMapper\Attributes\Expect\MappedObjectValue;
+use Orisai\ObjectMapper\Attributes\Expect\StringValue;
+use Orisai\ObjectMapper\MappedObject;
+
+final class Input extends MappedObject
+{
+
+    /** @MappedObjectValue(InnerInput::class) */
+    public InnerInput $field;
+
+}
+
+class InnerInput extends MappedObject
+{
+
+    /**
+     * @StringValue()
+     */
+    public string $field;
+
+}
+```
+
+```php
+$data = [
+	'field' => [
+		'field' => 'string',
+	],
+];
+$processor->process($data, Input::class); // Input
+```
+
+Parameters:
+
+- `type`
+	- subclass of `MappedObject` which should be created
+	- required
+
 ### Mixed rule
 
 Expects any value
@@ -644,56 +694,6 @@ Parameters:
 	- regex pattern which must match
 	- default `null` - no validation by pattern
 	- e.g. `/[\s\S]/`
-
-### Structure / Mapped object rule
-
-Expects array with structure defined by a mapped object
-
-- Returns instance of `MappedObject`
-- Structure is initialized even when field is not sent at all. It tries to initialize structure with an empty
-  array (`[]`) to auto-initialize structure whose fields are all optional.
-	- Structures inside a compound rule ([all of](#all-of-rules), [any of](#any-of-rules)) are not auto-initialized.
-	- Structures are also not auto-initialized when validation mode requires none of values or all values to be sent
-	  (including defaults)
-
-```php
-use Orisai\ObjectMapper\Attributes\Expect\StringValue;
-use Orisai\ObjectMapper\Attributes\Expect\Structure;
-use Orisai\ObjectMapper\MappedObject;
-
-final class Input extends MappedObject
-{
-
-    /** @Structure(InnerInput::class) */
-    public InnerInput $field;
-
-}
-
-class InnerInput extends MappedObject
-{
-
-    /**
-     * @StringValue()
-     */
-    public string $field;
-
-}
-```
-
-```php
-$data = [
-	'field' => [
-		'field' => 'string',
-	],
-];
-$processor->process($data, Input::class); // Input
-```
-
-Parameters:
-
-- `type`
-	- subclass of `MappedObject` which should be created
-	- required
 
 ### Url rule
 
@@ -969,7 +969,7 @@ $input->optional; // true, default
 ### All fields are required
 
 Send all fields, including these with default values and (with default
-mode) [auto-initialized](#structure--mapped-object-rule) mapped objects .
+mode) [auto-initialized](#mapped-object-rule) mapped objects .
 
 ```php
 use Orisai\ObjectMapper\Processing\Options;
@@ -994,7 +994,7 @@ We can make all fields optional. This is useful for partial updates, like PATCH 
 fields are sent, and we have to check which ones are available with `$mappedObject->isInitialized('property');`.
 
 Unlike with default mode, mapped object are not auto-initialized as described
-under [mapped object rule](#structure--mapped-object-rule). At least empty array (`[]`) should be sent to initialize
+under [mapped object rule](#mapped-object-rule). At least empty array (`[]`) should be sent to initialize
 them.
 
 Even default values, when not sent, are not initialized - they are unset before assigning sent data.
@@ -1050,7 +1050,7 @@ In [field callbacks](#field-callbacks), current field name can be accessed via [
 
 Callbacks can be both static and non-static, object mapper initializes object to call non-static callbacks when needed.
 
-### Structure / mapped object callbacks
+### Mapped object callbacks
 
 Modify and check data before and after processing fields with their rules
 
@@ -1073,7 +1073,7 @@ After mapped object
 use Orisai\ObjectMapper\MappedObject;
 use Orisai\ObjectMapper\Attributes\Callbacks\Before;
 use Orisai\ObjectMapper\Attributes\Callbacks\After;
-use Orisai\ObjectMapper\Context\FieldSetContext;
+use Orisai\ObjectMapper\Context\MappedObjectContext;
 
 /**
  * @Before("beforeObject")
@@ -1086,7 +1086,7 @@ final class WithMappedObjectCallbacksInput extends MappedObject
      * @param mixed $value
      * @return mixed
      */
-	public static function beforeObject($value, FieldSetContext $context)
+	public static function beforeObject($value, MappedObjectContext $context)
 	{
 		return $value;
 	}
@@ -1095,7 +1095,7 @@ final class WithMappedObjectCallbacksInput extends MappedObject
      * @param array<int|string, mixed> $value
      * @return array<int|string, mixed>
      */
-	public static function afterObject(array $value, FieldSetContext $context): array
+	public static function afterObject(array $value, MappedObjectContext $context): array
 	{
 		return $value;
 	}
@@ -1291,7 +1291,7 @@ final class WithComplexCallbackInput extends MappedObject
 
 ### Callback context
 
-Both [mapped object callbacks](#structure--mapped-object-callbacks) and [field callbacks](#field-callbacks) have
+Both [mapped object callbacks](#mapped-object-callbacks) and [field callbacks](#field-callbacks) have
 additional context available as a second parameter, for extended processing:
 
 Mapped object and field contexts

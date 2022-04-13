@@ -10,10 +10,10 @@ use Orisai\ObjectMapper\Meta\DefaultMetaSourceManager;
 use Orisai\ObjectMapper\Meta\MetaLoader;
 use Orisai\ObjectMapper\Printers\DefaultValuesArrayPrinter;
 use Orisai\ObjectMapper\Rules\DefaultRuleManager;
+use Orisai\ObjectMapper\Rules\MappedObjectArgs;
+use Orisai\ObjectMapper\Rules\MappedObjectRule;
 use Orisai\ObjectMapper\Rules\RuleManager;
-use Orisai\ObjectMapper\Rules\StructureArgs;
-use Orisai\ObjectMapper\Rules\StructureRule;
-use Orisai\ObjectMapper\Types\StructureType;
+use Orisai\ObjectMapper\Types\MappedObjectType;
 use PHPUnit\Framework\TestCase;
 use Tests\Orisai\ObjectMapper\Doubles\DefaultsVO;
 use Tests\Orisai\ObjectMapper\Doubles\NoDefaultsVO;
@@ -45,13 +45,13 @@ final class DefaultValuesArrayPrinterTest extends TestCase
 	/**
 	 * @param class-string<MappedObject> $class
 	 */
-	private function createType(string $class): StructureType
+	private function createType(string $class): MappedObjectType
 	{
-		$type = $this->ruleManager->getRule(StructureRule::class)->createType(
-			new StructureArgs($class),
+		$type = $this->ruleManager->getRule(MappedObjectRule::class)->createType(
+			new MappedObjectArgs($class),
 			new TypeContext($this->metaLoader, $this->ruleManager),
 		);
-		self::assertInstanceOf(StructureType::class, $type);
+		self::assertInstanceOf(MappedObjectType::class, $type);
 
 		return $type;
 	}

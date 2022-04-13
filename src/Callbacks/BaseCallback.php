@@ -9,7 +9,7 @@ use Orisai\ObjectMapper\Args\ArgsChecker;
 use Orisai\ObjectMapper\Context\ArgsContext;
 use Orisai\ObjectMapper\Context\BaseFieldContext;
 use Orisai\ObjectMapper\Context\FieldContext;
-use Orisai\ObjectMapper\Context\FieldSetContext;
+use Orisai\ObjectMapper\Context\MappedObjectContext;
 use Orisai\ObjectMapper\MappedObject;
 use Orisai\ObjectMapper\Processing\ObjectHolder;
 use ReflectionClass;
@@ -160,8 +160,8 @@ abstract class BaseCallback implements Callback
 		$returnType = $method->getReturnType();
 
 		if ($property === null) { // Class method
-			// beforeClass(<nothing>|mixed $data, FieldSetContext $context): <anything>
-			// afterClass(array $data, FieldSetContext $context): array|void|never
+			// beforeClass(<nothing>|mixed $data, MappedObjectContext $context): <anything>
+			// afterClass(array $data, MappedObjectContext $context): array|void|never
 
 			if ($paramData !== null) {
 				$type = self::getTypeName($paramData->getType());
@@ -188,7 +188,7 @@ abstract class BaseCallback implements Callback
 
 			if ($paramContext !== null && (
 					($type = self::getTypeName($paramContext->getType())) === null
-					|| !is_a($type, FieldSetContext::class, true)
+					|| !is_a($type, MappedObjectContext::class, true)
 				)
 			) {
 				throw InvalidArgument::create()
@@ -196,7 +196,7 @@ abstract class BaseCallback implements Callback
 						'Second parameter of class callback method %s::%s should have "%s" (or child class) type instead of %s',
 						$class->getName(),
 						$method->getName(),
-						FieldSetContext::class,
+						MappedObjectContext::class,
 						$type ?? 'none',
 					));
 			}
@@ -263,9 +263,9 @@ abstract class BaseCallback implements Callback
 	}
 
 	/**
-	 * @param mixed                        $data
-	 * @param BaseCallbackArgs             $args
-	 * @param FieldContext|FieldSetContext $context
+	 * @param mixed                            $data
+	 * @param BaseCallbackArgs                 $args
+	 * @param FieldContext|MappedObjectContext $context
 	 * @return mixed
 	 */
 	public static function invoke($data, Args $args, ObjectHolder $holder, BaseFieldContext $context)

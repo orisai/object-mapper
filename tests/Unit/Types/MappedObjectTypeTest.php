@@ -3,25 +3,25 @@
 namespace Tests\Orisai\ObjectMapper\Unit\Types;
 
 use Orisai\ObjectMapper\Exception\ValueDoesNotMatch;
+use Orisai\ObjectMapper\Types\MappedObjectType;
 use Orisai\ObjectMapper\Types\MessageType;
-use Orisai\ObjectMapper\Types\StructureType;
 use Orisai\ObjectMapper\Types\Value;
 use PHPUnit\Framework\TestCase;
 use Tests\Orisai\ObjectMapper\Doubles\DefaultsVO;
 
-final class StructureTypeTest extends TestCase
+final class MappedObjectTypeTest extends TestCase
 {
 
 	public function testClass(): void
 	{
-		$type = new StructureType(DefaultsVO::class);
+		$type = new MappedObjectType(DefaultsVO::class);
 
 		self::assertSame(DefaultsVO::class, $type->getClass());
 	}
 
 	public function testInvalid(): void
 	{
-		$type = new StructureType(DefaultsVO::class);
+		$type = new MappedObjectType(DefaultsVO::class);
 
 		self::assertFalse($type->isInvalid());
 		$type->markInvalid();
@@ -30,7 +30,7 @@ final class StructureTypeTest extends TestCase
 
 	public function testErrors(): void
 	{
-		$type = new StructureType(DefaultsVO::class);
+		$type = new MappedObjectType(DefaultsVO::class);
 
 		self::assertSame([], $type->getErrors());
 		self::assertFalse($type->hasErrors());
@@ -53,7 +53,7 @@ final class StructureTypeTest extends TestCase
 
 	public function testFields(): void
 	{
-		$type = new StructureType(DefaultsVO::class);
+		$type = new MappedObjectType(DefaultsVO::class);
 
 		self::assertSame([], $type->getFields());
 

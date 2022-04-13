@@ -6,19 +6,19 @@ use Orisai\ObjectMapper\Meta\MetaLoader;
 use Orisai\ObjectMapper\Processing\Options;
 use Orisai\ObjectMapper\Processing\Processor;
 use Orisai\ObjectMapper\Rules\RuleManager;
-use Orisai\ObjectMapper\Types\StructureType;
+use Orisai\ObjectMapper\Types\MappedObjectType;
 
-class FieldSetContext extends BaseFieldContext
+class MappedObjectContext extends BaseFieldContext
 {
 
-	private StructureType $type;
+	private MappedObjectType $type;
 
 	public function __construct(
 		MetaLoader $metaLoader,
 		RuleManager $ruleManager,
 		Processor $processor,
 		Options $options,
-		StructureType $type,
+		MappedObjectType $type,
 		bool $initializeObjects
 	)
 	{
@@ -26,7 +26,7 @@ class FieldSetContext extends BaseFieldContext
 		$this->type = $type;
 	}
 
-	public function getType(): StructureType
+	public function getType(): MappedObjectType
 	{
 		return $this->type;
 	}

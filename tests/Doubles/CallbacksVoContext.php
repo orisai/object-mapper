@@ -8,22 +8,22 @@ final class CallbacksVoContext
 {
 
 	/** @var class-string<MappedObject> */
-	private string $dynamicStructureType;
+	private string $objectType;
 
 	/**
-	 * @param class-string<MappedObject> $dynamicStructureType
+	 * @param class-string<MappedObject> $objectType
 	 */
-	public function __construct(string $dynamicStructureType)
+	public function __construct(string $objectType)
 	{
-		$this->dynamicStructureType = $dynamicStructureType;
+		$this->objectType = $objectType;
 	}
 
 	/**
 	 * @return class-string<MappedObject>
 	 */
-	public function getDynamicStructureType(): string
+	public function getObjectType(): string
 	{
-		return $this->dynamicStructureType;
+		return $this->objectType;
 	}
 
 }

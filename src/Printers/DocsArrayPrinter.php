@@ -6,12 +6,12 @@ use Orisai\ObjectMapper\Meta\MetaLoader;
 use Orisai\ObjectMapper\Meta\Runtime\SharedNodeRuntimeMeta;
 use Orisai\ObjectMapper\Types\ArrayType;
 use Orisai\ObjectMapper\Types\CompoundType;
+use Orisai\ObjectMapper\Types\MappedObjectType;
 use Orisai\ObjectMapper\Types\MultiValueType;
-use Orisai\ObjectMapper\Types\StructureType;
 use Orisai\ObjectMapper\Types\Type;
 use function array_key_exists;
 
-class DocsArrayPrinter implements StructurePrinter
+class DocsArrayPrinter implements MappedObjectPrinter
 {
 
 	private MetaLoader $metaLoader;
@@ -34,9 +34,9 @@ class DocsArrayPrinter implements StructurePrinter
 	/**
 	 * @return array<mixed>
 	 */
-	public function printType(StructureType $type): array
+	public function printType(MappedObjectType $type): array
 	{
-		return $this->printStructureType($type);
+		return $this->printMappedObjectType($type);
 	}
 
 	/**
@@ -44,8 +44,8 @@ class DocsArrayPrinter implements StructurePrinter
 	 */
 	private function print(Type $type): array
 	{
-		if ($type instanceof StructureType) {
-			return $this->printStructureType($type);
+		if ($type instanceof MappedObjectType) {
+			return $this->printMappedObjectType($type);
 		}
 
 		if ($type instanceof MultiValueType) {
@@ -62,7 +62,7 @@ class DocsArrayPrinter implements StructurePrinter
 	/**
 	 * @return array<mixed>
 	 */
-	private function printStructureType(StructureType $type): array
+	private function printMappedObjectType(MappedObjectType $type): array
 	{
 		$meta = $this->metaLoader->load($type->getClass());
 		$propertiesMeta = $meta->getProperties();
@@ -78,7 +78,7 @@ class DocsArrayPrinter implements StructurePrinter
 				'value' => $this->print($fieldType),
 			];
 
-			if (array_key_exists($fieldName, $defaults) && !$fieldType instanceof StructureType) {
+			if (array_key_exists($fieldName, $defaults) && !$fieldType instanceof MappedObjectType) {
 				$formattedField['default'] = $defaults[$fieldName];
 			}
 
@@ -86,7 +86,7 @@ class DocsArrayPrinter implements StructurePrinter
 		}
 
 		return [
-			'type' => 'structure',
+			'type' => 'mapped object',
 			'sourceClass' => $type->getClass(),
 			'docs' => $this->printDocs($meta->getClass()),
 			'fields' => $fields,
@@ -114,7 +114,7 @@ class DocsArrayPrinter implements StructurePrinter
 	 */
 	private function printCompoundType(CompoundType $type): array
 	{
-		if (!$this->compoundContainsStructures($type)) {
+		if (!$this->compoundContainsMappedObject($type)) {
 			return $this->printDefault($type);
 		}
 
@@ -158,14 +158,14 @@ class DocsArrayPrinter implements StructurePrinter
 		];
 	}
 
-	private function compoundContainsStructures(CompoundType $type): bool
+	private function compoundContainsMappedObject(CompoundType $type): bool
 	{
 		foreach ($type->getSubtypes() as $subtype) {
-			if ($subtype instanceof StructureType) {
+			if ($subtype instanceof MappedObjectType) {
 				return true;
 			}
 
-			if ($subtype instanceof MultiValueType && $this->multiValueContainsStructure($subtype)) {
+			if ($subtype instanceof MultiValueType && $this->multiValueContainsMappedObject($subtype)) {
 				return true;
 			}
 		}
@@ -173,15 +173,15 @@ class DocsArrayPrinter implements StructurePrinter
 		return false;
 	}
 
-	private function multiValueContainsStructure(MultiValueType $type): bool
+	private function multiValueContainsMappedObject(MultiValueType $type): bool
 	{
 		$item = $type->getItemType();
 
-		if ($item instanceof StructureType) {
+		if ($item instanceof MappedObjectType) {
 			return true;
 		}
 
-		return $item instanceof CompoundType && $this->compoundContainsStructures($item);
+		return $item instanceof CompoundType && $this->compoundContainsMappedObject($item);
 	}
 
 }

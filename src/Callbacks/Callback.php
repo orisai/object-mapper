@@ -6,7 +6,7 @@ use Orisai\ObjectMapper\Args\Args;
 use Orisai\ObjectMapper\Context\ArgsContext;
 use Orisai\ObjectMapper\Context\BaseFieldContext;
 use Orisai\ObjectMapper\Context\FieldContext;
-use Orisai\ObjectMapper\Context\FieldSetContext;
+use Orisai\ObjectMapper\Context\MappedObjectContext;
 use Orisai\ObjectMapper\Exception\InvalidData;
 use Orisai\ObjectMapper\Exception\ValueDoesNotMatch;
 use Orisai\ObjectMapper\MappedObject;
@@ -30,10 +30,10 @@ interface Callback
 	public static function getArgsType(): string;
 
 	/**
-	 * @param mixed                        $data
-	 * @param FieldContext|FieldSetContext $context
-	 * @param ObjectHolder<MappedObject>   $holder
-	 * @phpstan-param T_ARGS               $args
+	 * @param mixed                            $data
+	 * @param FieldContext|MappedObjectContext $context
+	 * @param ObjectHolder<MappedObject>       $holder
+	 * @phpstan-param T_ARGS                   $args
 	 * @return mixed
 	 * @throws ValueDoesNotMatch
 	 * @throws InvalidData

@@ -7,10 +7,10 @@ use Orisai\ObjectMapper\Types\ArrayType;
 use Orisai\ObjectMapper\Types\CompoundType;
 use Orisai\ObjectMapper\Types\EnumType;
 use Orisai\ObjectMapper\Types\ListType;
+use Orisai\ObjectMapper\Types\MappedObjectType;
 use Orisai\ObjectMapper\Types\MessageType;
 use Orisai\ObjectMapper\Types\ParametrizedType;
 use Orisai\ObjectMapper\Types\SimpleValueType;
-use Orisai\ObjectMapper\Types\StructureType;
 use Orisai\ObjectMapper\Types\Type;
 use function array_key_last;
 use function get_class;
@@ -48,17 +48,17 @@ class TypeVisualPrinter implements TypePrinter
 	public string $parameterKeyValueSeparator = ': ';
 
 	/**
-	 * Separator around all items (structures fields, invalid array and list keys)
+	 * Separator around all items (object fields, invalid array and list keys)
 	 */
 	public string $aroundItemsSeparator = PHP_EOL;
 
 	/**
-	 * Separator between items (structures fields, invalid array and list keys)
+	 * Separator between items (object fields, invalid array and list keys)
 	 */
 	public string $itemsSeparator = PHP_EOL;
 
 	/**
-	 * Indentation between items (structures fields, invalid array and list keys)
+	 * Indentation between items (object fields, invalid array and list keys)
 	 */
 	public string $itemsIndentation = "\t";
 
@@ -69,8 +69,8 @@ class TypeVisualPrinter implements TypePrinter
 
 	protected function print(Type $type, ?int $level): string
 	{
-		if ($type instanceof StructureType) {
-			return $this->printStructureType($type, $level);
+		if ($type instanceof MappedObjectType) {
+			return $this->printMappedObjectType($type, $level);
 		}
 
 		if ($type instanceof CompoundType) {
@@ -101,7 +101,7 @@ class TypeVisualPrinter implements TypePrinter
 			->withMessage(sprintf('Unsupported type %s', get_class($type)));
 	}
 
-	protected function printStructureType(StructureType $type, ?int $level): string
+	protected function printMappedObjectType(MappedObjectType $type, ?int $level): string
 	{
 		$formatted = '';
 		$innerLevel = $this->getInnerIndentationLevelCount($level);
@@ -133,7 +133,7 @@ class TypeVisualPrinter implements TypePrinter
 	/**
 	 * @return array<Type>
 	 */
-	protected function filterFields(StructureType $type): array
+	protected function filterFields(MappedObjectType $type): array
 	{
 		return $type->getFields();
 	}

@@ -4,21 +4,21 @@ namespace Tests\Orisai\ObjectMapper\Unit\Rules;
 
 use Orisai\ObjectMapper\Exception\InvalidData;
 use Orisai\ObjectMapper\Processing\Options;
-use Orisai\ObjectMapper\Rules\StructureArgs;
-use Orisai\ObjectMapper\Rules\StructureRule;
+use Orisai\ObjectMapper\Rules\MappedObjectArgs;
+use Orisai\ObjectMapper\Rules\MappedObjectRule;
 use Tests\Orisai\ObjectMapper\Doubles\DefaultsVO;
 use Tests\Orisai\ObjectMapper\Toolkit\RuleTestCase;
 use function array_keys;
 
-final class StructureRuleTest extends RuleTestCase
+final class MappedObjectRuleTest extends RuleTestCase
 {
 
-	private StructureRule $rule;
+	private MappedObjectRule $rule;
 
 	protected function setUp(): void
 	{
 		parent::setUp();
-		$this->rule = new StructureRule();
+		$this->rule = new MappedObjectRule();
 	}
 
 	public function testProcessValid(): void
@@ -28,7 +28,7 @@ final class StructureRuleTest extends RuleTestCase
 
 		$processed = $this->rule->processValue(
 			[],
-			new StructureArgs(DefaultsVO::class),
+			new MappedObjectArgs(DefaultsVO::class),
 			$this->fieldContext(null, $options),
 		);
 
@@ -39,7 +39,7 @@ final class StructureRuleTest extends RuleTestCase
 	{
 		$processed = $this->rule->processValue(
 			[],
-			new StructureArgs(DefaultsVO::class),
+			new MappedObjectArgs(DefaultsVO::class),
 			$this->fieldContext(null, null, true),
 		);
 
@@ -54,7 +54,7 @@ final class StructureRuleTest extends RuleTestCase
 		try {
 			$this->rule->processValue(
 				$value,
-				new StructureArgs(DefaultsVO::class),
+				new MappedObjectArgs(DefaultsVO::class),
 				$this->fieldContext(),
 			);
 		} catch (InvalidData $exception) {
@@ -69,7 +69,7 @@ final class StructureRuleTest extends RuleTestCase
 
 	public function testType(): void
 	{
-		$args = new StructureArgs(DefaultsVO::class);
+		$args = new MappedObjectArgs(DefaultsVO::class);
 
 		$type = $this->rule->createType($args, $this->typeContext);
 

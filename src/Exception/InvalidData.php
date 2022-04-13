@@ -4,17 +4,17 @@ namespace Orisai\ObjectMapper\Exception;
 
 use Orisai\Exceptions\DomainException;
 use Orisai\ObjectMapper\Printers\ErrorPrinter;
-use Orisai\ObjectMapper\Types\StructureType;
+use Orisai\ObjectMapper\Types\MappedObjectType;
 use Orisai\ObjectMapper\Types\Value;
 
 final class InvalidData extends DomainException implements WithTypeAndValue
 {
 
-	private StructureType $type;
+	private MappedObjectType $type;
 
 	private Value $value;
 
-	public static function create(StructureType $type, Value $value): self
+	public static function create(MappedObjectType $type, Value $value): self
 	{
 		$self = new self();
 		$self->value = $value;
@@ -29,7 +29,7 @@ final class InvalidData extends DomainException implements WithTypeAndValue
 		return $self;
 	}
 
-	public function getType(): StructureType
+	public function getType(): MappedObjectType
 	{
 		return $this->type;
 	}

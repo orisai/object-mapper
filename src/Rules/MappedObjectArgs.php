@@ -8,7 +8,7 @@ use Orisai\ObjectMapper\MappedObject;
 /**
  * @internal
  */
-final class StructureArgs implements Args
+final class MappedObjectArgs implements Args
 {
 
 	/** @var class-string<MappedObject> */

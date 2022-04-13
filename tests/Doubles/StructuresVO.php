@@ -4,21 +4,21 @@ namespace Tests\Orisai\ObjectMapper\Doubles;
 
 use Orisai\ObjectMapper\Attributes\Expect\AnyOf;
 use Orisai\ObjectMapper\Attributes\Expect\ArrayOf;
+use Orisai\ObjectMapper\Attributes\Expect\MappedObjectValue;
 use Orisai\ObjectMapper\Attributes\Expect\MixedValue;
-use Orisai\ObjectMapper\Attributes\Expect\Structure;
 use Orisai\ObjectMapper\MappedObject;
 
 final class StructuresVO extends MappedObject
 {
 
-	/** @Structure(DefaultsVO::class) */
+	/** @MappedObjectValue(DefaultsVO::class) */
 	public DefaultsVO $structure;
 
 	/**
 	 * @var DefaultsVO|array<mixed>
 	 *
 	 * @AnyOf({
-	 *     @Structure(DefaultsVO::class),
+	 *     @MappedObjectValue(DefaultsVO::class),
 	 *     @ArrayOf(
 	 *          @MixedValue()
 	 *     )
@@ -30,7 +30,7 @@ final class StructuresVO extends MappedObject
 	 * @var DefaultsVO|array<mixed>
 	 *
 	 * @AnyOf({
-	 *     @Structure(DefaultsVO::class),
+	 *     @MappedObjectValue(DefaultsVO::class),
 	 *     @ArrayOf(
 	 *          @MixedValue()
 	 *     )
@@ -43,8 +43,8 @@ final class StructuresVO extends MappedObject
 	 *
 	 * @ArrayOf(
 	 *     @AnyOf({
-	 *         @Structure(NoDefaultsVO::class),
-	 *         @Structure(DefaultsVO::class),
+	 *         @MappedObjectValue(NoDefaultsVO::class),
+	 *         @MappedObjectValue(DefaultsVO::class),
 	 *     })
 	 * )
 	 */

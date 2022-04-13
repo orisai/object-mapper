@@ -9,9 +9,9 @@ use Orisai\ObjectMapper\Meta\Compile\RuleCompileMeta;
 use Orisai\ObjectMapper\Meta\Runtime\RuleRuntimeMeta;
 use Orisai\ObjectMapper\Rules\AnyOfRule;
 use Orisai\ObjectMapper\Rules\CompoundRuleArgs;
+use Orisai\ObjectMapper\Rules\MappedObjectArgs;
+use Orisai\ObjectMapper\Rules\MappedObjectRule;
 use Orisai\ObjectMapper\Rules\MixedRule;
-use Orisai\ObjectMapper\Rules\StructureArgs;
-use Orisai\ObjectMapper\Rules\StructureRule;
 use Orisai\ObjectMapper\Types\CompoundType;
 use Orisai\ObjectMapper\Types\MessageType;
 use Orisai\ObjectMapper\Types\SimpleValueType;
@@ -93,7 +93,7 @@ final class AnyOfRuleTest extends RuleTestCase
 				null,
 				new CompoundRuleArgs([
 					new RuleRuntimeMeta(AlwaysInvalidRule::class, new EmptyArgs()),
-					new RuleRuntimeMeta(StructureRule::class, new StructureArgs(DefaultsVO::class)),
+					new RuleRuntimeMeta(MappedObjectRule::class, new MappedObjectArgs(DefaultsVO::class)),
 				]),
 				$this->fieldContext(),
 			);

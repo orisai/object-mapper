@@ -3,25 +3,25 @@
 namespace Orisai\ObjectMapper\Context;
 
 use Orisai\ObjectMapper\Processing\Options;
-use Orisai\ObjectMapper\Types\StructureType;
+use Orisai\ObjectMapper\Types\MappedObjectType;
 
 class SkippedPropertiesContext
 {
 
-	private StructureType $type;
+	private MappedObjectType $type;
 
 	private Options $options;
 
 	/** @var array<string, SkippedPropertyContext> */
 	private array $skippedProperties = [];
 
-	public function __construct(StructureType $type, Options $options)
+	public function __construct(MappedObjectType $type, Options $options)
 	{
 		$this->type = $type;
 		$this->options = $options;
 	}
 
-	public function getType(): StructureType
+	public function getType(): MappedObjectType
 	{
 		return $this->type;
 	}

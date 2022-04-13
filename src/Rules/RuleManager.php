@@ -15,12 +15,12 @@ interface RuleManager
 		InstanceRule::class,
 		IntRule::class,
 		ListOfRule::class,
+		MappedObjectRule::class,
 		MixedRule::class,
 		NullRule::class,
 		ObjectRule::class,
 		ScalarRule::class,
 		StringRule::class,
-		StructureRule::class,
 		UrlRule::class,
 		ValueEnumRule::class,
 	];

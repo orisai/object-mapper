@@ -3,9 +3,9 @@
 namespace Orisai\ObjectMapper\Printers;
 
 use Orisai\ObjectMapper\Meta\MetaLoader;
-use Orisai\ObjectMapper\Types\StructureType;
+use Orisai\ObjectMapper\Types\MappedObjectType;
 
-class DefaultValuesArrayPrinter implements StructurePrinter
+class DefaultValuesArrayPrinter implements MappedObjectPrinter
 {
 
 	private MetaLoader $metaLoader;
@@ -23,15 +23,15 @@ class DefaultValuesArrayPrinter implements StructurePrinter
 	/**
 	 * @return array<mixed>
 	 */
-	public function printType(StructureType $type): array
+	public function printType(MappedObjectType $type): array
 	{
-		return $this->printStructureType($type);
+		return $this->printMappedObjectType($type);
 	}
 
 	/**
 	 * @return array<mixed>
 	 */
-	protected function printStructureType(StructureType $type): array
+	protected function printMappedObjectType(MappedObjectType $type): array
 	{
 		$meta = $this->metaLoader->load($type->getClass())->getProperties();
 		$formatted = [];
@@ -40,8 +40,8 @@ class DefaultValuesArrayPrinter implements StructurePrinter
 		foreach ($fields as $fieldName => $fieldType) {
 			$defaultMeta = $meta[$fieldName]->getDefault();
 
-			if ($fieldType instanceof StructureType) {
-				$value = $this->printStructureType($fieldType);
+			if ($fieldType instanceof MappedObjectType) {
+				$value = $this->printMappedObjectType($fieldType);
 			} elseif ($defaultMeta->hasValue()) {
 				$value = $defaultMeta->getValue();
 			} elseif ($this->requiredValuePlaceholder !== null) {

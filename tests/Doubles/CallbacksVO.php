@@ -10,7 +10,7 @@ use Orisai\ObjectMapper\Attributes\Expect\MixedValue;
 use Orisai\ObjectMapper\Attributes\Expect\StringValue;
 use Orisai\ObjectMapper\Callbacks\CallbackRuntime;
 use Orisai\ObjectMapper\Context\FieldContext;
-use Orisai\ObjectMapper\Context\FieldSetContext;
+use Orisai\ObjectMapper\Context\MappedObjectContext;
 use Orisai\ObjectMapper\Exception\InvalidData;
 use Orisai\ObjectMapper\MappedObject;
 use function array_key_exists;
@@ -76,7 +76,7 @@ final class CallbacksVO extends MappedObject
 	 * @param mixed $data
 	 * @return mixed
 	 */
-	public static function beforeClass($data, FieldSetContext $context)
+	public static function beforeClass($data, MappedObjectContext $context)
 	{
 		if (!is_array($data)) {
 			return $data;
@@ -103,7 +103,7 @@ final class CallbacksVO extends MappedObject
 	 * @param array<mixed> $data
 	 * @return array<mixed>
 	 */
-	public static function afterClass(array $data, FieldSetContext $context): array
+	public static function afterClass(array $data, MappedObjectContext $context): array
 	{
 		$data['array']['afterClassCallback'][] = $context->shouldMapDataToObjects();
 
@@ -151,7 +151,7 @@ final class CallbacksVO extends MappedObject
 	{
 		$processor = $context->getProcessor();
 		$options = $context->getOptions();
-		$class = $options->getDynamicContext(CallbacksVoContext::class)->getDynamicStructureType();
+		$class = $options->getDynamicContext(CallbacksVoContext::class)->getObjectType();
 
 		return $context->shouldMapDataToObjects()
 			? $processor->process($structure, $class, $options)
