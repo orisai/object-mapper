@@ -17,8 +17,8 @@ use function array_key_exists;
 use function is_array;
 
 /**
- * @Before(method="beforeClass")
- * @After(method="afterClass")
+ * @Before(method="beforeClass", runtime=CallbackRuntime::ALWAYS)
+ * @After(method="afterClass", runtime=CallbackRuntime::ALWAYS)
  */
 final class CallbacksVO extends MappedObject
 {
@@ -43,7 +43,7 @@ final class CallbacksVO extends MappedObject
 	 * @ArrayOf(
 	 *     @MixedValue()
 	 * )
-	 * @After(method="afterStructure")
+	 * @After(method="afterStructure", runtime=CallbackRuntime::ALWAYS)
 	 */
 	public MappedObject $structure;
 
@@ -52,8 +52,8 @@ final class CallbacksVO extends MappedObject
 
 	/**
 	 * @StringValue()
-	 * @Before(method="beforeImmutableDefaultValue")
-	 * @Before(method="afterImmutableDefaultValue")
+	 * @Before(method="beforeImmutableDefaultValue", runtime=CallbackRuntime::ALWAYS)
+	 * @Before(method="afterImmutableDefaultValue", runtime=CallbackRuntime::ALWAYS)
 	 */
 	public string $immutableDefaultValue = 'defaultValue_immutable';
 
@@ -62,8 +62,8 @@ final class CallbacksVO extends MappedObject
 
 	/**
 	 * @StringValue()
-	 * @Before(method="beforeCallbackSetValue")
-	 * @After(method="afterCallbackSetValue")
+	 * @Before(method="beforeCallbackSetValue", runtime=CallbackRuntime::ALWAYS)
+	 * @After(method="afterCallbackSetValue", runtime=CallbackRuntime::ALWAYS)
 	 */
 	public string $callbackSetValue;
 

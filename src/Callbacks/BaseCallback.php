@@ -81,7 +81,7 @@ abstract class BaseCallback implements Callback
 			&& in_array($returnType->getName(), ['void', 'never'], true)
 		);
 
-		$runtime = CallbackRuntime::ALWAYS;
+		$runtime = CallbackRuntime::WITH_MAPPING;
 		if ($checker->hasArg(self::RUNTIME)) {
 			$runtime = $checker->checkEnum(self::RUNTIME, [
 				CallbackRuntime::ALWAYS,
