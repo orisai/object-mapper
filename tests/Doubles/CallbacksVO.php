@@ -34,8 +34,8 @@ final class CallbacksVO extends MappedObject
 	 *         @MixedValue(),
 	 *     ),
 	 * )
-	 * @After(method="afterArrayInitialization", runtime=CallbackRuntime::WITH_MAPPING)
-	 * @After(method="afterArrayProcessing", runtime=CallbackRuntime::WITHOUT_MAPPING)
+	 * @After(method="afterArrayInitialization", runtime=CallbackRuntime::PROCESS)
+	 * @After(method="afterArrayProcessing", runtime=CallbackRuntime::PROCESS_WITHOUT_MAPPING)
 	 */
 	public array $array;
 
