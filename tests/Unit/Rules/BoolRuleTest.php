@@ -71,10 +71,12 @@ final class BoolRuleTest extends RuleTestCase
 		yield ['TRUE', true];
 		yield ['tRuE', true];
 		yield [1, true];
+		yield ['1', true];
 		yield ['false', false];
 		yield ['FALSE', false];
 		yield ['fAlSe', false];
 		yield [0, false];
+		yield ['0', false];
 	}
 
 	/**

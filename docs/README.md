@@ -215,7 +215,7 @@ $processor->process($data, Input::class); // Input
 Parameters:
 
 - `castBoolLike`
-	- accepts also `0` (int), `1` (int), `'true'` (string, any case), `'false'` (string, any case)
+	- accepts also `0` (int|string), `1` (int|string), `'true'` (string, any case), `'false'` (string, any case)
 	- value is cast to respective bool value
 	- default `false` - bool-like are not cast
 
