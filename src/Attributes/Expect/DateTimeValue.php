@@ -13,7 +13,7 @@ use Orisai\ObjectMapper\Rules\DateTimeRule;
  * @NamedArgumentConstructor()
  * @Target({"PROPERTY", "ANNOTATION"})
  */
-final class DateTime implements RuleAttribute
+final class DateTimeValue implements RuleAttribute
 {
 
 	/** @var class-string<DateTimeInterface> */

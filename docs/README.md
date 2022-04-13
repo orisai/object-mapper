@@ -226,18 +226,19 @@ Expects datetime as a string or int
 - Returns instance of `DateTimeInterface`
 
 ```php
+use DateTime;
 use DateTimeImmutable;
-use Orisai\ObjectMapper\Attributes\Expect\DateTime;
+use Orisai\ObjectMapper\Attributes\Expect\DateTimeValue;
 use Orisai\ObjectMapper\MappedObject;
 
 final class Input extends MappedObject
 {
 
-    /** @DateTime() */
+    /** @DateTimeValue() */
     public DateTimeImmutable $field;
 
-    /** @DateTime(type=\DateTime::class, format="timestamp") */
-    public \DateTime $anotherField;
+    /** @DateTimeValue(type=DateTime::class, format="timestamp") */
+    public DateTime $anotherField;
 
 }
 ```
@@ -252,6 +253,9 @@ $processor->process($data, Input::class); // Input
 
 Parameters:
 
+- `type`
+	- subclass of `DateTimeInterface` which should be created
+	- default `DateTimeImmutable`
 - `format`
 	- expected date-time format
 	- default `DateTimeInterface::ATOM`
@@ -968,8 +972,8 @@ $input->optional; // true, default
 
 ### All fields are required
 
-Send all fields, including these with default values and (with default
-mode) [auto-initialized](#mapped-object-rule) mapped objects .
+Send all fields, including these with default values and (with default mode) [auto-initialized](#mapped-object-rule)
+mapped objects .
 
 ```php
 use Orisai\ObjectMapper\Processing\Options;
@@ -994,8 +998,7 @@ We can make all fields optional. This is useful for partial updates, like PATCH 
 fields are sent, and we have to check which ones are available with `$mappedObject->isInitialized('property');`.
 
 Unlike with default mode, mapped object are not auto-initialized as described
-under [mapped object rule](#mapped-object-rule). At least empty array (`[]`) should be sent to initialize
-them.
+under [mapped object rule](#mapped-object-rule). At least empty array (`[]`) should be sent to initialize them.
 
 Even default values, when not sent, are not initialized - they are unset before assigning sent data.
 
@@ -1291,8 +1294,8 @@ final class WithComplexCallbackInput extends MappedObject
 
 ### Callback context
 
-Both [mapped object callbacks](#mapped-object-callbacks) and [field callbacks](#field-callbacks) have
-additional context available as a second parameter, for extended processing:
+Both [mapped object callbacks](#mapped-object-callbacks) and [field callbacks](#field-callbacks) have additional context
+available as a second parameter, for extended processing:
 
 Mapped object and field contexts
 
