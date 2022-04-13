@@ -5,23 +5,26 @@ Raw data mapping to validated objects
 ## Content
 
 - [Rules](#rules)
-	- [All of rules](#all-of-rules)
-	- [Any of rules](#any-of-rules)
-	- [Array of keys and items](#array-of-keys-and-items-rule)
-	- [Bool](#bool-rule)
-	- [DateTime](#datetime-rule)
-	- [Float](#float-rule)
-	- [Instance of type](#instance-of-type-rule)
-	- [Int](#int-rule)
-	- [List of items](#list-of-items-rule)
-	- [Mapped object](#mapped-object-rule)
-	- [Mixed](#mixed-rule)
-	- [Null](#null-rule)
-	- [Object](#object-rule)
-	- [Scalar](#scalar-rule)
-	- [String](#string-rule)
-	- [Url](#url-rule)
-	- [Enum from values](#enum-from-values-rule)
+	- [Simple types](#simple-types)
+		- [bool](#bool-rule)
+		- [enum - from array](#enum---from-array-rule)
+		- [float](#float-rule)
+		- [instanceof](#instanceof-rule)
+		- [int](#int-rule)
+		- [mixed](#mixed-rule)
+		- [null](#null-rule)
+		- [object](#object-rule)
+		- [scalar](#scalar-rule)
+		- [string](#string-rule)
+	- [Composed types](#composed-types)
+		- [All of rules - &&](#all-of-rules---)
+		- [Any of rules - ||](#any-of-rules---)
+		- [Array of keys and items](#array-of-keys-and-items-rule)
+		- [List of items](#list-of-items-rule)
+	- [Value objects](#value-objects)
+		- [DateTime](#datetime-rule)
+		- [MappedObject](#mappedobject-rule)
+		- [Url](#url-rule)
 - [Optional fields and default values](#optional-fields-and-default-values)
 - [Mapping field names to properties](#mapping-field-names-to-properties)
 - [Processing modes](#processing-modes)
@@ -37,13 +40,417 @@ Raw data mapping to validated objects
 
 ## Rules
 
-### All of rules
+### Simple types
+
+### bool rule
+
+Expects bool
+
+```php
+use Orisai\ObjectMapper\Attributes\Expect\BoolValue;
+use Orisai\ObjectMapper\MappedObject;
+
+final class Input extends MappedObject
+{
+
+    /** @BoolValue() */
+    public bool $field;
+
+    /** @BoolValue(castBoolLike=true) */
+    public bool $anotherField;
+
+}
+```
+
+```php
+$data = [
+	'field' => true,
+	'anotherField' => 1,
+];
+$processor->process($data, Input::class); // Input
+```
+
+Parameters:
+
+- `castBoolLike`
+	- accepts also `0` (int|string), `1` (int|string), `'true'` (string, any case), `'false'` (string, any case)
+	- value is cast to respective bool value
+	- default `false` - bool-like are not cast
+
+### enum - from array rule
+
+Expects any of values from given list
+
+```php
+use Orisai\ObjectMapper\Attributes\Expect\ValueEnum;
+use Orisai\ObjectMapper\MappedObject;
+
+final class Input extends MappedObject
+{
+
+    public const VALUES = [
+        'first' => 1,
+        'second' => 2,
+        'third' => 3,
+    ];
+
+    /**
+     * @ValueEnum(Input::VALUES)
+     */
+    public int $field;
+
+    /**
+     * @ValueEnum(values=Input::VALUES, useKeys=true)
+     */
+    public string $anotherField;
+
+}
+```
+
+```php
+$data = [
+	'field' => 1,
+	'anotherField' => 'first',
+];
+$processor->process($data, Input::class); // Input
+```
+
+Parameters:
+
+- `useKeys`
+	- use keys for enumeration instead of values
+	- default `false` - values are used for enumeration
+
+### float rule
+
+Expects float or int
+
+- Int is cast to float
+
+```php
+use Orisai\ObjectMapper\Attributes\Expect\FloatValue;
+use Orisai\ObjectMapper\MappedObject;
+
+final class Input extends MappedObject
+{
+
+    /** @FloatValue() */
+    public float $field;
+
+    /**
+     * @var float<1.1, 100.1>
+     * @FloatValue(min=1.1, max=100.1, unsigned=false, castNumericString=true)
+     */
+    public float $anotherField;
+
+}
+```
+
+```php
+$data = [
+	'field' => 666.666,
+	'anotherField' => '6.66',
+];
+$processor->process($data, Input::class); // Input
+```
+
+Parameters:
+
+- `min`
+	- minimal accepted value
+	- default `null` - no limit
+	- e.g. `10.0`
+- `max`
+	- maximal accepted value
+	- default `null` - no limit
+	- e.g. `100.0`
+- `unsigned`
+	- accepts only numbers without minus sign
+	- default `false` - both positive and negative numbers are accepted
+	- act same way as `min: 0`
+- `castNumericString`
+	- accepts also numeric strings (float and int)
+	- value is cast to respective float value
+	- default `false` - numeric strings are not cast
+
+### instanceof rule
+
+Expects an instance of specified class or interface
+
+- Use [Object rule](#object-rule) to accept any object
+
+```php
+use Orisai\ObjectMapper\Attributes\Expect\InstanceValue;
+use Orisai\ObjectMapper\MappedObject;
+use stdClass;
+
+final class Input extends MappedObject
+{
+
+    /** @InstanceValue(stdClass::class) */
+    public stdClass $field;
+
+}
+```
+
+```php
+$data = [
+	'field' => new stdClass(),
+];
+$processor->process($data, Input::class); // Input
+```
+
+Parameters:
+
+- `type`
+	- type of required instance (class or interface)
+	- required
+	- e.g. `stdClass::class`
+
+### int rule
+
+Expects int
+
+```php
+use Orisai\ObjectMapper\Attributes\Expect\IntValue;
+use Orisai\ObjectMapper\MappedObject;
+
+final class Input extends MappedObject
+{
+
+    /** @IntValue() */
+    public int $field;
+
+    /**
+     * @var int<1, 100>
+     * @IntValue(min=1, max=100, unsigned=false, castNumericString=true)
+     */
+    public int $anotherField;
+
+}
+```
+
+```php
+$data = [
+	'field' => 666,
+	'anotherField' => '42',
+];
+$processor->process($data, Input::class); // Input
+```
+
+Parameters:
+
+- `min`
+	- minimal accepted value
+	- default `null` - no limit
+	- e.g. `10`
+- `max`
+	- maximal accepted value
+	- default `null` - no limit
+	- e.g. `100`
+- `unsigned`
+	- accepts only numbers without minus sign
+	- default `false` - both positive and negative numbers are accepted
+	- act same way as `min: 0`
+- `castNumericString`
+	- accepts also numeric strings (int)
+	- value is cast to respective int value
+	- default `false` - numeric strings are not cast
+
+### mixed rule
+
+Expects any value
+
+```php
+use Orisai\ObjectMapper\Attributes\Expect\MixedValue;
+use Orisai\ObjectMapper\MappedObject;
+
+final class Input extends MappedObject
+{
+
+    /**
+     * @var mixed
+     * @MixedValue()
+     */
+    public $field;
+
+}
+```
+
+```php
+$data = [
+	'field' => 'anything',
+];
+$processor->process($data, Input::class); // Input
+```
+
+Parameters:
+
+- no parameters
+
+### null rule
+
+Expects null
+
+```php
+use Orisai\ObjectMapper\Attributes\Expect\NullValue;
+use Orisai\ObjectMapper\MappedObject;
+
+final class Input extends MappedObject
+{
+
+    /**
+     * @var null
+     * @NullValue()
+     */
+    public $field;
+
+    /**
+     * @var null
+     * @NullValue(castEmptyString=true)
+     */
+    public $anotherField;
+
+}
+```
+
+```php
+$data = [
+	'field' => null,
+	'anotherField' => '',
+];
+$processor->process($data, Input::class); // Input
+```
+
+Parameters:
+
+- `castEmptyString`
+	- accepts any string with only empty characters
+	- value is cast to null
+	- default `false` - empty strings are not cast
+	- e.g. `''`, `'   '`, `"\t"` ,`"\t\n\r""`
+
+### object rule
+
+Expects any object
+
+- Use [instanceof rule](#instanceof-rule) to accept instance of specific type
+
+```php
+use Orisai\ObjectMapper\Attributes\Expect\ObjectValue;
+use Orisai\ObjectMapper\MappedObject;
+
+final class Input extends MappedObject
+{
+
+    /** @ObjectValue() */
+    public object $field;
+
+}
+```
+
+```php
+$data = [
+	'field' => $anyObject,
+];
+$processor->process($data, Input::class); // Input
+```
+
+Parameters:
+
+- no parameters
+
+### scalar rule
+
+Expects any scalar value - int|float|string|bool
+
+```php
+use Orisai\ObjectMapper\Attributes\Expect\ScalarValue;
+use Orisai\ObjectMapper\MappedObject;
+
+final class Input extends MappedObject
+{
+
+    /**
+     * @var int|float|string|bool
+     * @ScalarValue()
+     */
+    public $field;
+
+}
+```
+
+```php
+$data = [
+	'field' => 'any scalar value',
+];
+$processor->process($data, Input::class); // Input
+```
+
+Parameters:
+
+- no parameters
+
+### string rule
+
+Expects string
+
+```php
+use Orisai\ObjectMapper\Attributes\Expect\StringValue;
+use Orisai\ObjectMapper\MappedObject;
+
+final class Input extends MappedObject
+{
+
+    /** @StringValue() */
+    public string $field;
+
+    /**
+     * @var non-empty-string
+     * @StringValue(minLength=1, maxLength=100, notEmpty=true, pattern="/^abc/")
+     */
+    public string $anotherField;
+
+}
+```
+
+```php
+$data = [
+	'field' => 'string',
+	'anotherField' => 'abcdef',
+];
+$processor->process($data, Input::class); // Input
+```
+
+Parameters:
+
+- `minLength`
+	- minimal string length
+	- default `null` - no limit
+	- e.g. `10`
+- `maxLength`
+	- maximal string length
+	- default `null` - no limit
+	- e.g. `100`
+- `notEmpty`
+	- string **must not** contain **only** empty characters
+	- default `false` - empty strings are allowed
+	- e.g. `''`, `'   '`, `"\t"` ,`"\t\n\r""`
+- `pattern`
+	- regex pattern which must match
+	- default `null` - no validation by pattern
+	- e.g. `/[\s\S]/`
+
+### Composed types
+
+### All of rules - &&
 
 Expects all rules to match
 
 - After first failure is validation terminated, other rules are skipped
 - Rules are executed from first to last
 - Output value of each rule is input value of the next rule
+- Acts as `&&` operator
 
 ```php
 use Orisai\ObjectMapper\Attributes\Expect\AllOf;
@@ -75,12 +482,13 @@ Parameters:
 	- accepts list of rules by which is the field validated
 	- required
 
-### Any of rules
+### Any of rules - ||
 
 Expects any of rules to match
 
 - Rules are executed from first to last
 - Result of first rule which match is used, other rules are skipped
+- Acts as `||` operator
 
 ```php
 use Orisai\ObjectMapper\Attributes\Expect\AnyOf;
@@ -184,223 +592,6 @@ Parameters:
 	- merge default value into array after it is validated
 	- default `false` - default is not merged
 
-### Bool rule
-
-Expects bool
-
-```php
-use Orisai\ObjectMapper\Attributes\Expect\BoolValue;
-use Orisai\ObjectMapper\MappedObject;
-
-final class Input extends MappedObject
-{
-
-    /** @BoolValue() */
-    public bool $field;
-
-    /** @BoolValue(castBoolLike=true) */
-    public bool $anotherField;
-
-}
-```
-
-```php
-$data = [
-	'field' => true,
-	'anotherField' => 1,
-];
-$processor->process($data, Input::class); // Input
-```
-
-Parameters:
-
-- `castBoolLike`
-	- accepts also `0` (int|string), `1` (int|string), `'true'` (string, any case), `'false'` (string, any case)
-	- value is cast to respective bool value
-	- default `false` - bool-like are not cast
-
-### DateTime rule
-
-Expects datetime as a string or int
-
-- Returns instance of `DateTimeInterface`
-
-```php
-use DateTime;
-use DateTimeImmutable;
-use Orisai\ObjectMapper\Attributes\Expect\DateTimeValue;
-use Orisai\ObjectMapper\MappedObject;
-
-final class Input extends MappedObject
-{
-
-    /** @DateTimeValue() */
-    public DateTimeImmutable $field;
-
-    /** @DateTimeValue(type=DateTime::class, format="timestamp") */
-    public DateTime $anotherField;
-
-}
-```
-
-```php
-$data = [
-	'field' => '2013-04-12T16:40:00-04:00',
-	'anotherField' => 1365799200,
-];
-$processor->process($data, Input::class); // Input
-```
-
-Parameters:
-
-- `type`
-	- subclass of `DateTimeInterface` which should be created
-	- default `DateTimeImmutable`
-- `format`
-	- expected date-time format
-	- default `DateTimeInterface::ATOM`
-		- expects standard ISO 8601 format
-		- e.g. `2013-04-12T16:40:00-04:00`
-	- accepts any of the formats which are [supported by PHP](https://www.php.net/manual/en/datetime.formats.php)
-	- to try auto-parse date-time of unknown format, use format `any`
-	- for timestamp use format `timestamp`
-
-### Float rule
-
-Expects float or int
-
-- Int is cast to float
-
-```php
-use Orisai\ObjectMapper\Attributes\Expect\FloatValue;
-use Orisai\ObjectMapper\MappedObject;
-
-final class Input extends MappedObject
-{
-
-    /** @FloatValue() */
-    public float $field;
-
-    /**
-     * @var float<1.1, 100.1>
-     * @FloatValue(min=1.1, max=100.1, unsigned=false, castNumericString=true)
-     */
-    public float $anotherField;
-
-}
-```
-
-```php
-$data = [
-	'field' => 666.666,
-	'anotherField' => '6.66',
-];
-$processor->process($data, Input::class); // Input
-```
-
-Parameters:
-
-- `min`
-	- minimal accepted value
-	- default `null` - no limit
-	- e.g. `10.0`
-- `max`
-	- maximal accepted value
-	- default `null` - no limit
-	- e.g. `100.0`
-- `unsigned`
-	- accepts only numbers without minus sign
-	- default `false` - both positive and negative numbers are accepted
-	- act same way as `min: 0`
-- `castNumericString`
-	- accepts also numeric strings (float and int)
-	- value is cast to respective float value
-	- default `false` - numeric strings are not cast
-
-### Instance of type rule
-
-Expects an instance of specified class or interface
-
-- Use [Object rule](#object-rule) to accept any object
-
-```php
-use Orisai\ObjectMapper\Attributes\Expect\InstanceValue;
-use Orisai\ObjectMapper\MappedObject;
-use stdClass;
-
-final class Input extends MappedObject
-{
-
-    /** @InstanceValue(stdClass::class) */
-    public stdClass $field;
-
-}
-```
-
-```php
-$data = [
-	'field' => new stdClass(),
-];
-$processor->process($data, Input::class); // Input
-```
-
-Parameters:
-
-- `type`
-	- type of required instance (class or interface)
-	- required
-	- e.g. `stdClass::class`
-
-### Int rule
-
-Expects int
-
-```php
-use Orisai\ObjectMapper\Attributes\Expect\IntValue;
-use Orisai\ObjectMapper\MappedObject;
-
-final class Input extends MappedObject
-{
-
-    /** @IntValue() */
-    public int $field;
-
-    /**
-     * @var int<1, 100>
-     * @IntValue(min=1, max=100, unsigned=false, castNumericString=true)
-     */
-    public int $anotherField;
-
-}
-```
-
-```php
-$data = [
-	'field' => 666,
-	'anotherField' => '42',
-];
-$processor->process($data, Input::class); // Input
-```
-
-Parameters:
-
-- `min`
-	- minimal accepted value
-	- default `null` - no limit
-	- e.g. `10`
-- `max`
-	- maximal accepted value
-	- default `null` - no limit
-	- e.g. `100`
-- `unsigned`
-	- accepts only numbers without minus sign
-	- default `false` - both positive and negative numbers are accepted
-	- act same way as `min: 0`
-- `castNumericString`
-	- accepts also numeric strings (int)
-	- value is cast to respective int value
-	- default `false` - numeric strings are not cast
-
 ### List of items rule
 
 Expects list
@@ -465,14 +656,62 @@ Parameters:
 	- merge default value into array after it is validated
 	- default `false` - default is not merged
 
-### Mapped object rule
+### Value objects
+
+### DateTime rule
+
+Expects datetime as a string or int
+
+- Returns instance of `DateTimeInterface`
+
+```php
+use DateTime;
+use DateTimeImmutable;
+use Orisai\ObjectMapper\Attributes\Expect\DateTimeValue;
+use Orisai\ObjectMapper\MappedObject;
+
+final class Input extends MappedObject
+{
+
+    /** @DateTimeValue() */
+    public DateTimeImmutable $field;
+
+    /** @DateTimeValue(type=DateTime::class, format="timestamp") */
+    public DateTime $anotherField;
+
+}
+```
+
+```php
+$data = [
+	'field' => '2013-04-12T16:40:00-04:00',
+	'anotherField' => 1365799200,
+];
+$processor->process($data, Input::class); // Input
+```
+
+Parameters:
+
+- `type`
+	- subclass of `DateTimeInterface` which should be created
+	- default `DateTimeImmutable`
+- `format`
+	- expected date-time format
+	- default `DateTimeInterface::ATOM`
+		- expects standard ISO 8601 format
+		- e.g. `2013-04-12T16:40:00-04:00`
+	- accepts any of the formats which are [supported by PHP](https://www.php.net/manual/en/datetime.formats.php)
+	- to try auto-parse date-time of unknown format, use format `any`
+	- for timestamp use format `timestamp`
+
+### MappedObject rule
 
 Expects array with structure defined by a mapped object
 
 - Returns instance of `MappedObject`
 - Mapped object is initialized even when field is not sent at all. It tries to initialize object with an empty
   array (`[]`) to auto-initialize object whose fields are all optional.
-	- Object inside a compound rule ([all of](#all-of-rules), [any of](#any-of-rules)) is not auto-initialized.
+	- Object inside a compound rule ([all of](#all-of-rules---), [any of](#any-of-rules---)) is not auto-initialized.
 	- Object is also not auto-initialized when [processing mode](#processing-modes) requires none of values or all
 	  values to be sent
 
@@ -515,190 +754,6 @@ Parameters:
 	- subclass of `MappedObject` which should be created
 	- required
 
-### Mixed rule
-
-Expects any value
-
-```php
-use Orisai\ObjectMapper\Attributes\Expect\MixedValue;
-use Orisai\ObjectMapper\MappedObject;
-
-final class Input extends MappedObject
-{
-
-    /**
-     * @var mixed
-     * @MixedValue()
-     */
-    public $field;
-
-}
-```
-
-```php
-$data = [
-	'field' => 'anything',
-];
-$processor->process($data, Input::class); // Input
-```
-
-Parameters:
-
-- no parameters
-
-### Null rule
-
-Expects null
-
-```php
-use Orisai\ObjectMapper\Attributes\Expect\NullValue;
-use Orisai\ObjectMapper\MappedObject;
-
-final class Input extends MappedObject
-{
-
-    /**
-     * @var null
-     * @NullValue()
-     */
-    public $field;
-
-    /**
-     * @var null
-     * @NullValue(castEmptyString=true)
-     */
-    public $anotherField;
-
-}
-```
-
-```php
-$data = [
-	'field' => null,
-	'anotherField' => '',
-];
-$processor->process($data, Input::class); // Input
-```
-
-Parameters:
-
-- `castEmptyString`
-	- accepts any string with only empty characters
-	- value is cast to null
-	- default `false` - empty strings are not cast
-	- e.g. `''`, `'   '`, `"\t"` ,`"\t\n\r""`
-
-### Object rule
-
-Expects any object
-
-- Use [Instance of type rule](#instance-of-type-rule) to accept instance of specific type
-
-```php
-use Orisai\ObjectMapper\Attributes\Expect\ObjectValue;
-use Orisai\ObjectMapper\MappedObject;
-
-final class Input extends MappedObject
-{
-
-    /** @ObjectValue() */
-    public object $field;
-
-}
-```
-
-```php
-$data = [
-	'field' => $anyObject,
-];
-$processor->process($data, Input::class); // Input
-```
-
-Parameters:
-
-- no parameters
-
-### Scalar rule
-
-Expects any scalar value - int|float|string|bool
-
-```php
-use Orisai\ObjectMapper\Attributes\Expect\ScalarValue;
-use Orisai\ObjectMapper\MappedObject;
-
-final class Input extends MappedObject
-{
-
-    /**
-     * @var int|float|string|bool
-     * @ScalarValue()
-     */
-    public $field;
-
-}
-```
-
-```php
-$data = [
-	'field' => 'any scalar value',
-];
-$processor->process($data, Input::class); // Input
-```
-
-Parameters:
-
-- no parameters
-
-### String rule
-
-Expects string
-
-```php
-use Orisai\ObjectMapper\Attributes\Expect\StringValue;
-use Orisai\ObjectMapper\MappedObject;
-
-final class Input extends MappedObject
-{
-
-    /** @StringValue() */
-    public string $field;
-
-    /**
-     * @var non-empty-string
-     * @StringValue(minLength=1, maxLength=100, notEmpty=true, pattern="/^abc/")
-     */
-    public string $anotherField;
-
-}
-```
-
-```php
-$data = [
-	'field' => 'string',
-	'anotherField' => 'abcdef',
-];
-$processor->process($data, Input::class); // Input
-```
-
-Parameters:
-
-- `minLength`
-	- minimal string length
-	- default `null` - no limit
-	- e.g. `10`
-- `maxLength`
-	- maximal string length
-	- default `null` - no limit
-	- e.g. `100`
-- `notEmpty`
-	- string **must not** contain **only** empty characters
-	- default `false` - empty strings are allowed
-	- e.g. `''`, `'   '`, `"\t"` ,`"\t\n\r""`
-- `pattern`
-	- regex pattern which must match
-	- default `null` - no validation by pattern
-	- e.g. `/[\s\S]/`
-
 ### Url rule
 
 Expects valid url address
@@ -726,50 +781,6 @@ $processor->process($data, Input::class); // Input
 Parameters:
 
 - no parameters
-
-### Enum from values rule
-
-Expects any of values from given list
-
-```php
-use Orisai\ObjectMapper\Attributes\Expect\ValueEnum;
-use Orisai\ObjectMapper\MappedObject;
-
-final class Input extends MappedObject
-{
-
-    public const VALUES = [
-        'first' => 1,
-        'second' => 2,
-        'third' => 3,
-    ];
-
-    /**
-     * @ValueEnum(Input::VALUES)
-     */
-    public int $field;
-
-    /**
-     * @ValueEnum(values=Input::VALUES, useKeys=true)
-     */
-    public string $anotherField;
-
-}
-```
-
-```php
-$data = [
-	'field' => 1,
-	'anotherField' => 'first',
-];
-$processor->process($data, Input::class); // Input
-```
-
-Parameters:
-
-- `useKeys`
-	- use keys for enumeration instead of values
-	- default `false` - values are used for enumeration
 
 ## Optional fields and default values
 
@@ -972,7 +983,7 @@ $input->optional; // true, default
 
 ### All fields are required
 
-Send all fields, including these with default values and (with default mode) [auto-initialized](#mapped-object-rule)
+Send all fields, including these with default values and (with default mode) [auto-initialized](#mappedobject-rule)
 mapped objects .
 
 ```php
@@ -998,7 +1009,7 @@ We can make all fields optional. This is useful for partial updates, like PATCH 
 fields are sent, and we have to check which ones are available with `$mappedObject->isInitialized('property');`.
 
 Unlike with default mode, mapped object are not auto-initialized as described
-under [mapped object rule](#mapped-object-rule). At least empty array (`[]`) should be sent to initialize them.
+under [mapped object rule](#mappedobject-rule). At least empty array (`[]`) should be sent to initialize them.
 
 Even default values, when not sent, are not initialized - they are unset before assigning sent data.
 
