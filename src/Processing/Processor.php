@@ -30,7 +30,7 @@ interface Processor
 	public function processWithoutMapping($data, string $class, ?Options $options = null): array;
 
 	/**
-	 * Validate and initialize MappedObject properties which were skipped due to LateProcessed modifier
+	 * Validate and initialize MappedObject properties which were skipped due to Skipped modifier
 	 *
 	 * @param array<string> $properties
 	 * @throws InvalidData

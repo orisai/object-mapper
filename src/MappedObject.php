@@ -23,9 +23,9 @@ abstract class MappedObject
 	/** @var mixed */
 	private $rawValues;
 
-	public function setSkippedPropertiesContext(?SkippedPropertiesContext $partialContext): void
+	public function setSkippedPropertiesContext(?SkippedPropertiesContext $context): void
 	{
-		$this->skippedPropertiesContext = $partialContext;
+		$this->skippedPropertiesContext = $context;
 	}
 
 	public function hasSkippedPropertiesContext(): bool
