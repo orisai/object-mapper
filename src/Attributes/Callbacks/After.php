@@ -34,9 +34,6 @@ final class After implements CallableAttribute
 		return AfterCallback::class;
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
 	public function getArgs(): array
 	{
 		return [

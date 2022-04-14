@@ -21,9 +21,6 @@ final class NullRule implements Rule
 
 	public const CAST_EMPTY_STRING = 'castEmptyString';
 
-	/**
-	 * {@inheritDoc}
-	 */
 	public function resolveArgs(array $args, RuleArgsContext $context): NullArgs
 	{
 		$checker = new ArgsChecker($args, self::class);

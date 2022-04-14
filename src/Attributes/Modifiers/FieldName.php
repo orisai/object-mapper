@@ -29,9 +29,6 @@ final class FieldName implements ModifierAttribute
 		return FieldNameModifier::class;
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
 	public function getArgs(): array
 	{
 		return [

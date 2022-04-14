@@ -26,9 +26,6 @@ final class BoolValue implements RuleAttribute
 		return BoolRule::class;
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
 	public function getArgs(): array
 	{
 		return [

@@ -26,9 +26,6 @@ final class StringRule implements Rule
 		MAX_LENGTH = 'maxLength',
 		NOT_EMPTY = 'notEmpty';
 
-	/**
-	 * {@inheritDoc}
-	 */
 	public function resolveArgs(array $args, RuleArgsContext $context): StringArgs
 	{
 		$checker = new ArgsChecker($args, self::class);

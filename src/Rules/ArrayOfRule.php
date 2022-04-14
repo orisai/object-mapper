@@ -24,9 +24,6 @@ final class ArrayOfRule extends MultiValueRule
 
 	public const KEY_RULE = 'key';
 
-	/**
-	 * {@inheritDoc}
-	 */
 	public function resolveArgs(array $args, RuleArgsContext $context): ArrayOfArgs
 	{
 		$checker = new ArgsChecker($args, self::class);

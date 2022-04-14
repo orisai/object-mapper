@@ -19,9 +19,6 @@ final class MixedValue implements RuleAttribute
 		return MixedRule::class;
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
 	public function getArgs(): array
 	{
 		return [];

@@ -31,9 +31,6 @@ final class MappedObjectValue implements RuleAttribute
 		return MappedObjectRule::class;
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
 	public function getArgs(): array
 	{
 		return [

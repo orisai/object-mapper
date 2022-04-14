@@ -27,9 +27,6 @@ final class Summary implements DocumentationAttribute
 		return SummaryDoc::class;
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
 	public function getArgs(): array
 	{
 		return [

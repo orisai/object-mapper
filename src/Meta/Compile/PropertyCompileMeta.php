@@ -7,9 +7,6 @@ final class PropertyCompileMeta extends SharedNodeCompileMeta
 
 	private RuleCompileMeta $rule;
 
-	/**
-	 * {@inheritDoc}
-	 */
 	public function __construct(array $callbacks, array $docs, array $modifiers, RuleCompileMeta $rule)
 	{
 		parent::__construct($callbacks, $docs, $modifiers);

@@ -33,9 +33,6 @@ final class ArrayEnumValue implements RuleAttribute
 		return ArrayEnumRule::class;
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
 	public function getArgs(): array
 	{
 		return [

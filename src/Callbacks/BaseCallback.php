@@ -54,9 +54,6 @@ abstract class BaseCallback implements Callback
 		// Static constructor is required
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
 	public static function resolveArgs(array $args, ArgsContext $context): BaseCallbackArgs
 	{
 		$checker = new ArgsChecker($args, static::class);

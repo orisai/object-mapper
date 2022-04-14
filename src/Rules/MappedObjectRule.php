@@ -24,9 +24,6 @@ final class MappedObjectRule implements Rule
 
 	public const TYPE = 'type';
 
-	/**
-	 * {@inheritDoc}
-	 */
 	public function resolveArgs(array $args, RuleArgsContext $context): MappedObjectArgs
 	{
 		$checker = new ArgsChecker($args, self::class);

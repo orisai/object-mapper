@@ -16,9 +16,6 @@ final class FieldNameModifier implements Modifier
 
 	public const NAME = 'name';
 
-	/**
-	 * {@inheritDoc}
-	 */
 	public static function resolveArgs(array $args, ArgsContext $context): FieldNameArgs
 	{
 		$checker = new ArgsChecker($args, self::class);

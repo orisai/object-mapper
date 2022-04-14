@@ -28,9 +28,6 @@ final class ArrayEnumRule implements Rule
 		VALUES = 'values',
 		USE_KEYS = 'use_keys';
 
-	/**
-	 * {@inheritDoc}
-	 */
 	public function resolveArgs(array $args, RuleArgsContext $context): ArrayEnumArgs
 	{
 		$checker = new ArgsChecker($args, self::class);

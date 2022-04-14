@@ -52,9 +52,6 @@ abstract class CompoundRulesAttribute implements RuleAttribute
 		return $rules;
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
 	public function getArgs(): array
 	{
 		return [

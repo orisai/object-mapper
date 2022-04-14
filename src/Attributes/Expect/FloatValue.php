@@ -40,9 +40,6 @@ final class FloatValue implements RuleAttribute
 		return FloatRule::class;
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
 	public function getArgs(): array
 	{
 		return [

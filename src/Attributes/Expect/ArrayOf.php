@@ -34,9 +34,6 @@ final class ArrayOf extends MultiValueRuleAttribute
 		return ArrayOfRule::class;
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
 	public function getArgs(): array
 	{
 		$args = parent::getArgs();

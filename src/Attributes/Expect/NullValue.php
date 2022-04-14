@@ -26,9 +26,6 @@ final class NullValue implements RuleAttribute
 		return NullRule::class;
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
 	public function getArgs(): array
 	{
 		return [

@@ -30,9 +30,6 @@ final class FloatRule implements Rule
 		UNSIGNED = 'unsigned',
 		CAST_NUMERIC_STRING = 'castNumericString';
 
-	/**
-	 * {@inheritDoc}
-	 */
 	public function resolveArgs(array $args, RuleArgsContext $context): FloatArgs
 	{
 		$checker = new ArgsChecker($args, self::class);

@@ -19,9 +19,6 @@ final class Url implements RuleAttribute
 		return UrlRule::class;
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
 	public function getArgs(): array
 	{
 		return [];

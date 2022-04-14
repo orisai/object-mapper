@@ -24,9 +24,6 @@ use function is_array;
 final class ListOfRule extends MultiValueRule
 {
 
-	/**
-	 * {@inheritDoc}
-	 */
 	public function resolveArgs(array $args, RuleArgsContext $context): MultiValueArgs
 	{
 		$checker = new ArgsChecker($args, self::class);

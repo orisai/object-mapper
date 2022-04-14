@@ -19,9 +19,6 @@ final class ObjectValue implements RuleAttribute
 		return ObjectRule::class;
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
 	public function getArgs(): array
 	{
 		return [];

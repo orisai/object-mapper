@@ -53,9 +53,6 @@ final class Examples implements DocumentationAttribute
 		return ExamplesDoc::class;
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
 	public function getArgs(): array
 	{
 		return [

@@ -32,9 +32,6 @@ final class Example implements DocumentationAttribute
 		return ExampleDoc::class;
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
 	public function getArgs(): array
 	{
 		return [

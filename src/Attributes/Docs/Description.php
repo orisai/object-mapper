@@ -27,9 +27,6 @@ final class Description implements DocumentationAttribute
 		return DescriptionDoc::class;
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
 	public function getArgs(): array
 	{
 		return [

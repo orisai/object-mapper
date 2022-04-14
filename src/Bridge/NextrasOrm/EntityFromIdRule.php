@@ -38,9 +38,6 @@ final class EntityFromIdRule implements Rule
 		$this->model = $model;
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
 	public function resolveArgs(array $args, RuleArgsContext $context): Args
 	{
 		$checker = new ArgsChecker($args, self::class);

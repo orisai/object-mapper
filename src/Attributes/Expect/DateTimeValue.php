@@ -35,9 +35,6 @@ final class DateTimeValue implements RuleAttribute
 		return DateTimeRule::class;
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
 	public function getArgs(): array
 	{
 		return [

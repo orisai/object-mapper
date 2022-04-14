@@ -20,9 +20,6 @@ abstract class CompoundRule implements Rule
 
 	public const RULES = 'rules';
 
-	/**
-	 * {@inheritDoc}
-	 */
 	public function resolveArgs(array $args, RuleArgsContext $context): CompoundRuleArgs
 	{
 		$checker = new ArgsChecker($args, static::class);

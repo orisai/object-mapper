@@ -29,9 +29,6 @@ final class Link implements DocumentationAttribute
 		return LinkDoc::class;
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
 	public function getArgs(): array
 	{
 		return [

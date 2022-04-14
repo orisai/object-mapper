@@ -34,9 +34,6 @@ final class Before implements CallableAttribute
 		return BeforeCallback::class;
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
 	public function getArgs(): array
 	{
 		return [

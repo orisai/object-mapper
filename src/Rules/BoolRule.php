@@ -30,9 +30,6 @@ final class BoolRule implements Rule
 		0 => false,
 	];
 
-	/**
-	 * {@inheritDoc}
-	 */
 	public function resolveArgs(array $args, RuleArgsContext $context): BoolArgs
 	{
 		$checker = new ArgsChecker($args, self::class);

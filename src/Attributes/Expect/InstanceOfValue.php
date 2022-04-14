@@ -30,9 +30,6 @@ final class InstanceOfValue implements RuleAttribute
 		return InstanceRule::class;
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
 	public function getArgs(): array
 	{
 		return [

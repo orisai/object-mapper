@@ -23,9 +23,6 @@ final class InstanceRule implements Rule
 
 	public const TYPE = 'type';
 
-	/**
-	 * {@inheritDoc}
-	 */
 	public function resolveArgs(array $args, RuleArgsContext $context): InstanceArgs
 	{
 		$checker = new ArgsChecker($args, self::class);

@@ -39,9 +39,6 @@ final class DateTimeRule implements Rule
 	public const FORMAT_TIMESTAMP = 'timestamp',
 		FORMAT_ANY = 'any';
 
-	/**
-	 * {@inheritDoc}
-	 */
 	public function resolveArgs(array $args, RuleArgsContext $context): DateTimeArgs
 	{
 		$checker = new ArgsChecker($args, self::class);

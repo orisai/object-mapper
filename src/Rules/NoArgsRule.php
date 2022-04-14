@@ -9,9 +9,6 @@ use Orisai\ObjectMapper\Context\RuleArgsContext;
 trait NoArgsRule
 {
 
-	/**
-	 * {@inheritDoc}
-	 */
 	public function resolveArgs(array $args, RuleArgsContext $context): EmptyArgs
 	{
 		$checker = new ArgsChecker($args, static::class);

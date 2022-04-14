@@ -11,9 +11,6 @@ final class PropertyRuntimeMeta extends SharedNodeRuntimeMeta
 
 	private RuleRuntimeMeta $rule;
 
-	/**
-	 * {@inheritDoc}
-	 */
 	public function __construct(
 		array $callbacks,
 		array $docs,

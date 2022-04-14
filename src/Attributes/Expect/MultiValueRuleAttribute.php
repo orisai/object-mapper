@@ -28,9 +28,6 @@ abstract class MultiValueRuleAttribute implements RuleAttribute
 		$this->mergeDefaults = $mergeDefaults;
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
 	public function getArgs(): array
 	{
 		return [

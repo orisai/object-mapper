@@ -40,9 +40,6 @@ final class IntValue implements RuleAttribute
 		return IntRule::class;
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
 	public function getArgs(): array
 	{
 		return [

@@ -37,9 +37,6 @@ final class EntityFromId implements RuleAttribute
 		return EntityFromIdRule::class;
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
 	public function getArgs(): array
 	{
 		return [

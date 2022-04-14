@@ -19,9 +19,6 @@ final class ScalarValue implements RuleAttribute
 		return ScalarRule::class;
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
 	public function getArgs(): array
 	{
 		return [];

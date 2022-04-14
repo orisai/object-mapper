@@ -18,9 +18,6 @@ final class Skipped implements ModifierAttribute
 		return SkippedModifier::class;
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
 	public function getArgs(): array
 	{
 		return [];

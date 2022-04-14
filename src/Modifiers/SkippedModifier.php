@@ -12,9 +12,6 @@ use Orisai\ObjectMapper\Context\ArgsContext;
 final class SkippedModifier implements Modifier
 {
 
-	/**
-	 * {@inheritDoc}
-	 */
 	public static function resolveArgs(array $args, ArgsContext $context): EmptyArgs
 	{
 		$checker = new ArgsChecker($args, self::class);

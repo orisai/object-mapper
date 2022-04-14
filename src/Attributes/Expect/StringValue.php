@@ -40,9 +40,6 @@ final class StringValue implements RuleAttribute
 		return StringRule::class;
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
 	public function getArgs(): array
 	{
 		return [
