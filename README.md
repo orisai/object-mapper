@@ -40,37 +40,6 @@
 ##
 
 ```php
-use Orisai\ObjectMapper\Exception\InvalidData;
-use Orisai\ObjectMapper\Printers\ErrorVisualPrinter;
-use Orisai\ObjectMapper\Processing\Processor;
-
-final class UserValidator
-{
-
-	private Processor $processor;
-
-	private ErrorVisualPrinter $errorPrinter;
-
-	public function __construct(Processor $processor)
-	{
-		$this->processor = $processor;
-		$this->errorPrinter = new ErrorVisualPrinter();
-	}
-
-	public function process(array $data): UserInput
-	{
-		try {
-			return $this->processor->process($data, UserInput::class);
-		} catch (InvalidData $exception) {
-			$error = $this->errorPrinter->printError($exception);
-			throw new Exception("Validation failed due to following error:\n$error");
-		}
-	}
-
-}
-```
-
-```php
 use Orisai\ObjectMapper\MappedObject;
 use Orisai\ObjectMapper\Attributes\Expect\MappedObjectValue;
 use Orisai\ObjectMapper\Attributes\Expect\StringValue;
@@ -97,4 +66,44 @@ final class UserAddressInput extends MappedObject
 {
 	// ...
 }
+```
+
+```php
+use Orisai\ObjectMapper\Exception\InvalidData;
+use Orisai\ObjectMapper\Printers\ErrorVisualPrinter;
+use Orisai\ObjectMapper\Processing\Processor;
+
+final class UserValidator
+{
+
+	private Processor $processor;
+
+	private ErrorVisualPrinter $errorPrinter;
+
+	public function __construct(Processor $processor)
+	{
+		$this->processor = $processor;
+		$this->errorPrinter = new ErrorVisualPrinter();
+	}
+
+	public function validate(array $data): UserInput
+	{
+		try {
+			return $this->processor->process($data, UserInput::class);
+		} catch (InvalidData $exception) {
+			$error = $this->errorPrinter->printError($exception);
+			throw new Exception("Validation failed due to following error:\n$error");
+		}
+	}
+
+}
+```
+
+```php
+$validator = new UserValidator(...);
+$user = $validator->validate([
+	'firstName' => '',
+	'lastName' => '',
+	'address' => [],
+]);
 ```
