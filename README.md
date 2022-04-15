@@ -77,8 +77,8 @@ $processor = new DefaultProcessor(...);
 $errorPrinter = new ErrorVisualPrinter();
 
 $data = [
-	'firstName' => '',
-	'lastName' => '',
+	'firstName' => 'Tony',
+	'lastName' => 'Stark',
 	'address' => [],
 ];
 
