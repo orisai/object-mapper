@@ -75,6 +75,7 @@ use Orisai\ObjectMapper\Processing\DefaultProcessor;
 
 $processor = new DefaultProcessor(...);
 $errorPrinter = new ErrorVisualPrinter();
+
 $data = [
 	'firstName' => '',
 	'lastName' => '',
