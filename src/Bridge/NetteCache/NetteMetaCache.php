@@ -3,7 +3,7 @@
 namespace Orisai\ObjectMapper\Bridge\NetteCache;
 
 use Nette\Caching\Cache;
-use Nette\Caching\IStorage;
+use Nette\Caching\Storage;
 use Orisai\ObjectMapper\MappedObject;
 use Orisai\ObjectMapper\Meta\ClassModificationsChecker;
 use Orisai\ObjectMapper\Meta\MetaCache;
@@ -18,7 +18,7 @@ final class NetteMetaCache implements MetaCache
 
 	private bool $debugMode;
 
-	public function __construct(IStorage $storage, bool $debugMode, string $namespace = self::NAMESPACE)
+	public function __construct(Storage $storage, bool $debugMode, string $namespace = self::NAMESPACE)
 	{
 		$this->cache = new Cache($storage, $namespace);
 		$this->debugMode = $debugMode;
