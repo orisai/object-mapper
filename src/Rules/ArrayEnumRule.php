@@ -26,7 +26,7 @@ final class ArrayEnumRule implements Rule
 
 	public const
 		VALUES = 'values',
-		USE_KEYS = 'use_keys';
+		USE_KEYS = 'useKeys';
 
 	public function resolveArgs(array $args, RuleArgsContext $context): ArrayEnumArgs
 	{
