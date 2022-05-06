@@ -22,24 +22,24 @@ use function is_array;
 final class ArrayOfRule extends MultiValueRule
 {
 
-	public const KEY_RULE = 'key';
+	public const KeyRule = 'key';
 
 	public function resolveArgs(array $args, RuleArgsContext $context): ArrayOfArgs
 	{
 		$checker = new ArgsChecker($args, self::class);
 		$checker->checkAllowedArgs(
-			[self::KEY_RULE, self::ITEM_RULE, self::MIN_ITEMS, self::MAX_ITEMS, self::MERGE_DEFAULTS],
+			[self::KeyRule, self::ItemRule, self::MinItems, self::MaxItems, self::MergeDefaults],
 		);
 
 		$resolver = $context->getMetaResolver();
 
-		$checker->checkRequiredArg(self::ITEM_RULE);
-		$item = $checker->checkInstanceOf(self::ITEM_RULE, RuleCompileMeta::class);
+		$checker->checkRequiredArg(self::ItemRule);
+		$item = $checker->checkInstanceOf(self::ItemRule, RuleCompileMeta::class);
 		$itemRuleMeta = $resolver->resolveRuleMeta($item, $context);
 
 		$keyRuleMeta = null;
-		if ($checker->hasArg(self::KEY_RULE)) {
-			$key = $checker->checkNullableInstanceOf(self::KEY_RULE, RuleCompileMeta::class);
+		if ($checker->hasArg(self::KeyRule)) {
+			$key = $checker->checkNullableInstanceOf(self::KeyRule, RuleCompileMeta::class);
 
 			if ($key !== null) {
 				$keyRuleMeta = $resolver->resolveRuleMeta($key, $context);
@@ -47,18 +47,18 @@ final class ArrayOfRule extends MultiValueRule
 		}
 
 		$minItems = null;
-		if ($checker->hasArg(self::MIN_ITEMS)) {
-			$minItems = $checker->checkNullableInt(self::MIN_ITEMS);
+		if ($checker->hasArg(self::MinItems)) {
+			$minItems = $checker->checkNullableInt(self::MinItems);
 		}
 
 		$maxItems = null;
-		if ($checker->hasArg(self::MAX_ITEMS)) {
-			$maxItems = $checker->checkNullableInt(self::MAX_ITEMS);
+		if ($checker->hasArg(self::MaxItems)) {
+			$maxItems = $checker->checkNullableInt(self::MaxItems);
 		}
 
 		$mergeDefaults = false;
-		if ($checker->hasArg(self::MERGE_DEFAULTS)) {
-			$mergeDefaults = $checker->checkBool(self::MERGE_DEFAULTS);
+		if ($checker->hasArg(self::MergeDefaults)) {
+			$mergeDefaults = $checker->checkBool(self::MergeDefaults);
 		}
 
 		return new ArrayOfArgs(
@@ -92,11 +92,11 @@ final class ArrayOfRule extends MultiValueRule
 		}
 
 		if ($args->minItems !== null && count($value) < $args->minItems) {
-			$type->markParameterInvalid(self::MIN_ITEMS);
+			$type->markParameterInvalid(self::MinItems);
 		}
 
 		if ($args->maxItems !== null && count($value) > $args->maxItems) {
-			$type->markParameterInvalid(self::MAX_ITEMS);
+			$type->markParameterInvalid(self::MaxItems);
 
 			throw ValueDoesNotMatch::create($type, Value::of($value));
 		}

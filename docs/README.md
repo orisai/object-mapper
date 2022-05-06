@@ -88,19 +88,19 @@ use Orisai\ObjectMapper\MappedObject;
 final class ArrayEnumInput extends MappedObject
 {
 
-    public const VALUES = [
+    public const Values = [
         'first' => 1,
         'second' => 2,
         'third' => 3,
     ];
 
     /**
-     * @ArrayEnumValue(Input::VALUES)
+     * @ArrayEnumValue(Input::Values)
      */
     public int $field;
 
     /**
-     * @ArrayEnumValue(values=Input::VALUES, useKeys=true)
+     * @ArrayEnumValue(values=Input::Values, useKeys=true)
      */
     public string $anotherField;
 

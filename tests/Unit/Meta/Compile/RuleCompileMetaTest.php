@@ -25,7 +25,7 @@ final class RuleCompileMetaTest extends TestCase
 		self::assertTrue($meta->containsAnyOfRules([MixedRule::class, NullRule::class]));
 
 		$compound = new RuleCompileMeta(CompoundRule::class, [
-			CompoundRule::RULES => [
+			CompoundRule::Rules => [
 				$meta,
 			],
 		]);

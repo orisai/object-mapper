@@ -235,9 +235,9 @@ class TypeVisualPrinter implements TypePrinter
 	protected function valueToString($value, bool $includeApostrophe = true, ?int $level = 0): string
 	{
 		return Dumper::dumpValue($value, [
-			Dumper::OPT_INCLUDE_APOSTROPHE => $includeApostrophe,
-			Dumper::OPT_LEVEL => $level,
-			Dumper::OPT_INDENT_CHAR => $this->itemsSeparator,
+			Dumper::OptIncludeApostrophe => $includeApostrophe,
+			Dumper::OptLevel => $level,
+			Dumper::OptIndentChar => $this->itemsSeparator,
 		]);
 	}
 

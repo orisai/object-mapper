@@ -21,35 +21,35 @@ final class StringRule implements Rule
 {
 
 	public const
-		PATTERN = 'pattern',
-		MIN_LENGTH = 'minLength',
-		MAX_LENGTH = 'maxLength',
-		NOT_EMPTY = 'notEmpty';
+		Pattern = 'pattern',
+		MinLength = 'minLength',
+		MaxLength = 'maxLength',
+		NotEmpty = 'notEmpty';
 
 	public function resolveArgs(array $args, RuleArgsContext $context): StringArgs
 	{
 		$checker = new ArgsChecker($args, self::class);
 
-		$checker->checkAllowedArgs([self::PATTERN, self::NOT_EMPTY, self::MIN_LENGTH, self::MAX_LENGTH]);
+		$checker->checkAllowedArgs([self::Pattern, self::NotEmpty, self::MinLength, self::MaxLength]);
 
 		$pattern = null;
-		if ($checker->hasArg(self::PATTERN)) {
-			$pattern = $checker->checkNullableString(self::PATTERN);
+		if ($checker->hasArg(self::Pattern)) {
+			$pattern = $checker->checkNullableString(self::Pattern);
 		}
 
 		$notEmpty = false;
-		if ($checker->hasArg(self::NOT_EMPTY)) {
-			$notEmpty = $checker->checkBool(self::NOT_EMPTY);
+		if ($checker->hasArg(self::NotEmpty)) {
+			$notEmpty = $checker->checkBool(self::NotEmpty);
 		}
 
 		$minLength = null;
-		if ($checker->hasArg(self::MIN_LENGTH)) {
-			$minLength = $checker->checkNullableInt(self::MIN_LENGTH);
+		if ($checker->hasArg(self::MinLength)) {
+			$minLength = $checker->checkNullableInt(self::MinLength);
 		}
 
 		$maxLength = null;
-		if ($checker->hasArg(self::MAX_LENGTH)) {
-			$maxLength = $checker->checkNullableInt(self::MAX_LENGTH);
+		if ($checker->hasArg(self::MaxLength)) {
+			$maxLength = $checker->checkNullableInt(self::MaxLength);
 		}
 
 		return new StringArgs($pattern, $notEmpty, $minLength, $maxLength);
@@ -74,19 +74,19 @@ final class StringRule implements Rule
 		$invalidParameters = [];
 
 		if ($args->notEmpty && preg_match('/\S/', $value) !== 1) {
-			$invalidParameters[] = self::NOT_EMPTY;
+			$invalidParameters[] = self::NotEmpty;
 		}
 
 		if ($args->minLength !== null && $args->minLength > mb_strlen($value)) {
-			$invalidParameters[] = self::MIN_LENGTH;
+			$invalidParameters[] = self::MinLength;
 		}
 
 		if ($args->maxLength !== null && $args->maxLength < mb_strlen($value)) {
-			$invalidParameters[] = self::MAX_LENGTH;
+			$invalidParameters[] = self::MaxLength;
 		}
 
 		if ($args->pattern !== null && preg_match($args->pattern, $value) !== 1) {
-			$invalidParameters[] = self::PATTERN;
+			$invalidParameters[] = self::Pattern;
 		}
 
 		if ($invalidParameters !== []) {

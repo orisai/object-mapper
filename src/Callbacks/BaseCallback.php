@@ -31,22 +31,22 @@ abstract class BaseCallback implements Callback
 
 	// User defined
 	public const
-		METHOD = 'method',
-		RUNTIME = 'runtime';
+		Method = 'method',
+		Runtime = 'runtime';
 
 	// Internal
 	public const
-		METHOD_IS_STATIC = 'method_is_static',
-		METHOD_RETURNS_VALUE = 'method_returns_value';
+		MethodIsStatic = 'method_is_static',
+		MethodReturnsValue = 'method_returns_value';
 
-	private const PROCESSING_RUNTIMES = [
-		CallbackRuntime::ALWAYS,
-		CallbackRuntime::PROCESS_WITHOUT_MAPPING,
+	private const ProcessingRuntimes = [
+		CallbackRuntime::Always,
+		CallbackRuntime::ProcessWithoutMapping,
 	];
 
-	private const INITIALIZATION_RUNTIMES = [
-		CallbackRuntime::ALWAYS,
-		CallbackRuntime::PROCESS,
+	private const InitializationRuntimes = [
+		CallbackRuntime::Always,
+		CallbackRuntime::Process,
 	];
 
 	private function __construct()
@@ -57,14 +57,14 @@ abstract class BaseCallback implements Callback
 	public static function resolveArgs(array $args, ArgsContext $context): BaseCallbackArgs
 	{
 		$checker = new ArgsChecker($args, static::class);
-		$checker->checkAllowedArgs([self::METHOD, self::RUNTIME]);
+		$checker->checkAllowedArgs([self::Method, self::Runtime]);
 
-		$checker->checkRequiredArg(self::METHOD);
-		$checker->checkString(self::METHOD);
+		$checker->checkRequiredArg(self::Method);
+		$checker->checkString(self::Method);
 
 		$class = $context->getClass();
 		$property = $context->getProperty();
-		$methodName = $args[self::METHOD];
+		$methodName = $args[self::Method];
 		$method = self::validateMethod($class, $methodName);
 		self::validateMethodSignature($method, $class, $property);
 
@@ -78,12 +78,12 @@ abstract class BaseCallback implements Callback
 			&& in_array($returnType->getName(), ['void', 'never'], true)
 		);
 
-		$runtime = CallbackRuntime::PROCESS;
-		if ($checker->hasArg(self::RUNTIME)) {
-			$runtime = $checker->checkEnum(self::RUNTIME, [
-				CallbackRuntime::ALWAYS,
-				CallbackRuntime::PROCESS,
-				CallbackRuntime::PROCESS_WITHOUT_MAPPING,
+		$runtime = CallbackRuntime::Process;
+		if ($checker->hasArg(self::Runtime)) {
+			$runtime = $checker->checkEnum(self::Runtime, [
+				CallbackRuntime::Always,
+				CallbackRuntime::Process,
+				CallbackRuntime::ProcessWithoutMapping,
 			]);
 		}
 
@@ -105,7 +105,7 @@ abstract class BaseCallback implements Callback
 			throw InvalidArgument::create()
 				->withMessage(sprintf(
 					'Argument "%s" given to "%s" is expected to be existing method of "%s", "%s" given.%s',
-					self::METHOD,
+					self::Method,
 					static::class,
 					$class->getName(),
 					$methodName,
@@ -119,7 +119,7 @@ abstract class BaseCallback implements Callback
 			throw InvalidArgument::create()
 				->withMessage(sprintf(
 					'Argument "%s" given to "%s" is expected to be public method of "%s", "%s method %s" given.',
-					self::METHOD,
+					self::Method,
 					static::class,
 					$class->getName(),
 					$method->isProtected() ? 'protected' : 'private',
@@ -268,7 +268,7 @@ abstract class BaseCallback implements Callback
 	public static function invoke($data, Args $args, ObjectHolder $holder, BaseFieldContext $context)
 	{
 		// Callback is skipped for unsupported runtime
-		$runtimes = $context->shouldMapDataToObjects() ? self::INITIALIZATION_RUNTIMES : self::PROCESSING_RUNTIMES;
+		$runtimes = $context->shouldMapDataToObjects() ? self::InitializationRuntimes : self::ProcessingRuntimes;
 		if (!in_array($args->runtime, $runtimes, true)) {
 			return $data;
 		}

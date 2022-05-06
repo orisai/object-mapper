@@ -33,25 +33,25 @@ final class DateTimeRule implements Rule
 {
 
 	public const
-		FORMAT = 'format',
-		TYPE = 'type';
+		Format = 'format',
+		Type = 'type';
 
-	public const FORMAT_TIMESTAMP = 'timestamp',
-		FORMAT_ANY = 'any';
+	public const FormatTimestamp = 'timestamp',
+		FormatAny = 'any';
 
 	public function resolveArgs(array $args, RuleArgsContext $context): DateTimeArgs
 	{
 		$checker = new ArgsChecker($args, self::class);
-		$checker->checkAllowedArgs([self::FORMAT, self::TYPE]);
+		$checker->checkAllowedArgs([self::Format, self::Type]);
 
 		$format = DateTimeInterface::ATOM;
-		if ($checker->hasArg(self::FORMAT)) {
-			$format = $checker->checkString(self::FORMAT);
+		if ($checker->hasArg(self::Format)) {
+			$format = $checker->checkString(self::Format);
 		}
 
 		$type = DateTimeImmutable::class;
-		if ($checker->hasArg(self::TYPE)) {
-			$type = $args[self::TYPE];
+		if ($checker->hasArg(self::Type)) {
+			$type = $args[self::Type];
 
 			if (
 				!is_string($type)
@@ -65,7 +65,7 @@ final class DateTimeRule implements Rule
 							DateTimeImmutable::class,
 							DateTime::class,
 						),
-						self::TYPE,
+						self::Type,
 						$type,
 					));
 			}
@@ -94,7 +94,7 @@ final class DateTimeRule implements Rule
 		$format = $args->format;
 		$isTimestamp = false;
 
-		if ($format === self::FORMAT_TIMESTAMP || ($format === self::FORMAT_ANY && Validators::isNumericInt($value))) {
+		if ($format === self::FormatTimestamp || ($format === self::FormatAny && Validators::isNumericInt($value))) {
 			$isTimestamp = true;
 		}
 
@@ -103,7 +103,7 @@ final class DateTimeRule implements Rule
 
 		if ($isTimestamp) {
 			$datetime = $classType::createFromFormat('U', $stringValue);
-		} elseif ($format === self::FORMAT_ANY) {
+		} elseif ($format === self::FormatAny) {
 			try {
 				$datetime = new $classType($stringValue);
 			} catch (Throwable $exception) {
@@ -158,13 +158,13 @@ final class DateTimeRule implements Rule
 	 */
 	public function createType(Args $args, TypeContext $context): SimpleValueType
 	{
-		if ($args->format === self::FORMAT_TIMESTAMP) {
+		if ($args->format === self::FormatTimestamp) {
 			return new SimpleValueType('timestamp');
 		}
 
 		$type = new SimpleValueType('datetime');
 
-		if ($args->format !== self::FORMAT_ANY) {
+		if ($args->format !== self::FormatAny) {
 			$type->addKeyValueParameter('format', $args->format);
 		}
 

@@ -100,7 +100,7 @@ final class TypeVisualPrinterTest extends TestCase
 			$this->formatter->printType($type3),
 		);
 
-		$type4Key = new CompoundType(CompoundType::OPERATOR_OR);
+		$type4Key = new CompoundType(CompoundType::OperatorOr);
 		$type4Key->addSubtype(0, new SimpleValueType('string'));
 		$type4Key->addSubtype(1, new SimpleValueType('int'));
 		$type4 = new ArrayType(
@@ -139,15 +139,15 @@ final class TypeVisualPrinterTest extends TestCase
 	public function testCompound(): void
 	{
 		//TODO - brackets
-		$subtype1 = new CompoundType(CompoundType::OPERATOR_AND);
+		$subtype1 = new CompoundType(CompoundType::OperatorAnd);
 		$subtype1->addSubtype(0, new SimpleValueType('int'));
 		$subtype1->addSubtype(1, new SimpleValueType('float'));
 
-		$subtype2 = new CompoundType(CompoundType::OPERATOR_AND);
+		$subtype2 = new CompoundType(CompoundType::OperatorAnd);
 		$subtype2->addSubtype(0, new SimpleValueType('foo'));
 		$subtype2->addSubtype(1, new SimpleValueType('bar'));
 
-		$type1 = new CompoundType(CompoundType::OPERATOR_OR);
+		$type1 = new CompoundType(CompoundType::OperatorOr);
 		$type1->addSubtype(0, $subtype1);
 		$type1->addSubtype(1, $subtype2);
 

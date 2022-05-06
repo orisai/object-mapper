@@ -14,12 +14,12 @@ final class CompoundType implements Type
 {
 
 	public const
-		OPERATOR_AND = '&',
-		OPERATOR_OR = '|';
+		OperatorAnd = '&',
+		OperatorOr = '|';
 
-	private const OPERATORS = [
-		self::OPERATOR_AND,
-		self::OPERATOR_OR,
+	private const Operators = [
+		self::OperatorAnd,
+		self::OperatorOr,
 	];
 
 	/** @var array<Type> */
@@ -31,18 +31,18 @@ final class CompoundType implements Type
 	/** @var array<WithTypeAndValue> */
 	private array $invalidSubtypes = [];
 
-	/** @phpstan-var self::OPERATOR_* */
+	/** @phpstan-var self::OperatorAnd|self::OperatorOr */
 	private string $operator;
 
 	public function __construct(string $operator)
 	{
-		if (!in_array($operator, self::OPERATORS, true)) {
+		if (!in_array($operator, self::Operators, true)) {
 			throw InvalidArgument::create()
 				->withMessage(
 					sprintf(
 						'Invalid operator %s, choose one of %s',
 						$operator,
-						implode(', ', self::OPERATORS),
+						implode(', ', self::Operators),
 					),
 				);
 		}
@@ -144,7 +144,7 @@ final class CompoundType implements Type
 	}
 
 	/**
-	 * @phpstan-return self::OPERATOR_*
+	 * @phpstan-return self::OperatorAnd|self::OperatorOr
 	 */
 	public function getOperator(): string
 	{

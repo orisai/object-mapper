@@ -19,7 +19,7 @@ final class DefaultRuleManager implements RuleManager
 			return $this->instances[$rule];
 		}
 
-		if (in_array($rule, self::DEFAULT_RULES, true)) {
+		if (in_array($rule, self::DefaultRules, true)) {
 			return $this->instances[$rule] = new $rule();
 		}
 

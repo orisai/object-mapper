@@ -66,7 +66,7 @@ final class RuleCompileMeta
 		if (is_a($nodeType, CompoundRule::class, true)) {
 			$nodeArgs = $ruleNode->getArgs();
 
-			foreach ($nodeArgs[CompoundRule::RULES] as $nestedRuleMeta) {
+			foreach ($nodeArgs[CompoundRule::Rules] as $nestedRuleMeta) {
 				if ($this->containsAnyOfRulesInternal($types, $nestedRuleMeta)) {
 					return true;
 				}

@@ -142,7 +142,7 @@ final class IntRuleTest extends RuleTestCase
 
 			self::assertSame('int', $type->getName());
 			self::assertTrue($type->hasInvalidParameters());
-			self::assertTrue($type->getParameter(IntRule::MAX)->isInvalid());
+			self::assertTrue($type->getParameter(IntRule::Max)->isInvalid());
 			self::assertSame($value, $exception->getValue()->get());
 		}
 
@@ -166,8 +166,8 @@ final class IntRuleTest extends RuleTestCase
 
 			self::assertSame('int', $type->getName());
 			self::assertTrue($type->hasInvalidParameters());
-			self::assertTrue($type->getParameter(IntRule::MIN)->isInvalid());
-			self::assertTrue($type->getParameter(IntRule::UNSIGNED)->isInvalid());
+			self::assertTrue($type->getParameter(IntRule::Min)->isInvalid());
+			self::assertTrue($type->getParameter(IntRule::Unsigned)->isInvalid());
 			self::assertSame($value, $exception->getValue()->get());
 		}
 
@@ -203,10 +203,10 @@ final class IntRuleTest extends RuleTestCase
 		self::assertSame('int', $type->getName());
 
 		self::assertCount(4, $type->getParameters());
-		self::assertTrue($type->hasParameter(IntRule::MIN));
-		self::assertSame(10, $type->getParameter(IntRule::MIN)->getValue());
-		self::assertTrue($type->hasParameter(IntRule::MAX));
-		self::assertSame(100, $type->getParameter(IntRule::MAX)->getValue());
+		self::assertTrue($type->hasParameter(IntRule::Min));
+		self::assertSame(10, $type->getParameter(IntRule::Min)->getValue());
+		self::assertTrue($type->hasParameter(IntRule::Max));
+		self::assertSame(100, $type->getParameter(IntRule::Max)->getValue());
 		self::assertTrue($type->hasParameter('unsigned'));
 		self::assertFalse($type->getParameter('unsigned')->hasValue());
 		self::assertTrue($type->hasParameter('acceptsNumericString'));

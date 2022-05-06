@@ -129,7 +129,7 @@ final class ArrayOfRuleTest extends RuleTestCase
 
 			self::assertFalse($type->isInvalid());
 			self::assertSame($value, $exception->getValue()->get());
-			self::assertTrue($type->getParameter(ArrayOfRule::MIN_ITEMS)->isInvalid());
+			self::assertTrue($type->getParameter(ArrayOfRule::MinItems)->isInvalid());
 
 			self::assertTrue($type->hasInvalidPairs());
 			$invalidPairs = $type->getInvalidPairs();
@@ -172,8 +172,8 @@ final class ArrayOfRuleTest extends RuleTestCase
 			self::assertInstanceOf(ArrayType::class, $type);
 
 			self::assertFalse($type->isInvalid());
-			self::assertFalse($type->hasParameter(ArrayOfRule::MIN_ITEMS));
-			self::assertTrue($type->getParameter(ArrayOfRule::MAX_ITEMS)->isInvalid());
+			self::assertFalse($type->hasParameter(ArrayOfRule::MinItems));
+			self::assertTrue($type->getParameter(ArrayOfRule::MaxItems)->isInvalid());
 			self::assertFalse($type->hasInvalidPairs());
 			self::assertSame($value, $exception->getValue()->get());
 		}
@@ -247,10 +247,10 @@ final class ArrayOfRuleTest extends RuleTestCase
 		self::assertInstanceOf(SimpleValueType::class, $type->getKeyType());
 
 		self::assertCount(2, $type->getParameters());
-		self::assertTrue($type->hasParameter(ArrayOfRule::MIN_ITEMS));
-		self::assertSame(10, $type->getParameter(ArrayOfRule::MIN_ITEMS)->getValue());
-		self::assertTrue($type->hasParameter(ArrayOfRule::MAX_ITEMS));
-		self::assertSame(100, $type->getParameter(ArrayOfRule::MAX_ITEMS)->getValue());
+		self::assertTrue($type->hasParameter(ArrayOfRule::MinItems));
+		self::assertSame(10, $type->getParameter(ArrayOfRule::MinItems)->getValue());
+		self::assertTrue($type->hasParameter(ArrayOfRule::MaxItems));
+		self::assertSame(100, $type->getParameter(ArrayOfRule::MaxItems)->getValue());
 	}
 
 }

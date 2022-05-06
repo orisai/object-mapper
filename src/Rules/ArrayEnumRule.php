@@ -25,23 +25,23 @@ final class ArrayEnumRule implements Rule
 {
 
 	public const
-		VALUES = 'values',
-		USE_KEYS = 'useKeys';
+		Values = 'values',
+		UseKeys = 'useKeys';
 
 	public function resolveArgs(array $args, RuleArgsContext $context): ArrayEnumArgs
 	{
 		$checker = new ArgsChecker($args, self::class);
-		$checker->checkAllowedArgs([self::VALUES, self::USE_KEYS]);
+		$checker->checkAllowedArgs([self::Values, self::UseKeys]);
 
-		$checker->checkRequiredArg(self::VALUES);
-		$values = $checker->checkArray(self::VALUES);
+		$checker->checkRequiredArg(self::Values);
+		$values = $checker->checkArray(self::Values);
 
 		foreach ($values as $value) {
 			if (!is_scalar($value) && $value !== null) {
 				throw InvalidArgument::create()
 					->withMessage(sprintf(
 						'Argument "%s" given to "%s" expected to be array of "%s", one of values was "%s".',
-						self::VALUES,
+						self::Values,
 						self::class,
 						'string|int|float|bool|null',
 						gettype($value),
@@ -50,8 +50,8 @@ final class ArrayEnumRule implements Rule
 		}
 
 		$useKeys = false;
-		if ($checker->hasArg(self::USE_KEYS)) {
-			$useKeys = $checker->checkBool(self::USE_KEYS);
+		if ($checker->hasArg(self::UseKeys)) {
+			$useKeys = $checker->checkBool(self::UseKeys);
 		}
 
 		return new ArrayEnumArgs($values, $useKeys);

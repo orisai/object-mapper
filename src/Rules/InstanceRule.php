@@ -21,21 +21,21 @@ use function is_string;
 final class InstanceRule implements Rule
 {
 
-	public const TYPE = 'type';
+	public const Type = 'type';
 
 	public function resolveArgs(array $args, RuleArgsContext $context): InstanceArgs
 	{
 		$checker = new ArgsChecker($args, self::class);
-		$checker->checkAllowedArgs([self::TYPE]);
+		$checker->checkAllowedArgs([self::Type]);
 
-		$checker->checkRequiredArg(self::TYPE);
-		$type = $args[self::TYPE];
+		$checker->checkRequiredArg(self::Type);
+		$type = $args[self::Type];
 
 		if (!is_string($type) || (!class_exists($type) && !interface_exists($type))) {
 			throw InvalidArgument::create()
 				->withMessage($checker->formatMessage(
 					'class|interface',
-					self::TYPE,
+					self::Type,
 					$type,
 				));
 		}

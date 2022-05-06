@@ -9,7 +9,7 @@ use Orisai\ObjectMapper\Meta\DocMeta;
 final class ExamplesDoc implements Doc
 {
 
-	public const EXAMPLES = 'examples';
+	public const Examples = 'examples';
 
 	/**
 	 * @param array<mixed> $args
@@ -18,11 +18,11 @@ final class ExamplesDoc implements Doc
 	public static function resolveArgs(array $args, ArgsContext $context): array
 	{
 		$checker = new ArgsChecker($args, self::class);
-		$checker->checkAllowedArgs([self::EXAMPLES]);
+		$checker->checkAllowedArgs([self::Examples]);
 
-		$checker->checkRequiredArg(self::EXAMPLES);
+		$checker->checkRequiredArg(self::Examples);
 		/** @var array<DocMeta> $examples */
-		$examples = $checker->checkArray(self::EXAMPLES);
+		$examples = $checker->checkArray(self::Examples);
 
 		$resolver = $context->getMetaResolver();
 		$optimized = [];

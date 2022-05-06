@@ -22,7 +22,7 @@ final class DefaultRuleManagerTest extends TestCase
 
 	public function testDefaultRules(): void
 	{
-		foreach (RuleManager::DEFAULT_RULES as $rule) {
+		foreach (RuleManager::DefaultRules as $rule) {
 			self::assertInstanceOf($rule, $this->ruleManager->getRule($rule));
 		}
 	}

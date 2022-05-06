@@ -103,10 +103,10 @@ final class StringRuleTest extends RuleTestCase
 
 			self::assertSame('string', $type->getName());
 			self::assertTrue($type->hasInvalidParameters());
-			self::assertTrue($type->getParameter(StringRule::NOT_EMPTY)->isInvalid());
-			self::assertTrue($type->getParameter(StringRule::MIN_LENGTH)->isInvalid());
-			self::assertTrue($type->getParameter(StringRule::PATTERN)->isInvalid());
-			self::assertFalse($type->getParameter(StringRule::MAX_LENGTH)->isInvalid());
+			self::assertTrue($type->getParameter(StringRule::NotEmpty)->isInvalid());
+			self::assertTrue($type->getParameter(StringRule::MinLength)->isInvalid());
+			self::assertTrue($type->getParameter(StringRule::Pattern)->isInvalid());
+			self::assertFalse($type->getParameter(StringRule::MaxLength)->isInvalid());
 			self::assertSame($value, $exception->getValue()->get());
 		}
 
@@ -130,10 +130,10 @@ final class StringRuleTest extends RuleTestCase
 
 			self::assertSame('string', $type->getName());
 			self::assertTrue($type->hasInvalidParameters());
-			self::assertFalse($type->getParameter(StringRule::NOT_EMPTY)->isInvalid());
-			self::assertFalse($type->getParameter(StringRule::MIN_LENGTH)->isInvalid());
-			self::assertFalse($type->getParameter(StringRule::PATTERN)->isInvalid());
-			self::assertTrue($type->getParameter(StringRule::MAX_LENGTH)->isInvalid());
+			self::assertFalse($type->getParameter(StringRule::NotEmpty)->isInvalid());
+			self::assertFalse($type->getParameter(StringRule::MinLength)->isInvalid());
+			self::assertFalse($type->getParameter(StringRule::Pattern)->isInvalid());
+			self::assertTrue($type->getParameter(StringRule::MaxLength)->isInvalid());
 			self::assertSame($value, $exception->getValue()->get());
 		}
 
@@ -159,10 +159,10 @@ final class StringRuleTest extends RuleTestCase
 
 			self::assertSame('string', $type->getName());
 			self::assertTrue($type->hasInvalidParameters());
-			self::assertTrue($type->getParameter(StringRule::NOT_EMPTY)->isInvalid());
-			self::assertFalse($type->hasParameter(StringRule::MIN_LENGTH));
-			self::assertFalse($type->hasParameter(StringRule::PATTERN));
-			self::assertFalse($type->hasParameter(StringRule::MAX_LENGTH));
+			self::assertTrue($type->getParameter(StringRule::NotEmpty)->isInvalid());
+			self::assertFalse($type->hasParameter(StringRule::MinLength));
+			self::assertFalse($type->hasParameter(StringRule::Pattern));
+			self::assertFalse($type->hasParameter(StringRule::MaxLength));
 			self::assertSame($value, $exception->getValue()->get());
 		}
 
@@ -208,14 +208,14 @@ final class StringRuleTest extends RuleTestCase
 		self::assertSame('string', $type->getName());
 
 		self::assertCount(4, $type->getParameters());
-		self::assertTrue($type->hasParameter(StringRule::NOT_EMPTY));
-		self::assertFalse($type->getParameter(StringRule::NOT_EMPTY)->hasValue());
-		self::assertTrue($type->hasParameter(StringRule::MIN_LENGTH));
-		self::assertSame(1, $type->getParameter(StringRule::MIN_LENGTH)->getValue());
-		self::assertTrue($type->hasParameter(StringRule::MAX_LENGTH));
-		self::assertSame(10, $type->getParameter(StringRule::MAX_LENGTH)->getValue());
-		self::assertTrue($type->hasParameter(StringRule::PATTERN));
-		self::assertSame('/[\s\S]/', $type->getParameter(StringRule::PATTERN)->getValue());
+		self::assertTrue($type->hasParameter(StringRule::NotEmpty));
+		self::assertFalse($type->getParameter(StringRule::NotEmpty)->hasValue());
+		self::assertTrue($type->hasParameter(StringRule::MinLength));
+		self::assertSame(1, $type->getParameter(StringRule::MinLength)->getValue());
+		self::assertTrue($type->hasParameter(StringRule::MaxLength));
+		self::assertSame(10, $type->getParameter(StringRule::MaxLength)->getValue());
+		self::assertTrue($type->hasParameter(StringRule::Pattern));
+		self::assertSame('/[\s\S]/', $type->getParameter(StringRule::Pattern)->getValue());
 	}
 
 }

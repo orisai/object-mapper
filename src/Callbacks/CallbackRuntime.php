@@ -6,8 +6,8 @@ interface CallbackRuntime
 {
 
 	public const
-		PROCESS_WITHOUT_MAPPING = 'processWithoutMapping',
-		PROCESS = 'process',
-		ALWAYS = 'always';
+		ProcessWithoutMapping = 'processWithoutMapping',
+		Process = 'process',
+		Always = 'always';
 
 }

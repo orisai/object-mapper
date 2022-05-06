@@ -26,13 +26,13 @@ final class Dumper
 {
 
 	public const
-		OPT_INCLUDE_APOSTROPHE = 'include_apostrophe',
-		OPT_MAX_DEPTH = 'max_depth',
-		OPT_WRAP_LENGTH = 'wrap_length',
-		OPT_LEVEL = 'level',
-		OPT_INDENT_CHAR = 'indent_char';
+		OptIncludeApostrophe = 'include_apostrophe',
+		OptMaxDepth = 'max_depth',
+		OptWrapLength = 'wrap_length',
+		OptLevel = 'level',
+		OptIndentChar = 'indent_char';
 
-	private const INDENT_LENGTH = 4;
+	private const IndentLength = 4;
 
 	/**
 	 * @param mixed $value
@@ -40,7 +40,7 @@ final class Dumper
 	 */
 	public static function dumpValue($value, array $options = []): string
 	{
-		return self::dumpValueInternal($value, [], $options[self::OPT_LEVEL] ?? 0, 0, $options);
+		return self::dumpValueInternal($value, [], $options[self::OptLevel] ?? 0, 0, $options);
 	}
 
 	/**
@@ -86,7 +86,7 @@ final class Dumper
 	private static function dumpString(string $var, array $options): string
 	{
 		$var = (string) preg_replace('#\'|\\\\(?=[\'\\\\]|$)#D', '\\\\$0', $var);
-		$includeApostrophe = (bool) ($options[self::OPT_INCLUDE_APOSTROPHE] ?? true);
+		$includeApostrophe = (bool) ($options[self::OptIncludeApostrophe] ?? true);
 
 		return $includeApostrophe ? sprintf("'%s'", $var) : $var;
 	}
@@ -102,12 +102,12 @@ final class Dumper
 			return '[]';
 		}
 
-		if ($level > ($options[self::OPT_MAX_DEPTH] ?? 50) || in_array($var, $parents, true)) {
+		if ($level > ($options[self::OptMaxDepth] ?? 50) || in_array($var, $parents, true)) {
 			throw InvalidArgument::create()
 				->withMessage('Nesting level too deep or recursive dependency.');
 		}
 
-		$indentChar = $options[self::OPT_INDENT_CHAR] ?? "\t";
+		$indentChar = $options[self::OptIndentChar] ?? "\t";
 		$space = str_repeat($indentChar, $level);
 		$outInline = '';
 		$outWrapped = sprintf("\n%s", $space);
@@ -127,9 +127,9 @@ final class Dumper
 		}
 
 		array_pop($parents);
-		$wrap = strpos($outInline, PHP_EOL) !== false || $level * self::INDENT_LENGTH + $column + strlen(
+		$wrap = strpos($outInline, PHP_EOL) !== false || $level * self::IndentLength + $column + strlen(
 			$outInline,
-		) + 3 > ($options[self::OPT_WRAP_LENGTH] ?? 120); // 3 = [],
+		) + 3 > ($options[self::OptWrapLength] ?? 120); // 3 = [],
 
 		return '[' . ($wrap ? $outWrapped : $outInline) . ']';
 	}

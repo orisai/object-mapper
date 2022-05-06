@@ -9,8 +9,8 @@ final class ExampleDoc implements Doc
 {
 
 	public const
-		CONTENT = 'content',
-		DESCRIPTION = 'description';
+		Content = 'content',
+		Description = 'description';
 
 	/**
 	 * @param array<mixed> $args
@@ -19,15 +19,15 @@ final class ExampleDoc implements Doc
 	public static function resolveArgs(array $args, ArgsContext $context): array
 	{
 		$checker = new ArgsChecker($args, self::class);
-		$checker->checkAllowedArgs([self::CONTENT, self::DESCRIPTION]);
+		$checker->checkAllowedArgs([self::Content, self::Description]);
 
-		$checker->checkRequiredArg(self::CONTENT);
-		$checker->checkString(self::CONTENT);
+		$checker->checkRequiredArg(self::Content);
+		$checker->checkString(self::Content);
 
-		if ($checker->hasArg(self::DESCRIPTION)) {
-			$checker->checkNullableString(self::DESCRIPTION);
+		if ($checker->hasArg(self::Description)) {
+			$checker->checkNullableString(self::Description);
 		} else {
-			$args[self::DESCRIPTION] = null;
+			$args[self::Description] = null;
 		}
 
 		return $args;

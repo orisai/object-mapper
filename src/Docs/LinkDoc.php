@@ -9,8 +9,8 @@ final class LinkDoc implements Doc
 {
 
 	public const
-		URL = 'url',
-		DESCRIPTION = 'description';
+		Url = 'url',
+		Description = 'description';
 
 	/**
 	 * @param array<mixed> $args
@@ -19,15 +19,15 @@ final class LinkDoc implements Doc
 	public static function resolveArgs(array $args, ArgsContext $context): array
 	{
 		$checker = new ArgsChecker($args, self::class);
-		$checker->checkAllowedArgs([self::URL, self::DESCRIPTION]);
+		$checker->checkAllowedArgs([self::Url, self::Description]);
 
-		$checker->checkRequiredArg(self::URL);
-		$checker->checkString(self::URL);
+		$checker->checkRequiredArg(self::Url);
+		$checker->checkString(self::Url);
 
-		if ($checker->hasArg(self::DESCRIPTION)) {
-			$checker->checkNullableString(self::DESCRIPTION);
+		if ($checker->hasArg(self::Description)) {
+			$checker->checkNullableString(self::Description);
 		} else {
-			$args[self::DESCRIPTION] = null;
+			$args[self::Description] = null;
 		}
 
 		return $args;

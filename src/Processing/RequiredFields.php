@@ -9,14 +9,14 @@ final class RequiredFields
 {
 
 	private const
-		NON_DEFAULT = 1,
-		ALL = 2,
-		NONE = 3;
+		NonDefault = 1,
+		All = 2,
+		None = 3;
 
-	private const VALUES_AND_NAMES = [
-		self::NON_DEFAULT => 'nonDefault',
-		self::ALL => 'all',
-		self::NONE => 'none',
+	private const ValuesAndNames = [
+		self::NonDefault => 'nonDefault',
+		self::All => 'all',
+		self::None => 'none',
 	];
 
 	/** @readonly */
@@ -36,7 +36,7 @@ final class RequiredFields
 	 */
 	public static function nonDefault(): self
 	{
-		return self::from(self::NON_DEFAULT);
+		return self::from(self::NonDefault);
 	}
 
 	/**
@@ -46,7 +46,7 @@ final class RequiredFields
 	 */
 	public static function all(): self
 	{
-		return self::from(self::ALL);
+		return self::from(self::All);
 	}
 
 	/**
@@ -56,16 +56,16 @@ final class RequiredFields
 	 */
 	public static function none(): self
 	{
-		return self::from(self::NONE);
+		return self::from(self::None);
 	}
 
 	public static function tryFrom(int $value): ?self
 	{
-		if (!array_key_exists($value, self::VALUES_AND_NAMES)) {
+		if (!array_key_exists($value, self::ValuesAndNames)) {
 			return null;
 		}
 
-		return new self(self::VALUES_AND_NAMES[$value], $value);
+		return new self(self::ValuesAndNames[$value], $value);
 	}
 
 	public static function from(int $value): self
@@ -85,7 +85,7 @@ final class RequiredFields
 	public static function cases(): array
 	{
 		$cases = [];
-		foreach (self::VALUES_AND_NAMES as $value => $name) {
+		foreach (self::ValuesAndNames as $value => $name) {
 			$cases[] = self::from($value);
 		}
 

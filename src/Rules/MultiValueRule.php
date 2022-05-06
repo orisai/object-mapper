@@ -10,9 +10,9 @@ abstract class MultiValueRule implements Rule
 {
 
 	public const
-		ITEM_RULE = 'item',
-		MIN_ITEMS = 'minItems',
-		MAX_ITEMS = 'maxItems',
-		MERGE_DEFAULTS = 'mergeDefaults';
+		ItemRule = 'item',
+		MinItems = 'minItems',
+		MaxItems = 'maxItems',
+		MergeDefaults = 'mergeDefaults';
 
 }

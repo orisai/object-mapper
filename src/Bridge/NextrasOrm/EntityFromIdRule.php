@@ -27,9 +27,9 @@ use function is_subclass_of;
 final class EntityFromIdRule implements Rule
 {
 
-	public const NAME = 'name',
-		ENTITY = 'entity',
-		ID_RULE = 'idRule';
+	public const Name = 'name',
+		Entity = 'entity',
+		IdRule = 'idRule';
 
 	private IModel $model;
 
@@ -41,13 +41,13 @@ final class EntityFromIdRule implements Rule
 	public function resolveArgs(array $args, RuleArgsContext $context): Args
 	{
 		$checker = new ArgsChecker($args, self::class);
-		$checker->checkAllowedArgs([self::NAME, self::ENTITY, self::ID_RULE]);
+		$checker->checkAllowedArgs([self::Name, self::Entity, self::IdRule]);
 
-		$checker->checkRequiredArg(self::NAME);
-		$name = $checker->checkString(self::NAME);
+		$checker->checkRequiredArg(self::Name);
+		$name = $checker->checkString(self::Name);
 
-		$checker->checkRequiredArg(self::ENTITY);
-		$entity = $args[self::ENTITY];
+		$checker->checkRequiredArg(self::Entity);
+		$entity = $args[self::Entity];
 
 		$entityInterface = IEntity::class;
 		if (
@@ -58,7 +58,7 @@ final class EntityFromIdRule implements Rule
 			throw InvalidArgument::create()
 				->withMessage($checker->formatMessage(
 					"non-abstract class-string<$entityInterface>",
-					self::ENTITY,
+					self::Entity,
 					$entity,
 				));
 		}
@@ -73,8 +73,8 @@ final class EntityFromIdRule implements Rule
 
 		$resolver = $context->getMetaResolver();
 
-		$checker->checkRequiredArg(self::ID_RULE);
-		$idRule = $checker->checkInstanceOf(self::ID_RULE, RuleCompileMeta::class);
+		$checker->checkRequiredArg(self::IdRule);
+		$idRule = $checker->checkInstanceOf(self::IdRule, RuleCompileMeta::class);
 		$idRuleMeta = $resolver->resolveRuleMeta($idRule, $context);
 
 		return new EntityFromIdArgs($name, $entity, $idRuleMeta);

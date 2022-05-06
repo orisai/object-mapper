@@ -48,7 +48,7 @@ final class ScalarRule implements Rule
 	 */
 	public function createType(Args $args, TypeContext $context): CompoundType
 	{
-		$type = new CompoundType(CompoundType::OPERATOR_OR);
+		$type = new CompoundType(CompoundType::OperatorOr);
 
 		foreach ($this->getSubtypes() as $key => $subtype) {
 			$type->addSubtype($key, $subtype);

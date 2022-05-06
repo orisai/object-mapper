@@ -17,9 +17,9 @@ final class CompoundTypeTest extends TestCase
 
 	public function testOperator(): void
 	{
-		$type = new CompoundType(CompoundType::OPERATOR_AND);
+		$type = new CompoundType(CompoundType::OperatorAnd);
 
-		self::assertSame(CompoundType::OPERATOR_AND, $type->getOperator());
+		self::assertSame(CompoundType::OperatorAnd, $type->getOperator());
 		self::assertSame([], $type->getSubtypes());
 	}
 
@@ -33,9 +33,9 @@ final class CompoundTypeTest extends TestCase
 
 	public function testSubtypes(): void
 	{
-		$type = new CompoundType(CompoundType::OPERATOR_OR);
+		$type = new CompoundType(CompoundType::OperatorOr);
 
-		self::assertSame(CompoundType::OPERATOR_OR, $type->getOperator());
+		self::assertSame(CompoundType::OperatorOr, $type->getOperator());
 		self::assertSame([], $type->getSubtypes());
 
 		$key1 = 1;
@@ -97,7 +97,7 @@ final class CompoundTypeTest extends TestCase
 		$this->expectException(InvalidState::class);
 		$this->expectExceptionMessage('Cannot set subtype with key 1 because it was already set');
 
-		$type = new CompoundType(CompoundType::OPERATOR_AND);
+		$type = new CompoundType(CompoundType::OperatorAnd);
 		$type->addSubtype(1, new MessageType('t'));
 		$type->addSubtype(1, new MessageType('t'));
 	}
@@ -107,7 +107,7 @@ final class CompoundTypeTest extends TestCase
 		$this->expectException(InvalidState::class);
 		$this->expectExceptionMessage('Cannot mark subtype with key 1 skipped because it was never set');
 
-		$type = new CompoundType(CompoundType::OPERATOR_AND);
+		$type = new CompoundType(CompoundType::OperatorAnd);
 		$type->setSubtypeSkipped(1);
 	}
 
@@ -118,7 +118,7 @@ final class CompoundTypeTest extends TestCase
 			'Cannot overwrite subtype with key 1 with invalid subtype because it was never set',
 		);
 
-		$type = new CompoundType(CompoundType::OPERATOR_AND);
+		$type = new CompoundType(CompoundType::OperatorAnd);
 		$type->overwriteInvalidSubtype(
 			1,
 			ValueDoesNotMatch::create(new MessageType('f'), Value::none()),
@@ -130,7 +130,7 @@ final class CompoundTypeTest extends TestCase
 		$this->expectException(InvalidState::class);
 		$this->expectExceptionMessage('Cannot overwrite subtype with key 1 because it is already marked as skipped');
 
-		$type = new CompoundType(CompoundType::OPERATOR_AND);
+		$type = new CompoundType(CompoundType::OperatorAnd);
 		$type->addSubtype(1, new MessageType('t'));
 		$type->setSubtypeSkipped(1);
 		$type->overwriteInvalidSubtype(
@@ -146,7 +146,7 @@ final class CompoundTypeTest extends TestCase
 			'Cannot mark subtype with key 1 skipped because it was already overwritten with invalid subtype',
 		);
 
-		$type = new CompoundType(CompoundType::OPERATOR_AND);
+		$type = new CompoundType(CompoundType::OperatorAnd);
 		$type->addSubtype(1, new MessageType('t'));
 		$type->overwriteInvalidSubtype(
 			1,

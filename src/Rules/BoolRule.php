@@ -21,9 +21,9 @@ use function strtolower;
 final class BoolRule implements Rule
 {
 
-	public const CAST_BOOL_LIKE = 'castBoolLike';
+	public const CastBoolLike = 'castBoolLike';
 
-	private const CASTABLE_MAP = [
+	private const CastMap = [
 		'true' => true,
 		'false' => false,
 		1 => true,
@@ -33,11 +33,11 @@ final class BoolRule implements Rule
 	public function resolveArgs(array $args, RuleArgsContext $context): BoolArgs
 	{
 		$checker = new ArgsChecker($args, self::class);
-		$checker->checkAllowedArgs([self::CAST_BOOL_LIKE]);
+		$checker->checkAllowedArgs([self::CastBoolLike]);
 
 		$castBoolLike = false;
-		if ($checker->hasArg(self::CAST_BOOL_LIKE)) {
-			$castBoolLike = $checker->checkBool(self::CAST_BOOL_LIKE);
+		if ($checker->hasArg(self::CastBoolLike)) {
+			$castBoolLike = $checker->checkBool(self::CastBoolLike);
 		}
 
 		return new BoolArgs($castBoolLike);
@@ -93,9 +93,9 @@ final class BoolRule implements Rule
 
 			if (
 				(is_string($value) || is_int($value))
-				&& isset(self::CASTABLE_MAP[$value])
+				&& isset(self::CastMap[$value])
 			) {
-				return self::CASTABLE_MAP[$value];
+				return self::CastMap[$value];
 			}
 		}
 

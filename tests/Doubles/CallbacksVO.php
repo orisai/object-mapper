@@ -17,8 +17,8 @@ use function array_key_exists;
 use function is_array;
 
 /**
- * @Before(method="beforeClass", runtime=CallbackRuntime::ALWAYS)
- * @After(method="afterClass", runtime=CallbackRuntime::ALWAYS)
+ * @Before(method="beforeClass", runtime=CallbackRuntime::Always)
+ * @After(method="afterClass", runtime=CallbackRuntime::Always)
  */
 final class CallbacksVO extends MappedObject
 {
@@ -34,8 +34,8 @@ final class CallbacksVO extends MappedObject
 	 *         @MixedValue(),
 	 *     ),
 	 * )
-	 * @After(method="afterArrayInitialization", runtime=CallbackRuntime::PROCESS)
-	 * @After(method="afterArrayProcessing", runtime=CallbackRuntime::PROCESS_WITHOUT_MAPPING)
+	 * @After(method="afterArrayInitialization", runtime=CallbackRuntime::Process)
+	 * @After(method="afterArrayProcessing", runtime=CallbackRuntime::ProcessWithoutMapping)
 	 */
 	public array $array;
 
@@ -43,7 +43,7 @@ final class CallbacksVO extends MappedObject
 	 * @ArrayOf(
 	 *     @MixedValue()
 	 * )
-	 * @After(method="afterStructure", runtime=CallbackRuntime::ALWAYS)
+	 * @After(method="afterStructure", runtime=CallbackRuntime::Always)
 	 */
 	public MappedObject $structure;
 
@@ -52,8 +52,8 @@ final class CallbacksVO extends MappedObject
 
 	/**
 	 * @StringValue()
-	 * @Before(method="beforeImmutableDefaultValue", runtime=CallbackRuntime::ALWAYS)
-	 * @Before(method="afterImmutableDefaultValue", runtime=CallbackRuntime::ALWAYS)
+	 * @Before(method="beforeImmutableDefaultValue", runtime=CallbackRuntime::Always)
+	 * @Before(method="afterImmutableDefaultValue", runtime=CallbackRuntime::Always)
 	 */
 	public string $immutableDefaultValue = 'defaultValue_immutable';
 
@@ -62,8 +62,8 @@ final class CallbacksVO extends MappedObject
 
 	/**
 	 * @StringValue()
-	 * @Before(method="beforeCallbackSetValue", runtime=CallbackRuntime::ALWAYS)
-	 * @After(method="afterCallbackSetValue", runtime=CallbackRuntime::ALWAYS)
+	 * @Before(method="beforeCallbackSetValue", runtime=CallbackRuntime::Always)
+	 * @After(method="afterCallbackSetValue", runtime=CallbackRuntime::Always)
 	 */
 	public string $callbackSetValue;
 

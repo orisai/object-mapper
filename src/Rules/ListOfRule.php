@@ -27,28 +27,28 @@ final class ListOfRule extends MultiValueRule
 	public function resolveArgs(array $args, RuleArgsContext $context): MultiValueArgs
 	{
 		$checker = new ArgsChecker($args, self::class);
-		$checker->checkAllowedArgs([self::ITEM_RULE, self::MIN_ITEMS, self::MAX_ITEMS, self::MERGE_DEFAULTS]);
+		$checker->checkAllowedArgs([self::ItemRule, self::MinItems, self::MaxItems, self::MergeDefaults]);
 
 		$resolver = $context->getMetaResolver();
 
-		$checker->checkRequiredArg(self::ITEM_RULE);
+		$checker->checkRequiredArg(self::ItemRule);
 
-		$item = $checker->checkInstanceOf(self::ITEM_RULE, RuleCompileMeta::class);
+		$item = $checker->checkInstanceOf(self::ItemRule, RuleCompileMeta::class);
 		$itemRuleMeta = $resolver->resolveRuleMeta($item, $context);
 
 		$minItems = null;
-		if ($checker->hasArg(self::MIN_ITEMS)) {
-			$minItems = $checker->checkNullableInt(self::MIN_ITEMS);
+		if ($checker->hasArg(self::MinItems)) {
+			$minItems = $checker->checkNullableInt(self::MinItems);
 		}
 
 		$maxItems = null;
-		if ($checker->hasArg(self::MAX_ITEMS)) {
-			$maxItems = $checker->checkNullableInt(self::MAX_ITEMS);
+		if ($checker->hasArg(self::MaxItems)) {
+			$maxItems = $checker->checkNullableInt(self::MaxItems);
 		}
 
 		$mergeDefaults = false;
-		if ($checker->hasArg(self::MERGE_DEFAULTS)) {
-			$mergeDefaults = $checker->checkBool(self::MERGE_DEFAULTS);
+		if ($checker->hasArg(self::MergeDefaults)) {
+			$mergeDefaults = $checker->checkBool(self::MergeDefaults);
 		}
 
 		return new MultiValueArgs(
@@ -81,11 +81,11 @@ final class ListOfRule extends MultiValueRule
 		}
 
 		if ($args->minItems !== null && count($value) < $args->minItems) {
-			$type->markParameterInvalid(self::MIN_ITEMS);
+			$type->markParameterInvalid(self::MinItems);
 		}
 
 		if ($args->maxItems !== null && count($value) > $args->maxItems) {
-			$type->markParameterInvalid(self::MAX_ITEMS);
+			$type->markParameterInvalid(self::MaxItems);
 
 			throw ValueDoesNotMatch::create($type, Value::of($value));
 		}

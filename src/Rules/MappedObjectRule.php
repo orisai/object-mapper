@@ -22,20 +22,20 @@ use function is_a;
 final class MappedObjectRule implements Rule
 {
 
-	public const TYPE = 'type';
+	public const Type = 'type';
 
 	public function resolveArgs(array $args, RuleArgsContext $context): MappedObjectArgs
 	{
 		$checker = new ArgsChecker($args, self::class);
 
-		$checker->checkAllowedArgs([self::TYPE]);
+		$checker->checkAllowedArgs([self::Type]);
 
-		$checker->checkRequiredArg(self::TYPE);
-		$type = $checker->checkString(self::TYPE);
+		$checker->checkRequiredArg(self::Type);
+		$type = $checker->checkString(self::Type);
 
 		// Load object to ensure whole hierarchy is valid even if not used
 		// Note: Loading as class should be always array cached and in runtime should be metadata resolved only once so it has no performance impact
-		$context->getMetaLoader()->load($args[self::TYPE]);
+		$context->getMetaLoader()->load($args[self::Type]);
 		assert(is_a($type, MappedObject::class, true));
 
 		return new MappedObjectArgs($type);

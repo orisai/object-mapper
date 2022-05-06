@@ -9,7 +9,7 @@ use Orisai\ObjectMapper\Meta\DocMeta;
 final class LinksDoc implements Doc
 {
 
-	public const LINKS = 'links';
+	public const Links = 'links';
 
 	/**
 	 * @param array<mixed> $args
@@ -18,11 +18,11 @@ final class LinksDoc implements Doc
 	public static function resolveArgs(array $args, ArgsContext $context): array
 	{
 		$checker = new ArgsChecker($args, self::class);
-		$checker->checkAllowedArgs([self::LINKS]);
+		$checker->checkAllowedArgs([self::Links]);
 
-		$checker->checkRequiredArg(self::LINKS);
+		$checker->checkRequiredArg(self::Links);
 		/** @var array<DocMeta> $links */
-		$links = $checker->checkArray(self::LINKS);
+		$links = $checker->checkArray(self::Links);
 
 		$resolver = $context->getMetaResolver();
 		$optimized = [];

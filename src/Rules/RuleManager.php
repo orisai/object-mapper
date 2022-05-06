@@ -5,7 +5,7 @@ namespace Orisai\ObjectMapper\Rules;
 interface RuleManager
 {
 
-	public const DEFAULT_RULES = [
+	public const DefaultRules = [
 		AllOfRule::class,
 		AnyOfRule::class,
 		ArrayOfRule::class,

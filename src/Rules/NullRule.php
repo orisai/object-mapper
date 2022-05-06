@@ -19,16 +19,16 @@ use function preg_match;
 final class NullRule implements Rule
 {
 
-	public const CAST_EMPTY_STRING = 'castEmptyString';
+	public const CastEmptyString = 'castEmptyString';
 
 	public function resolveArgs(array $args, RuleArgsContext $context): NullArgs
 	{
 		$checker = new ArgsChecker($args, self::class);
-		$checker->checkAllowedArgs([self::CAST_EMPTY_STRING]);
+		$checker->checkAllowedArgs([self::CastEmptyString]);
 
 		$castEmptyString = false;
-		if ($checker->hasArg(self::CAST_EMPTY_STRING)) {
-			$castEmptyString = $checker->checkBool(self::CAST_EMPTY_STRING);
+		if ($checker->hasArg(self::CastEmptyString)) {
+			$castEmptyString = $checker->checkBool(self::CastEmptyString);
 		}
 
 		return new NullArgs($castEmptyString);

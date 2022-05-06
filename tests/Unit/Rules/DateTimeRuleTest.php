@@ -61,15 +61,15 @@ final class DateTimeRuleTest extends RuleTestCase
 	 */
 	public function provideValidValues(): Generator
 	{
-		yield ['now', DateTimeRule::FORMAT_ANY];
-		yield ['yesterday', DateTimeRule::FORMAT_ANY];
-		yield ['1879-03-14', DateTimeRule::FORMAT_ANY];
-		yield ['2013-04-12T16:40:00-04:00', DateTimeRule::FORMAT_ANY];
+		yield ['now', DateTimeRule::FormatAny];
+		yield ['yesterday', DateTimeRule::FormatAny];
+		yield ['1879-03-14', DateTimeRule::FormatAny];
+		yield ['2013-04-12T16:40:00-04:00', DateTimeRule::FormatAny];
 		yield ['2013-04-12T16:40:00-04:00', DateTimeInterface::ATOM];
-		yield ['1389312000', DateTimeRule::FORMAT_TIMESTAMP];
-		yield [1_389_312_000, DateTimeRule::FORMAT_TIMESTAMP];
-		yield ['1389312000', DateTimeRule::FORMAT_ANY];
-		yield [1_389_312_000, DateTimeRule::FORMAT_ANY];
+		yield ['1389312000', DateTimeRule::FormatTimestamp];
+		yield [1_389_312_000, DateTimeRule::FormatTimestamp];
+		yield ['1389312000', DateTimeRule::FormatAny];
+		yield [1_389_312_000, DateTimeRule::FormatAny];
 	}
 
 	/**
@@ -123,11 +123,11 @@ final class DateTimeRuleTest extends RuleTestCase
 	 */
 	public function provideInvalidValues(): Generator
 	{
-		yield [null, DateTimeRule::FORMAT_ANY, []];
-		yield [[], DateTimeRule::FORMAT_ANY, []];
-		yield [true, DateTimeRule::FORMAT_ANY, []];
-		yield [1.2, DateTimeRule::FORMAT_ANY, []];
-		yield ['whatever', DateTimeRule::FORMAT_ANY, [
+		yield [null, DateTimeRule::FormatAny, []];
+		yield [[], DateTimeRule::FormatAny, []];
+		yield [true, DateTimeRule::FormatAny, []];
+		yield [1.2, DateTimeRule::FormatAny, []];
+		yield ['whatever', DateTimeRule::FormatAny, [
 			'Failed to parse time string (whatever) at position 0 (w): The timezone could not be found in the database',
 		]];
 
@@ -137,7 +137,7 @@ final class DateTimeRuleTest extends RuleTestCase
 			'Data missing',
 		]];
 
-		yield ['whatever', DateTimeRule::FORMAT_TIMESTAMP, [
+		yield ['whatever', DateTimeRule::FormatTimestamp, [
 			PHP_VERSION_ID < 8_00_00 ? 'Unexpected data found.' : 'Found unexpected data',
 		], 'timestamp'];
 
@@ -162,13 +162,13 @@ final class DateTimeRuleTest extends RuleTestCase
 
 		self::assertSame('datetime', $type->getName());
 		self::assertCount(1, $type->getParameters());
-		self::assertTrue($type->hasParameter(DateTimeRule::FORMAT));
-		self::assertSame(DateTimeInterface::ATOM, $type->getParameter(DateTimeRule::FORMAT)->getValue());
+		self::assertTrue($type->hasParameter(DateTimeRule::Format));
+		self::assertSame(DateTimeInterface::ATOM, $type->getParameter(DateTimeRule::Format)->getValue());
 	}
 
 	public function testTypeWithTimestamp(): void
 	{
-		$args = new DateTimeArgs(DateTimeRule::FORMAT_TIMESTAMP);
+		$args = new DateTimeArgs(DateTimeRule::FormatTimestamp);
 
 		$type = $this->rule->createType($args, $this->typeContext);
 
@@ -194,8 +194,8 @@ final class DateTimeRuleTest extends RuleTestCase
 
 		self::assertSame('datetime', $type->getName());
 		self::assertCount(1, $type->getParameters());
-		self::assertTrue($type->hasParameter(DateTimeRule::FORMAT));
-		self::assertSame(DateTimeInterface::COOKIE, $type->getParameter(DateTimeRule::FORMAT)->getValue());
+		self::assertTrue($type->hasParameter(DateTimeRule::Format));
+		self::assertSame(DateTimeInterface::COOKIE, $type->getParameter(DateTimeRule::Format)->getValue());
 	}
 
 }

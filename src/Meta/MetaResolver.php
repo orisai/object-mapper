@@ -277,7 +277,7 @@ final class MetaResolver
 			}
 
 			if ($fieldNameMeta !== null) {
-				$fieldName = $fieldNameMeta->getArgs()[FieldNameModifier::NAME];
+				$fieldName = $fieldNameMeta->getArgs()[FieldNameModifier::Name];
 
 				if (isset($map[$fieldName])) {
 					$message = Message::create()

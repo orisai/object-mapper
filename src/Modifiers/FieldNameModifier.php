@@ -14,20 +14,20 @@ use function is_string;
 final class FieldNameModifier implements Modifier
 {
 
-	public const NAME = 'name';
+	public const Name = 'name';
 
 	public static function resolveArgs(array $args, ArgsContext $context): FieldNameArgs
 	{
 		$checker = new ArgsChecker($args, self::class);
-		$checker->checkAllowedArgs([self::NAME]);
-		$checker->checkRequiredArg(self::NAME);
+		$checker->checkAllowedArgs([self::Name]);
+		$checker->checkRequiredArg(self::Name);
 
-		$name = $args[self::NAME];
+		$name = $args[self::Name];
 		if (!is_string($name) && !is_int($name)) {
 			throw InvalidArgument::create()
 				->withMessage($checker->formatMessage(
 					'int|string',
-					self::NAME,
+					self::Name,
 					$name,
 				));
 		}

@@ -164,7 +164,7 @@ final class FloatRuleTest extends RuleTestCase
 
 			self::assertSame('float', $type->getName());
 			self::assertTrue($type->hasInvalidParameters());
-			self::assertTrue($type->getParameter(FloatRule::MAX)->isInvalid());
+			self::assertTrue($type->getParameter(FloatRule::Max)->isInvalid());
 			self::assertSame($value, $exception->getValue()->get());
 		}
 
@@ -188,8 +188,8 @@ final class FloatRuleTest extends RuleTestCase
 
 			self::assertSame('float', $type->getName());
 			self::assertTrue($type->hasInvalidParameters());
-			self::assertTrue($type->getParameter(FloatRule::MIN)->isInvalid());
-			self::assertTrue($type->getParameter(FloatRule::UNSIGNED)->isInvalid());
+			self::assertTrue($type->getParameter(FloatRule::Min)->isInvalid());
+			self::assertTrue($type->getParameter(FloatRule::Unsigned)->isInvalid());
 			self::assertSame($value, $exception->getValue()->get());
 		}
 
@@ -225,10 +225,10 @@ final class FloatRuleTest extends RuleTestCase
 		self::assertSame('float', $type->getName());
 
 		self::assertCount(4, $type->getParameters());
-		self::assertTrue($type->hasParameter(FloatRule::MIN));
-		self::assertSame(10.0, $type->getParameter(FloatRule::MIN)->getValue());
-		self::assertTrue($type->hasParameter(FloatRule::MAX));
-		self::assertSame(100.0, $type->getParameter(FloatRule::MAX)->getValue());
+		self::assertTrue($type->hasParameter(FloatRule::Min));
+		self::assertSame(10.0, $type->getParameter(FloatRule::Min)->getValue());
+		self::assertTrue($type->hasParameter(FloatRule::Max));
+		self::assertSame(100.0, $type->getParameter(FloatRule::Max)->getValue());
 		self::assertTrue($type->hasParameter('unsigned'));
 		self::assertFalse($type->getParameter('unsigned')->hasValue());
 		self::assertTrue($type->hasParameter('acceptsNumericString'));

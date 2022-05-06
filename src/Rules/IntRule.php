@@ -24,44 +24,44 @@ final class IntRule implements Rule
 {
 
 	public const
-		MIN = 'min',
-		MAX = 'max',
-		UNSIGNED = 'unsigned',
-		CAST_NUMERIC_STRING = 'castNumericString';
+		Min = 'min',
+		Max = 'max',
+		Unsigned = 'unsigned',
+		CastNumericString = 'castNumericString';
 
 	public function resolveArgs(array $args, RuleArgsContext $context): IntArgs
 	{
 		$checker = new ArgsChecker($args, self::class);
-		$checker->checkAllowedArgs([self::MIN, self::MAX, self::UNSIGNED, self::CAST_NUMERIC_STRING]);
+		$checker->checkAllowedArgs([self::Min, self::Max, self::Unsigned, self::CastNumericString]);
 
 		$min = null;
-		if ($checker->hasArg(self::MIN)) {
-			$min = $checker->checkNullableInt(self::MIN);
+		if ($checker->hasArg(self::Min)) {
+			$min = $checker->checkNullableInt(self::Min);
 		}
 
 		$max = null;
-		if ($checker->hasArg(self::MAX)) {
-			$max = $checker->checkNullableInt(self::MAX);
+		if ($checker->hasArg(self::Max)) {
+			$max = $checker->checkNullableInt(self::Max);
 		}
 
 		$unsigned = false;
-		if ($checker->hasArg(self::UNSIGNED)) {
-			$unsigned = $checker->checkBool(self::UNSIGNED);
+		if ($checker->hasArg(self::Unsigned)) {
+			$unsigned = $checker->checkBool(self::Unsigned);
 		}
 
 		$castNumericString = false;
-		if ($checker->hasArg(self::CAST_NUMERIC_STRING)) {
-			$castNumericString = $checker->checkBool(self::CAST_NUMERIC_STRING);
+		if ($checker->hasArg(self::CastNumericString)) {
+			$castNumericString = $checker->checkBool(self::CastNumericString);
 		}
 
 		if ($min !== null && $max !== null && $max < $min) {
 			throw InvalidArgument::create()
 				->withMessage(sprintf(
 					'Argument %s (%s) given to rule %s cannot be lower than %s (%s).',
-					self::MAX,
+					self::Max,
 					$max,
 					self::class,
-					self::MIN,
+					self::Min,
 					$min,
 				));
 		}
@@ -71,10 +71,10 @@ final class IntRule implements Rule
 				throw InvalidArgument::create()
 					->withMessage(sprintf(
 						'Argument %s (%s) given to rule %s cannot be lower than 0 without %s=false',
-						self::MIN,
+						self::Min,
 						$min,
 						self::class,
-						self::UNSIGNED,
+						self::Unsigned,
 					));
 			}
 
@@ -82,10 +82,10 @@ final class IntRule implements Rule
 				throw InvalidArgument::create()
 					->withMessage(sprintf(
 						'Argument %s (%s) given to rule %s cannot be lower than 0 without %s=false',
-						self::MAX,
+						self::Max,
 						$max,
 						self::class,
-						self::UNSIGNED,
+						self::Unsigned,
 					));
 			}
 		}
@@ -118,15 +118,15 @@ final class IntRule implements Rule
 		$invalidParameters = [];
 
 		if ($args->unsigned && $value < 0) {
-			$invalidParameters[] = self::UNSIGNED;
+			$invalidParameters[] = self::Unsigned;
 		}
 
 		if ($args->min !== null && $args->min > $value) {
-			$invalidParameters[] = self::MIN;
+			$invalidParameters[] = self::Min;
 		}
 
 		if ($args->max !== null && $args->max < $value) {
-			$invalidParameters[] = self::MAX;
+			$invalidParameters[] = self::Max;
 		}
 
 		if ($invalidParameters !== []) {

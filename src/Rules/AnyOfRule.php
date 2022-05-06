@@ -55,7 +55,7 @@ final class AnyOfRule extends CompoundRule
 
 	protected function getOperator(): string
 	{
-		return CompoundType::OPERATOR_OR;
+		return CompoundType::OperatorOr;
 	}
 
 }

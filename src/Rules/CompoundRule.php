@@ -18,21 +18,21 @@ use function sprintf;
 abstract class CompoundRule implements Rule
 {
 
-	public const RULES = 'rules';
+	public const Rules = 'rules';
 
 	public function resolveArgs(array $args, RuleArgsContext $context): CompoundRuleArgs
 	{
 		$checker = new ArgsChecker($args, static::class);
-		$checker->checkAllowedArgs([self::RULES]);
+		$checker->checkAllowedArgs([self::Rules]);
 
-		$checker->checkRequiredArg(self::RULES);
-		$rules = $checker->checkArray(self::RULES);
+		$checker->checkRequiredArg(self::Rules);
+		$rules = $checker->checkArray(self::Rules);
 
 		if (count($rules) < 2) {
 			throw InvalidArgument::create()
 				->withMessage(sprintf(
 					'Argument %s given to rule %s expect at least 2 rules',
-					self::RULES,
+					self::Rules,
 					static::class,
 				));
 		}

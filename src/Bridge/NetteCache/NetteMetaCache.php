@@ -12,13 +12,13 @@ use Orisai\ObjectMapper\Meta\Runtime\RuntimeMeta;
 final class NetteMetaCache implements MetaCache
 {
 
-	private const NAMESPACE = 'orisai.objectMapper.meta';
+	private const Namespace = 'orisai.objectMapper.meta';
 
 	private Cache $cache;
 
 	private bool $debugMode;
 
-	public function __construct(Storage $storage, bool $debugMode, string $namespace = self::NAMESPACE)
+	public function __construct(Storage $storage, bool $debugMode, string $namespace = self::Namespace)
 	{
 		$this->cache = new Cache($storage, $namespace);
 		$this->debugMode = $debugMode;

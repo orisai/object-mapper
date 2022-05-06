@@ -135,7 +135,7 @@ final class AllOfRuleTest extends RuleTestCase
 			$type,
 		);
 
-		self::assertSame($type::OPERATOR_AND, $type->getOperator());
+		self::assertSame($type::OperatorAnd, $type->getOperator());
 
 		$subtypes = $type->getSubtypes();
 		self::assertCount(3, $subtypes);
@@ -156,7 +156,7 @@ final class AllOfRuleTest extends RuleTestCase
 
 		$this->rule->resolveArgs(
 			[
-				AllOfRule::RULES => [
+				AllOfRule::Rules => [
 					new RuleCompileMeta(MixedRule::class),
 					new RuleCompileMeta(MixedRule::class, [
 						'foo' => 'bar',

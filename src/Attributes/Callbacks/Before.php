@@ -23,7 +23,7 @@ final class Before implements CallableAttribute
 	/**
 	 * @phpstan-param CallbackRuntime::* $runtime
 	 */
-	public function __construct(string $method, string $runtime = CallbackRuntime::PROCESS)
+	public function __construct(string $method, string $runtime = CallbackRuntime::Process)
 	{
 		$this->method = $method;
 		$this->runtime = $runtime;

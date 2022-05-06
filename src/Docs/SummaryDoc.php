@@ -8,7 +8,7 @@ use Orisai\ObjectMapper\Context\ArgsContext;
 final class SummaryDoc implements Doc
 {
 
-	public const MESSAGE = 'message';
+	public const Message = 'message';
 
 	/**
 	 * @param array<mixed> $args
@@ -17,10 +17,10 @@ final class SummaryDoc implements Doc
 	public static function resolveArgs(array $args, ArgsContext $context): array
 	{
 		$checker = new ArgsChecker($args, self::class);
-		$checker->checkAllowedArgs([self::MESSAGE]);
+		$checker->checkAllowedArgs([self::Message]);
 
-		$checker->checkRequiredArg(self::MESSAGE);
-		$checker->checkString(self::MESSAGE);
+		$checker->checkRequiredArg(self::Message);
+		$checker->checkString(self::Message);
 
 		return $args;
 	}
