@@ -134,7 +134,7 @@ final class DateTimeRuleTest extends RuleTestCase
 		yield ['whatever', DateTimeInterface::ATOM, [
 			'format: Y-m-d\TH:i:sP',
 			'A four digit year could not be found',
-			'Data missing',
+			PHP_VERSION_ID < 8_01_07 ? 'Data missing' : 'Not enough data available to satisfy format',
 		]];
 
 		yield ['whatever', DateTimeRule::FormatTimestamp, [
