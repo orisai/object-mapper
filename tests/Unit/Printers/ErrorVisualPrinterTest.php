@@ -317,9 +317,7 @@ final class ErrorVisualPrinterTest extends TestCase
 		$type1->addField('a', new SimpleValueType('t'));
 
 		self::assertSame(
-			'structure[
-
-]',
+			'structure[]',
 			$this->formatter->printType($type1),
 		);
 	}
