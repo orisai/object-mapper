@@ -20,7 +20,7 @@ use function implode;
 use function sprintf;
 use const PHP_EOL;
 
-class ErrorVisualPrinter implements ErrorPrinter, TypePrinter
+final class ErrorVisualPrinter implements ErrorPrinter, TypePrinter
 {
 
 	/**
@@ -137,7 +137,7 @@ class ErrorVisualPrinter implements ErrorPrinter, TypePrinter
 		return $formatted;
 	}
 
-	protected function print(Type $type): string
+	private function print(Type $type): string
 	{
 		if ($type instanceof MappedObjectType) {
 			return $this->printMappedObjectType($type);
@@ -171,7 +171,7 @@ class ErrorVisualPrinter implements ErrorPrinter, TypePrinter
 			->withMessage(sprintf('Unsupported type %s', get_class($type)));
 	}
 
-	protected function printMappedObjectType(MappedObjectType $type): string
+	private function printMappedObjectType(MappedObjectType $type): string
 	{
 		$formatted = '';
 
@@ -216,7 +216,7 @@ class ErrorVisualPrinter implements ErrorPrinter, TypePrinter
 	/**
 	 * @return array<Type>
 	 */
-	protected function filterFields(MappedObjectType $type): array
+	private function filterFields(MappedObjectType $type): array
 	{
 		if ($this->scopes->shouldRenderValid() || $type->isInvalid()) {
 			return $type->getFields();
@@ -233,7 +233,7 @@ class ErrorVisualPrinter implements ErrorPrinter, TypePrinter
 		return $filtered;
 	}
 
-	protected function printCompoundType(CompoundType $type): string
+	private function printCompoundType(CompoundType $type): string
 	{
 		$subtypes = [];
 
@@ -268,7 +268,7 @@ class ErrorVisualPrinter implements ErrorPrinter, TypePrinter
 		return $formatted;
 	}
 
-	protected function printArrayType(ArrayType $type): string
+	private function printArrayType(ArrayType $type): string
 	{
 		$keyType = $type->getKeyType();
 		$itemType = $type->getItemType();
@@ -337,7 +337,7 @@ class ErrorVisualPrinter implements ErrorPrinter, TypePrinter
 		return "array$formatted";
 	}
 
-	protected function printListType(ListType $type): string
+	private function printListType(ListType $type): string
 	{
 		$invalidItemsString = '';
 		$invalidItems = $type->getInvalidItems();
@@ -384,12 +384,12 @@ class ErrorVisualPrinter implements ErrorPrinter, TypePrinter
 		return "list$formatted";
 	}
 
-	protected function printSimpleValueType(SimpleValueType $type): string
+	private function printSimpleValueType(SimpleValueType $type): string
 	{
 		return sprintf('%s%s', $type->getName(), $this->printParameters($type));
 	}
 
-	protected function printEnumType(EnumType $type): string
+	private function printEnumType(EnumType $type): string
 	{
 		$inlineValues = '';
 		$values = $type->getValues();
@@ -403,12 +403,12 @@ class ErrorVisualPrinter implements ErrorPrinter, TypePrinter
 		return sprintf('enum(%s)', $inlineValues);
 	}
 
-	protected function printMessageType(MessageType $type): string
+	private function printMessageType(MessageType $type): string
 	{
 		return $type->getMessage();
 	}
 
-	protected function printParameters(ParametrizedType $type): string
+	private function printParameters(ParametrizedType $type): string
 	{
 		$parameters = $type->getParameters();
 
@@ -449,7 +449,7 @@ class ErrorVisualPrinter implements ErrorPrinter, TypePrinter
 	/**
 	 * @param mixed $value
 	 */
-	protected function valueToString($value, bool $includeApostrophe = true): string
+	private function valueToString($value, bool $includeApostrophe = true): string
 	{
 		return Dumper::dumpValue($value, [
 			Dumper::OptIncludeApostrophe => $includeApostrophe,
@@ -458,12 +458,12 @@ class ErrorVisualPrinter implements ErrorPrinter, TypePrinter
 		]);
 	}
 
-	protected function printComplexTypeInnerLine(string $inner, bool $isLast): string
+	private function printComplexTypeInnerLine(string $inner, bool $isLast): string
 	{
 		return $inner . ($isLast ? '' : $this->itemsSeparator);
 	}
 
-	protected function indent(string $content): string
+	private function indent(string $content): string
 	{
 		$lines = [];
 		foreach (explode($this->itemsSeparator, $content) as $line) {
@@ -473,7 +473,7 @@ class ErrorVisualPrinter implements ErrorPrinter, TypePrinter
 		return implode($this->itemsSeparator, $lines);
 	}
 
-	protected function createScopes(): PrinterScopes
+	private function createScopes(): PrinterScopes
 	{
 		return new PrinterScopes();
 	}

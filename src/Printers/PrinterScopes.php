@@ -6,7 +6,7 @@ use Orisai\Exceptions\Logic\InvalidState;
 use function array_key_first;
 use function array_key_last;
 
-class PrinterScopes
+final class PrinterScopes
 {
 
 	private bool $isOpen = false;

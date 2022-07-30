@@ -11,7 +11,7 @@ use Orisai\ObjectMapper\Types\MultiValueType;
 use Orisai\ObjectMapper\Types\Type;
 use function array_key_exists;
 
-class DocsArrayPrinter implements MappedObjectPrinter
+final class DocsArrayPrinter implements MappedObjectPrinter
 {
 
 	private MetaLoader $metaLoader;

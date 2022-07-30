@@ -5,7 +5,7 @@ namespace Orisai\ObjectMapper\Printers;
 use Orisai\ObjectMapper\Meta\MetaLoader;
 use Orisai\ObjectMapper\Types\MappedObjectType;
 
-class DefaultValuesArrayPrinter implements MappedObjectPrinter
+final class DefaultValuesArrayPrinter implements MappedObjectPrinter
 {
 
 	private MetaLoader $metaLoader;
@@ -31,7 +31,7 @@ class DefaultValuesArrayPrinter implements MappedObjectPrinter
 	/**
 	 * @return array<mixed>
 	 */
-	protected function printMappedObjectType(MappedObjectType $type): array
+	private function printMappedObjectType(MappedObjectType $type): array
 	{
 		$meta = $this->metaLoader->load($type->getClass())->getProperties();
 		$formatted = [];

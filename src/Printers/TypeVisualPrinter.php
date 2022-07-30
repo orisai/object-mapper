@@ -19,7 +19,7 @@ use function implode;
 use function sprintf;
 use const PHP_EOL;
 
-class TypeVisualPrinter implements TypePrinter
+final class TypeVisualPrinter implements TypePrinter
 {
 
 	/**
@@ -64,7 +64,7 @@ class TypeVisualPrinter implements TypePrinter
 		return $this->print($type);
 	}
 
-	protected function print(Type $type): string
+	private function print(Type $type): string
 	{
 		if ($type instanceof MappedObjectType) {
 			return $this->printMappedObjectType($type);
@@ -98,7 +98,7 @@ class TypeVisualPrinter implements TypePrinter
 			->withMessage(sprintf('Unsupported type %s', get_class($type)));
 	}
 
-	protected function printMappedObjectType(MappedObjectType $type): string
+	private function printMappedObjectType(MappedObjectType $type): string
 	{
 		$formatted = '';
 
@@ -125,12 +125,12 @@ class TypeVisualPrinter implements TypePrinter
 	/**
 	 * @return array<Type>
 	 */
-	protected function filterFields(MappedObjectType $type): array
+	private function filterFields(MappedObjectType $type): array
 	{
 		return $type->getFields();
 	}
 
-	protected function printCompoundType(CompoundType $type): string
+	private function printCompoundType(CompoundType $type): string
 	{
 		$formatted = '';
 		$subtypes = $type->getSubtypes();
@@ -144,7 +144,7 @@ class TypeVisualPrinter implements TypePrinter
 		return $formatted;
 	}
 
-	protected function printArrayType(ArrayType $type): string
+	private function printArrayType(ArrayType $type): string
 	{
 		$keyType = $type->getKeyType();
 		$itemType = $type->getItemType();
@@ -159,7 +159,7 @@ class TypeVisualPrinter implements TypePrinter
 		return "array$formatted";
 	}
 
-	protected function printListType(ListType $type): string
+	private function printListType(ListType $type): string
 	{
 		$parameters = $this->printParameters($type);
 
@@ -169,12 +169,12 @@ class TypeVisualPrinter implements TypePrinter
 		return "list$formatted";
 	}
 
-	protected function printSimpleValueType(SimpleValueType $type): string
+	private function printSimpleValueType(SimpleValueType $type): string
 	{
 		return sprintf('%s%s', $type->getName(), $this->printParameters($type));
 	}
 
-	protected function printEnumType(EnumType $type): string
+	private function printEnumType(EnumType $type): string
 	{
 		$inlineValues = '';
 		$values = $type->getValues();
@@ -188,12 +188,12 @@ class TypeVisualPrinter implements TypePrinter
 		return sprintf('enum(%s)', $inlineValues);
 	}
 
-	protected function printMessageType(MessageType $type): string
+	private function printMessageType(MessageType $type): string
 	{
 		return $type->getMessage();
 	}
 
-	protected function printParameters(ParametrizedType $type): string
+	private function printParameters(ParametrizedType $type): string
 	{
 		$parameters = $type->getParameters();
 
@@ -224,7 +224,7 @@ class TypeVisualPrinter implements TypePrinter
 	/**
 	 * @param mixed $value
 	 */
-	protected function valueToString($value, bool $includeApostrophe = true): string
+	private function valueToString($value, bool $includeApostrophe = true): string
 	{
 		return Dumper::dumpValue($value, [
 			Dumper::OptIncludeApostrophe => $includeApostrophe,
@@ -233,7 +233,7 @@ class TypeVisualPrinter implements TypePrinter
 		]);
 	}
 
-	protected function printComplexTypeInnerLine(string $inner, bool $isLast): string
+	private function printComplexTypeInnerLine(string $inner, bool $isLast): string
 	{
 		return $inner . ($isLast ? '' : $this->itemsSeparator);
 	}
