@@ -81,11 +81,9 @@ final class ErrorVisualPrinter implements ErrorPrinter, TypePrinter
 		$lastFieldKey = array_key_last($fields);
 
 		foreach ($fields as $fieldName => $fieldType) {
-			if ($errors !== []) {
-				$fieldSeparator = $this->itemsSeparator;
-			} else {
-				$fieldSeparator = $fieldName === $lastFieldKey ? '' : $this->itemsSeparator;
-			}
+			$fieldSeparator = $errors === [] && $fieldName === $lastFieldKey
+				? ''
+				: $this->itemsSeparator;
 
 			$fieldScope = $type->isInvalid()
 				? $scope->withValidNodes()
@@ -188,10 +186,10 @@ final class ErrorVisualPrinter implements ErrorPrinter, TypePrinter
 		}
 
 		if ($formatted === '') {
-			return "structure$this->typeAndParametersSeparator[]";
+			return "shape$this->typeAndParametersSeparator{}";
 		}
 
-		return "structure$this->typeAndParametersSeparator[$this->aroundItemsSeparator{$this->indent($formatted)}$this->aroundItemsSeparator]";
+		return "shape$this->typeAndParametersSeparator{{$this->aroundItemsSeparator}{$this->indent($formatted)}{$this->aroundItemsSeparator}}";
 	}
 
 	/**
@@ -309,7 +307,7 @@ final class ErrorVisualPrinter implements ErrorPrinter, TypePrinter
 		}
 
 		if ($invalidPairs !== []) {
-			$formatted .= "{{$this->aroundItemsSeparator}{$this->indent($invalidPairsString)}{$this->aroundItemsSeparator}}";
+			$formatted .= "[$this->aroundItemsSeparator{$this->indent($invalidPairsString)}$this->aroundItemsSeparator]";
 		}
 
 		return "array$formatted";
@@ -352,7 +350,7 @@ final class ErrorVisualPrinter implements ErrorPrinter, TypePrinter
 		}
 
 		if ($invalidItems !== []) {
-			$formatted .= "{{$this->aroundItemsSeparator}{$this->indent($invalidItemsString)}{$this->aroundItemsSeparator}}";
+			$formatted .= "[$this->aroundItemsSeparator{$this->indent($invalidItemsString)}$this->aroundItemsSeparator]";
 		}
 
 		return "list$formatted";

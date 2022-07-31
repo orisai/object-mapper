@@ -65,13 +65,13 @@ final class DefaultProcessorTest extends ProcessingTestCase
 nullableString: string|null
 untypedString: string
 arrayOfMixed: array<mixed>
-manyStructures: array<int(unsigned), structure[
+manyStructures: array<int(unsigned), shape{
 	string: string
 	nullableString: string|null
 	untypedNullableString: string|null
 	untypedNull: null
 	arrayOfMixed: array<mixed>
-]>',
+}>',
 			$this->formatter->printError($exception),
 		);
 	}
@@ -96,20 +96,20 @@ manyStructures: array<int(unsigned), structure[
 nullableString: string|null
 untypedString: string
 arrayOfMixed: array<mixed>
-structure: structure[
+structure: shape{
 	string: string
 	nullableString: string|null
 	untypedNullableString: string|null
 	untypedNull: null
 	arrayOfMixed: array<mixed>
-]
-manyStructures: array<int, structure[
+}
+manyStructures: array<int, shape{
 	string: string
 	nullableString: string|null
 	untypedNullableString: string|null
 	untypedNull: null
 	arrayOfMixed: array<mixed>
-]>',
+}>',
 			$this->formatter->printError($exception),
 		);
 	}
@@ -143,14 +143,14 @@ manyStructures: array<int, structure[
 			'TODO - badKey and anotherBadKey are completely invalid, complete type (including parameters) must be rendered',
 		);
 		self::assertSame(
-			'manyStructures: array{
-	0: structure[
+			'manyStructures: array[
+	0: shape{
 		test: Field is unknown.
-	]
+	}
 	badKey: int(unsigned) => value
-	anotherBadKey: int(unsigned) => structure[
+	anotherBadKey: int(unsigned) => shape{
 		string: string
-	]
+	}
 }',
 			$this->formatter->printError($exception),
 		);
@@ -550,9 +550,9 @@ validationFailed: string',
 		self::assertInstanceOf(InvalidData::class, $exception);
 
 		self::assertSame(
-			'structure[
+			'shape{
 	test
-]',
+}',
 			$this->formatter->printError($exception),
 		);
 	}

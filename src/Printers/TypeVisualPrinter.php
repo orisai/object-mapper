@@ -116,10 +116,10 @@ final class TypeVisualPrinter implements TypePrinter
 		}
 
 		if ($formatted === '') {
-			return "structure$this->typeAndParametersSeparator[]";
+			return "shape$this->typeAndParametersSeparator{}";
 		}
 
-		return "structure$this->typeAndParametersSeparator[$this->aroundItemsSeparator{$this->indent($formatted)}$this->aroundItemsSeparator]";
+		return "shape$this->typeAndParametersSeparator{{$this->aroundItemsSeparator}{$this->indent($formatted)}{$this->aroundItemsSeparator}}";
 	}
 
 	/**

@@ -164,10 +164,10 @@ final class TypeVisualPrinterTest extends TestCase
 		$type1->addField('a', new SimpleValueType('t'));
 
 		self::assertSame(
-			'structure[
+			'shape{
 	0: t
 	a: t
-]',
+}',
 			$this->formatter->printType($type1),
 		);
 	}

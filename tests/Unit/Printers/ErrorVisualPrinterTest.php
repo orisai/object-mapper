@@ -197,11 +197,11 @@ final class ErrorVisualPrinterTest extends TestCase
 		);
 
 		self::assertSame(
-			"array{
+			"array[
 	test: string => value
 	0: int(second)
 	123: string => int(first: 'value')
-}",
+]",
 			$this->formatter->printType($type7),
 		);
 	}
@@ -256,11 +256,11 @@ final class ErrorVisualPrinterTest extends TestCase
 		);
 
 		self::assertSame(
-			'list{
+			'list[
 	0: string
 	1: string
 	test: string
-}',
+]',
 			$this->formatter->printType($type5),
 		);
 	}
@@ -317,7 +317,7 @@ final class ErrorVisualPrinterTest extends TestCase
 		$type1->addField('a', new SimpleValueType('t'));
 
 		self::assertSame(
-			'structure[]',
+			'shape{}',
 			$this->formatter->printType($type1),
 		);
 	}
@@ -339,24 +339,24 @@ final class ErrorVisualPrinterTest extends TestCase
 		$type1->markInvalid();
 
 		self::assertSame(
-			'structure[
+			'shape{
 	0: t
 	a: t
-	b: structure[
+	b: shape{
 		foo: t
 		bar: t
-	]
+	}
 	Whole structure is invalid
-]',
+}',
 			$this->formatter->printType($type1),
 		);
 		self::assertSame(
 			'path > to > error > 0: t
 path > to > error > a: t
-path > to > error > b: structure[
+path > to > error > b: shape{
 	foo: t
 	bar: t
-]
+}
 path > to > error > Whole structure is invalid',
 			$this->formatter->printError(
 				InvalidData::create($type1, Value::none()),
@@ -366,10 +366,10 @@ path > to > error > Whole structure is invalid',
 		self::assertSame(
 			'0: t
 a: t
-b: structure[
+b: shape{
 	foo: t
 	bar: t
-]
+}
 Whole structure is invalid',
 			$this->formatter->printError(InvalidData::create($type1, Value::none())),
 		);
@@ -409,20 +409,20 @@ Whole structure is invalid',
 		$this->formatter->pathNodeSeparator = ' -_- ';
 
 		self::assertSame(
-			'structure[
+			'shape{
 	0: overwritten
-	b: structure[
+	b: shape{
 		foo: overwritten
-	]
+	}
 	Random error
-]',
+}',
 			$this->formatter->printType($type1),
 		);
 		self::assertSame(
 			'path -_- to -_- error -_- 0: overwritten
-path -_- to -_- error -_- b: structure[
+path -_- to -_- error -_- b: shape{
 	foo: overwritten
-]
+}
 path -_- to -_- error -_- Random error',
 			$this->formatter->printError(
 				InvalidData::create($type1, Value::none()),
@@ -431,9 +431,9 @@ path -_- to -_- error -_- Random error',
 		);
 		self::assertSame(
 			'0: overwritten
-b: structure[
+b: shape{
 	foo: overwritten
-]
+}
 Random error',
 			$this->formatter->printError(InvalidData::create($type1, Value::none())),
 		);
