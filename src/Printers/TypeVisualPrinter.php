@@ -231,10 +231,11 @@ final class TypeVisualPrinter implements TypePrinter
 	 */
 	private function printValue($value, bool $includeApostrophe = true): string
 	{
-		return Dumper::dumpValue($value, [
-			Dumper::OptIncludeApostrophe => $includeApostrophe,
-			Dumper::OptIndentChar => $this->itemsSeparator,
-		]);
+		$options = new DumperOptions();
+		$options->indentChar = $this->itemsSeparator;
+		$options->includeApostrophe = $includeApostrophe;
+
+		return Dumper::dumpValue($value, $options);
 	}
 
 	private function indent(string $content): string

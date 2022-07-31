@@ -25,34 +25,26 @@ use const PHP_EOL;
 final class Dumper
 {
 
-	public const
-		OptIncludeApostrophe = 'include_apostrophe',
-		OptMaxDepth = 'max_depth',
-		OptWrapLength = 'wrap_length',
-		OptIndentChar = 'indent_char';
-
 	private const IndentLength = 4;
 
 	/**
 	 * @param mixed $value
-	 * @param array<mixed> $options
 	 */
-	public static function dumpValue($value, array $options = []): string
+	public static function dumpValue($value, ?DumperOptions $options = null): string
 	{
-		return self::dumpValueInternal($value, [], 0, 0, $options);
+		return self::dumpValueInternal($value, [], 0, 0, $options ?? new DumperOptions());
 	}
 
 	/**
 	 * @param mixed $value
 	 * @param array<mixed> $parents
-	 * @param array<mixed> $options
 	 */
 	private static function dumpValueInternal(
 		&$value,
-		array $parents = [],
-		int $level = 0,
-		int $column = 0,
-		array $options = []
+		array $parents,
+		int $level,
+		int $column,
+		DumperOptions $options
 	): string
 	{
 		if (is_bool($value)) {
@@ -79,35 +71,35 @@ final class Dumper
 			->withMessage('Unexpected value');
 	}
 
-	/**
-	 * @param array<mixed> $options
-	 */
-	private static function dumpString(string $var, array $options): string
+	private static function dumpString(string $var, DumperOptions $options): string
 	{
 		$var = (string) preg_replace('#\'|\\\\(?=[\'\\\\]|$)#D', '\\\\$0', $var);
-		$includeApostrophe = (bool) ($options[self::OptIncludeApostrophe] ?? true);
 
-		return $includeApostrophe ? sprintf("'%s'", $var) : $var;
+		return $options->includeApostrophe ? sprintf("'%s'", $var) : $var;
 	}
 
 	/**
 	 * @param array<mixed> $var
 	 * @param array<mixed> $parents
-	 * @param array<mixed> $options
 	 */
-	private static function dumpArray(array &$var, array $parents, int $level, int $column, array $options): string
+	private static function dumpArray(
+		array &$var,
+		array $parents,
+		int $level,
+		int $column,
+		DumperOptions $options
+	): string
 	{
 		if ($var === []) {
 			return '[]';
 		}
 
-		if ($level > ($options[self::OptMaxDepth] ?? 50) || in_array($var, $parents, true)) {
+		if ($level > $options->maxDepth || in_array($var, $parents, true)) {
 			throw InvalidArgument::create()
 				->withMessage('Nesting level too deep or recursive dependency.');
 		}
 
-		$indentChar = $options[self::OptIndentChar] ?? "\t";
-		$space = str_repeat($indentChar, $level);
+		$space = str_repeat($options->indentChar, $level);
 		$outInline = '';
 		$outWrapped = sprintf("\n%s", $space);
 		$parents[] = $var;
@@ -119,7 +111,7 @@ final class Dumper
 			$counter = is_int($k) ? max($k + 1, $counter) : $counter;
 			$outInline .= ($outInline === '' ? '' : ', ') . $keyPart;
 			$outInline .= self::dumpValueInternal($v, $parents, 0, $column + strlen($outInline), $options);
-			$outWrapped .= $indentChar
+			$outWrapped .= $options->indentChar
 				. $keyPart
 				. self::dumpValueInternal($v, $parents, $level + 1, strlen($keyPart), $options)
 				. sprintf(",\n%s", $space);
@@ -130,7 +122,7 @@ final class Dumper
 		array_pop($parents);
 		$wrap = strpos($outInline, PHP_EOL) !== false || $level * self::IndentLength + $column + strlen(
 			$outInline,
-		) + 3 > ($options[self::OptWrapLength] ?? 120); // 3 = [],
+		) + 3 > $options->wrapLength; // 3 = [],
 
 		return '[' . ($wrap ? $outWrapped : $outInline) . ']';
 	}
