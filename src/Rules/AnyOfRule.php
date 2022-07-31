@@ -53,9 +53,9 @@ final class AnyOfRule extends CompoundRule
 		return $value;
 	}
 
-	protected function getOperator(): string
+	protected function createCompoundType(): CompoundType
 	{
-		return CompoundType::OperatorOr;
+		return CompoundType::createOrType();
 	}
 
 }

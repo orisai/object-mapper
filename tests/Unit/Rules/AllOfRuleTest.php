@@ -64,7 +64,7 @@ final class AllOfRuleTest extends RuleTestCase
 			$type = $exception->getType();
 			self::assertInstanceOf(CompoundType::class, $type);
 
-			self::assertSame('&', $type->getOperator());
+			self::assertSame(CompoundType::OperatorAnd, $type->getOperator());
 
 			$subtypes = $type->getSubtypes();
 			self::assertCount(3, $subtypes);
@@ -103,7 +103,7 @@ final class AllOfRuleTest extends RuleTestCase
 			$type = $exception->getType();
 			self::assertInstanceOf(CompoundType::class, $type);
 
-			self::assertSame('&', $type->getOperator());
+			self::assertSame(CompoundType::OperatorAnd, $type->getOperator());
 
 			$subtypes = $type->getSubtypes();
 			self::assertCount(2, $subtypes);

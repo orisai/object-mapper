@@ -124,7 +124,7 @@ final class ErrorVisualPrinterTest extends TestCase
 			$this->formatter->printType($type4),
 		);
 
-		$type5Key = new CompoundType(CompoundType::OperatorOr);
+		$type5Key = CompoundType::createOrType();
 		$type5Key->addSubtype(0, new SimpleValueType('string'));
 		$type5Key->addSubtype(1, new SimpleValueType('int'));
 		$type5Value = new ArrayType(new SimpleValueType('string'), new SimpleValueType('test'));
@@ -268,7 +268,7 @@ final class ErrorVisualPrinterTest extends TestCase
 	public function testCompound(): void
 	{
 		//TODO - brackets
-		$subtype1 = new CompoundType(CompoundType::OperatorAnd);
+		$subtype1 = CompoundType::createAndType();
 		$subtype1->addSubtype(0, new SimpleValueType('int'));
 		$subtype1->overwriteInvalidSubtype(
 			0,
@@ -280,7 +280,7 @@ final class ErrorVisualPrinterTest extends TestCase
 			ValueDoesNotMatch::create(new SimpleValueType('float'), Value::none()),
 		);
 
-		$subtype2 = new CompoundType(CompoundType::OperatorAnd);
+		$subtype2 = CompoundType::createAndType();
 		$subtype2->addSubtype(0, new SimpleValueType('foo'));
 		$subtype2->overwriteInvalidSubtype(
 			0,
@@ -292,7 +292,7 @@ final class ErrorVisualPrinterTest extends TestCase
 			ValueDoesNotMatch::create(new SimpleValueType('bar'), Value::none()),
 		);
 
-		$type1 = new CompoundType(CompoundType::OperatorOr);
+		$type1 = CompoundType::createOrType();
 		$type1->addSubtype(0, $subtype1);
 		$type1->overwriteInvalidSubtype(
 			0,

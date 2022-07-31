@@ -2,25 +2,19 @@
 
 namespace Orisai\ObjectMapper\Types;
 
-use Orisai\Exceptions\Logic\InvalidArgument;
 use Orisai\Exceptions\Logic\InvalidState;
 use Orisai\ObjectMapper\Exception\WithTypeAndValue;
 use function array_key_exists;
-use function implode;
 use function in_array;
 use function sprintf;
 
 final class CompoundType implements Type
 {
 
+	/** @internal */
 	public const
 		OperatorAnd = '&',
 		OperatorOr = '|';
-
-	private const Operators = [
-		self::OperatorAnd,
-		self::OperatorOr,
-	];
 
 	/** @var array<Type> */
 	private array $subtypes = [];
@@ -31,23 +25,25 @@ final class CompoundType implements Type
 	/** @var array<WithTypeAndValue> */
 	private array $invalidSubtypes = [];
 
-	/** @phpstan-var self::OperatorAnd|self::OperatorOr */
+	/** @phpstan-var self::Operator* */
 	private string $operator;
 
-	public function __construct(string $operator)
+	/**
+	 * @phpstan-param self::Operator* $operator
+	 */
+	private function __construct(string $operator)
 	{
-		if (!in_array($operator, self::Operators, true)) {
-			throw InvalidArgument::create()
-				->withMessage(
-					sprintf(
-						'Invalid operator %s, choose one of %s',
-						$operator,
-						implode(', ', self::Operators),
-					),
-				);
-		}
-
 		$this->operator = $operator;
+	}
+
+	public static function createAndType(): self
+	{
+		return new self(self::OperatorAnd);
+	}
+
+	public static function createOrType(): self
+	{
+		return new self(self::OperatorOr);
 	}
 
 	/**
@@ -144,7 +140,7 @@ final class CompoundType implements Type
 	}
 
 	/**
-	 * @phpstan-return self::OperatorAnd|self::OperatorOr
+	 * @phpstan-return self::Operator*
 	 */
 	public function getOperator(): string
 	{

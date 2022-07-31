@@ -61,7 +61,7 @@ abstract class CompoundRule implements Rule
 	 */
 	public function createType(Args $args, TypeContext $context): CompoundType
 	{
-		$type = new CompoundType($this->getOperator());
+		$type = $this->createCompoundType();
 
 		foreach ($args->rules as $key => $nestedRuleMeta) {
 			$nestedRule = $context->getRule($nestedRuleMeta->getType());
@@ -72,6 +72,6 @@ abstract class CompoundRule implements Rule
 		return $type;
 	}
 
-	abstract protected function getOperator(): string;
+	abstract protected function createCompoundType(): CompoundType;
 
 }

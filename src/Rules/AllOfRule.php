@@ -52,9 +52,9 @@ final class AllOfRule extends CompoundRule
 		return $value;
 	}
 
-	protected function getOperator(): string
+	protected function createCompoundType(): CompoundType
 	{
-		return CompoundType::OperatorAnd;
+		return CompoundType::createAndType();
 	}
 
 }
