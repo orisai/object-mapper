@@ -62,13 +62,13 @@ final class DefaultProcessorTest extends ProcessingTestCase
 		self::markTestSkipped('TODO - all structure values are invalid and complete type must be rendered');
 		self::assertSame(
 			'string: string
-nullableString: string|null
+nullableString: string||null
 untypedString: string
 arrayOfMixed: array<mixed>
 manyStructures: array<int(unsigned), shape{
 	string: string
-	nullableString: string|null
-	untypedNullableString: string|null
+	nullableString: string||null
+	untypedNullableString: string||null
 	untypedNull: null
 	arrayOfMixed: array<mixed>
 }>',
@@ -93,20 +93,20 @@ manyStructures: array<int(unsigned), shape{
 
 		self::assertSame(
 			'string: string
-nullableString: string|null
+nullableString: string||null
 untypedString: string
 arrayOfMixed: array<mixed>
 structure: shape{
 	string: string
-	nullableString: string|null
-	untypedNullableString: string|null
+	nullableString: string||null
+	untypedNullableString: string||null
 	untypedNull: null
 	arrayOfMixed: array<mixed>
 }
 manyStructures: array<int, shape{
 	string: string
-	nullableString: string|null
-	untypedNullableString: string|null
+	nullableString: string||null
+	untypedNullableString: string||null
 	untypedNull: null
 	arrayOfMixed: array<mixed>
 }>',
@@ -627,8 +627,8 @@ validationFailed: string',
 		self::markTestSkipped('TODO - all structure values are invalid and complete type must be rendered');
 		self::assertSame(
 			'string: string
-nullableString: string|null
-untypedNullableString: string|null
+nullableString: string||null
+untypedNullableString: string||null
 untypedNull: null
 arrayOfMixed: array<mixed>',
 			$this->formatter->printError($exception),

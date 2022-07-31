@@ -134,7 +134,7 @@ final class ErrorVisualPrinterTest extends TestCase
 		$type5->markInvalid();
 
 		self::assertSame(
-			'array<string|int, array<string, test>>',
+			'array<string||int, array<string, test>>',
 			$this->formatter->printType($type5),
 		);
 
@@ -147,7 +147,7 @@ final class ErrorVisualPrinterTest extends TestCase
 			ValueDoesNotMatch::create(new SimpleValueType('int'), Value::none()),
 		);
 		self::assertSame(
-			'string|int',
+			'string||int',
 			$this->formatter->printType($type5Key),
 		);
 
@@ -305,7 +305,7 @@ final class ErrorVisualPrinterTest extends TestCase
 		);
 
 		self::assertSame(
-			'int&float|foo&bar',
+			'int&&float||foo&&bar',
 			$this->formatter->printType($type1),
 		);
 	}

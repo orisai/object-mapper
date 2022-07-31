@@ -109,11 +109,11 @@ final class TypeVisualPrinterTest extends TestCase
 		);
 
 		self::assertSame(
-			'string|int',
+			'string||int',
 			$this->formatter->printType($type4Key),
 		);
 		self::assertSame(
-			'array<string|int, array<string, test>>',
+			'array<string||int, array<string, test>>',
 			$this->formatter->printType($type4),
 		);
 	}
@@ -152,7 +152,7 @@ final class TypeVisualPrinterTest extends TestCase
 		$type1->addSubtype(1, $subtype2);
 
 		self::assertSame(
-			'int&float|foo&bar',
+			'int&&float||foo&&bar',
 			$this->formatter->printType($type1),
 		);
 	}

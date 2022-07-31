@@ -13,8 +13,8 @@ final class CompoundType implements Type
 
 	/** @internal */
 	public const
-		OperatorAnd = '&',
-		OperatorOr = '|';
+		OperatorAnd = '&&',
+		OperatorOr = '||';
 
 	/** @var array<Type> */
 	private array $subtypes = [];
