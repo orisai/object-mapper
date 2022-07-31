@@ -14,6 +14,7 @@ use function is_string;
 final class FieldNameModifier implements Modifier
 {
 
+	/** @internal */
 	public const Name = 'name';
 
 	public static function resolveArgs(array $args, ArgsContext $context): FieldNameArgs

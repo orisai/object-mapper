@@ -8,7 +8,7 @@ use Orisai\ObjectMapper\Context\ArgsContext;
 final class ExampleDoc implements Doc
 {
 
-	public const
+	private const
 		Content = 'content',
 		Description = 'description';
 

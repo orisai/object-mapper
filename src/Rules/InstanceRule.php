@@ -21,7 +21,7 @@ use function is_string;
 final class InstanceRule implements Rule
 {
 
-	public const Type = 'type';
+	private const Type = 'type';
 
 	public function resolveArgs(array $args, RuleArgsContext $context): InstanceArgs
 	{

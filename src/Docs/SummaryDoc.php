@@ -8,7 +8,7 @@ use Orisai\ObjectMapper\Context\ArgsContext;
 final class SummaryDoc implements Doc
 {
 
-	public const Message = 'message';
+	private const Message = 'message';
 
 	/**
 	 * @param array<mixed> $args

@@ -8,7 +8,7 @@ use Orisai\ObjectMapper\Context\ArgsContext;
 final class LinkDoc implements Doc
 {
 
-	public const
+	private const
 		Url = 'url',
 		Description = 'description';
 

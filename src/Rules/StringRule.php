@@ -20,6 +20,7 @@ use function preg_match;
 final class StringRule implements Rule
 {
 
+	/** @internal */
 	public const
 		Pattern = 'pattern',
 		MinLength = 'minLength',

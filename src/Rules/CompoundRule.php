@@ -18,6 +18,7 @@ use function sprintf;
 abstract class CompoundRule implements Rule
 {
 
+	/** @internal */
 	public const Rules = 'rules';
 
 	public function resolveArgs(array $args, RuleArgsContext $context): CompoundRuleArgs

@@ -29,15 +29,9 @@ use function sprintf;
 abstract class BaseCallback implements Callback
 {
 
-	// User defined
-	public const
+	private const
 		Method = 'method',
 		Runtime = 'runtime';
-
-	// Internal
-	public const
-		MethodIsStatic = 'method_is_static',
-		MethodReturnsValue = 'method_returns_value';
 
 	private const ProcessingRuntimes = [
 		CallbackRuntime::Always,

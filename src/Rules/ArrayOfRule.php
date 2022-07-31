@@ -22,6 +22,7 @@ use function is_array;
 final class ArrayOfRule extends MultiValueRule
 {
 
+	/** @internal */
 	public const KeyRule = 'key';
 
 	public function resolveArgs(array $args, RuleArgsContext $context): ArrayOfArgs

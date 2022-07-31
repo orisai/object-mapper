@@ -19,7 +19,7 @@ use function preg_match;
 final class NullRule implements Rule
 {
 
-	public const CastEmptyString = 'castEmptyString';
+	private const CastEmptyString = 'castEmptyString';
 
 	public function resolveArgs(array $args, RuleArgsContext $context): NullArgs
 	{

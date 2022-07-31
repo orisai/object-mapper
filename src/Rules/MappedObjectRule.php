@@ -22,7 +22,7 @@ use function is_a;
 final class MappedObjectRule implements Rule
 {
 
-	public const Type = 'type';
+	private const Type = 'type';
 
 	public function resolveArgs(array $args, RuleArgsContext $context): MappedObjectArgs
 	{

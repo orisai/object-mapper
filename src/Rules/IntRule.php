@@ -23,6 +23,7 @@ use function str_replace;
 final class IntRule implements Rule
 {
 
+	/** @internal */
 	public const
 		Min = 'min',
 		Max = 'max',

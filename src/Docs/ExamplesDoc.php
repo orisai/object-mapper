@@ -9,7 +9,7 @@ use Orisai\ObjectMapper\Meta\DocMeta;
 final class ExamplesDoc implements Doc
 {
 
-	public const Examples = 'examples';
+	private const Examples = 'examples';
 
 	/**
 	 * @param array<mixed> $args

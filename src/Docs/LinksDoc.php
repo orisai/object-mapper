@@ -9,7 +9,7 @@ use Orisai\ObjectMapper\Meta\DocMeta;
 final class LinksDoc implements Doc
 {
 
-	public const Links = 'links';
+	private const Links = 'links';
 
 	/**
 	 * @param array<mixed> $args

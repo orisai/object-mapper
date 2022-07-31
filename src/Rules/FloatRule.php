@@ -24,6 +24,7 @@ use function str_replace;
 final class FloatRule implements Rule
 {
 
+	/** @internal */
 	public const
 		Min = 'min',
 		Max = 'max',

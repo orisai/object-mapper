@@ -27,7 +27,7 @@ use function is_subclass_of;
 final class EntityFromIdRule implements Rule
 {
 
-	public const Name = 'name',
+	private const Name = 'name',
 		Entity = 'entity',
 		IdRule = 'idRule';
 
