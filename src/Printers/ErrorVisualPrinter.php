@@ -65,26 +65,19 @@ final class ErrorVisualPrinter implements ErrorPrinter, TypePrinter
 	 */
 	public string $itemsIndentation = "\t";
 
-	private PrinterScopes $scopes;
-
-	public function __construct()
-	{
-		$this->scopes = $this->createScopes();
-	}
-
 	/**
 	 * @param array<string> $pathNodes
 	 */
 	public function printError(InvalidData $exception, array $pathNodes = []): string
 	{
-		$this->scopes->open();
+		$scope = PrinterScope::forInvalidScope();
 
 		$rootPath = implode($this->pathNodeSeparator, $pathNodes);
 		$formatted = '';
 		$type = $exception->getType();
 
 		$errors = $type->getErrors();
-		$fields = $this->filterFields($type);
+		$fields = $this->filterFields($type, $scope);
 		$lastFieldKey = array_key_last($fields);
 
 		foreach ($fields as $fieldName => $fieldType) {
@@ -94,69 +87,60 @@ final class ErrorVisualPrinter implements ErrorPrinter, TypePrinter
 				$fieldSeparator = $fieldName === $lastFieldKey ? '' : $this->itemsSeparator;
 			}
 
-			$this->scopes->openScope(!$type->isInvalid() && !$this->scopes->shouldRenderValid());
+			$fieldScope = $type->isInvalid()
+				? $scope->withValidNodes()
+				: $scope->withoutValidNodes();
 
 			$formatted .= sprintf(
 				'%s%s%s%s%s',
 				$rootPath !== '' ? $rootPath . $this->pathNodeSeparator : '',
 				$fieldName,
 				$this->pathAndTypeSeparator,
-				$this->print($fieldType),
+				$this->print($fieldType, $fieldScope),
 				$fieldSeparator,
 			);
-
-			$this->scopes->closeScope();
 		}
 
 		$lastErrorKey = array_key_last($errors);
-		$this->scopes->openScope(false);
 
 		foreach ($errors as $errorKey => $error) {
 			$fieldSeparator = $errorKey === $lastErrorKey ? '' : $this->itemsSeparator;
 			$formatted .= sprintf(
 				'%s%s%s',
 				$rootPath !== '' ? $rootPath . $this->pathNodeSeparator : '',
-				$this->print($error->getType()),
+				$this->print($error->getType(), $scope->withoutValidNodes()),
 				$fieldSeparator,
 			);
 		}
-
-		$this->scopes->closeScope();
-
-		$this->scopes->close();
 
 		return $formatted;
 	}
 
 	public function printType(Type $type): string
 	{
-		$this->scopes->open();
-		$formatted = $this->print($type);
-		$this->scopes->close();
-
-		return $formatted;
+		return $this->print($type, PrinterScope::forInvalidScope());
 	}
 
-	private function print(Type $type): string
+	private function print(Type $type, PrinterScope $scope): string
 	{
 		if ($type instanceof MappedObjectType) {
-			return $this->printMappedObjectType($type);
+			return $this->printMappedObjectType($type, $scope);
 		}
 
 		if ($type instanceof CompoundType) {
-			return $this->printCompoundType($type);
+			return $this->printCompoundType($type, $scope);
 		}
 
 		if ($type instanceof ArrayType) {
-			return $this->printArrayType($type);
+			return $this->printArrayType($type, $scope);
 		}
 
 		if ($type instanceof ListType) {
-			return $this->printListType($type);
+			return $this->printListType($type, $scope);
 		}
 
 		if ($type instanceof SimpleValueType) {
-			return $this->printSimpleValueType($type);
+			return $this->printSimpleValueType($type, $scope);
 		}
 
 		if ($type instanceof EnumType) {
@@ -171,40 +155,37 @@ final class ErrorVisualPrinter implements ErrorPrinter, TypePrinter
 			->withMessage(sprintf('Unsupported type %s', get_class($type)));
 	}
 
-	private function printMappedObjectType(MappedObjectType $type): string
+	private function printMappedObjectType(MappedObjectType $type, PrinterScope $scope): string
 	{
 		$formatted = '';
 
 		$errors = $type->getErrors();
-		$fields = $this->filterFields($type);
+		$fields = $this->filterFields($type, $scope);
 		$lastFieldKey = array_key_last($fields);
 
 		foreach ($fields as $fieldName => $fieldType) {
-			$this->scopes->openScope(!$type->isInvalid() && !$this->scopes->shouldRenderValid());
+			$fieldScope = $type->isInvalid() || $scope->shouldRenderValid()
+				? $scope->withValidNodes()
+				: $scope->withoutValidNodes();
 
 			$formattedField = sprintf(
 				'%s%s%s',
 				$fieldName,
 				$this->pathAndTypeSeparator,
-				$this->print($fieldType),
+				$this->print($fieldType, $fieldScope),
 			);
 			$formatted .= $this->printComplexTypeInnerLine(
 				$formattedField,
 				$errors === [] && $fieldName === $lastFieldKey,
 			);
-
-			$this->scopes->closeScope();
 		}
 
 		$lastErrorKey = array_key_last($errors);
-		$this->scopes->openScope(false);
 
 		foreach ($errors as $errorKey => $error) {
-			$formattedError = $this->print($error->getType());
+			$formattedError = $this->print($error->getType(), $scope->withoutValidNodes());
 			$formatted .= $this->printComplexTypeInnerLine($formattedError, $errorKey === $lastErrorKey);
 		}
-
-		$this->scopes->closeScope();
 
 		if ($formatted === '') {
 			return "structure$this->typeAndParametersSeparator[]";
@@ -216,9 +197,9 @@ final class ErrorVisualPrinter implements ErrorPrinter, TypePrinter
 	/**
 	 * @return array<Type>
 	 */
-	private function filterFields(MappedObjectType $type): array
+	private function filterFields(MappedObjectType $type, PrinterScope $scope): array
 	{
-		if ($this->scopes->shouldRenderValid() || $type->isInvalid()) {
+		if ($scope->shouldRenderValid() || $type->isInvalid()) {
 			return $type->getFields();
 		}
 
@@ -233,11 +214,11 @@ final class ErrorVisualPrinter implements ErrorPrinter, TypePrinter
 		return $filtered;
 	}
 
-	private function printCompoundType(CompoundType $type): string
+	private function printCompoundType(CompoundType $type, PrinterScope $scope): string
 	{
 		$subtypes = [];
 
-		if ($this->scopes->shouldRenderValid()) {
+		if ($scope->shouldRenderValid()) {
 			// Don't filter valid, in must render valid scope
 			$subtypes = $type->getSubtypes();
 		} else {
@@ -257,18 +238,18 @@ final class ErrorVisualPrinter implements ErrorPrinter, TypePrinter
 			// In invalid subtype are valid nodes filtered
 			// In valid and skipped subtype are valid nodes rendered completely - nodes cannot choose to filter valid
 			$mustBeRendered = !$type->isSubtypeInvalid($key);
-			$this->scopes->openScope(!$mustBeRendered, $mustBeRendered);
+			$subtypeScope = $mustBeRendered
+				? $scope->withValidNodes()->withImmutableState()
+				: $scope->withoutValidNodes();
 
 			$separator = $key === $lastKey ? '' : $operator;
-			$formatted .= sprintf('%s%s', $this->print($subtype), $separator);
-
-			$this->scopes->closeScope();
+			$formatted .= sprintf('%s%s', $this->print($subtype, $subtypeScope), $separator);
 		}
 
 		return $formatted;
 	}
 
-	private function printArrayType(ArrayType $type): string
+	private function printArrayType(ArrayType $type, PrinterScope $scope): string
 	{
 		$keyType = $type->getKeyType();
 		$itemType = $type->getItemType();
@@ -277,21 +258,21 @@ final class ErrorVisualPrinter implements ErrorPrinter, TypePrinter
 		$invalidPairs = $type->getInvalidPairs();
 		$lastKey = array_key_last($invalidPairs);
 
-		$this->scopes->openScope(true);
-
 		//TODO - otestovat, že se z nevalidních itemů nevypisuje nic navíc
 		foreach ($invalidPairs as $key => $pair) {
+			$invalidPairScope = $scope->withoutValidNodes();
+
 			$invalidPairString = sprintf('%s%s', $this->valueToString($key, false), $this->pathAndTypeSeparator);
 
 			$pairKeyType = $pair->getKey();
 			if ($pairKeyType !== null) {
-				$invalidPairString .= $this->print($pairKeyType->getType());
+				$invalidPairString .= $this->print($pairKeyType->getType(), $invalidPairScope);
 				$invalidPairString .= ' => ';
 			}
 
 			$pairItemType = $pair->getValue();
 			if ($pairItemType !== null) {
-				$invalidPairString .= $this->print($pairItemType->getType());
+				$invalidPairString .= $this->print($pairItemType->getType(), $invalidPairScope);
 			} else {
 				$invalidPairString .= 'value';
 			}
@@ -302,32 +283,29 @@ final class ErrorVisualPrinter implements ErrorPrinter, TypePrinter
 			);
 		}
 
-		$this->scopes->closeScope();
-
-		$this->scopes->openScope(!$type->isInvalid() && !$this->scopes->shouldRenderValid());
-		$parameters = $this->printParameters($type);
-		$this->scopes->closeScope();
+		$parametersScope = $type->isInvalid() || $scope->shouldRenderValid()
+			? $scope->withValidNodes()
+			: $scope->withoutValidNodes();
+		$parameters = $this->printParameters($type, $parametersScope);
 
 		$formatted = '';
 
-		if ($this->scopes->shouldRenderValid() || $type->isInvalid() || $type->hasInvalidParameters()) {
+		if ($scope->shouldRenderValid() || $type->isInvalid() || $type->hasInvalidParameters()) {
 			$formatted .= sprintf('%s%s', $this->typeAndParametersSeparator, $parameters);
 		}
 
-		if ($this->scopes->shouldRenderValid() || $type->isInvalid()) {
+		if ($scope->shouldRenderValid() || $type->isInvalid()) {
 			//TODO - otestovat, že se vypíše celý složený (structure) type, pokud je celá struktura nevalidní
-			$this->scopes->openScope(false, true);
+			$pairScope = $scope->withValidNodes()->withImmutableState();
 
 			$formatted .= $keyType !== null
 				? sprintf(
 					'<%s%s%s>',
-					$this->print($keyType),
+					$this->print($keyType, $pairScope),
 					$this->parameterSeparator,
-					$this->print($itemType),
+					$this->print($itemType, $pairScope),
 				)
-				: sprintf('<%s>', $this->print($itemType));
-
-			$this->scopes->closeScope();
+				: sprintf('<%s>', $this->print($itemType, $pairScope));
 		}
 
 		if ($invalidPairs !== []) {
@@ -337,44 +315,40 @@ final class ErrorVisualPrinter implements ErrorPrinter, TypePrinter
 		return "array$formatted";
 	}
 
-	private function printListType(ListType $type): string
+	private function printListType(ListType $type, PrinterScope $scope): string
 	{
 		$invalidItemsString = '';
 		$invalidItems = $type->getInvalidItems();
 		$lastKey = array_key_last($invalidItems);
 
 		//TODO - otestovat, že se z nevalidních itemů nevypisuje nic navíc
-		$this->scopes->openScope(true);
-
 		foreach ($invalidItems as $key => $invalidItem) {
+			$invalidItemScope = $scope->withoutValidNodes();
 			$invalidItemString = sprintf('%s%s', $this->valueToString($key, false), $this->pathAndTypeSeparator);
-			$invalidItemString .= $this->print($invalidItem->getType());
+			$invalidItemString .= $this->print($invalidItem->getType(), $invalidItemScope);
 			$invalidItemsString .= $this->printComplexTypeInnerLine(
 				$invalidItemString,
 				$key === $lastKey,
 			);
 		}
 
-		$this->scopes->closeScope();
-
-		$this->scopes->openScope(!$type->isInvalid() && !$this->scopes->shouldRenderValid());
-		$parameters = $this->printParameters($type);
-		$this->scopes->closeScope();
+		$parametersScope = $type->isInvalid() || $scope->shouldRenderValid()
+			? $scope->withValidNodes()
+			: $scope->withoutValidNodes();
+		$parameters = $this->printParameters($type, $parametersScope);
 
 		//TODO - invalid keys?
 		$formatted = '';
 
-		if ($this->scopes->shouldRenderValid() || $type->isInvalid() || $type->hasInvalidParameters()) {
+		if ($scope->shouldRenderValid() || $type->isInvalid() || $type->hasInvalidParameters()) {
 			$formatted .= sprintf('%s%s', $this->typeAndParametersSeparator, $parameters);
 		}
 
-		if ($this->scopes->shouldRenderValid() || $type->isInvalid()) {
+		if ($scope->shouldRenderValid() || $type->isInvalid()) {
 			//TODO - otestovat, že se vypíše celý složený (structure) type, pokud je celá struktura nevalidní
-			$this->scopes->openScope(false, true);
+			$itemScope = $scope->withValidNodes()->withImmutableState();
 
-			$formatted .= sprintf('<%s>', $this->print($type->getItemType()));
-
-			$this->scopes->closeScope();
+			$formatted .= sprintf('<%s>', $this->print($type->getItemType(), $itemScope));
 		}
 
 		if ($invalidItems !== []) {
@@ -384,9 +358,9 @@ final class ErrorVisualPrinter implements ErrorPrinter, TypePrinter
 		return "list$formatted";
 	}
 
-	private function printSimpleValueType(SimpleValueType $type): string
+	private function printSimpleValueType(SimpleValueType $type, PrinterScope $scope): string
 	{
-		return sprintf('%s%s', $type->getName(), $this->printParameters($type));
+		return sprintf('%s%s', $type->getName(), $this->printParameters($type, $scope));
 	}
 
 	private function printEnumType(EnumType $type): string
@@ -408,12 +382,12 @@ final class ErrorVisualPrinter implements ErrorPrinter, TypePrinter
 		return $type->getMessage();
 	}
 
-	private function printParameters(ParametrizedType $type): string
+	private function printParameters(ParametrizedType $type, PrinterScope $scope): string
 	{
 		$parameters = $type->getParameters();
 
 		foreach ($parameters as $parameter) {
-			if ($this->scopes->shouldRenderValid()) {
+			if ($scope->shouldRenderValid()) {
 				continue;
 			}
 
@@ -471,11 +445,6 @@ final class ErrorVisualPrinter implements ErrorPrinter, TypePrinter
 		}
 
 		return implode($this->itemsSeparator, $lines);
-	}
-
-	private function createScopes(): PrinterScopes
-	{
-		return new PrinterScopes();
 	}
 
 }
