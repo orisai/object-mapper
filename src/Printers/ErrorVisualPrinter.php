@@ -174,7 +174,7 @@ final class ErrorVisualPrinter implements ErrorPrinter, TypePrinter
 				$this->pathAndTypeSeparator,
 				$this->print($fieldType, $fieldScope),
 			);
-			$formatted .= $this->printComplexTypeInnerLine(
+			$formatted .= $this->printItem(
 				$formattedField,
 				$errors === [] && $fieldName === $lastFieldKey,
 			);
@@ -184,7 +184,7 @@ final class ErrorVisualPrinter implements ErrorPrinter, TypePrinter
 
 		foreach ($errors as $errorKey => $error) {
 			$formattedError = $this->print($error->getType(), $scope->withoutValidNodes());
-			$formatted .= $this->printComplexTypeInnerLine($formattedError, $errorKey === $lastErrorKey);
+			$formatted .= $this->printItem($formattedError, $errorKey === $lastErrorKey);
 		}
 
 		if ($formatted === '') {
@@ -262,7 +262,7 @@ final class ErrorVisualPrinter implements ErrorPrinter, TypePrinter
 		foreach ($invalidPairs as $key => $pair) {
 			$invalidPairScope = $scope->withoutValidNodes();
 
-			$invalidPairString = sprintf('%s%s', $this->valueToString($key, false), $this->pathAndTypeSeparator);
+			$invalidPairString = sprintf('%s%s', $this->printValue($key, false), $this->pathAndTypeSeparator);
 
 			$pairKeyType = $pair->getKey();
 			if ($pairKeyType !== null) {
@@ -277,7 +277,7 @@ final class ErrorVisualPrinter implements ErrorPrinter, TypePrinter
 				$invalidPairString .= 'value';
 			}
 
-			$invalidPairsString .= $this->printComplexTypeInnerLine(
+			$invalidPairsString .= $this->printItem(
 				$invalidPairString,
 				$key === $lastKey,
 			);
@@ -324,9 +324,9 @@ final class ErrorVisualPrinter implements ErrorPrinter, TypePrinter
 		//TODO - otestovat, že se z nevalidních itemů nevypisuje nic navíc
 		foreach ($invalidItems as $key => $invalidItem) {
 			$invalidItemScope = $scope->withoutValidNodes();
-			$invalidItemString = sprintf('%s%s', $this->valueToString($key, false), $this->pathAndTypeSeparator);
+			$invalidItemString = sprintf('%s%s', $this->printValue($key, false), $this->pathAndTypeSeparator);
 			$invalidItemString .= $this->print($invalidItem->getType(), $invalidItemScope);
-			$invalidItemsString .= $this->printComplexTypeInnerLine(
+			$invalidItemsString .= $this->printItem(
 				$invalidItemString,
 				$key === $lastKey,
 			);
@@ -371,7 +371,7 @@ final class ErrorVisualPrinter implements ErrorPrinter, TypePrinter
 
 		foreach ($values as $key => $value) {
 			$separator = $key === $lastKey ? '' : $this->parameterSeparator;
-			$inlineValues .= sprintf('%s%s', $this->valueToString($value, false), $separator);
+			$inlineValues .= sprintf('%s%s', $this->printValue($value, false), $separator);
 		}
 
 		return sprintf('enum(%s)', $inlineValues);
@@ -409,32 +409,32 @@ final class ErrorVisualPrinter implements ErrorPrinter, TypePrinter
 			$inlineParameters .= $parameter->hasValue()
 				? sprintf(
 					'%s%s%s%s',
-					$this->valueToString($key, false),
+					$this->printValue($key, false),
 					$this->parameterKeyValueSeparator,
-					$this->valueToString($parameter->getValue(), true),
+					$this->printValue($parameter->getValue(), true),
 					$separator,
 				)
-				: sprintf('%s%s', $this->valueToString($key, false), $separator);
+				: sprintf('%s%s', $this->printValue($key, false), $separator);
 		}
 
 		return sprintf('%s(%s)', $this->typeAndParametersSeparator, $inlineParameters);
 	}
 
+	private function printItem(string $item, bool $isLast): string
+	{
+		return $item . ($isLast ? '' : $this->itemsSeparator);
+	}
+
 	/**
 	 * @param mixed $value
 	 */
-	private function valueToString($value, bool $includeApostrophe = true): string
+	private function printValue($value, bool $includeApostrophe = true): string
 	{
 		return Dumper::dumpValue($value, [
 			Dumper::OptIncludeApostrophe => $includeApostrophe,
 			Dumper::OptLevel => 1,
 			Dumper::OptIndentChar => $this->itemsSeparator,
 		]);
-	}
-
-	private function printComplexTypeInnerLine(string $inner, bool $isLast): string
-	{
-		return $inner . ($isLast ? '' : $this->itemsSeparator);
 	}
 
 	private function indent(string $content): string

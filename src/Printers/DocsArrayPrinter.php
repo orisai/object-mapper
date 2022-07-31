@@ -114,7 +114,7 @@ final class DocsArrayPrinter implements MappedObjectPrinter
 	 */
 	private function printCompoundType(CompoundType $type): array
 	{
-		if (!$this->compoundContainsMappedObject($type)) {
+		if (!$this->isCompoundContainingMappedObject($type)) {
 			return $this->printDefault($type);
 		}
 
@@ -158,14 +158,14 @@ final class DocsArrayPrinter implements MappedObjectPrinter
 		];
 	}
 
-	private function compoundContainsMappedObject(CompoundType $type): bool
+	private function isCompoundContainingMappedObject(CompoundType $type): bool
 	{
 		foreach ($type->getSubtypes() as $subtype) {
 			if ($subtype instanceof MappedObjectType) {
 				return true;
 			}
 
-			if ($subtype instanceof MultiValueType && $this->multiValueContainsMappedObject($subtype)) {
+			if ($subtype instanceof MultiValueType && $this->isMultiValueContainingMappedObject($subtype)) {
 				return true;
 			}
 		}
@@ -173,7 +173,7 @@ final class DocsArrayPrinter implements MappedObjectPrinter
 		return false;
 	}
 
-	private function multiValueContainsMappedObject(MultiValueType $type): bool
+	private function isMultiValueContainingMappedObject(MultiValueType $type): bool
 	{
 		$item = $type->getItemType();
 
@@ -181,7 +181,7 @@ final class DocsArrayPrinter implements MappedObjectPrinter
 			return true;
 		}
 
-		return $item instanceof CompoundType && $this->compoundContainsMappedObject($item);
+		return $item instanceof CompoundType && $this->isCompoundContainingMappedObject($item);
 	}
 
 }

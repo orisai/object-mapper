@@ -112,7 +112,7 @@ final class TypeVisualPrinter implements TypePrinter
 				$this->pathAndTypeSeparator,
 				$this->print($fieldType),
 			);
-			$formatted .= $this->printComplexTypeInnerLine($formattedField, $fieldName === $lastFieldKey);
+			$formatted .= $this->printItem($formattedField, $fieldName === $lastFieldKey);
 		}
 
 		if ($formatted === '') {
@@ -182,7 +182,7 @@ final class TypeVisualPrinter implements TypePrinter
 
 		foreach ($values as $key => $value) {
 			$separator = $key === $lastKey ? '' : $this->parameterSeparator;
-			$inlineValues .= sprintf('%s%s', $this->valueToString($value, false), $separator);
+			$inlineValues .= sprintf('%s%s', $this->printValue($value, false), $separator);
 		}
 
 		return sprintf('enum(%s)', $inlineValues);
@@ -210,32 +210,32 @@ final class TypeVisualPrinter implements TypePrinter
 			$inlineParameters .= $parameter->hasValue()
 				? sprintf(
 					'%s%s%s%s',
-					$this->valueToString($key, false),
+					$this->printValue($key, false),
 					$this->parameterKeyValueSeparator,
-					$this->valueToString($parameter->getValue(), true),
+					$this->printValue($parameter->getValue(), true),
 					$separator,
 				)
-				: sprintf('%s%s', $this->valueToString($key, false), $separator);
+				: sprintf('%s%s', $this->printValue($key, false), $separator);
 		}
 
 		return sprintf('%s(%s)', $this->typeAndParametersSeparator, $inlineParameters);
 	}
 
+	private function printItem(string $inner, bool $isLast): string
+	{
+		return $inner . ($isLast ? '' : $this->itemsSeparator);
+	}
+
 	/**
 	 * @param mixed $value
 	 */
-	private function valueToString($value, bool $includeApostrophe = true): string
+	private function printValue($value, bool $includeApostrophe = true): string
 	{
 		return Dumper::dumpValue($value, [
 			Dumper::OptIncludeApostrophe => $includeApostrophe,
 			Dumper::OptLevel => 1,
 			Dumper::OptIndentChar => $this->itemsSeparator,
 		]);
-	}
-
-	private function printComplexTypeInnerLine(string $inner, bool $isLast): string
-	{
-		return $inner . ($isLast ? '' : $this->itemsSeparator);
 	}
 
 	private function indent(string $content): string
