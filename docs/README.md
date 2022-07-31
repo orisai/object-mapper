@@ -871,7 +871,7 @@ final class NullableVariantsInput extends MappedObject
      * OPTIONAL - Field allows null
      *          - MixedValue and multiple levels of AnyOf and AllOf work as well
      *
-     * @var null
+     * @var string|null
      * @AllOf({
      *     @StringValue(),
      *     @NullValue(castEmptyString=true),
