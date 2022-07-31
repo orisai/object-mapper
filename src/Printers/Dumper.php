@@ -126,6 +126,8 @@ final class Dumper
 				. sprintf(",\n%s", $space);
 		}
 
+		unset($v);
+
 		array_pop($parents);
 		$wrap = strpos($outInline, PHP_EOL) !== false || $level * self::IndentLength + $column + strlen(
 			$outInline,
