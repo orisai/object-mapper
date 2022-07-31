@@ -285,6 +285,17 @@ stringg: Field is unknown, did you mean `string`?',
 		);
 	}
 
+	public function testStdClass(): void
+	{
+		$data = new stdClass();
+		$data->string = 'custom';
+
+		$vo = $this->processor->process($data, DefaultsVO::class);
+
+		self::assertInstanceOf(DefaultsVO::class, $vo);
+		self::assertSame('custom', $vo->string);
+	}
+
 	public function testNoInitialization(): void
 	{
 		$options = new Options();

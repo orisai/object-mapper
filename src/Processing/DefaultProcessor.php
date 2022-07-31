@@ -32,6 +32,7 @@ use Orisai\ObjectMapper\Rules\RuleManager;
 use Orisai\ObjectMapper\Types\MappedObjectType;
 use Orisai\ObjectMapper\Types\MessageType;
 use Orisai\ObjectMapper\Types\Value;
+use stdClass;
 use function array_diff;
 use function array_key_exists;
 use function array_keys;
@@ -128,6 +129,10 @@ class DefaultProcessor implements Processor
 	{
 		$meta = $callContext->getMeta();
 		$classMeta = $meta->getClass();
+
+		if ($data instanceof stdClass) {
+			$data = (array) $data;
+		}
 
 		$data = $this->handleClassCallbacks(
 			$data,
