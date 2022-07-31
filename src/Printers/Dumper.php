@@ -48,7 +48,7 @@ final class Dumper
 	 * @param array<mixed> $parents
 	 * @param array<mixed> $options
 	 */
-	public static function dumpValueInternal(
+	private static function dumpValueInternal(
 		&$value,
 		array $parents = [],
 		int $level = 0,
