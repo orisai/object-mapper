@@ -29,7 +29,6 @@ final class Dumper
 		OptIncludeApostrophe = 'include_apostrophe',
 		OptMaxDepth = 'max_depth',
 		OptWrapLength = 'wrap_length',
-		OptLevel = 'level',
 		OptIndentChar = 'indent_char';
 
 	private const IndentLength = 4;
@@ -40,7 +39,7 @@ final class Dumper
 	 */
 	public static function dumpValue($value, array $options = []): string
 	{
-		return self::dumpValueInternal($value, [], $options[self::OptLevel] ?? 0, 0, $options);
+		return self::dumpValueInternal($value, [], 0, 0, $options);
 	}
 
 	/**

@@ -430,7 +430,6 @@ final class ErrorVisualPrinter implements ErrorPrinter, TypePrinter
 	{
 		return Dumper::dumpValue($value, [
 			Dumper::OptIncludeApostrophe => $includeApostrophe,
-			Dumper::OptLevel => 1,
 			Dumper::OptIndentChar => $this->itemsSeparator,
 		]);
 	}
