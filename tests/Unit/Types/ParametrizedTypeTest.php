@@ -5,7 +5,6 @@ namespace Tests\Orisai\ObjectMapper\Unit\Types;
 use Generator;
 use Orisai\Exceptions\Logic\InvalidState;
 use Orisai\ObjectMapper\Types\ArrayType;
-use Orisai\ObjectMapper\Types\ListType;
 use Orisai\ObjectMapper\Types\MessageType;
 use Orisai\ObjectMapper\Types\ParametrizedType;
 use Orisai\ObjectMapper\Types\SimpleValueType;
@@ -65,11 +64,7 @@ final class ParametrizedTypeTest extends TestCase
 		];
 
 		yield [
-			new ArrayType(null, new SimpleValueType('test')),
-		];
-
-		yield [
-			new ListType(new SimpleValueType('test')),
+			ArrayType::forArray(null, new SimpleValueType('test')),
 		];
 	}
 
@@ -78,7 +73,7 @@ final class ParametrizedTypeTest extends TestCase
 		$this->expectException(InvalidState::class);
 		$this->expectExceptionMessage('Cannot get parameter `a` because it was never set');
 
-		$type = new ArrayType(null, new MessageType('test'));
+		$type = ArrayType::forArray(null, new MessageType('test'));
 		$type->markParameterInvalid('a');
 	}
 

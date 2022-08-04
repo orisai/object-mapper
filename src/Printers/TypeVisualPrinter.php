@@ -6,7 +6,6 @@ use Orisai\Exceptions\Logic\InvalidArgument;
 use Orisai\ObjectMapper\Types\ArrayType;
 use Orisai\ObjectMapper\Types\CompoundType;
 use Orisai\ObjectMapper\Types\EnumType;
-use Orisai\ObjectMapper\Types\ListType;
 use Orisai\ObjectMapper\Types\MappedObjectType;
 use Orisai\ObjectMapper\Types\MessageType;
 use Orisai\ObjectMapper\Types\ParametrizedType;
@@ -43,10 +42,6 @@ final class TypeVisualPrinter implements TypePrinter
 
 		if ($type instanceof ArrayType) {
 			return $this->printArrayType($type);
-		}
-
-		if ($type instanceof ListType) {
-			return $this->printListType($type);
 		}
 
 		if ($type instanceof SimpleValueType) {
@@ -99,19 +94,9 @@ final class TypeVisualPrinter implements TypePrinter
 		$printedKeyType = $keyType !== null ? $this->print($keyType) : null;
 
 		return $this->converter->printArray(
-			'array',
+			$type->getName(),
 			$this->getParameters($type),
 			$printedKeyType,
-			$this->print($type->getItemType()),
-		);
-	}
-
-	private function printListType(ListType $type): string
-	{
-		return $this->converter->printArray(
-			'list',
-			$this->getParameters($type),
-			null,
 			$this->print($type->getItemType()),
 		);
 	}

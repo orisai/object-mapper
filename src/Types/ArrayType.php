@@ -8,15 +8,33 @@ use Orisai\ObjectMapper\Exception\WithTypeAndValue;
 final class ArrayType extends MultiValueType
 {
 
+	private string $name;
+
 	private ?Type $keyType;
 
 	/** @var array<int|string, KeyValueErrorPair> */
 	private array $invalidPairs = [];
 
-	public function __construct(?Type $keyType, Type $itemType)
+	private function __construct(string $name, ?Type $keyType, Type $itemType)
 	{
 		parent::__construct($itemType);
+		$this->name = $name;
 		$this->keyType = $keyType;
+	}
+
+	public static function forArray(?Type $keyType, Type $itemType): self
+	{
+		return new self('array', $keyType, $itemType);
+	}
+
+	public static function forList(?Type $keyType, Type $itemType): self
+	{
+		return new self('list', $keyType, $itemType);
+	}
+
+	public function getName(): string
+	{
+		return $this->name;
 	}
 
 	public function getKeyType(): ?Type

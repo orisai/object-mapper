@@ -9,7 +9,6 @@ use Orisai\ObjectMapper\Printers\ErrorVisualPrinter;
 use Orisai\ObjectMapper\Types\ArrayType;
 use Orisai\ObjectMapper\Types\CompoundType;
 use Orisai\ObjectMapper\Types\EnumType;
-use Orisai\ObjectMapper\Types\ListType;
 use Orisai\ObjectMapper\Types\MappedObjectType;
 use Orisai\ObjectMapper\Types\MessageType;
 use Orisai\ObjectMapper\Types\SimpleValueType;
@@ -89,7 +88,7 @@ final class ErrorVisualPrinterTest extends TestCase
 
 	public function testArray(): void
 	{
-		$type1 = new ArrayType(new SimpleValueType('string'), new SimpleValueType('test'));
+		$type1 = ArrayType::forArray(new SimpleValueType('string'), new SimpleValueType('test'));
 
 		self::assertSame(
 			'array',
@@ -98,7 +97,7 @@ final class ErrorVisualPrinterTest extends TestCase
 
 		$type2Value = new SimpleValueType('test');
 		$type2Value->addKeyParameter('parameter');
-		$type2 = new ArrayType(null, $type2Value);
+		$type2 = ArrayType::forArray(null, $type2Value);
 		$type2->markInvalid();
 
 		self::assertSame(
@@ -106,7 +105,7 @@ final class ErrorVisualPrinterTest extends TestCase
 			$this->formatter->printType($type2),
 		);
 
-		$type3 = new ArrayType(new SimpleValueType('string'), new SimpleValueType('test'));
+		$type3 = ArrayType::forArray(new SimpleValueType('string'), new SimpleValueType('test'));
 		$type3->markInvalid();
 
 		self::assertSame(
@@ -114,7 +113,7 @@ final class ErrorVisualPrinterTest extends TestCase
 			$this->formatter->printType($type3),
 		);
 
-		$type4 = new ArrayType(new SimpleValueType('string'), new SimpleValueType('test'));
+		$type4 = ArrayType::forArray(new SimpleValueType('string'), new SimpleValueType('test'));
 		$type4->addKeyValueParameter('foo', 'bar');
 		$type4->addKeyValueParameter('baz', 123);
 		$type4->markInvalid();
@@ -127,10 +126,10 @@ final class ErrorVisualPrinterTest extends TestCase
 		$type5Key = CompoundType::createOrType();
 		$type5Key->addSubtype(0, new SimpleValueType('string'));
 		$type5Key->addSubtype(1, new SimpleValueType('int'));
-		$type5Value = new ArrayType(new SimpleValueType('string'), new SimpleValueType('test'));
+		$type5Value = ArrayType::forArray(new SimpleValueType('string'), new SimpleValueType('test'));
 		$type5Value->markInvalid();
 
-		$type5 = new ArrayType($type5Key, $type5Value);
+		$type5 = ArrayType::forArray($type5Key, $type5Value);
 		$type5->markInvalid();
 
 		self::assertSame(
@@ -151,7 +150,7 @@ final class ErrorVisualPrinterTest extends TestCase
 			$this->formatter->printType($type5Key),
 		);
 
-		$type6 = new ArrayType(new SimpleValueType('string'), new SimpleValueType('int'));
+		$type6 = ArrayType::forArray(new SimpleValueType('string'), new SimpleValueType('int'));
 		$type6->addKeyValueParameter('first', 'value');
 		$type6->addKeyParameter('second');
 		$type6->addKeyParameter('third');
@@ -163,7 +162,7 @@ final class ErrorVisualPrinterTest extends TestCase
 			$this->formatter->printType($type6),
 		);
 
-		$type7 = new ArrayType(new SimpleValueType('string'), new SimpleValueType('int'));
+		$type7 = ArrayType::forArray(new SimpleValueType('string'), new SimpleValueType('int'));
 		$type7->addKeyValueParameter('first', 'value');
 		$type7->addKeyParameter('second');
 		$type7->addKeyParameter('third');
@@ -208,14 +207,14 @@ final class ErrorVisualPrinterTest extends TestCase
 
 	public function testList(): void
 	{
-		$type1 = new ListType(new SimpleValueType('string'));
+		$type1 = ArrayType::forList(null, new SimpleValueType('string'));
 
 		self::assertSame(
 			'list',
 			$this->formatter->printType($type1),
 		);
 
-		$type2 = new ListType(new SimpleValueType('string'));
+		$type2 = ArrayType::forList(null, new SimpleValueType('string'));
 		$type2->markInvalid();
 
 		self::assertSame(
@@ -223,7 +222,7 @@ final class ErrorVisualPrinterTest extends TestCase
 			$this->formatter->printType($type2),
 		);
 
-		$type3 = new ListType(new SimpleValueType('string'));
+		$type3 = ArrayType::forList(null, new SimpleValueType('string'));
 		$type3->addKeyValueParameter('foo', 'bar');
 		$type3->markInvalid();
 
@@ -232,7 +231,7 @@ final class ErrorVisualPrinterTest extends TestCase
 			$this->formatter->printType($type3),
 		);
 
-		$type4 = new ListType(new SimpleValueType('string'));
+		$type4 = ArrayType::forList(null, new SimpleValueType('string'));
 		$type4->addKeyValueParameter('foo', 'bar');
 		$type4->markParameterInvalid('foo');
 
@@ -241,16 +240,16 @@ final class ErrorVisualPrinterTest extends TestCase
 			$this->formatter->printType($type4),
 		);
 
-		$type5 = new ListType(new SimpleValueType('string'));
-		$type5->addInvalidItem(
+		$type5 = ArrayType::forList(null, new SimpleValueType('string'));
+		$type5->addInvalidValue(
 			0,
 			ValueDoesNotMatch::create(new SimpleValueType('string'), Value::none()),
 		);
-		$type5->addInvalidItem(
+		$type5->addInvalidValue(
 			1,
 			ValueDoesNotMatch::create(new SimpleValueType('string'), Value::none()),
 		);
-		$type5->addInvalidItem(
+		$type5->addInvalidValue(
 			'test',
 			ValueDoesNotMatch::create(new SimpleValueType('string'), Value::none()),
 		);

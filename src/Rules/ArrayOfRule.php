@@ -173,7 +173,7 @@ final class ArrayOfRule extends MultiValueRule
 			$keyType = $keyRule->createType($keyArgs, $context);
 		}
 
-		$type = new ArrayType(
+		$type = ArrayType::forArray(
 			$keyType ?? null,
 			$itemRule->createType($itemArgs, $context),
 		);

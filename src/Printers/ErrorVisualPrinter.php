@@ -7,7 +7,6 @@ use Orisai\ObjectMapper\Exception\InvalidData;
 use Orisai\ObjectMapper\Types\ArrayType;
 use Orisai\ObjectMapper\Types\CompoundType;
 use Orisai\ObjectMapper\Types\EnumType;
-use Orisai\ObjectMapper\Types\ListType;
 use Orisai\ObjectMapper\Types\MappedObjectType;
 use Orisai\ObjectMapper\Types\MessageType;
 use Orisai\ObjectMapper\Types\MultiValueType;
@@ -72,10 +71,6 @@ final class ErrorVisualPrinter implements ErrorPrinter, TypePrinter
 
 		if ($type instanceof ArrayType) {
 			return $this->printArrayType($type, $scope);
-		}
-
-		if ($type instanceof ListType) {
-			return $this->printListType($type, $scope);
 		}
 
 		if ($type instanceof SimpleValueType) {
@@ -205,41 +200,9 @@ final class ErrorVisualPrinter implements ErrorPrinter, TypePrinter
 		}
 
 		return $this->converter->printArray(
-			'array',
+			$type->getName(),
 			$this->getMultiValueTypeParameters($type, $scope),
 			$printedKeyType,
-			$printedItemType,
-			$invalidPairs,
-		);
-	}
-
-	private function printListType(ListType $type, PrinterScope $scope): string
-	{
-		//TODO - invalid keys?
-		$itemType = $type->getItemType();
-		if ($scope->shouldRenderValid() || $type->isInvalid()) {
-			//TODO - otestovat, že se vypíše celý složený (structure) type, pokud je celá struktura nevalidní
-			$pairScope = $scope->withValidNodes()->withImmutableState();
-
-			$printedItemType = $this->print($itemType, $pairScope);
-		} else {
-			$printedItemType = null;
-		}
-
-		//TODO - otestovat, že se z nevalidních itemů nevypisuje nic navíc
-		$invalidPairs = [];
-		foreach ($type->getInvalidItems() as $key => $invalidItem) {
-			$invalidItemScope = $scope->withoutValidNodes();
-
-			$invalidItem = $this->print($invalidItem->getType(), $invalidItemScope);
-
-			$invalidPairs[$key] = [null, $invalidItem];
-		}
-
-		return $this->converter->printArray(
-			'list',
-			$this->getMultiValueTypeParameters($type, $scope),
-			null,
 			$printedItemType,
 			$invalidPairs,
 		);

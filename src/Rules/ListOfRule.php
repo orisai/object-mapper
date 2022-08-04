@@ -10,19 +10,21 @@ use Orisai\ObjectMapper\Context\TypeContext;
 use Orisai\ObjectMapper\Exception\InvalidData;
 use Orisai\ObjectMapper\Exception\ValueDoesNotMatch;
 use Orisai\ObjectMapper\Meta\Compile\RuleCompileMeta;
-use Orisai\ObjectMapper\Types\ListType;
+use Orisai\ObjectMapper\Types\ArrayType;
+use Orisai\ObjectMapper\Types\SimpleValueType;
 use Orisai\ObjectMapper\Types\Value;
 use Orisai\Utils\Arrays\ArrayMerger;
-use function array_keys;
-use function array_values;
 use function count;
 use function is_array;
+use function is_int;
 
 /**
  * @phpstan-extends MultiValueRule<MultiValueArgs>
  */
 final class ListOfRule extends MultiValueRule
 {
+
+	private const Continuous = 'continuous';
 
 	public function resolveArgs(array $args, RuleArgsContext $context): MultiValueArgs
 	{
@@ -90,15 +92,26 @@ final class ListOfRule extends MultiValueRule
 			throw ValueDoesNotMatch::create($type, Value::of($value));
 		}
 
-		if (array_keys($value) !== array_keys(array_values($value))) {
-			$type->markKeysInvalid();
-		}
-
 		$itemMeta = $args->itemRuleMeta;
 		$itemRule = $context->getRule($itemMeta->getType());
 		$itemArgs = $itemMeta->getArgs();
 
+		$lastIntKey = -1; // List starts from 0
 		foreach ($value as $key => $item) {
+			if (!is_int($key) || $key !== ++$lastIntKey) {
+				$keyType = $this->createKeyType();
+				$keyType->markParameterInvalid(self::Continuous);
+
+				$type->addInvalidKey(
+					$key,
+					ValueDoesNotMatch::create($keyType, Value::of($key)),
+				);
+			}
+
+			if (is_int($key)) {
+				$lastIntKey = $key;
+			}
+
 			try {
 				$value[$key] = $itemRule->processValue(
 					$item,
@@ -106,13 +119,12 @@ final class ListOfRule extends MultiValueRule
 					$context,
 				);
 			} catch (ValueDoesNotMatch | InvalidData $exception) {
-				//TODO - mark key invalid (if not just one higher than previous or if it's first and not 0)
-				$type->addInvalidItem($key, $exception);
+				$type->addInvalidValue($key, $exception);
 			}
 		}
 
 		$hasInvalidParameters = $type->hasInvalidParameters();
-		if ($hasInvalidParameters || $type->hasInvalidItems()) {
+		if ($hasInvalidParameters || $type->hasInvalidPairs()) {
 			throw ValueDoesNotMatch::create(
 				$type,
 				$hasInvalidParameters ? Value::of($value) : Value::none(),
@@ -129,13 +141,14 @@ final class ListOfRule extends MultiValueRule
 	/**
 	 * @param MultiValueArgs $args
 	 */
-	public function createType(Args $args, TypeContext $context): ListType
+	public function createType(Args $args, TypeContext $context): ArrayType
 	{
 		$itemMeta = $args->itemRuleMeta;
 		$itemRule = $context->getRule($itemMeta->getType());
 		$itemArgs = $itemMeta->getArgs();
 
-		$type = new ListType(
+		$type = ArrayType::forList(
+			$this->createKeyType(),
 			$itemRule->createType($itemArgs, $context),
 		);
 
@@ -146,6 +159,14 @@ final class ListOfRule extends MultiValueRule
 		if ($args->maxItems !== null) {
 			$type->addKeyValueParameter('maxItems', $args->maxItems);
 		}
+
+		return $type;
+	}
+
+	private function createKeyType(): SimpleValueType
+	{
+		$type = new SimpleValueType('int');
+		$type->addKeyParameter(self::Continuous);
 
 		return $type;
 	}

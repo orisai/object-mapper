@@ -38,7 +38,7 @@ final class CompoundTypeTest extends TestCase
 		$type->addSubtype(2, $subtype2);
 
 		$key3 = 3;
-		$subtype3 = new ArrayType(null, new SimpleValueType('string'));
+		$subtype3 = ArrayType::forArray(null, new SimpleValueType('string'));
 		$type->addSubtype(3, $subtype3);
 
 		self::assertSame(

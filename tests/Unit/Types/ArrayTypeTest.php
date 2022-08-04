@@ -12,11 +12,20 @@ use PHPUnit\Framework\TestCase;
 final class ArrayTypeTest extends TestCase
 {
 
+	public function testName(): void
+	{
+		$type = ArrayType::forArray(null, new MessageType('test'));
+		self::assertSame('array', $type->getName());
+
+		$type = ArrayType::forList(null, new MessageType('test'));
+		self::assertSame('list', $type->getName());
+	}
+
 	public function testPairs(): void
 	{
 		$keyType = new MessageType('test');
 		$itemType = new MessageType('test');
-		$type = new ArrayType($keyType, $itemType);
+		$type = ArrayType::forArray($keyType, $itemType);
 
 		self::assertSame($itemType, $type->getItemType());
 		self::assertSame($keyType, $type->getKeyType());
@@ -25,7 +34,7 @@ final class ArrayTypeTest extends TestCase
 	public function testInvalidPairs(): void
 	{
 		$itemType = new MessageType('test');
-		$type = new ArrayType(null, $itemType);
+		$type = ArrayType::forArray(null, $itemType);
 
 		self::assertSame($itemType, $type->getItemType());
 		self::assertNull($type->getKeyType());
@@ -68,7 +77,7 @@ final class ArrayTypeTest extends TestCase
 	public function testInvalidKeyThenValue(): void
 	{
 		$itemType = new MessageType('test');
-		$type = new ArrayType(null, $itemType);
+		$type = ArrayType::forArray(null, $itemType);
 
 		$invalidKey = ValueDoesNotMatch::create(new MessageType('test'), Value::none());
 		$type->addInvalidKey(1, $invalidKey);
@@ -88,7 +97,7 @@ final class ArrayTypeTest extends TestCase
 	public function testInvalidValueThenKey(): void
 	{
 		$itemType = new MessageType('test');
-		$type = new ArrayType(null, $itemType);
+		$type = ArrayType::forArray(null, $itemType);
 
 		$invalidValue = ValueDoesNotMatch::create(new MessageType('test'), Value::none());
 		$type->addInvalidValue(1, $invalidValue);
@@ -110,7 +119,7 @@ final class ArrayTypeTest extends TestCase
 		$this->expectException(InvalidArgument::class);
 		$this->expectExceptionMessage('At least one of key type and item type of invalid pair should not be null');
 
-		$type = new ArrayType(null, new MessageType('test'));
+		$type = ArrayType::forArray(null, new MessageType('test'));
 		$type->addInvalidPair(123, null, null);
 	}
 

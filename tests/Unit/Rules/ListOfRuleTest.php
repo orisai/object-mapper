@@ -4,7 +4,6 @@ namespace Tests\Orisai\ObjectMapper\Unit\Rules;
 
 use Orisai\ObjectMapper\Args\EmptyArgs;
 use Orisai\ObjectMapper\Exception\ValueDoesNotMatch;
-use Orisai\ObjectMapper\Exception\WithTypeAndValue;
 use Orisai\ObjectMapper\Meta\DefaultValueMeta;
 use Orisai\ObjectMapper\Meta\Runtime\RuleRuntimeMeta;
 use Orisai\ObjectMapper\Rules\ListOfRule;
@@ -12,7 +11,8 @@ use Orisai\ObjectMapper\Rules\MixedRule;
 use Orisai\ObjectMapper\Rules\MultiValueArgs;
 use Orisai\ObjectMapper\Rules\StringArgs;
 use Orisai\ObjectMapper\Rules\StringRule;
-use Orisai\ObjectMapper\Types\ListType;
+use Orisai\ObjectMapper\Types\ArrayType;
+use Orisai\ObjectMapper\Types\KeyValueErrorPair;
 use Orisai\ObjectMapper\Types\SimpleValueType;
 use Tests\Orisai\ObjectMapper\Doubles\AlwaysInvalidRule;
 use Tests\Orisai\ObjectMapper\Toolkit\RuleTestCase;
@@ -79,7 +79,7 @@ final class ListOfRuleTest extends RuleTestCase
 			);
 		} catch (ValueDoesNotMatch $exception) {
 			$type = $exception->getType();
-			self::assertInstanceOf(ListType::class, $type);
+			self::assertInstanceOf(ArrayType::class, $type);
 
 			self::assertTrue($type->isInvalid());
 			self::assertSame($value, $exception->getValue()->get());
@@ -91,7 +91,7 @@ final class ListOfRuleTest extends RuleTestCase
 	public function testProcessInvalidParameterMinAndInvalidValuesAndKeys(): void
 	{
 		$exception = null;
-		$value = ['foo', 3 => 'bar', 'baz', 123, 456];
+		$value = ['foo', 3 => 'bar', 'baz', 'key' => 123, 456];
 
 		try {
 			$this->rule->processValue(
@@ -104,19 +104,27 @@ final class ListOfRuleTest extends RuleTestCase
 			);
 		} catch (ValueDoesNotMatch $exception) {
 			$type = $exception->getType();
-			self::assertInstanceOf(ListType::class, $type);
+			self::assertInstanceOf(ArrayType::class, $type);
 
 			self::assertFalse($type->isInvalid());
-			self::assertTrue($type->areKeysInvalid());
 			self::assertTrue($type->getParameter(ListOfRule::MinItems)->isInvalid());
 			self::assertSame($value, $exception->getValue()->get());
 
-			self::assertTrue($type->hasInvalidItems());
-			$invalidItems = $type->getInvalidItems();
-			self::assertCount(2, $invalidItems);
+			self::assertTrue($type->hasInvalidPairs());
+			$invalidItems = $type->getInvalidPairs();
+			self::assertCount(3, $invalidItems);
 
-			self::assertInstanceOf(WithTypeAndValue::class, $invalidItems[5]);
-			self::assertInstanceOf(WithTypeAndValue::class, $invalidItems[6]);
+			self::assertInstanceOf(KeyValueErrorPair::class, $invalidItems[3]);
+			self::assertInstanceOf(SimpleValueType::class, $invalidItems[3]->getKey()->getType());
+			self::assertNull($invalidItems[3]->getValue());
+
+			self::assertInstanceOf(KeyValueErrorPair::class, $invalidItems['key']);
+			self::assertInstanceOf(SimpleValueType::class, $invalidItems['key']->getKey()->getType());
+			self::assertInstanceOf(SimpleValueType::class, $invalidItems['key']->getValue()->getType());
+
+			self::assertInstanceOf(KeyValueErrorPair::class, $invalidItems[5]);
+			self::assertNull($invalidItems[5]->getKey());
+			self::assertInstanceOf(SimpleValueType::class, $invalidItems[5]->getValue()->getType());
 		}
 
 		self::assertNotNull($exception);
@@ -139,13 +147,12 @@ final class ListOfRuleTest extends RuleTestCase
 			);
 		} catch (ValueDoesNotMatch $exception) {
 			$type = $exception->getType();
-			self::assertInstanceOf(ListType::class, $type);
+			self::assertInstanceOf(ArrayType::class, $type);
 
 			self::assertFalse($type->isInvalid());
-			self::assertFalse($type->areKeysInvalid());
 			self::assertFalse($type->hasParameter(ListOfRule::MinItems));
 			self::assertTrue($type->getParameter(ListOfRule::MaxItems)->isInvalid());
-			self::assertFalse($type->hasInvalidItems());
+			self::assertFalse($type->hasInvalidPairs());
 			self::assertSame($value, $exception->getValue()->get());
 		}
 
@@ -167,15 +174,14 @@ final class ListOfRuleTest extends RuleTestCase
 			);
 		} catch (ValueDoesNotMatch $exception) {
 			$type = $exception->getType();
-			self::assertInstanceOf(ListType::class, $type);
+			self::assertInstanceOf(ArrayType::class, $type);
 
 			self::assertFalse($type->isInvalid());
-			self::assertFalse($type->areKeysInvalid());
 			self::assertFalse($type->hasInvalidParameters());
-			self::assertTrue($type->hasInvalidItems());
+			self::assertTrue($type->hasInvalidPairs());
 			self::assertFalse($exception->getValue()->has());
 
-			self::assertCount(2, $type->getInvalidItems());
+			self::assertCount(2, $type->getInvalidPairs());
 		}
 
 		self::assertNotNull($exception);
