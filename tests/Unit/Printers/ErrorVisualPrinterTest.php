@@ -406,7 +406,7 @@ Whole structure is invalid',
 			ValueDoesNotMatch::create($fieldType1Invalid, Value::none()),
 		);
 
-		$this->formatter->pathNodeSeparator = ' -_- ';
+		$this->formatter->converter->pathNodeSeparator = ' -_- ';
 
 		self::assertSame(
 			'shape{

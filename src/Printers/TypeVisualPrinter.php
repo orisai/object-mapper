@@ -12,52 +12,19 @@ use Orisai\ObjectMapper\Types\MessageType;
 use Orisai\ObjectMapper\Types\ParametrizedType;
 use Orisai\ObjectMapper\Types\SimpleValueType;
 use Orisai\ObjectMapper\Types\Type;
-use function array_key_last;
-use function explode;
+use Orisai\ObjectMapper\Types\TypeParameter;
 use function get_class;
-use function implode;
 use function sprintf;
-use const PHP_EOL;
 
 final class TypeVisualPrinter implements TypePrinter
 {
 
-	/**
-	 * Separator between path and type
-	 */
-	public string $pathAndTypeSeparator = ': ';
+	public TypeToStringConverter $converter;
 
-	/**
-	 * Separator between type and it's parameters
-	 */
-	public string $typeAndParametersSeparator = '';
-
-	/**
-	 * Separator between type parameters
-	 */
-	public string $parameterSeparator = ', ';
-
-	/**
-	 * Separator between parameter key and value (in case parameter has any value)
-	 */
-	public string $parameterKeyValueSeparator = ': ';
-
-	/**
-	 * Separator around all items (object fields, invalid array and list keys)
-	 */
-	public string $aroundItemsSeparator = PHP_EOL;
-
-	/**
-	 * Separator between items (object fields, invalid array and list keys)
-	 *
-	 * @var non-empty-string
-	 */
-	public string $itemsSeparator = PHP_EOL;
-
-	/**
-	 * Indentation between items (object fields, invalid array and list keys)
-	 */
-	public string $itemsIndentation = "\t";
+	public function __construct()
+	{
+		$this->converter = new TypeToStringConverter();
+	}
 
 	public function printType(Type $type): string
 	{
@@ -100,26 +67,12 @@ final class TypeVisualPrinter implements TypePrinter
 
 	private function printMappedObjectType(MappedObjectType $type): string
 	{
-		$formatted = '';
-
-		$fields = $this->filterFields($type);
-		$lastFieldKey = array_key_last($fields);
-
-		foreach ($fields as $fieldName => $fieldType) {
-			$formattedField = sprintf(
-				'%s%s%s',
-				$fieldName,
-				$this->pathAndTypeSeparator,
-				$this->print($fieldType),
-			);
-			$formatted .= $this->printItem($formattedField, $fieldName === $lastFieldKey);
+		$printedFields = [];
+		foreach ($this->filterFields($type) as $fieldName => $fieldType) {
+			$printedFields[$fieldName] = $this->print($fieldType);
 		}
 
-		if ($formatted === '') {
-			return "shape$this->typeAndParametersSeparator{}";
-		}
-
-		return "shape$this->typeAndParametersSeparator{{$this->aroundItemsSeparator}{$this->indent($formatted)}{$this->aroundItemsSeparator}}";
+		return $this->converter->printShape($printedFields);
 	}
 
 	/**
@@ -132,120 +85,61 @@ final class TypeVisualPrinter implements TypePrinter
 
 	private function printCompoundType(CompoundType $type): string
 	{
-		$formatted = '';
-		$subtypes = $type->getSubtypes();
-		$lastKey = array_key_last($subtypes);
-
-		foreach ($subtypes as $key => $subtype) {
-			$separator = $key === $lastKey ? '' : $type->getOperator();
-			$formatted .= sprintf('%s%s', $this->print($subtype), $separator);
+		$printedSubtypes = [];
+		foreach ($type->getSubtypes() as $key => $subtype) {
+			$printedSubtypes[$key] = $this->print($subtype);
 		}
 
-		return $formatted;
+		return $this->converter->printCompound($type->getOperator(), $printedSubtypes);
 	}
 
 	private function printArrayType(ArrayType $type): string
 	{
 		$keyType = $type->getKeyType();
-		$itemType = $type->getItemType();
+		$printedKeyType = $keyType !== null ? $this->print($keyType) : null;
 
-		$parameters = $this->printParameters($type);
-
-		$formatted = sprintf('%s%s', $this->typeAndParametersSeparator, $parameters);
-		$formatted .= $keyType !== null
-			? sprintf('<%s%s%s>', $this->print($keyType), $this->parameterSeparator, $this->print($itemType))
-			: sprintf('<%s>', $this->print($itemType));
-
-		return "array$formatted";
+		return $this->converter->printArray(
+			'array',
+			$this->getParameters($type),
+			$printedKeyType,
+			$this->print($type->getItemType()),
+		);
 	}
 
 	private function printListType(ListType $type): string
 	{
-		$parameters = $this->printParameters($type);
-
-		$formatted = sprintf('%s%s', $this->typeAndParametersSeparator, $parameters);
-		$formatted .= sprintf('<%s>', $this->print($type->getItemType()));
-
-		return "list$formatted";
+		return $this->converter->printArray(
+			'list',
+			$this->getParameters($type),
+			null,
+			$this->print($type->getItemType()),
+		);
 	}
 
 	private function printSimpleValueType(SimpleValueType $type): string
 	{
-		return sprintf('%s%s', $type->getName(), $this->printParameters($type));
+		return $this->converter->printSimpleValue(
+			$type->getName(),
+			$this->getParameters($type),
+		);
 	}
 
 	private function printEnumType(EnumType $type): string
 	{
-		$inlineValues = '';
-		$values = $type->getValues();
-		$lastKey = array_key_last($values);
-
-		foreach ($values as $key => $value) {
-			$separator = $key === $lastKey ? '' : $this->parameterSeparator;
-			$inlineValues .= sprintf('%s%s', $this->printValue($value, false), $separator);
-		}
-
-		return sprintf('enum(%s)', $inlineValues);
+		return $this->converter->printEnum($type);
 	}
 
 	private function printMessageType(MessageType $type): string
 	{
-		return $type->getMessage();
-	}
-
-	private function printParameters(ParametrizedType $type): string
-	{
-		$parameters = $type->getParameters();
-
-		if ($parameters === []) {
-			return '';
-		}
-
-		$inlineParameters = '';
-		$lastKey = array_key_last($parameters);
-
-		foreach ($parameters as $parameter) {
-			$key = $parameter->getKey();
-			$separator = $key === $lastKey ? '' : $this->parameterSeparator;
-			$inlineParameters .= $parameter->hasValue()
-				? sprintf(
-					'%s%s%s%s',
-					$this->printValue($key, false),
-					$this->parameterKeyValueSeparator,
-					$this->printValue($parameter->getValue(), true),
-					$separator,
-				)
-				: sprintf('%s%s', $this->printValue($key, false), $separator);
-		}
-
-		return sprintf('%s(%s)', $this->typeAndParametersSeparator, $inlineParameters);
-	}
-
-	private function printItem(string $inner, bool $isLast): string
-	{
-		return $inner . ($isLast ? '' : $this->itemsSeparator);
+		return $this->converter->printMessage($type);
 	}
 
 	/**
-	 * @param mixed $value
+	 * @return array<int|string, TypeParameter>
 	 */
-	private function printValue($value, bool $includeApostrophe = true): string
+	private function getParameters(ParametrizedType $type): array
 	{
-		$options = new DumperOptions();
-		$options->indentChar = $this->itemsSeparator;
-		$options->includeApostrophe = $includeApostrophe;
-
-		return Dumper::dumpValue($value, $options);
-	}
-
-	private function indent(string $content): string
-	{
-		$lines = [];
-		foreach (explode($this->itemsSeparator, $content) as $line) {
-			$lines[] = $this->itemsIndentation . $line;
-		}
-
-		return implode($this->itemsSeparator, $lines);
+		return $type->getParameters();
 	}
 
 }
