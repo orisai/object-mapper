@@ -7,7 +7,6 @@ use Orisai\ObjectMapper\Meta\Runtime\SharedNodeRuntimeMeta;
 use Orisai\ObjectMapper\Types\ArrayType;
 use Orisai\ObjectMapper\Types\CompoundType;
 use Orisai\ObjectMapper\Types\MappedObjectType;
-use Orisai\ObjectMapper\Types\MultiValueType;
 use Orisai\ObjectMapper\Types\Type;
 use function array_key_exists;
 
@@ -48,7 +47,7 @@ final class DocsArrayPrinter implements MappedObjectPrinter
 			return $this->printMappedObjectType($type);
 		}
 
-		if ($type instanceof MultiValueType) {
+		if ($type instanceof ArrayType) {
 			return $this->printMultiType($type);
 		}
 
@@ -134,14 +133,12 @@ final class DocsArrayPrinter implements MappedObjectPrinter
 	/**
 	 * @return array<mixed>
 	 */
-	private function printMultiType(MultiValueType $type): array
+	private function printMultiType(ArrayType $type): array
 	{
-		$keyType = $type instanceof ArrayType
-			? $type->getKeyType()
-			: null;
+		$keyType = $type->getKeyType();
 
 		return [
-			'type' => 'array',
+			'type' => $type->getName(),
 			'key' => $keyType !== null ? $this->print($keyType) : null,
 			'item' => $this->print($type->getItemType()),
 		];
@@ -165,7 +162,7 @@ final class DocsArrayPrinter implements MappedObjectPrinter
 				return true;
 			}
 
-			if ($subtype instanceof MultiValueType && $this->isMultiValueContainingMappedObject($subtype)) {
+			if ($subtype instanceof ArrayType && $this->isMultiValueContainingMappedObject($subtype)) {
 				return true;
 			}
 		}
@@ -173,7 +170,7 @@ final class DocsArrayPrinter implements MappedObjectPrinter
 		return false;
 	}
 
-	private function isMultiValueContainingMappedObject(MultiValueType $type): bool
+	private function isMultiValueContainingMappedObject(ArrayType $type): bool
 	{
 		$item = $type->getItemType();
 

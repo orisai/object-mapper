@@ -9,7 +9,6 @@ use Orisai\ObjectMapper\Types\CompoundType;
 use Orisai\ObjectMapper\Types\EnumType;
 use Orisai\ObjectMapper\Types\MappedObjectType;
 use Orisai\ObjectMapper\Types\MessageType;
-use Orisai\ObjectMapper\Types\MultiValueType;
 use Orisai\ObjectMapper\Types\ParametrizedType;
 use Orisai\ObjectMapper\Types\SimpleValueType;
 use Orisai\ObjectMapper\Types\Type;
@@ -201,7 +200,7 @@ final class ErrorVisualPrinter implements ErrorPrinter, TypePrinter
 
 		return $this->converter->printArray(
 			$type->getName(),
-			$this->getMultiValueTypeParameters($type, $scope),
+			$this->getArrayTypeParameters($type, $scope),
 			$printedKeyType,
 			$printedItemType,
 			$invalidPairs,
@@ -211,7 +210,7 @@ final class ErrorVisualPrinter implements ErrorPrinter, TypePrinter
 	/**
 	 * @return array<int|string, TypeParameter>
 	 */
-	private function getMultiValueTypeParameters(MultiValueType $type, PrinterScope $scope): array
+	private function getArrayTypeParameters(ArrayType $type, PrinterScope $scope): array
 	{
 		$parametersScope = $type->isInvalid() || $scope->shouldRenderValid()
 			? $scope->withValidNodes()
