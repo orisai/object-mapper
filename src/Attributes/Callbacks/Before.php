@@ -2,6 +2,7 @@
 
 namespace Orisai\ObjectMapper\Attributes\Callbacks;
 
+use Attribute;
 use Doctrine\Common\Annotations\Annotation\NamedArgumentConstructor;
 use Doctrine\Common\Annotations\Annotation\Target;
 use Orisai\ObjectMapper\Callbacks\BeforeCallback;
@@ -12,6 +13,7 @@ use Orisai\ObjectMapper\Callbacks\CallbackRuntime;
  * @NamedArgumentConstructor()
  * @Target({"CLASS", "PROPERTY"})
  */
+#[Attribute(Attribute::TARGET_CLASS | Attribute::TARGET_PROPERTY)]
 final class Before implements CallableAttribute
 {
 

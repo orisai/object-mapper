@@ -16,6 +16,7 @@ use stdClass;
 use Tests\Orisai\ObjectMapper\Doubles\AfterClassCallbackCurrentTypeInvalidDataVO;
 use Tests\Orisai\ObjectMapper\Doubles\AfterClassCallbackNewTypeInvalidDataVO;
 use Tests\Orisai\ObjectMapper\Doubles\AfterClassCallbackValueDoesNotMatchVO;
+use Tests\Orisai\ObjectMapper\Doubles\AttributesVO;
 use Tests\Orisai\ObjectMapper\Doubles\BeforeClassCallbackMixedValueVO;
 use Tests\Orisai\ObjectMapper\Doubles\BeforeClassCallbackValueDoesNotMatchVO;
 use Tests\Orisai\ObjectMapper\Doubles\CallbacksVO;
@@ -32,6 +33,7 @@ use Tests\Orisai\ObjectMapper\Doubles\StructuresVO;
 use Tests\Orisai\ObjectMapper\Doubles\TransformingVO;
 use Tests\Orisai\ObjectMapper\Toolkit\ProcessingTestCase;
 use function sprintf;
+use const PHP_VERSION_ID;
 
 final class DefaultProcessorTest extends ProcessingTestCase
 {
@@ -799,6 +801,22 @@ arrayOfMixed: array<mixed>',
 		));
 
 		$this->processor->process([], stdClass::class);
+	}
+
+	public function testAttributes(): void
+	{
+		if (PHP_VERSION_ID < 8_01_00) {
+			self::markTestSkipped('Attributes are supported on PHP 8.1+');
+		}
+
+		$data = [
+			'string' => 'foo',
+		];
+
+		$vo = $this->processor->process($data, AttributesVO::class);
+
+		self::assertInstanceOf(AttributesVO::class, $vo);
+		self::assertSame('foo', $vo->string);
 	}
 
 }

@@ -2,6 +2,7 @@
 
 namespace Orisai\ObjectMapper\Attributes\Expect;
 
+use Attribute;
 use Doctrine\Common\Annotations\Annotation\NamedArgumentConstructor;
 use Doctrine\Common\Annotations\Annotation\Target;
 use Orisai\ObjectMapper\Rules\FloatRule;
@@ -11,6 +12,7 @@ use Orisai\ObjectMapper\Rules\FloatRule;
  * @NamedArgumentConstructor()
  * @Target({"PROPERTY", "ANNOTATION"})
  */
+#[Attribute(Attribute::TARGET_PROPERTY)]
 final class FloatValue implements RuleAttribute
 {
 

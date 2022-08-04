@@ -2,6 +2,7 @@
 
 namespace Orisai\ObjectMapper\Attributes\Expect;
 
+use Attribute;
 use Doctrine\Common\Annotations\Annotation\NamedArgumentConstructor;
 use Doctrine\Common\Annotations\Annotation\Target;
 use Orisai\ObjectMapper\Rules\UrlRule;
@@ -11,6 +12,7 @@ use Orisai\ObjectMapper\Rules\UrlRule;
  * @NamedArgumentConstructor()
  * @Target({"PROPERTY", "ANNOTATION"})
  */
+#[Attribute(Attribute::TARGET_PROPERTY)]
 final class Url implements RuleAttribute
 {
 

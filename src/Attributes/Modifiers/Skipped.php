@@ -2,6 +2,7 @@
 
 namespace Orisai\ObjectMapper\Attributes\Modifiers;
 
+use Attribute;
 use Doctrine\Common\Annotations\Annotation\NamedArgumentConstructor;
 use Orisai\ObjectMapper\Modifiers\SkippedModifier;
 
@@ -10,6 +11,7 @@ use Orisai\ObjectMapper\Modifiers\SkippedModifier;
  * @NamedArgumentConstructor()
  * @Target({"PROPERTY"})
  */
+#[Attribute(Attribute::TARGET_PROPERTY)]
 final class Skipped implements ModifierAttribute
 {
 

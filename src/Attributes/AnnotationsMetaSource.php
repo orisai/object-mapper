@@ -18,9 +18,13 @@ use Orisai\ObjectMapper\Meta\Compile\PropertyCompileMeta;
 use Orisai\ObjectMapper\Meta\Compile\RuleCompileMeta;
 use Orisai\ObjectMapper\Meta\DocMeta;
 use Orisai\ObjectMapper\Meta\MetaSource;
+use ReflectionAttribute;
 use ReflectionClass;
+use ReflectionProperty;
+use function array_merge;
 use function get_class;
 use function sprintf;
+use const PHP_VERSION_ID;
 
 final class AnnotationsMetaSource implements MetaSource
 {
@@ -49,7 +53,7 @@ final class AnnotationsMetaSource implements MetaSource
 		$docs = [];
 		$modifiers = [];
 
-		foreach ($this->reader->getClassAnnotations($class) as $annotation) {
+		foreach ($this->getClassAttributes($class) as $annotation) {
 			if (!$annotation instanceof BaseAttribute) {
 				continue;
 			}
@@ -100,7 +104,7 @@ final class AnnotationsMetaSource implements MetaSource
 			$modifiers = [];
 			$rule = null;
 
-			foreach ($this->reader->getPropertyAnnotations($property) as $annotation) {
+			foreach ($this->getPropertyAttributes($property) as $annotation) {
 				if (!$annotation instanceof BaseAttribute) {
 					continue;
 				}
@@ -189,6 +193,55 @@ final class AnnotationsMetaSource implements MetaSource
 		}
 
 		return $annotation;
+	}
+
+	/**
+	 * @param ReflectionClass<MappedObject> $class
+	 * @return array<int, object>
+	 */
+	private function getClassAttributes(ReflectionClass $class): array
+	{
+		$attributesBySource = [];
+		if (PHP_VERSION_ID >= 8_01_00) {
+			$attributesBySource[] = $this->reflectionAttributesToInstances(
+				$class->getAttributes(),
+			);
+		}
+
+		$attributesBySource[] = $this->reader->getClassAnnotations($class);
+
+		return array_merge(...$attributesBySource);
+	}
+
+	/**
+	 * @return array<int, object>
+	 */
+	private function getPropertyAttributes(ReflectionProperty $property): array
+	{
+		$attributesBySource = [];
+		if (PHP_VERSION_ID >= 8_01_00) {
+			$attributesBySource[] = $this->reflectionAttributesToInstances(
+				$property->getAttributes(),
+			);
+		}
+
+		$attributesBySource[] = $this->reader->getPropertyAnnotations($property);
+
+		return array_merge(...$attributesBySource);
+	}
+
+	/**
+	 * @param array<int, ReflectionAttribute<object>> $reflectionAttributes
+	 * @return array<int, object>
+	 */
+	private function reflectionAttributesToInstances(array $reflectionAttributes): array
+	{
+		$attributes = [];
+		foreach ($reflectionAttributes as $attribute) {
+			$attributes[] = $attribute->newInstance();
+		}
+
+		return $attributes;
 	}
 
 }

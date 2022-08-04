@@ -2,6 +2,7 @@
 
 namespace Orisai\ObjectMapper\Attributes\Expect;
 
+use Attribute;
 use Doctrine\Common\Annotations\Annotation\NamedArgumentConstructor;
 use Doctrine\Common\Annotations\Annotation\Target;
 use Orisai\ObjectMapper\Meta\Compile\RuleCompileMeta;
@@ -12,6 +13,7 @@ use Orisai\ObjectMapper\Rules\ArrayOfRule;
  * @NamedArgumentConstructor()
  * @Target({"PROPERTY", "ANNOTATION"})
  */
+#[Attribute(Attribute::TARGET_PROPERTY)]
 final class ArrayOf extends MultiValueRuleAttribute
 {
 

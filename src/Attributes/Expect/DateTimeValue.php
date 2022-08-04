@@ -2,6 +2,7 @@
 
 namespace Orisai\ObjectMapper\Attributes\Expect;
 
+use Attribute;
 use DateTimeImmutable;
 use DateTimeInterface;
 use Doctrine\Common\Annotations\Annotation\NamedArgumentConstructor;
@@ -13,6 +14,7 @@ use Orisai\ObjectMapper\Rules\DateTimeRule;
  * @NamedArgumentConstructor()
  * @Target({"PROPERTY", "ANNOTATION"})
  */
+#[Attribute(Attribute::TARGET_PROPERTY)]
 final class DateTimeValue implements RuleAttribute
 {
 

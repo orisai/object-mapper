@@ -2,6 +2,7 @@
 
 namespace Orisai\ObjectMapper\Attributes\Docs;
 
+use Attribute;
 use Doctrine\Common\Annotations\Annotation\NamedArgumentConstructor;
 use Doctrine\Common\Annotations\Annotation\Target;
 use Orisai\Exceptions\Logic\InvalidArgument;
@@ -14,6 +15,7 @@ use function sprintf;
  * @NamedArgumentConstructor()
  * @Target({"CLASS", "PROPERTY"})
  */
+#[Attribute(Attribute::TARGET_CLASS | Attribute::TARGET_PROPERTY)]
 final class Links implements DocumentationAttribute
 {
 
