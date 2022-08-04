@@ -8,6 +8,7 @@ interface RuleManager
 	public const DefaultRules = [
 		AllOfRule::class,
 		AnyOfRule::class,
+		ArrayEnumRule::class,
 		ArrayOfRule::class,
 		BoolRule::class,
 		DateTimeRule::class,
@@ -22,7 +23,6 @@ interface RuleManager
 		ScalarRule::class,
 		StringRule::class,
 		UrlRule::class,
-		ArrayEnumRule::class,
 	];
 
 	/**
