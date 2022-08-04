@@ -2,7 +2,7 @@ includes:
 	- ../vendor/phpstan/phpstan/conf/bleedingEdge.neon
 
 parameters:
-	phpVersion: 74000
+	phpVersion: 80100
 	tmpDir: ../var/tools/PHPStan
 
 	exceptions:
