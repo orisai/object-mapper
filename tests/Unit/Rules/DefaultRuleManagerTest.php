@@ -3,11 +3,13 @@
 namespace Tests\Orisai\ObjectMapper\Unit\Rules;
 
 use Orisai\Exceptions\Logic\InvalidArgument;
+use Orisai\ObjectMapper\Rules\BackedEnumRule;
 use Orisai\ObjectMapper\Rules\DefaultRuleManager;
 use Orisai\ObjectMapper\Rules\RuleManager;
 use PHPUnit\Framework\TestCase;
 use Tests\Orisai\ObjectMapper\Doubles\AlwaysInvalidRule;
 use function sprintf;
+use const PHP_VERSION_ID;
 
 final class DefaultRuleManagerTest extends TestCase
 {
@@ -23,6 +25,10 @@ final class DefaultRuleManagerTest extends TestCase
 	public function testDefaultRules(): void
 	{
 		foreach (RuleManager::DefaultRules as $rule) {
+			if (PHP_VERSION_ID < 8_01_00 && $rule === BackedEnumRule::class) {
+				continue;
+			}
+
 			self::assertInstanceOf($rule, $this->ruleManager->getRule($rule));
 		}
 	}

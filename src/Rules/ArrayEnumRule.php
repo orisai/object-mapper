@@ -24,8 +24,7 @@ use function sprintf;
 final class ArrayEnumRule implements Rule
 {
 
-	/** @internal */
-	public const
+	private const
 		Values = 'values',
 		UseKeys = 'useKeys';
 

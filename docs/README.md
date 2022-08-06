@@ -22,6 +22,7 @@ Raw data mapping to validated objects
 		- [Array of keys and items](#array-of-keys-and-items-rule)
 		- [List of items](#list-of-items-rule)
 	- [Value objects](#value-objects)
+        - [BackedEnum](#backedenum-rule)
 		- [DateTime](#datetime-rule)
 		- [MappedObject](#mappedobject-rule)
 		- [Url](#url-rule)
@@ -78,6 +79,8 @@ Parameters:
 	- default `false` - bool-like are not cast
 
 ### enum - from array rule
+
+> For PHP 8.1+, check [BackedEnum rule](#backedenum-rule)
 
 Expects any of values from given list
 
@@ -657,6 +660,52 @@ Parameters:
 	- default `false` - default is not merged
 
 ### Value objects
+
+### BackedEnum rule
+
+Expects value of a `BackedEnum` case
+
+- Returns instance of `BackedEnum`
+
+```php
+use Orisai\ObjectMapper\Attributes\Expect\BackedEnumValue;
+use Orisai\ObjectMapper\MappedObject;
+
+final class BackedEnumInput extends MappedObject
+{
+
+	#[BackedEnumValue(ExampleEnum::class)]
+	public ExampleEnum $field;
+
+	#[BackedEnumValue(ExampleEnum::class, allowUnknown: true)]
+	public ExampleEnum|null $anotherField;
+
+}
+
+enum ExampleEnum: string
+{
+
+	case Foo = 'foo';
+
+}
+```
+
+```php
+$data = [
+	'field' => 'foo',
+	'anotherField' => 'unknown value',
+];
+$processor->process($data, BackedEnumInput::class); // BackedEnumInput
+```
+
+Parameters:
+
+- `class`
+	- subclass of `BackedEnum` which should be created
+	- required
+- `allowUnknown`
+	- for unknown values rule returns null instead of failing
+	- default `false`
 
 ### DateTime rule
 
