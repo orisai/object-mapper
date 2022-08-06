@@ -205,6 +205,9 @@ final class MetaResolver
 		return new ModifierRuntimeMeta($type, $args);
 	}
 
+	/**
+	 * @return RuleRuntimeMeta<Args>
+	 */
 	public function resolveRuleMeta(RuleCompileMeta $meta, RuleArgsContext $context): RuleRuntimeMeta
 	{
 		$type = $meta->getType();

@@ -14,10 +14,12 @@ final class EntityFromIdArgs implements Args
 	/** @var class-string<IEntity> */
 	public string $entity;
 
+	/** @var RuleRuntimeMeta<Args> */
 	public RuleRuntimeMeta $idRule;
 
 	/**
 	 * @param class-string<IEntity> $entity
+	 * @param RuleRuntimeMeta<Args> $idRule
 	 */
 	public function __construct(string $name, string $entity, RuleRuntimeMeta $idRule)
 	{

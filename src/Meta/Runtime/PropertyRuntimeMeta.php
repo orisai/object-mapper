@@ -2,6 +2,7 @@
 
 namespace Orisai\ObjectMapper\Meta\Runtime;
 
+use Orisai\ObjectMapper\Args\Args;
 use Orisai\ObjectMapper\Meta\DefaultValueMeta;
 
 final class PropertyRuntimeMeta extends NodeRuntimeMeta
@@ -9,8 +10,12 @@ final class PropertyRuntimeMeta extends NodeRuntimeMeta
 
 	private DefaultValueMeta $default;
 
+	/** @var RuleRuntimeMeta<Args> */
 	private RuleRuntimeMeta $rule;
 
+	/**
+	 * @param RuleRuntimeMeta<Args> $rule
+	 */
 	public function __construct(
 		array $callbacks,
 		array $docs,
@@ -29,6 +34,9 @@ final class PropertyRuntimeMeta extends NodeRuntimeMeta
 		return $this->default;
 	}
 
+	/**
+	 * @return RuleRuntimeMeta<Args>
+	 */
 	public function getRule(): RuleRuntimeMeta
 	{
 		return $this->rule;

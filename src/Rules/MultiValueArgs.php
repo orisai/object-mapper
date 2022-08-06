@@ -11,6 +11,7 @@ use Orisai\ObjectMapper\Meta\Runtime\RuleRuntimeMeta;
 class MultiValueArgs implements Args
 {
 
+	/** @var RuleRuntimeMeta<Args> */
 	public RuleRuntimeMeta $itemRuleMeta;
 
 	public ?int $minItems;
@@ -19,6 +20,9 @@ class MultiValueArgs implements Args
 
 	public bool $mergeDefaults;
 
+	/**
+	 * @param RuleRuntimeMeta<Args> $itemRuleMeta
+	 */
 	public function __construct(
 		RuleRuntimeMeta $itemRuleMeta,
 		?int $minItems = null,

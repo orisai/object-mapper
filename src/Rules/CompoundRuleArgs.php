@@ -11,11 +11,11 @@ use Orisai\ObjectMapper\Meta\Runtime\RuleRuntimeMeta;
 final class CompoundRuleArgs implements Args
 {
 
-	/** @var array<RuleRuntimeMeta> */
+	/** @var array<RuleRuntimeMeta<Args>> */
 	public array $rules;
 
 	/**
-	 * @param array<RuleRuntimeMeta> $rules
+	 * @param array<RuleRuntimeMeta<Args>> $rules
 	 */
 	public function __construct(array $rules)
 	{

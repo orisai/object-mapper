@@ -2,6 +2,7 @@
 
 namespace Orisai\ObjectMapper\Rules;
 
+use Orisai\ObjectMapper\Args\Args;
 use Orisai\ObjectMapper\Meta\Runtime\RuleRuntimeMeta;
 
 /**
@@ -10,8 +11,13 @@ use Orisai\ObjectMapper\Meta\Runtime\RuleRuntimeMeta;
 final class ArrayOfArgs extends MultiValueArgs
 {
 
+	/** @var RuleRuntimeMeta<Args>|null */
 	public ?RuleRuntimeMeta $keyRuleMeta;
 
+	/**
+	 * @param RuleRuntimeMeta<Args>      $itemRuleMeta
+	 * @param RuleRuntimeMeta<Args>|null $keyRuleMeta
+	 */
 	public function __construct(
 		RuleRuntimeMeta $itemRuleMeta,
 		?RuleRuntimeMeta $keyRuleMeta = null,

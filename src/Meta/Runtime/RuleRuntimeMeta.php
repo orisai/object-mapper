@@ -5,16 +5,21 @@ namespace Orisai\ObjectMapper\Meta\Runtime;
 use Orisai\ObjectMapper\Args\Args;
 use Orisai\ObjectMapper\Rules\Rule;
 
+/**
+ * @template T of Args
+ */
 final class RuleRuntimeMeta
 {
 
-	/** @var class-string<Rule<Args>> */
+	/** @var class-string<Rule<T>> */
 	private string $type;
 
+	/** @var T */
 	private Args $args;
 
 	/**
-	 * @param class-string<Rule<Args>> $type
+	 * @param class-string<Rule<T>> $type
+	 * @param T $args
 	 */
 	public function __construct(string $type, Args $args)
 	{
@@ -23,13 +28,16 @@ final class RuleRuntimeMeta
 	}
 
 	/**
-	 * @return class-string<Rule<Args>>
+	 * @return class-string<Rule<T>>
 	 */
 	public function getType(): string
 	{
 		return $this->type;
 	}
 
+	/**
+	 * @return T
+	 */
 	public function getArgs(): Args
 	{
 		return $this->args;
