@@ -38,7 +38,7 @@ final class DefaultValuesArrayPrinterTest extends TestCase
 
 		$cache = new TestMetaCache();
 		$resolverFactory = new DefaultMetaResolverFactory($this->ruleManager);
-		$this->metaLoader = new MetaLoader($cache, $sourceManager, $this->ruleManager, $resolverFactory);
+		$this->metaLoader = new MetaLoader($cache, $sourceManager, $resolverFactory);
 		$this->formatter = new DefaultValuesArrayPrinter($this->metaLoader);
 	}
 

@@ -5,7 +5,7 @@ namespace Orisai\ObjectMapper\Context;
 use Orisai\ObjectMapper\Processing\Options;
 use Orisai\ObjectMapper\Types\MappedObjectType;
 
-class SkippedPropertiesContext
+final class SkippedPropertiesContext
 {
 
 	private MappedObjectType $type;

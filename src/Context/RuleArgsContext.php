@@ -10,7 +10,7 @@ use ReflectionClass;
 use ReflectionProperty;
 use function assert;
 
-class RuleArgsContext extends ArgsContext
+final class RuleArgsContext extends ArgsContext
 {
 
 	private RuleManager $ruleManager;

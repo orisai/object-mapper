@@ -2,7 +2,7 @@
 
 namespace Orisai\ObjectMapper\Meta;
 
-class DefaultMetaSourceManager implements MetaSourceManager
+final class DefaultMetaSourceManager implements MetaSourceManager
 {
 
 	/** @var array<MetaSource> */

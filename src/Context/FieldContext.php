@@ -9,7 +9,7 @@ use Orisai\ObjectMapper\Processing\Processor;
 use Orisai\ObjectMapper\Rules\RuleManager;
 use Orisai\ObjectMapper\Types\Type;
 
-class FieldContext extends BaseFieldContext
+final class FieldContext extends BaseFieldContext
 {
 
 	private Type $type;

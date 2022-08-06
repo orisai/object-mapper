@@ -34,7 +34,7 @@ abstract class ProcessingTestCase extends TestCase
 
 		$cache = new TestMetaCache();
 		$resolverFactory = new DefaultMetaResolverFactory($this->ruleManager);
-		$this->metaLoader = new MetaLoader($cache, $sourceManager, $this->ruleManager, $resolverFactory);
+		$this->metaLoader = new MetaLoader($cache, $sourceManager, $resolverFactory);
 		$this->metaResolver = $resolverFactory->create($this->metaLoader);
 
 		$this->processor = new DefaultProcessor($this->metaLoader, $this->ruleManager, new DefaultObjectCreator());

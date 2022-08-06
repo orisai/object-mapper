@@ -8,7 +8,7 @@ use Orisai\ObjectMapper\Processing\Processor;
 use Orisai\ObjectMapper\Rules\RuleManager;
 use Orisai\ObjectMapper\Types\MappedObjectType;
 
-class MappedObjectContext extends BaseFieldContext
+final class MappedObjectContext extends BaseFieldContext
 {
 
 	private MappedObjectType $type;

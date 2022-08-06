@@ -10,7 +10,7 @@ abstract class ParametrizedType implements Type
 {
 
 	/** @var array<int|string, TypeParameter> */
-	protected array $parameters = [];
+	private array $parameters = [];
 
 	/**
 	 * @return array<int|string, TypeParameter>

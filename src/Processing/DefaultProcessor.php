@@ -44,16 +44,16 @@ use function is_a;
 use function is_array;
 use function sprintf;
 
-class DefaultProcessor implements Processor
+final class DefaultProcessor implements Processor
 {
 
-	protected MetaLoader $metaLoader;
+	private MetaLoader $metaLoader;
 
-	protected RuleManager $ruleManager;
+	private RuleManager $ruleManager;
 
-	protected ObjectCreator $creator;
+	private ObjectCreator $creator;
 
-	protected ?TypeContext $typeContext = null;
+	private ?TypeContext $typeContext = null;
 
 	public function __construct(MetaLoader $metaLoader, RuleManager $ruleManager, ObjectCreator $creator)
 	{
@@ -101,7 +101,7 @@ class DefaultProcessor implements Processor
 		return $this->processData($data, $mappedObjectContext, $callContext);
 	}
 
-	protected function getTypeContext(): TypeContext
+	private function getTypeContext(): TypeContext
 	{
 		if ($this->typeContext === null) {
 			$this->typeContext = new TypeContext($this->metaLoader, $this->ruleManager);
@@ -120,7 +120,7 @@ class DefaultProcessor implements Processor
 	 * @return array<int|string, mixed>
 	 * @throws InvalidData
 	 */
-	protected function processData(
+	private function processData(
 		$data,
 		MappedObjectContext $mappedObjectContext,
 		ProcessorCallContext $callContext
@@ -157,7 +157,7 @@ class DefaultProcessor implements Processor
 	/**
 	 * @param class-string<MappedObject> $class
 	 */
-	protected function createMappedObjectType(string $class): MappedObjectType
+	private function createMappedObjectType(string $class): MappedObjectType
 	{
 		return $this->ruleManager->getRule(MappedObjectRule::class)->createType(
 			new MappedObjectArgs($class),
@@ -165,7 +165,7 @@ class DefaultProcessor implements Processor
 		);
 	}
 
-	protected function createMappedObjectContext(
+	private function createMappedObjectContext(
 		Options $options,
 		MappedObjectType $type,
 		bool $initializeObjects
@@ -187,7 +187,7 @@ class DefaultProcessor implements Processor
 	 * @param ObjectHolder<RC> $holder
 	 * @return ProcessorCallContext<RC>
 	 */
-	protected function createProcessorRunContext(string $class, ObjectHolder $holder): ProcessorCallContext
+	private function createProcessorRunContext(string $class, ObjectHolder $holder): ProcessorCallContext
 	{
 		$meta = $this->metaLoader->load($class);
 
@@ -199,7 +199,7 @@ class DefaultProcessor implements Processor
 	 * @return array<mixed>
 	 * @throws InvalidData
 	 */
-	protected function ensureDataProcessable($data, MappedObjectContext $context): array
+	private function ensureDataProcessable($data, MappedObjectContext $context): array
 	{
 		if (!is_array($data)) {
 			$type = $context->getType();
@@ -214,7 +214,7 @@ class DefaultProcessor implements Processor
 	/**
 	 * @param int|string $fieldName
 	 */
-	protected function fieldNameToPropertyName($fieldName, RuntimeMeta $meta): string
+	private function fieldNameToPropertyName($fieldName, RuntimeMeta $meta): string
 	{
 		$map = $meta->getFieldsPropertiesMap();
 
@@ -224,7 +224,7 @@ class DefaultProcessor implements Processor
 	/**
 	 * @return int|string
 	 */
-	protected function propertyNameToFieldName(string $propertyName, PropertyRuntimeMeta $meta)
+	private function propertyNameToFieldName(string $propertyName, PropertyRuntimeMeta $meta)
 	{
 		$fieldNameMeta = $meta->getModifier(FieldNameModifier::class);
 		if ($fieldNameMeta !== null) {
@@ -244,7 +244,7 @@ class DefaultProcessor implements Processor
 	 * @return array<int|string, mixed>
 	 * @throws InvalidData
 	 */
-	protected function handleFields(
+	private function handleFields(
 		array $data,
 		MappedObjectContext $mappedObjectContext,
 		ProcessorCallContext $callContext
@@ -267,7 +267,7 @@ class DefaultProcessor implements Processor
 	 * @param ProcessorCallContext<MappedObject> $callContext
 	 * @return array<int|string, mixed>
 	 */
-	protected function handleSentFields(
+	private function handleSentFields(
 		array $data,
 		MappedObjectContext $mappedObjectContext,
 		ProcessorCallContext $callContext
@@ -350,7 +350,7 @@ class DefaultProcessor implements Processor
 	 * @param ProcessorCallContext<MappedObject> $callContext
 	 * @return array<string>
 	 */
-	protected function findMissingProperties(array $data, ProcessorCallContext $callContext): array
+	private function findMissingProperties(array $data, ProcessorCallContext $callContext): array
 	{
 		$meta = $callContext->getMeta();
 
@@ -367,7 +367,7 @@ class DefaultProcessor implements Processor
 	 * @param ProcessorCallContext<MappedObject> $callContext
 	 * @return array<string>
 	 */
-	protected function getSkippedProperties(ProcessorCallContext $callContext): array
+	private function getSkippedProperties(ProcessorCallContext $callContext): array
 	{
 		return array_keys($callContext->getSkippedProperties());
 	}
@@ -377,7 +377,7 @@ class DefaultProcessor implements Processor
 	 * @param ProcessorCallContext<MappedObject> $callContext
 	 * @return array<int|string, mixed>
 	 */
-	protected function handleMissingFields(
+	private function handleMissingFields(
 		array $data,
 		MappedObjectContext $mappedObjectContext,
 		ProcessorCallContext $callContext
@@ -473,7 +473,7 @@ class DefaultProcessor implements Processor
 	/**
 	 * @param int|string $fieldName
 	 */
-	protected function createFieldContext(
+	private function createFieldContext(
 		MappedObjectContext $mappedObjectContext,
 		PropertyRuntimeMeta $meta,
 		$fieldName,
@@ -502,7 +502,7 @@ class DefaultProcessor implements Processor
 	 * @throws ValueDoesNotMatch
 	 * @throws InvalidData
 	 */
-	protected function processProperty(
+	private function processProperty(
 		$value,
 		FieldContext $fieldContext,
 		ProcessorCallContext $callContext,
@@ -522,7 +522,7 @@ class DefaultProcessor implements Processor
 	 * @throws ValueDoesNotMatch
 	 * @throws InvalidData
 	 */
-	protected function processPropertyRules($value, FieldContext $fieldContext, PropertyRuntimeMeta $meta)
+	private function processPropertyRules($value, FieldContext $fieldContext, PropertyRuntimeMeta $meta)
 	{
 		$ruleMeta = $meta->getRule();
 		$rule = $this->ruleManager->getRule($ruleMeta->getType());
@@ -545,7 +545,7 @@ class DefaultProcessor implements Processor
 	 * @return mixed
 	 * @throws InvalidData
 	 */
-	protected function handleClassCallbacks(
+	private function handleClassCallbacks(
 		$data,
 		MappedObjectContext $mappedObjectContext,
 		ProcessorCallContext $callContext,
@@ -583,7 +583,7 @@ class DefaultProcessor implements Processor
 	 * @throws ValueDoesNotMatch
 	 * @throws InvalidData
 	 */
-	protected function applyCallbacks(
+	private function applyCallbacks(
 		$data,
 		BaseFieldContext $baseFieldContext,
 		ProcessorCallContext $callContext,
@@ -617,7 +617,7 @@ class DefaultProcessor implements Processor
 	 * @param mixed                              $rawData
 	 * @param ProcessorCallContext<MappedObject> $callContext
 	 */
-	protected function fillObject(
+	private function fillObject(
 		MappedObject $object,
 		array $data,
 		$rawData,
@@ -664,7 +664,7 @@ class DefaultProcessor implements Processor
 	 * @param H|null          $object
 	 * @return ObjectHolder<H>
 	 */
-	protected function createHolder(string $class, ?MappedObject $object = null): ObjectHolder
+	private function createHolder(string $class, ?MappedObject $object = null): ObjectHolder
 	{
 		return new ObjectHolder($this->creator, $class, $object);
 	}

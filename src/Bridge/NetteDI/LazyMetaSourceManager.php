@@ -7,13 +7,13 @@ use Orisai\ObjectMapper\Meta\MetaSource;
 use Orisai\ObjectMapper\Meta\MetaSourceManager;
 use function assert;
 
-class LazyMetaSourceManager implements MetaSourceManager
+final class LazyMetaSourceManager implements MetaSourceManager
 {
 
-	protected Container $container;
+	private Container $container;
 
 	/** @var array<string> */
-	protected array $services = [];
+	private array $services = [];
 
 	public function __construct(Container $container)
 	{

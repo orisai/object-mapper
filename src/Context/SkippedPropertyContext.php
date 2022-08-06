@@ -2,7 +2,7 @@
 
 namespace Orisai\ObjectMapper\Context;
 
-class SkippedPropertyContext
+final class SkippedPropertyContext
 {
 
 	/** @var int|string */

@@ -44,7 +44,7 @@ final class NetteMetaCache implements MetaCache
 	 * @param class-string<MappedObject> $class
 	 * @return array<mixed>
 	 */
-	protected function getDependencies(string $class): array
+	private function getDependencies(string $class): array
 	{
 		return $this->debugMode
 			? [Cache::FILES => ClassModificationsChecker::getSourceFiles($class)]

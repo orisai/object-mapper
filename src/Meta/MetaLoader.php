@@ -6,37 +6,32 @@ use Orisai\Exceptions\Logic\InvalidArgument;
 use Orisai\Exceptions\Logic\NotImplemented;
 use Orisai\ObjectMapper\MappedObject;
 use Orisai\ObjectMapper\Meta\Runtime\RuntimeMeta;
-use Orisai\ObjectMapper\Rules\RuleManager;
 use ReflectionClass;
 use function class_exists;
 use function count;
 
-class MetaLoader
+final class MetaLoader
 {
 
 	/** @var array<class-string<MappedObject>, RuntimeMeta> */
-	protected array $arrayCache;
+	private array $arrayCache;
 
-	protected MetaCache $cache;
+	private MetaCache $cache;
 
-	protected MetaSourceManager $sourceManager;
-
-	protected RuleManager $ruleManager;
+	private MetaSourceManager $sourceManager;
 
 	private MetaResolverFactory $resolverFactory;
 
-	protected ?MetaResolver $resolver = null;
+	private ?MetaResolver $resolver = null;
 
 	public function __construct(
 		MetaCache $cache,
 		MetaSourceManager $sourceManager,
-		RuleManager $ruleManager,
 		MetaResolverFactory $resolverFactory
 	)
 	{
 		$this->cache = $cache;
 		$this->sourceManager = $sourceManager;
-		$this->ruleManager = $ruleManager;
 		$this->resolverFactory = $resolverFactory;
 	}
 
@@ -96,7 +91,7 @@ class MetaLoader
 		return $this->arrayCache[$class] = $meta;
 	}
 
-	protected function getResolver(): MetaResolver
+	private function getResolver(): MetaResolver
 	{
 		if ($this->resolver === null) {
 			$this->resolver = $this->resolverFactory->create($this);
