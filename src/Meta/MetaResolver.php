@@ -12,9 +12,9 @@ use Orisai\ObjectMapper\MappedObject;
 use Orisai\ObjectMapper\Meta\Compile\CallbackCompileMeta;
 use Orisai\ObjectMapper\Meta\Compile\CompileMeta;
 use Orisai\ObjectMapper\Meta\Compile\ModifierCompileMeta;
+use Orisai\ObjectMapper\Meta\Compile\NodeCompileMeta;
 use Orisai\ObjectMapper\Meta\Compile\PropertyCompileMeta;
 use Orisai\ObjectMapper\Meta\Compile\RuleCompileMeta;
-use Orisai\ObjectMapper\Meta\Compile\SharedNodeCompileMeta;
 use Orisai\ObjectMapper\Meta\Runtime\CallbackRuntimeMeta;
 use Orisai\ObjectMapper\Meta\Runtime\ClassRuntimeMeta;
 use Orisai\ObjectMapper\Meta\Runtime\ModifierRuntimeMeta;
@@ -137,7 +137,7 @@ final class MetaResolver
 	/**
 	 * @return array<int, CallbackRuntimeMeta>
 	 */
-	private function resolveCallbacksMeta(SharedNodeCompileMeta $meta, ArgsContext $context): array
+	private function resolveCallbacksMeta(NodeCompileMeta $meta, ArgsContext $context): array
 	{
 		$array = [];
 		foreach ($meta->getCallbacks() as $key => $callback) {
@@ -160,7 +160,7 @@ final class MetaResolver
 	/**
 	 * @return array<string, DocMeta>
 	 */
-	private function resolveDocsMeta(SharedNodeCompileMeta $meta, ArgsContext $context): array
+	private function resolveDocsMeta(NodeCompileMeta $meta, ArgsContext $context): array
 	{
 		$array = [];
 		foreach ($meta->getDocs() as $doc) {
@@ -181,7 +181,7 @@ final class MetaResolver
 	/**
 	 * @return array<class-string<Modifier<Args>>, ModifierRuntimeMeta<Args>>
 	 */
-	private function resolveModifiersMeta(SharedNodeCompileMeta $meta, ArgsContext $context): array
+	private function resolveModifiersMeta(NodeCompileMeta $meta, ArgsContext $context): array
 	{
 		$array = [];
 		foreach ($meta->getModifiers() as $modifier) {

@@ -20,9 +20,9 @@ use Orisai\ObjectMapper\Exception\ValueDoesNotMatch;
 use Orisai\ObjectMapper\MappedObject;
 use Orisai\ObjectMapper\Meta\MetaLoader;
 use Orisai\ObjectMapper\Meta\Runtime\ClassRuntimeMeta;
+use Orisai\ObjectMapper\Meta\Runtime\NodeRuntimeMeta;
 use Orisai\ObjectMapper\Meta\Runtime\PropertyRuntimeMeta;
 use Orisai\ObjectMapper\Meta\Runtime\RuntimeMeta;
-use Orisai\ObjectMapper\Meta\Runtime\SharedNodeRuntimeMeta;
 use Orisai\ObjectMapper\Modifiers\FieldNameModifier;
 use Orisai\ObjectMapper\Modifiers\SkippedModifier;
 use Orisai\ObjectMapper\Rules\MappedObjectArgs;
@@ -587,7 +587,7 @@ class DefaultProcessor implements Processor
 		$data,
 		BaseFieldContext $baseFieldContext,
 		ProcessorCallContext $callContext,
-		SharedNodeRuntimeMeta $meta,
+		NodeRuntimeMeta $meta,
 		string $callbackType
 	)
 	{

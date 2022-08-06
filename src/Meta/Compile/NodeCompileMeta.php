@@ -7,7 +7,7 @@ use Orisai\ObjectMapper\Meta\DocMeta;
 /**
  * @internal
  */
-abstract class SharedNodeCompileMeta
+abstract class NodeCompileMeta
 {
 
 	/** @var array<int, CallbackCompileMeta> */

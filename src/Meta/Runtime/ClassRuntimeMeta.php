@@ -2,7 +2,7 @@
 
 namespace Orisai\ObjectMapper\Meta\Runtime;
 
-final class ClassRuntimeMeta extends SharedNodeRuntimeMeta
+final class ClassRuntimeMeta extends NodeRuntimeMeta
 {
 
 }

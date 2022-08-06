@@ -4,7 +4,7 @@ namespace Orisai\ObjectMapper\Meta\Runtime;
 
 use Orisai\ObjectMapper\Meta\DefaultValueMeta;
 
-final class PropertyRuntimeMeta extends SharedNodeRuntimeMeta
+final class PropertyRuntimeMeta extends NodeRuntimeMeta
 {
 
 	private DefaultValueMeta $default;

@@ -3,7 +3,7 @@
 namespace Orisai\ObjectMapper\Printers;
 
 use Orisai\ObjectMapper\Meta\MetaLoader;
-use Orisai\ObjectMapper\Meta\Runtime\SharedNodeRuntimeMeta;
+use Orisai\ObjectMapper\Meta\Runtime\NodeRuntimeMeta;
 use Orisai\ObjectMapper\Types\ArrayType;
 use Orisai\ObjectMapper\Types\CompoundType;
 use Orisai\ObjectMapper\Types\MappedObjectType;
@@ -95,7 +95,7 @@ final class DocsArrayPrinter implements MappedObjectPrinter
 	/**
 	 * @return array<mixed>
 	 */
-	private function printDocs(SharedNodeRuntimeMeta $meta): array
+	private function printDocs(NodeRuntimeMeta $meta): array
 	{
 		$docs = [];
 

@@ -9,7 +9,7 @@ use Orisai\ObjectMapper\Modifiers\Modifier;
 /**
  * @internal
  */
-abstract class SharedNodeRuntimeMeta
+abstract class NodeRuntimeMeta
 {
 
 	/** @var array<int, CallbackRuntimeMeta> */

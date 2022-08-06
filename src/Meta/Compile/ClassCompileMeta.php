@@ -2,7 +2,7 @@
 
 namespace Orisai\ObjectMapper\Meta\Compile;
 
-final class ClassCompileMeta extends SharedNodeCompileMeta
+final class ClassCompileMeta extends NodeCompileMeta
 {
 
 }

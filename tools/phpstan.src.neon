@@ -47,8 +47,8 @@ parameters:
 		  	- ../src/Rules/DefaultRuleManager.php
 		- message: '#^Method (.+)Options\:\:getDynamicContext\(\) should return T of object but returns object\.$#'
 		  path: ../src/Processing/Options.php
-		- message: '#^Method (.+)SharedNodeRuntimeMeta\:\:getModifier\(\) should return (.+)ModifierRuntimeMeta\<T of (.+)Args\>\|null but returns (.+)ModifierRuntimeMeta\<(.+)Args>\|null\.$#'
-		  path: ../src/Meta/Runtime/SharedNodeRuntimeMeta.php
+		- message: '#^Method (.+)NodeRuntimeMeta\:\:getModifier\(\) should return (.+)ModifierRuntimeMeta\<T of (.+)Args\>\|null but returns (.+)ModifierRuntimeMeta\<(.+)Args>\|null\.$#'
+		  path: ../src/Meta/Runtime/NodeRuntimeMeta.php
 		  count: 1
 		# Generics - phpstan resolves correct class-string as a constant string - but not on test site https://phpstan.org/r/ce7cd979-ab2f-4373-a589-f63bfa01ca33
 		- message: '#^Method (.+)(Before|After)\:\:getType\(\) should return class-string\<(.+)Callback\<(.+)Args\>\> but returns ''(.+)Callback''\.$#'
