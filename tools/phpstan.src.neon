@@ -47,6 +47,9 @@ parameters:
 		  	- ../src/Rules/DefaultRuleManager.php
 		- message: '#^Method (.+)Options\:\:getDynamicContext\(\) should return T of object but returns object\.$#'
 		  path: ../src/Processing/Options.php
+		- message: '#^Method (.+)SharedNodeRuntimeMeta\:\:getModifier\(\) should return (.+)ModifierRuntimeMeta\<T of (.+)Args\>\|null but returns (.+)ModifierRuntimeMeta\<(.+)Args>\|null\.$#'
+		  path: ../src/Meta/Runtime/SharedNodeRuntimeMeta.php
+		  count: 1
 		# Generics - phpstan resolves correct class-string as a constant string - but not on test site https://phpstan.org/r/ce7cd979-ab2f-4373-a589-f63bfa01ca33
 		- message: '#^Method (.+)(Before|After)\:\:getType\(\) should return class-string\<(.+)Callback\<(.+)Args\>\> but returns ''(.+)Callback''\.$#'
 		  path: ../src/Attributes/Callbacks
@@ -63,5 +66,3 @@ parameters:
 		# Generics - specifying type would cause too many errors like "Strict comparison using === between class-string<Modifier<Args>> and 'FieldNameModifier' will always evaluate to false."
 		- message: '#^Method (.+)ModifierCompileMeta\:\:getType\(\) return type with generic interface (.+)Modifier does not specify its types: T$#'
 		  path: ../src/Meta/Compile/ModifierCompileMeta.php
-		- message: '#^Method (.+)SharedNodeRuntimeMeta\:\:getModifier\(\) has parameter \$type with generic interface (.+)Modifier but does not specify its types: T$#'
-		  path: ../src/Meta/Runtime/SharedNodeRuntimeMeta.php

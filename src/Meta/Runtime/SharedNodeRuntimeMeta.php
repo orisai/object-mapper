@@ -58,8 +58,9 @@ abstract class SharedNodeRuntimeMeta
 	}
 
 	/**
-	 * @param class-string<Modifier> $type
-	 * @return ModifierRuntimeMeta<Args>|null
+	 * @template T of Args
+	 * @param class-string<Modifier<T>> $type
+	 * @return ModifierRuntimeMeta<T>|null
 	 */
 	public function getModifier(string $type): ?ModifierRuntimeMeta
 	{

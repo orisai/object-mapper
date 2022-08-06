@@ -23,7 +23,6 @@ use Orisai\ObjectMapper\Meta\Runtime\ClassRuntimeMeta;
 use Orisai\ObjectMapper\Meta\Runtime\PropertyRuntimeMeta;
 use Orisai\ObjectMapper\Meta\Runtime\RuntimeMeta;
 use Orisai\ObjectMapper\Meta\Runtime\SharedNodeRuntimeMeta;
-use Orisai\ObjectMapper\Modifiers\FieldNameArgs;
 use Orisai\ObjectMapper\Modifiers\FieldNameModifier;
 use Orisai\ObjectMapper\Modifiers\SkippedModifier;
 use Orisai\ObjectMapper\Rules\MappedObjectArgs;
@@ -229,10 +228,7 @@ class DefaultProcessor implements Processor
 	{
 		$fieldNameMeta = $meta->getModifier(FieldNameModifier::class);
 		if ($fieldNameMeta !== null) {
-			$args = $fieldNameMeta->getArgs();
-			assert($args instanceof FieldNameArgs);
-
-			return $args->name;
+			return $fieldNameMeta->getArgs()->name;
 		}
 
 		return $propertyName;

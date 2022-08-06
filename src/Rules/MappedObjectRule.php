@@ -9,7 +9,6 @@ use Orisai\ObjectMapper\Context\RuleArgsContext;
 use Orisai\ObjectMapper\Context\TypeContext;
 use Orisai\ObjectMapper\Exception\InvalidData;
 use Orisai\ObjectMapper\MappedObject;
-use Orisai\ObjectMapper\Modifiers\FieldNameArgs;
 use Orisai\ObjectMapper\Modifiers\FieldNameModifier;
 use Orisai\ObjectMapper\Types\MappedObjectType;
 use function array_keys;
@@ -78,13 +77,7 @@ final class MappedObjectRule implements Rule
 			$propertyArgs = $propertyRuleMeta->getArgs();
 
 			$fieldNameMeta = $propertyMeta->getModifier(FieldNameModifier::class);
-			if ($fieldNameMeta !== null) {
-				$args = $fieldNameMeta->getArgs();
-				assert($args instanceof FieldNameArgs);
-				$fieldName = $args->name;
-			} else {
-				$fieldName = $propertyName;
-			}
+			$fieldName = $fieldNameMeta !== null ? $fieldNameMeta->getArgs()->name : $propertyName;
 
 			$type->addField(
 				$fieldName,
