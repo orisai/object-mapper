@@ -179,7 +179,7 @@ final class MetaResolver
 	}
 
 	/**
-	 * @return array<class-string<Modifier<Args>>, ModifierRuntimeMeta>
+	 * @return array<class-string<Modifier<Args>>, ModifierRuntimeMeta<Args>>
 	 */
 	private function resolveModifiersMeta(SharedNodeCompileMeta $meta, ArgsContext $context): array
 	{
@@ -191,6 +191,9 @@ final class MetaResolver
 		return $array;
 	}
 
+	/**
+	 * @return ModifierRuntimeMeta<Args>
+	 */
 	private function resolveModifierMeta(ModifierCompileMeta $meta, ArgsContext $context): ModifierRuntimeMeta
 	{
 		$type = $meta->getType();
