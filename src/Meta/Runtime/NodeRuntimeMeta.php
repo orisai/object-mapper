@@ -12,7 +12,7 @@ use Orisai\ObjectMapper\Modifiers\Modifier;
 abstract class NodeRuntimeMeta
 {
 
-	/** @var array<int, CallbackRuntimeMeta> */
+	/** @var array<int, CallbackRuntimeMeta<Args>> */
 	private array $callbacks;
 
 	/** @var array<string, DocMeta> */
@@ -22,8 +22,8 @@ abstract class NodeRuntimeMeta
 	private array $modifiers;
 
 	/**
-	 * @param array<int, CallbackRuntimeMeta>                          $callbacks
-	 * @param array<string, DocMeta>                                   $docs
+	 * @param array<int, CallbackRuntimeMeta<Args>>                          $callbacks
+	 * @param array<string, DocMeta>                                         $docs
 	 * @param array<class-string<Modifier<Args>>, ModifierRuntimeMeta<Args>> $modifiers
 	 */
 	public function __construct(array $callbacks, array $docs, array $modifiers)
@@ -34,7 +34,7 @@ abstract class NodeRuntimeMeta
 	}
 
 	/**
-	 * @return array<int, CallbackRuntimeMeta>
+	 * @return array<int, CallbackRuntimeMeta<Args>>
 	 */
 	public function getCallbacks(): array
 	{

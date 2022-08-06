@@ -135,7 +135,7 @@ final class MetaResolver
 	}
 
 	/**
-	 * @return array<int, CallbackRuntimeMeta>
+	 * @return array<int, CallbackRuntimeMeta<Args>>
 	 */
 	private function resolveCallbacksMeta(NodeCompileMeta $meta, ArgsContext $context): array
 	{
@@ -147,6 +147,9 @@ final class MetaResolver
 		return $array;
 	}
 
+	/**
+	 * @return CallbackRuntimeMeta<Args>
+	 */
 	private function resolveCallbackMeta(CallbackCompileMeta $meta, ArgsContext $context): CallbackRuntimeMeta
 	{
 		$type = $meta->getType();
