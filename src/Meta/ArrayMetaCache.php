@@ -1,12 +1,11 @@
 <?php declare(strict_types = 1);
 
-namespace Tests\Orisai\ObjectMapper\Doubles;
+namespace Orisai\ObjectMapper\Meta;
 
 use Orisai\ObjectMapper\MappedObject;
-use Orisai\ObjectMapper\Meta\MetaCache;
 use Orisai\ObjectMapper\Meta\Runtime\RuntimeMeta;
 
-final class TestMetaCache implements MetaCache
+final class ArrayMetaCache implements MetaCache
 {
 
 	/** @var array<class-string<MappedObject>, RuntimeMeta> */

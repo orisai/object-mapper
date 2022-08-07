@@ -9,9 +9,9 @@ use Orisai\ObjectMapper\Rules\ScalarRule;
 use Orisai\ObjectMapper\Types\CompoundType;
 use Orisai\ObjectMapper\Types\SimpleValueType;
 use stdClass;
-use Tests\Orisai\ObjectMapper\Toolkit\RuleTestCase;
+use Tests\Orisai\ObjectMapper\Toolkit\ProcessingTestCase;
 
-final class ScalarRuleTest extends RuleTestCase
+final class ScalarRuleTest extends ProcessingTestCase
 {
 
 	private ScalarRule $rule;

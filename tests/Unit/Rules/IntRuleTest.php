@@ -7,9 +7,9 @@ use Orisai\ObjectMapper\Exception\ValueDoesNotMatch;
 use Orisai\ObjectMapper\Rules\IntArgs;
 use Orisai\ObjectMapper\Rules\IntRule;
 use Orisai\ObjectMapper\Types\SimpleValueType;
-use Tests\Orisai\ObjectMapper\Toolkit\RuleTestCase;
+use Tests\Orisai\ObjectMapper\Toolkit\ProcessingTestCase;
 
-final class IntRuleTest extends RuleTestCase
+final class IntRuleTest extends ProcessingTestCase
 {
 
 	private IntRule $rule;

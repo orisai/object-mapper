@@ -7,9 +7,9 @@ use Orisai\ObjectMapper\Exception\ValueDoesNotMatch;
 use Orisai\ObjectMapper\Rules\FloatArgs;
 use Orisai\ObjectMapper\Rules\FloatRule;
 use Orisai\ObjectMapper\Types\SimpleValueType;
-use Tests\Orisai\ObjectMapper\Toolkit\RuleTestCase;
+use Tests\Orisai\ObjectMapper\Toolkit\ProcessingTestCase;
 
-final class FloatRuleTest extends RuleTestCase
+final class FloatRuleTest extends ProcessingTestCase
 {
 
 	private FloatRule $rule;

@@ -2,42 +2,62 @@
 
 namespace Tests\Orisai\ObjectMapper\Toolkit;
 
-use Orisai\ObjectMapper\Attributes\AnnotationsMetaSource;
-use Orisai\ObjectMapper\Meta\DefaultMetaResolverFactory;
-use Orisai\ObjectMapper\Meta\DefaultMetaSourceManager;
+use Orisai\ObjectMapper\Context\FieldContext;
+use Orisai\ObjectMapper\Context\RuleArgsContext;
+use Orisai\ObjectMapper\Context\TypeContext;
+use Orisai\ObjectMapper\Meta\DefaultValueMeta;
 use Orisai\ObjectMapper\Meta\MetaLoader;
-use Orisai\ObjectMapper\Meta\MetaResolver;
-use Orisai\ObjectMapper\Processing\DefaultObjectCreator;
-use Orisai\ObjectMapper\Processing\DefaultProcessor;
+use Orisai\ObjectMapper\Processing\Options;
 use Orisai\ObjectMapper\Processing\Processor;
 use Orisai\ObjectMapper\Rules\DefaultRuleManager;
+use Orisai\ObjectMapper\Tester\ObjectMapperTester;
+use Orisai\ObjectMapper\Tester\TesterDependencies;
 use PHPUnit\Framework\TestCase;
-use Tests\Orisai\ObjectMapper\Doubles\TestMetaCache;
+use ReflectionClass;
+use ReflectionProperty;
+use Tests\Orisai\ObjectMapper\Doubles\NoDefaultsVO;
 
 abstract class ProcessingTestCase extends TestCase
 {
 
-	protected MetaLoader $metaLoader;
+	private TesterDependencies $dependencies;
 
-	protected MetaResolver $metaResolver;
+	protected MetaLoader $metaLoader;
 
 	protected DefaultRuleManager $ruleManager;
 
 	protected Processor $processor;
 
+	protected TypeContext $typeContext;
+
 	protected function setUp(): void
 	{
-		$this->ruleManager = new DefaultRuleManager();
+		$tester = new ObjectMapperTester();
+		$this->dependencies = $deps = $tester->buildDependencies();
 
-		$sourceManager = new DefaultMetaSourceManager();
-		$sourceManager->addSource(new AnnotationsMetaSource());
+		$this->ruleManager = $deps->ruleManager;
+		$this->metaLoader = $deps->metaLoader;
+		$this->processor = $deps->processor;
+		$this->typeContext = $deps->typeContext;
+	}
 
-		$cache = new TestMetaCache();
-		$resolverFactory = new DefaultMetaResolverFactory($this->ruleManager);
-		$this->metaLoader = new MetaLoader($cache, $sourceManager, $resolverFactory);
-		$this->metaResolver = $resolverFactory->create($this->metaLoader);
+	protected function ruleArgsContext(?ReflectionProperty $property = null): RuleArgsContext
+	{
+		if ($property === null) {
+			$class = new ReflectionClass(NoDefaultsVO::class);
+			$property = $class->getProperty('string');
+		}
 
-		$this->processor = new DefaultProcessor($this->metaLoader, $this->ruleManager, new DefaultObjectCreator());
+		return $this->dependencies->createRuleArgsContext($property);
+	}
+
+	protected function fieldContext(
+		?DefaultValueMeta $defaultValueMeta = null,
+		?Options $options = null,
+		bool $initializeObjects = false
+	): FieldContext
+	{
+		return $this->dependencies->createFieldContext($defaultValueMeta, $options, $initializeObjects);
 	}
 
 }

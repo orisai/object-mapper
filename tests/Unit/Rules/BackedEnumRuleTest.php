@@ -10,12 +10,12 @@ use Orisai\ObjectMapper\Rules\BackedEnumRule;
 use Orisai\ObjectMapper\Types\EnumType;
 use Tests\Orisai\ObjectMapper\Doubles\ExampleIntEnum;
 use Tests\Orisai\ObjectMapper\Doubles\ExampleStringEnum;
-use Tests\Orisai\ObjectMapper\Toolkit\RuleTestCase;
+use Tests\Orisai\ObjectMapper\Toolkit\ProcessingTestCase;
 
 /**
  * @requires PHP >= 8.1
  */
-final class BackedEnumRuleTest extends RuleTestCase
+final class BackedEnumRuleTest extends ProcessingTestCase
 {
 
 	private BackedEnumRule $rule;

@@ -8,9 +8,9 @@ use Orisai\ObjectMapper\Exception\ValueDoesNotMatch;
 use Orisai\ObjectMapper\Rules\UrlRule;
 use Orisai\ObjectMapper\Types\SimpleValueType;
 use stdClass;
-use Tests\Orisai\ObjectMapper\Toolkit\RuleTestCase;
+use Tests\Orisai\ObjectMapper\Toolkit\ProcessingTestCase;
 
-final class UrlRuleTest extends RuleTestCase
+final class UrlRuleTest extends ProcessingTestCase
 {
 
 	private UrlRule $rule;

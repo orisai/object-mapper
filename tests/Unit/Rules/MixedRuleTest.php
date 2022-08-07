@@ -6,9 +6,9 @@ use Generator;
 use Orisai\ObjectMapper\Args\EmptyArgs;
 use Orisai\ObjectMapper\Rules\MixedRule;
 use stdClass;
-use Tests\Orisai\ObjectMapper\Toolkit\RuleTestCase;
+use Tests\Orisai\ObjectMapper\Toolkit\ProcessingTestCase;
 
-final class MixedRuleTest extends RuleTestCase
+final class MixedRuleTest extends ProcessingTestCase
 {
 
 	private MixedRule $rule;

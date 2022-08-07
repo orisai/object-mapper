@@ -17,10 +17,10 @@ use Orisai\ObjectMapper\Types\MessageType;
 use Orisai\ObjectMapper\Types\SimpleValueType;
 use Tests\Orisai\ObjectMapper\Doubles\AlwaysInvalidRule;
 use Tests\Orisai\ObjectMapper\Doubles\DefaultsVO;
-use Tests\Orisai\ObjectMapper\Toolkit\RuleTestCase;
+use Tests\Orisai\ObjectMapper\Toolkit\ProcessingTestCase;
 use function sprintf;
 
-final class AnyOfRuleTest extends RuleTestCase
+final class AnyOfRuleTest extends ProcessingTestCase
 {
 
 	private AnyOfRule $rule;

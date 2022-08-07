@@ -8,9 +8,9 @@ use Orisai\ObjectMapper\Exception\ValueDoesNotMatch;
 use Orisai\ObjectMapper\Rules\ObjectRule;
 use Orisai\ObjectMapper\Types\SimpleValueType;
 use stdClass;
-use Tests\Orisai\ObjectMapper\Toolkit\RuleTestCase;
+use Tests\Orisai\ObjectMapper\Toolkit\ProcessingTestCase;
 
-final class ObjectRuleTest extends RuleTestCase
+final class ObjectRuleTest extends ProcessingTestCase
 {
 
 	private ObjectRule $rule;

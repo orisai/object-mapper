@@ -8,9 +8,9 @@ use Orisai\ObjectMapper\Rules\BoolArgs;
 use Orisai\ObjectMapper\Rules\BoolRule;
 use Orisai\ObjectMapper\Types\SimpleValueType;
 use stdClass;
-use Tests\Orisai\ObjectMapper\Toolkit\RuleTestCase;
+use Tests\Orisai\ObjectMapper\Toolkit\ProcessingTestCase;
 
-final class BoolRuleTest extends RuleTestCase
+final class BoolRuleTest extends ProcessingTestCase
 {
 
 	private BoolRule $rule;

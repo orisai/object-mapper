@@ -5,6 +5,7 @@ namespace Tests\Orisai\ObjectMapper\Unit\Printers;
 use Orisai\ObjectMapper\Attributes\AnnotationsMetaSource;
 use Orisai\ObjectMapper\Context\TypeContext;
 use Orisai\ObjectMapper\MappedObject;
+use Orisai\ObjectMapper\Meta\ArrayMetaCache;
 use Orisai\ObjectMapper\Meta\DefaultMetaResolverFactory;
 use Orisai\ObjectMapper\Meta\DefaultMetaSourceManager;
 use Orisai\ObjectMapper\Meta\MetaLoader;
@@ -18,7 +19,6 @@ use PHPUnit\Framework\TestCase;
 use Tests\Orisai\ObjectMapper\Doubles\DefaultsVO;
 use Tests\Orisai\ObjectMapper\Doubles\NoDefaultsVO;
 use Tests\Orisai\ObjectMapper\Doubles\StructuresVO;
-use Tests\Orisai\ObjectMapper\Doubles\TestMetaCache;
 
 final class DefaultValuesArrayPrinterTest extends TestCase
 {
@@ -36,7 +36,7 @@ final class DefaultValuesArrayPrinterTest extends TestCase
 		$sourceManager = new DefaultMetaSourceManager();
 		$sourceManager->addSource(new AnnotationsMetaSource());
 
-		$cache = new TestMetaCache();
+		$cache = new ArrayMetaCache();
 		$resolverFactory = new DefaultMetaResolverFactory($this->ruleManager);
 		$this->metaLoader = new MetaLoader($cache, $sourceManager, $resolverFactory);
 		$this->formatter = new DefaultValuesArrayPrinter($this->metaLoader);

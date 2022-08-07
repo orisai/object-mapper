@@ -7,9 +7,9 @@ use Orisai\ObjectMapper\Exception\ValueDoesNotMatch;
 use Orisai\ObjectMapper\Rules\ArrayEnumArgs;
 use Orisai\ObjectMapper\Rules\ArrayEnumRule;
 use Orisai\ObjectMapper\Types\EnumType;
-use Tests\Orisai\ObjectMapper\Toolkit\RuleTestCase;
+use Tests\Orisai\ObjectMapper\Toolkit\ProcessingTestCase;
 
-final class ArrayEnumRuleTest extends RuleTestCase
+final class ArrayEnumRuleTest extends ProcessingTestCase
 {
 
 	private ArrayEnumRule $rule;

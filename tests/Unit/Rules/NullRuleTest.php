@@ -8,9 +8,9 @@ use Orisai\ObjectMapper\Rules\NullArgs;
 use Orisai\ObjectMapper\Rules\NullRule;
 use Orisai\ObjectMapper\Types\SimpleValueType;
 use stdClass;
-use Tests\Orisai\ObjectMapper\Toolkit\RuleTestCase;
+use Tests\Orisai\ObjectMapper\Toolkit\ProcessingTestCase;
 
-final class NullRuleTest extends RuleTestCase
+final class NullRuleTest extends ProcessingTestCase
 {
 
 	private NullRule $rule;

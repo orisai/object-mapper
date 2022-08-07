@@ -15,9 +15,9 @@ use Orisai\ObjectMapper\Rules\StringRule;
 use Orisai\ObjectMapper\Types\ArrayType;
 use Orisai\ObjectMapper\Types\SimpleValueType;
 use Tests\Orisai\ObjectMapper\Doubles\AlwaysInvalidRule;
-use Tests\Orisai\ObjectMapper\Toolkit\RuleTestCase;
+use Tests\Orisai\ObjectMapper\Toolkit\ProcessingTestCase;
 
-final class ArrayOfRuleTest extends RuleTestCase
+final class ArrayOfRuleTest extends ProcessingTestCase
 {
 
 	private ArrayOfRule $rule;

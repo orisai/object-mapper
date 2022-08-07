@@ -8,9 +8,9 @@ use Orisai\ObjectMapper\Rules\InstanceArgs;
 use Orisai\ObjectMapper\Rules\InstanceRule;
 use Orisai\ObjectMapper\Types\SimpleValueType;
 use stdClass;
-use Tests\Orisai\ObjectMapper\Toolkit\RuleTestCase;
+use Tests\Orisai\ObjectMapper\Toolkit\ProcessingTestCase;
 
-final class InstanceRuleTest extends RuleTestCase
+final class InstanceRuleTest extends ProcessingTestCase
 {
 
 	private InstanceRule $rule;

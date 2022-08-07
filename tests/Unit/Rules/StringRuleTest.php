@@ -8,9 +8,9 @@ use Orisai\ObjectMapper\Rules\StringArgs;
 use Orisai\ObjectMapper\Rules\StringRule;
 use Orisai\ObjectMapper\Types\SimpleValueType;
 use stdClass;
-use Tests\Orisai\ObjectMapper\Toolkit\RuleTestCase;
+use Tests\Orisai\ObjectMapper\Toolkit\ProcessingTestCase;
 
-final class StringRuleTest extends RuleTestCase
+final class StringRuleTest extends ProcessingTestCase
 {
 
 	private StringRule $rule;

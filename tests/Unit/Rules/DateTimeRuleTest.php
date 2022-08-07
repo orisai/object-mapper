@@ -10,10 +10,10 @@ use Orisai\ObjectMapper\Exception\ValueDoesNotMatch;
 use Orisai\ObjectMapper\Rules\DateTimeArgs;
 use Orisai\ObjectMapper\Rules\DateTimeRule;
 use Orisai\ObjectMapper\Types\SimpleValueType;
-use Tests\Orisai\ObjectMapper\Toolkit\RuleTestCase;
+use Tests\Orisai\ObjectMapper\Toolkit\ProcessingTestCase;
 use const PHP_VERSION_ID;
 
-final class DateTimeRuleTest extends RuleTestCase
+final class DateTimeRuleTest extends ProcessingTestCase
 {
 
 	private DateTimeRule $rule;

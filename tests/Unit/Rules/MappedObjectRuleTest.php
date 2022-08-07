@@ -7,10 +7,10 @@ use Orisai\ObjectMapper\Processing\Options;
 use Orisai\ObjectMapper\Rules\MappedObjectArgs;
 use Orisai\ObjectMapper\Rules\MappedObjectRule;
 use Tests\Orisai\ObjectMapper\Doubles\DefaultsVO;
-use Tests\Orisai\ObjectMapper\Toolkit\RuleTestCase;
+use Tests\Orisai\ObjectMapper\Toolkit\ProcessingTestCase;
 use function array_keys;
 
-final class MappedObjectRuleTest extends RuleTestCase
+final class MappedObjectRuleTest extends ProcessingTestCase
 {
 
 	private MappedObjectRule $rule;
