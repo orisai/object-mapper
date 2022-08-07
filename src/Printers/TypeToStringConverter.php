@@ -24,11 +24,6 @@ final class TypeToStringConverter
 	public string $pathAndTypeSeparator = ': ';
 
 	/**
-	 * Separator between type and it's parameters
-	 */
-	public string $typeAndParametersSeparator = '';
-
-	/**
 	 * Separator between type parameters
 	 */
 	public string $parameterSeparator = ', ';
@@ -107,7 +102,7 @@ final class TypeToStringConverter
 				. $separator;
 		}
 
-		return "$this->typeAndParametersSeparator($inlineParameters)";
+		return "($inlineParameters)";
 	}
 
 	/**
@@ -150,9 +145,6 @@ final class TypeToStringConverter
 		array $invalidPairs = []
 	): string
 	{
-		$parametersString = $this->typeAndParametersSeparator
-			. $this->printParameters($parameters);
-
 		if ($keyType !== null) {
 			$keyValueType = '<'
 				. $keyType
@@ -168,7 +160,7 @@ final class TypeToStringConverter
 		}
 
 		return $name
-			. $parametersString
+			. $this->printParameters($parameters)
 			. $keyValueType
 			. $this->printInvalidPairs($invalidPairs);
 	}
@@ -218,9 +210,7 @@ final class TypeToStringConverter
 	public function printShape(array $fields, array $errors = []): string
 	{
 		if ($fields === [] && $errors === []) {
-			return 'shape'
-				. $this->typeAndParametersSeparator
-				. '{}';
+			return 'shape{}';
 		}
 
 		$printedFields = '';
@@ -243,9 +233,7 @@ final class TypeToStringConverter
 
 		$printedItems = $printedFields . $printedErrors;
 
-		return 'shape'
-			. $this->typeAndParametersSeparator
-			. '{'
+		return 'shape{'
 			. $this->aroundItemsSeparator
 			. ($printedItems !== '' ? $this->indent($printedItems) : '')
 			. $this->aroundItemsSeparator
