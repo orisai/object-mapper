@@ -23,6 +23,7 @@ use ReflectionClass;
 use ReflectionProperty;
 use function array_merge;
 use function get_class;
+use function is_a;
 use function sprintf;
 use const PHP_VERSION_ID;
 
@@ -238,6 +239,10 @@ final class AnnotationsMetaSource implements MetaSource
 	{
 		$attributes = [];
 		foreach ($reflectionAttributes as $attribute) {
+			if (!is_a($attribute->getName(), BaseAttribute::class, true)) {
+				continue;
+			}
+
 			$attributes[] = $attribute->newInstance();
 		}
 
