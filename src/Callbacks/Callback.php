@@ -3,10 +3,10 @@
 namespace Orisai\ObjectMapper\Callbacks;
 
 use Orisai\ObjectMapper\Args\Args;
-use Orisai\ObjectMapper\Context\ArgsContext;
 use Orisai\ObjectMapper\Context\BaseFieldContext;
 use Orisai\ObjectMapper\Context\FieldContext;
 use Orisai\ObjectMapper\Context\MappedObjectContext;
+use Orisai\ObjectMapper\Context\ResolverArgsContext;
 use Orisai\ObjectMapper\Exception\InvalidData;
 use Orisai\ObjectMapper\Exception\ValueDoesNotMatch;
 use Orisai\ObjectMapper\MappedObject;
@@ -22,7 +22,7 @@ interface Callback
 	 * @param array<int|string, mixed> $args
 	 * @return T_ARGS
 	 */
-	public static function resolveArgs(array $args, ArgsContext $context): Args;
+	public static function resolveArgs(array $args, ResolverArgsContext $context): Args;
 
 	/**
 	 * @phpstan-return class-string<T_ARGS>

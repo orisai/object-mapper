@@ -4,7 +4,7 @@ namespace Orisai\ObjectMapper\Modifiers;
 
 use Orisai\ObjectMapper\Args\ArgsChecker;
 use Orisai\ObjectMapper\Args\EmptyArgs;
-use Orisai\ObjectMapper\Context\ArgsContext;
+use Orisai\ObjectMapper\Context\ResolverArgsContext;
 
 /**
  * @implements Modifier<EmptyArgs>
@@ -12,7 +12,7 @@ use Orisai\ObjectMapper\Context\ArgsContext;
 final class SkippedModifier implements Modifier
 {
 
-	public static function resolveArgs(array $args, ArgsContext $context): EmptyArgs
+	public static function resolveArgs(array $args, ResolverArgsContext $context): EmptyArgs
 	{
 		$checker = new ArgsChecker($args, self::class);
 		$checker->checkNoArgs();

@@ -47,9 +47,7 @@ final class TesterDependencies
 
 	public function createRuleArgsContext(ReflectionProperty $property): RuleArgsContext
 	{
-		$class = $property->getDeclaringClass();
-
-		return new RuleArgsContext($class, $property, $this->ruleManager, $this->metaLoader, $this->metaResolver);
+		return new RuleArgsContext($property, $this->ruleManager, $this->metaLoader, $this->metaResolver);
 	}
 
 	public function createFieldContext(

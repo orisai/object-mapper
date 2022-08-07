@@ -2,7 +2,7 @@
 
 namespace Orisai\ObjectMapper\Docs;
 
-use Orisai\ObjectMapper\Context\ArgsContext;
+use Orisai\ObjectMapper\Context\ResolverArgsContext;
 
 interface Doc
 {
@@ -11,7 +11,7 @@ interface Doc
 	 * @param array<mixed> $args
 	 * @return array<mixed>
 	 */
-	public static function resolveArgs(array $args, ArgsContext $context): array;
+	public static function resolveArgs(array $args, ResolverArgsContext $context): array;
 
 	public static function getUniqueName(): string;
 

@@ -6,7 +6,7 @@ use Orisai\Exceptions\Logic\InvalidArgument;
 use Orisai\Exceptions\Logic\InvalidState;
 use Orisai\Exceptions\Message;
 use Orisai\ObjectMapper\Args\Args;
-use Orisai\ObjectMapper\Context\ArgsContext;
+use Orisai\ObjectMapper\Context\ResolverArgsContext;
 use Orisai\ObjectMapper\Context\RuleArgsContext;
 use Orisai\ObjectMapper\MappedObject;
 use Orisai\ObjectMapper\Meta\Compile\CallbackCompileMeta;
@@ -68,7 +68,7 @@ final class MetaResolver
 	 */
 	private function resolveClassMeta(CompileMeta $meta, ReflectionClass $class): ClassRuntimeMeta
 	{
-		$context = $this->createArgsContext($class, null);
+		$context = ResolverArgsContext::forClass($class, $this);
 		$classMeta = $meta->getClass();
 
 		return new ClassRuntimeMeta(
@@ -91,7 +91,6 @@ final class MetaResolver
 			$property = $class->getProperty($propertyName);
 			$array[$propertyName] = $this->resolvePropertyMeta(
 				$propertyMeta,
-				$class,
 				$property,
 				$defaults[$propertyName] ?? DefaultValueMeta::fromNothing(),
 			);
@@ -100,12 +99,8 @@ final class MetaResolver
 		return $array;
 	}
 
-	/**
-	 * @param ReflectionClass<MappedObject> $class
-	 */
 	private function resolvePropertyMeta(
 		PropertyCompileMeta $meta,
-		ReflectionClass $class,
 		ReflectionProperty $property,
 		DefaultValueMeta $defaultValue
 	): PropertyRuntimeMeta
@@ -114,13 +109,13 @@ final class MetaResolver
 			throw InvalidArgument::create()
 				->withMessage(sprintf(
 					'Property %s::$%s is not valid mapped property, \'%s\' supports only non-static public properties to be mapped.',
-					$class->getName(),
+					$property->getDeclaringClass()->getName(),
 					$property->getName(),
 					MappedObject::class,
 				));
 		}
 
-		$context = $this->createArgsContext($class, $property);
+		$context = ResolverArgsContext::forProperty($property, $this);
 
 		return new PropertyRuntimeMeta(
 			$this->resolveCallbacksMeta($meta, $context),
@@ -128,7 +123,7 @@ final class MetaResolver
 			$this->resolveModifiersMeta($meta, $context),
 			$this->resolveRuleMeta(
 				$meta->getRule(),
-				$this->createRuleArgsContext($class, $property),
+				$this->createRuleArgsContext($property),
 			),
 			$defaultValue,
 		);
@@ -137,7 +132,7 @@ final class MetaResolver
 	/**
 	 * @return array<int, CallbackRuntimeMeta<Args>>
 	 */
-	private function resolveCallbacksMeta(NodeCompileMeta $meta, ArgsContext $context): array
+	private function resolveCallbacksMeta(NodeCompileMeta $meta, ResolverArgsContext $context): array
 	{
 		$array = [];
 		foreach ($meta->getCallbacks() as $key => $callback) {
@@ -150,7 +145,7 @@ final class MetaResolver
 	/**
 	 * @return CallbackRuntimeMeta<Args>
 	 */
-	private function resolveCallbackMeta(CallbackCompileMeta $meta, ArgsContext $context): CallbackRuntimeMeta
+	private function resolveCallbackMeta(CallbackCompileMeta $meta, ResolverArgsContext $context): CallbackRuntimeMeta
 	{
 		$type = $meta->getType();
 
@@ -163,7 +158,7 @@ final class MetaResolver
 	/**
 	 * @return array<string, DocMeta>
 	 */
-	private function resolveDocsMeta(NodeCompileMeta $meta, ArgsContext $context): array
+	private function resolveDocsMeta(NodeCompileMeta $meta, ResolverArgsContext $context): array
 	{
 		$array = [];
 		foreach ($meta->getDocs() as $doc) {
@@ -173,7 +168,7 @@ final class MetaResolver
 		return $array;
 	}
 
-	public function resolveDocMeta(DocMeta $meta, ArgsContext $context): DocMeta
+	public function resolveDocMeta(DocMeta $meta, ResolverArgsContext $context): DocMeta
 	{
 		$type = $meta->getName();
 		$args = $type::resolveArgs($meta->getArgs(), $context);
@@ -184,7 +179,7 @@ final class MetaResolver
 	/**
 	 * @return array<class-string<Modifier<Args>>, ModifierRuntimeMeta<Args>>
 	 */
-	private function resolveModifiersMeta(NodeCompileMeta $meta, ArgsContext $context): array
+	private function resolveModifiersMeta(NodeCompileMeta $meta, ResolverArgsContext $context): array
 	{
 		$array = [];
 		foreach ($meta->getModifiers() as $modifier) {
@@ -197,7 +192,7 @@ final class MetaResolver
 	/**
 	 * @return ModifierRuntimeMeta<Args>
 	 */
-	private function resolveModifierMeta(ModifierCompileMeta $meta, ArgsContext $context): ModifierRuntimeMeta
+	private function resolveModifierMeta(ModifierCompileMeta $meta, ResolverArgsContext $context): ModifierRuntimeMeta
 	{
 		$type = $meta->getType();
 		$args = $type::resolveArgs($meta->getArgs(), $context);
@@ -336,20 +331,9 @@ final class MetaResolver
 		return $map;
 	}
 
-	/**
-	 * @param ReflectionClass<MappedObject> $class
-	 */
-	private function createArgsContext(ReflectionClass $class, ?ReflectionProperty $property): ArgsContext
+	private function createRuleArgsContext(ReflectionProperty $property): RuleArgsContext
 	{
-		return new ArgsContext($class, $property, $this);
-	}
-
-	/**
-	 * @param ReflectionClass<MappedObject> $class
-	 */
-	private function createRuleArgsContext(ReflectionClass $class, ReflectionProperty $property): RuleArgsContext
-	{
-		return new RuleArgsContext($class, $property, $this->ruleManager, $this->loader, $this);
+		return new RuleArgsContext($property, $this->ruleManager, $this->loader, $this);
 	}
 
 }

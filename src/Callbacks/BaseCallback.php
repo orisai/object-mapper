@@ -6,10 +6,10 @@ use Nette\Utils\Helpers;
 use Orisai\Exceptions\Logic\InvalidArgument;
 use Orisai\ObjectMapper\Args\Args;
 use Orisai\ObjectMapper\Args\ArgsChecker;
-use Orisai\ObjectMapper\Context\ArgsContext;
 use Orisai\ObjectMapper\Context\BaseFieldContext;
 use Orisai\ObjectMapper\Context\FieldContext;
 use Orisai\ObjectMapper\Context\MappedObjectContext;
+use Orisai\ObjectMapper\Context\ResolverArgsContext;
 use Orisai\ObjectMapper\MappedObject;
 use Orisai\ObjectMapper\Processing\ObjectHolder;
 use ReflectionClass;
@@ -48,7 +48,7 @@ abstract class BaseCallback implements Callback
 		// Static constructor is required
 	}
 
-	public static function resolveArgs(array $args, ArgsContext $context): BaseCallbackArgs
+	public static function resolveArgs(array $args, ResolverArgsContext $context): BaseCallbackArgs
 	{
 		$checker = new ArgsChecker($args, static::class);
 		$checker->checkAllowedArgs([self::Method, self::Runtime]);
