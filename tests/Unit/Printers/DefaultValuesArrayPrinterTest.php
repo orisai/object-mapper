@@ -2,7 +2,7 @@
 
 namespace Tests\Orisai\ObjectMapper\Unit\Printers;
 
-use Orisai\ObjectMapper\Attributes\AnnotationsMetaSource;
+use Orisai\ObjectMapper\Attributes\AttributesMetaSource;
 use Orisai\ObjectMapper\Context\TypeContext;
 use Orisai\ObjectMapper\MappedObject;
 use Orisai\ObjectMapper\Meta\ArrayMetaCache;
@@ -34,7 +34,7 @@ final class DefaultValuesArrayPrinterTest extends TestCase
 		$this->ruleManager = new DefaultRuleManager();
 
 		$sourceManager = new DefaultMetaSourceManager();
-		$sourceManager->addSource(new AnnotationsMetaSource());
+		$sourceManager->addSource(new AttributesMetaSource());
 
 		$cache = new ArrayMetaCache();
 		$resolverFactory = new DefaultMetaResolverFactory($this->ruleManager);

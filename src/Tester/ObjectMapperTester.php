@@ -2,7 +2,7 @@
 
 namespace Orisai\ObjectMapper\Tester;
 
-use Orisai\ObjectMapper\Attributes\AnnotationsMetaSource;
+use Orisai\ObjectMapper\Attributes\AttributesMetaSource;
 use Orisai\ObjectMapper\Meta\ArrayMetaCache;
 use Orisai\ObjectMapper\Meta\DefaultMetaResolverFactory;
 use Orisai\ObjectMapper\Meta\DefaultMetaSourceManager;
@@ -19,7 +19,7 @@ final class ObjectMapperTester
 		$ruleManager = new DefaultRuleManager();
 
 		$sourceManager = new DefaultMetaSourceManager();
-		$sourceManager->addSource(new AnnotationsMetaSource());
+		$sourceManager->addSource(new AttributesMetaSource());
 
 		$cache = new ArrayMetaCache();
 		$resolverFactory = new DefaultMetaResolverFactory($ruleManager);

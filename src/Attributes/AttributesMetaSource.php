@@ -27,7 +27,7 @@ use function is_a;
 use function sprintf;
 use const PHP_VERSION_ID;
 
-final class AnnotationsMetaSource implements MetaSource
+final class AttributesMetaSource implements MetaSource
 {
 
 	private Reader $reader;
