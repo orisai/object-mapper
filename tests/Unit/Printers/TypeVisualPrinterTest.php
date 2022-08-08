@@ -3,6 +3,7 @@
 namespace Tests\Orisai\ObjectMapper\Unit\Printers;
 
 use Orisai\ObjectMapper\MappedObject;
+use Orisai\ObjectMapper\Printers\TypeToStringConverter;
 use Orisai\ObjectMapper\Printers\TypeVisualPrinter;
 use Orisai\ObjectMapper\Types\ArrayType;
 use Orisai\ObjectMapper\Types\CompoundType;
@@ -22,7 +23,7 @@ final class TypeVisualPrinterTest extends TestCase
 
 	protected function setUp(): void
 	{
-		$this->formatter = new TypeVisualPrinter();
+		$this->formatter = new TypeVisualPrinter(new TypeToStringConverter());
 	}
 
 	public function testMessage(): void

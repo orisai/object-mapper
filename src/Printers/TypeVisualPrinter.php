@@ -15,22 +15,32 @@ use Orisai\ObjectMapper\Types\TypeParameter;
 use function get_class;
 use function sprintf;
 
+/**
+ * @template T of string|array
+ */
 final class TypeVisualPrinter implements TypePrinter
 {
 
-	public TypeToStringConverter $converter;
+	/** @var TypeToPrimitiveConverter<T> */
+	public TypeToPrimitiveConverter $converter;
 
-	public function __construct()
+	/**
+	 * @param TypeToPrimitiveConverter<T> $converter
+	 */
+	public function __construct(TypeToPrimitiveConverter $converter)
 	{
-		$this->converter = new TypeToStringConverter();
+		$this->converter = $converter;
 	}
 
-	public function printType(Type $type): string
+	public function printType(Type $type)
 	{
 		return $this->print($type);
 	}
 
-	private function print(Type $type): string
+	/**
+	 * @return T
+	 */
+	private function print(Type $type)
 	{
 		if ($type instanceof MappedObjectType) {
 			return $this->printMappedObjectType($type);
@@ -60,7 +70,10 @@ final class TypeVisualPrinter implements TypePrinter
 			->withMessage(sprintf('Unsupported type %s', get_class($type)));
 	}
 
-	private function printMappedObjectType(MappedObjectType $type): string
+	/**
+	 * @return T
+	 */
+	private function printMappedObjectType(MappedObjectType $type)
 	{
 		$printedFields = [];
 		foreach ($this->filterFields($type) as $fieldName => $fieldType) {
@@ -78,7 +91,10 @@ final class TypeVisualPrinter implements TypePrinter
 		return $type->getFields();
 	}
 
-	private function printCompoundType(CompoundType $type): string
+	/**
+	 * @return T
+	 */
+	private function printCompoundType(CompoundType $type)
 	{
 		$printedSubtypes = [];
 		foreach ($type->getSubtypes() as $key => $subtype) {
@@ -88,7 +104,10 @@ final class TypeVisualPrinter implements TypePrinter
 		return $this->converter->printCompound($type->getOperator(), $printedSubtypes);
 	}
 
-	private function printArrayType(ArrayType $type): string
+	/**
+	 * @return T
+	 */
+	private function printArrayType(ArrayType $type)
 	{
 		$keyType = $type->getKeyType();
 		$printedKeyType = $keyType !== null ? $this->print($keyType) : null;
@@ -101,7 +120,10 @@ final class TypeVisualPrinter implements TypePrinter
 		);
 	}
 
-	private function printSimpleValueType(SimpleValueType $type): string
+	/**
+	 * @return T
+	 */
+	private function printSimpleValueType(SimpleValueType $type)
 	{
 		return $this->converter->printSimpleValue(
 			$type->getName(),
@@ -109,12 +131,18 @@ final class TypeVisualPrinter implements TypePrinter
 		);
 	}
 
-	private function printEnumType(EnumType $type): string
+	/**
+	 * @return T
+	 */
+	private function printEnumType(EnumType $type)
 	{
 		return $this->converter->printEnum($type->getValues());
 	}
 
-	private function printMessageType(MessageType $type): string
+	/**
+	 * @return T
+	 */
+	private function printMessageType(MessageType $type)
 	{
 		return $this->converter->printMessage($type->getMessage());
 	}

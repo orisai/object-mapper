@@ -26,7 +26,7 @@ final class DocsArrayPrinter implements MappedObjectPrinter
 	)
 	{
 		$this->metaLoader = $metaLoader;
-		$this->typePrinter = $typePrinter ?? new TypeVisualPrinter();
+		$this->typePrinter = $typePrinter ?? new TypeVisualPrinter(new TypeToStringConverter());
 		$this->defaultsPrinter = $defaultsPrinter ?? new DefaultValuesArrayPrinter($metaLoader);
 	}
 
