@@ -16,20 +16,28 @@ use Orisai\ObjectMapper\Types\TypeParameter;
 use function get_class;
 use function sprintf;
 
+/**
+ * @template T of string|array
+ */
 final class ErrorVisualPrinter implements ErrorPrinter, TypePrinter
 {
 
-	private TypeToStringConverter $converter;
+	/** @var TypeToPrimitiveConverter<T> */
+	private TypeToPrimitiveConverter $converter;
 
-	public function __construct(TypeToStringConverter $converter)
+	/**
+	 * @param TypeToPrimitiveConverter<T> $converter
+	 */
+	public function __construct(TypeToPrimitiveConverter $converter)
 	{
 		$this->converter = $converter;
 	}
 
 	/**
 	 * @param array<string> $pathNodes
+	 * @return T
 	 */
-	public function printError(InvalidData $exception, array $pathNodes = []): string
+	public function printError(InvalidData $exception, array $pathNodes = [])
 	{
 		$scope = PrinterScope::forInvalidScope();
 
@@ -53,12 +61,18 @@ final class ErrorVisualPrinter implements ErrorPrinter, TypePrinter
 		return $this->converter->printError($pathNodes, $printedFields, $printedErrors);
 	}
 
-	public function printType(Type $type): string
+	/**
+	 * @return T
+	 */
+	public function printType(Type $type)
 	{
 		return $this->print($type, PrinterScope::forInvalidScope());
 	}
 
-	private function print(Type $type, PrinterScope $scope): string
+	/**
+	 * @return T
+	 */
+	private function print(Type $type, PrinterScope $scope)
 	{
 		if ($type instanceof MappedObjectType) {
 			return $this->printMappedObjectType($type, $scope);
@@ -88,7 +102,10 @@ final class ErrorVisualPrinter implements ErrorPrinter, TypePrinter
 			->withMessage(sprintf('Unsupported type %s', get_class($type)));
 	}
 
-	private function printMappedObjectType(MappedObjectType $type, PrinterScope $scope): string
+	/**
+	 * @return T
+	 */
+	private function printMappedObjectType(MappedObjectType $type, PrinterScope $scope)
 	{
 		$printedFields = [];
 		foreach ($this->filterFields($type, $scope) as $fieldName => $fieldType) {
@@ -126,7 +143,10 @@ final class ErrorVisualPrinter implements ErrorPrinter, TypePrinter
 		return $filtered;
 	}
 
-	private function printCompoundType(CompoundType $type, PrinterScope $scope): string
+	/**
+	 * @return T
+	 */
+	private function printCompoundType(CompoundType $type, PrinterScope $scope)
 	{
 		$printedSubtypes = [];
 		foreach ($this->getSubtypes($scope, $type) as $key => $subtype) {
@@ -164,7 +184,10 @@ final class ErrorVisualPrinter implements ErrorPrinter, TypePrinter
 		return $subtypes;
 	}
 
-	private function printArrayType(ArrayType $type, PrinterScope $scope): string
+	/**
+	 * @return T
+	 */
+	private function printArrayType(ArrayType $type, PrinterScope $scope)
 	{
 		$keyType = $type->getKeyType();
 		$itemType = $type->getItemType();
@@ -221,7 +244,10 @@ final class ErrorVisualPrinter implements ErrorPrinter, TypePrinter
 			: [];
 	}
 
-	private function printSimpleValueType(SimpleValueType $type, PrinterScope $scope): string
+	/**
+	 * @return T
+	 */
+	private function printSimpleValueType(SimpleValueType $type, PrinterScope $scope)
 	{
 		return $this->converter->printSimpleValue(
 			$type->getName(),
@@ -229,12 +255,18 @@ final class ErrorVisualPrinter implements ErrorPrinter, TypePrinter
 		);
 	}
 
-	private function printEnumType(EnumType $type): string
+	/**
+	 * @return T
+	 */
+	private function printEnumType(EnumType $type)
 	{
 		return $this->converter->printEnum($type->getValues());
 	}
 
-	private function printMessageType(MessageType $type): string
+	/**
+	 * @return T
+	 */
+	private function printMessageType(MessageType $type)
 	{
 		return $this->converter->printMessage($type->getMessage());
 	}
