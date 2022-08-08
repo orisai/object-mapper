@@ -22,7 +22,7 @@ final class TypeVisualPrinter implements TypePrinter
 {
 
 	/** @var TypeToPrimitiveConverter<T> */
-	public TypeToPrimitiveConverter $converter;
+	private TypeToPrimitiveConverter $converter;
 
 	/**
 	 * @param TypeToPrimitiveConverter<T> $converter
