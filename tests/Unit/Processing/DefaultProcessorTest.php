@@ -10,6 +10,7 @@ use Orisai\ObjectMapper\Exception\InvalidData;
 use Orisai\ObjectMapper\MappedObject;
 use Orisai\ObjectMapper\Printers\ErrorPrinter;
 use Orisai\ObjectMapper\Printers\ErrorVisualPrinter;
+use Orisai\ObjectMapper\Printers\TypeToStringConverter;
 use Orisai\ObjectMapper\Processing\Options;
 use Orisai\ObjectMapper\Processing\RequiredFields;
 use stdClass;
@@ -43,7 +44,7 @@ final class DefaultProcessorTest extends ProcessingTestCase
 	protected function setUp(): void
 	{
 		parent::setUp();
-		$this->formatter = new ErrorVisualPrinter();
+		$this->formatter = new ErrorVisualPrinter(new TypeToStringConverter());
 	}
 
 	public function testMissingRequiredValues(): void

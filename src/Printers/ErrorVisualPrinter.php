@@ -19,11 +19,11 @@ use function sprintf;
 final class ErrorVisualPrinter implements ErrorPrinter, TypePrinter
 {
 
-	public TypeToStringConverter $converter;
+	private TypeToStringConverter $converter;
 
-	public function __construct()
+	public function __construct(TypeToStringConverter $converter)
 	{
-		$this->converter = new TypeToStringConverter();
+		$this->converter = $converter;
 	}
 
 	/**

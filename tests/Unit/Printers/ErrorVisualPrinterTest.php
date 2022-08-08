@@ -6,6 +6,7 @@ use Orisai\ObjectMapper\Exception\InvalidData;
 use Orisai\ObjectMapper\Exception\ValueDoesNotMatch;
 use Orisai\ObjectMapper\MappedObject;
 use Orisai\ObjectMapper\Printers\ErrorVisualPrinter;
+use Orisai\ObjectMapper\Printers\TypeToStringConverter;
 use Orisai\ObjectMapper\Types\ArrayType;
 use Orisai\ObjectMapper\Types\CompoundType;
 use Orisai\ObjectMapper\Types\EnumType;
@@ -21,11 +22,14 @@ use PHPUnit\Framework\TestCase;
 final class ErrorVisualPrinterTest extends TestCase
 {
 
+	private TypeToStringConverter $converter;
+
 	private ErrorVisualPrinter $formatter;
 
 	protected function setUp(): void
 	{
-		$this->formatter = new ErrorVisualPrinter();
+		$this->converter = new TypeToStringConverter();
+		$this->formatter = new ErrorVisualPrinter($this->converter);
 	}
 
 	public function testMessage(): void
@@ -405,7 +409,7 @@ Whole structure is invalid',
 			ValueDoesNotMatch::create($fieldType1Invalid, Value::none()),
 		);
 
-		$this->formatter->converter->pathNodeSeparator = ' -_- ';
+		$this->converter->pathNodeSeparator = ' -_- ';
 
 		self::assertSame(
 			'shape{
