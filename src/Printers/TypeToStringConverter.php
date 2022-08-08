@@ -2,13 +2,15 @@
 
 namespace Orisai\ObjectMapper\Printers;
 
-use Orisai\ObjectMapper\Types\TypeParameter;
 use function array_key_last;
 use function explode;
 use function implode;
 use const PHP_EOL;
 
-final class TypeToStringConverter
+/**
+ * @implements TypeToPrimitiveConverter<string>
+ */
+final class TypeToStringConverter implements TypeToPrimitiveConverter
 {
 
 	/**
@@ -53,18 +55,12 @@ final class TypeToStringConverter
 		return $message;
 	}
 
-	/**
-	 * @param array<int|string, TypeParameter> $parameters
-	 */
 	public function printSimpleValue(string $name, array $parameters): string
 	{
 		return $name
 			. $this->printParameters($parameters);
 	}
 
-	/**
-	 * @param array<int|string, mixed> $values
-	 */
 	public function printEnum(array $values): string
 	{
 		$inlineValues = '';
@@ -78,9 +74,6 @@ final class TypeToStringConverter
 		return "enum($inlineValues)";
 	}
 
-	/**
-	 * @param array<int|string, TypeParameter> $parameters
-	 */
 	public function printParameters(array $parameters): string
 	{
 		if ($parameters === []) {
@@ -117,9 +110,6 @@ final class TypeToStringConverter
 		return Dumper::dumpValue($value, $options);
 	}
 
-	/**
-	 * @param array<int|string, string> $subtypes
-	 */
 	public function printCompound(string $operator, array $subtypes): string
 	{
 		$lastKey = array_key_last($subtypes);
@@ -133,15 +123,11 @@ final class TypeToStringConverter
 		return $formatted;
 	}
 
-	/**
-	 * @param array<int|string, TypeParameter>                   $parameters
-	 * @param array<int|string, array{string|null, string|null}> $invalidPairs
-	 */
 	public function printArray(
 		string $name,
 		array $parameters,
-		?string $keyType,
-		?string $itemType,
+		$keyType,
+		$itemType,
 		array $invalidPairs = []
 	): string
 	{
@@ -203,10 +189,6 @@ final class TypeToStringConverter
 			. ']';
 	}
 
-	/**
-	 * @param array<int|string, string> $fields
-	 * @param array<int|string, string> $errors
-	 */
 	public function printShape(array $fields, array $errors = []): string
 	{
 		if ($fields === [] && $errors === []) {
@@ -255,11 +237,6 @@ final class TypeToStringConverter
 		return implode($this->itemsSeparator, $lines);
 	}
 
-	/**
-	 * @param array<int, string>        $pathNodes
-	 * @param array<int|string, string> $fields
-	 * @param array<int|string, string> $errors
-	 */
 	public function printError(array $pathNodes, array $fields, array $errors): string
 	{
 		$printed = '';
