@@ -111,12 +111,12 @@ final class TypeVisualPrinter implements TypePrinter
 
 	private function printEnumType(EnumType $type): string
 	{
-		return $this->converter->printEnum($type);
+		return $this->converter->printEnum($type->getValues());
 	}
 
 	private function printMessageType(MessageType $type): string
 	{
-		return $this->converter->printMessage($type);
+		return $this->converter->printMessage($type->getMessage());
 	}
 
 	/**

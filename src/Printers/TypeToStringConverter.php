@@ -2,8 +2,6 @@
 
 namespace Orisai\ObjectMapper\Printers;
 
-use Orisai\ObjectMapper\Types\EnumType;
-use Orisai\ObjectMapper\Types\MessageType;
 use Orisai\ObjectMapper\Types\TypeParameter;
 use function array_key_last;
 use function explode;
@@ -50,9 +48,9 @@ final class TypeToStringConverter
 	 */
 	public string $itemsIndentation = "\t";
 
-	public function printMessage(MessageType $type): string
+	public function printMessage(string $message): string
 	{
-		return $type->getMessage();
+		return $message;
 	}
 
 	/**
@@ -64,10 +62,12 @@ final class TypeToStringConverter
 			. $this->printParameters($parameters);
 	}
 
-	public function printEnum(EnumType $type): string
+	/**
+	 * @param array<int|string, mixed> $values
+	 */
+	public function printEnum(array $values): string
 	{
 		$inlineValues = '';
-		$values = $type->getValues();
 		$lastKey = array_key_last($values);
 
 		foreach ($values as $key => $value) {
