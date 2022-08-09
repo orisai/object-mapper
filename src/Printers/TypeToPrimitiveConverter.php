@@ -28,12 +28,6 @@ interface TypeToPrimitiveConverter
 	public function printEnum(array $values);
 
 	/**
-	 * @param array<int|string, TypeParameter> $parameters
-	 * @return T
-	 */
-	public function printParameters(array $parameters);
-
-	/**
 	 * @param array<int|string, T> $subtypes
 	 * @return T
 	 */

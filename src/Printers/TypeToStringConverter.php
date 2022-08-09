@@ -2,6 +2,7 @@
 
 namespace Orisai\ObjectMapper\Printers;
 
+use Orisai\ObjectMapper\Types\TypeParameter;
 use function array_key_last;
 use function explode;
 use function implode;
@@ -74,7 +75,10 @@ final class TypeToStringConverter implements TypeToPrimitiveConverter
 		return "enum($inlineValues)";
 	}
 
-	public function printParameters(array $parameters): string
+	/**
+	 * @param array<int|string, TypeParameter> $parameters
+	 */
+	private function printParameters(array $parameters): string
 	{
 		if ($parameters === []) {
 			return '';
