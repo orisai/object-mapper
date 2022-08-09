@@ -3,6 +3,7 @@
 namespace Orisai\ObjectMapper\Printers;
 
 use Orisai\ObjectMapper\Types\TypeParameter;
+use function array_key_last;
 
 /**
  * @implements TypeToPrimitiveConverter<array<mixed>>
@@ -106,7 +107,25 @@ final class TypeToArrayConverter implements TypeToPrimitiveConverter
 
 	public function printError(array $pathNodes, array $fields, array $errors): array
 	{
-		return $this->printShape($fields, $errors) + ['path' => $pathNodes];
+		$printed = $this->printShape($fields, $errors);
+
+		if ($pathNodes === []) {
+			return $printed;
+		}
+
+		$tree = [];
+		$lastNode = &$tree;
+		$lastKey = array_key_last($pathNodes);
+		foreach ($pathNodes as $key => $node) {
+			if ($key === $lastKey) {
+				$lastNode[$node] = $printed;
+			} else {
+				$lastNode[$node] = [];
+				$lastNode = &$lastNode[$node];
+			}
+		}
+
+		return $tree;
 	}
 
 }
