@@ -71,10 +71,11 @@ final class UserAddressInput extends MappedObject
 ```php
 use Orisai\ObjectMapper\Exception\InvalidData;
 use Orisai\ObjectMapper\Printers\ErrorVisualPrinter;
+use Orisai\ObjectMapper\Printers\TypeToStringConverter;
 use Orisai\ObjectMapper\Processing\DefaultProcessor;
 
 $processor = new DefaultProcessor(...);
-$errorPrinter = new ErrorVisualPrinter();
+$errorPrinter = new ErrorVisualPrinter(new TypeToStringConverter());
 
 $data = [
 	'firstName' => 'Tony',
@@ -88,4 +89,6 @@ try {
 	$error = $errorPrinter->printError($exception);
 	throw new Exception("Validation failed due to following error:\n$error");
 }
+
+echo "User name is: {$user->firstName} {$user->lastName}";
 ```

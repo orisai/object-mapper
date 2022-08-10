@@ -5,6 +5,7 @@ Raw data mapping to validated objects
 ## Content
 
 - [Setup](#setup)
+- [Quick start](#quick-start)
 - [Rules](#rules)
 	- [Simple types](#simple-types)
 		- [bool](#bool-rule)
@@ -85,6 +86,51 @@ services:
 		factory: Orisai\ObjectMapper\Rules\DefaultRuleManager
 	orisai.objectMapper.objectCreator: Orisai\ObjectMapper\Processing\DefaultObjectCreator
 	orisai.objectMapper.processor: Orisai\ObjectMapper\Processing\DefaultProcessor
+```
+
+## Quick start
+
+After you have finished [setup](#setup), define a mapped object:
+
+```php
+use Orisai\ObjectMapper\MappedObject;
+use Orisai\ObjectMapper\Attributes\Expect\StringValue;
+
+final class UserInput extends MappedObject
+{
+
+	/** @StringValue(notEmpty=true) */
+	public string $firstName;
+
+	/** @StringValue(notEmpty=true) */
+	public string $lastName;
+
+```
+
+Map data to the object:
+
+```php
+use Orisai\ObjectMapper\Exception\InvalidData;
+use Orisai\ObjectMapper\Printers\ErrorVisualPrinter;
+use Orisai\ObjectMapper\Printers\TypeToStringConverter;
+use Orisai\ObjectMapper\Processing\DefaultProcessor;
+
+$processor = new DefaultProcessor(...);
+$errorPrinter = new ErrorVisualPrinter(new TypeToStringConverter());
+
+$data = [
+	'firstName' => 'Tony',
+	'lastName' => 'Stark',
+];
+
+try {
+	$user = $processor->process($data, UserInput::class);
+} catch (InvalidData $exception) {
+	$error = $errorPrinter->printError($exception);
+	throw new Exception("Validation failed due to following error:\n$error");
+}
+
+echo "User name is: {$user->firstName} {$user->lastName}";
 ```
 
 ## Rules
