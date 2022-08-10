@@ -4,6 +4,7 @@ Raw data mapping to validated objects
 
 ## Content
 
+- [Setup](#setup)
 - [Rules](#rules)
 	- [Simple types](#simple-types)
 		- [bool](#bool-rule)
@@ -38,6 +39,53 @@ Raw data mapping to validated objects
 	- [Dependencies](#dependencies)
 	- [Context](#callback-context)
 - [Object creator](#object-creator)
+
+## Setup
+
+Basic:
+
+```php
+use Orisai\ObjectMapper\Attributes\AttributesMetaSource;
+use Orisai\ObjectMapper\Meta\ArrayMetaCache;
+use Orisai\ObjectMapper\Meta\DefaultMetaResolverFactory;
+use Orisai\ObjectMapper\Meta\DefaultMetaSourceManager;
+use Orisai\ObjectMapper\Meta\MetaLoader;
+use Orisai\ObjectMapper\Processing\DefaultObjectCreator;
+use Orisai\ObjectMapper\Processing\DefaultProcessor;
+use Orisai\ObjectMapper\Rules\DefaultRuleManager;
+
+$sourceManager = new DefaultMetaSourceManager();
+$sourceManager->addSource(new AttributesMetaSource());
+$ruleManager = new DefaultRuleManager();
+$cache = new ArrayMetaCache();
+$resolverFactory = new DefaultMetaResolverFactory($ruleManager);
+$metaLoader = new MetaLoader($cache, $sourceManager, $resolverFactory);
+$metaResolver = $resolverFactory->create($metaLoader);
+
+$processor = new DefaultProcessor(
+	$metaLoader,
+	$ruleManager,
+	new DefaultObjectCreator(),
+);
+```
+
+With Nette:
+
+```neon
+services:
+	orisai.objectMapper.metaSourceManager:
+		factory: Orisai\ObjectMapper\Meta\DefaultMetaSourceManager
+		setup:
+			- addSource(Orisai\ObjectMapper\Attributes\AttributesMetaSource())
+	orisai.objectMapper.metaCache: Orisai\ObjectMapper\Bridge\NetteCache\NetteMetaCache(debugMode: %debugMode%)
+	orisai.objectMapper.metaResolver.factory: Orisai\ObjectMapper\Meta\DefaultMetaResolverFactory
+	orisai.objectMapper.metaResolver: @orisai.objectMapper.metaResolver.factory::create()
+	orisai.objectMapper.metaLoader: Orisai\ObjectMapper\Meta\MetaLoader
+	orisai.objectMapper.ruleManager:
+		factory: Orisai\ObjectMapper\Rules\DefaultRuleManager
+	orisai.objectMapper.objectCreator: Orisai\ObjectMapper\Processing\DefaultObjectCreator
+	orisai.objectMapper.processor: Orisai\ObjectMapper\Processing\DefaultProcessor
+```
 
 ## Rules
 
