@@ -6,6 +6,7 @@ Raw data mapping to validated objects
 
 - [Setup](#setup)
 - [Quick start](#quick-start)
+- [Processing](#processing)
 - [Rules](#rules)
 	- [Simple types](#simple-types)
 		- [bool](#bool-rule)
@@ -131,6 +132,24 @@ try {
 }
 
 echo "User name is: {$user->firstName} {$user->lastName}";
+```
+
+## Processing
+
+Call `$processor->process()` to validate `$data`, instantiate `$objectClass` and map `$data` to `$object`.
+
+In case of an error, handle `InvalidData` exception and print errors with `ErrorPrinter->printError()`.
+
+```php
+$data = [/* ... */]; // Data mapped to object
+$objectClass = ExampleObject::class; // class-string<MappedObject>
+
+try {
+	$object = $processor->process($data, $objectClass); // instance of $objectClass
+} catch (InvalidData $exception) {
+	$error = $errorPrinter->printError($exception);
+	throw new Exception("Validation failed due to following error:\n$error");
+}
 ```
 
 ## Rules
