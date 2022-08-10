@@ -29,7 +29,7 @@ final class AnyOfRuleTest extends ProcessingTestCase
 	{
 		parent::setUp();
 		$this->rule = new AnyOfRule();
-		$this->ruleManager->addRule(AlwaysInvalidRule::class, new AlwaysInvalidRule());
+		$this->ruleManager->addRule(new AlwaysInvalidRule());
 	}
 
 	public function testProcessValid(): void

@@ -26,7 +26,7 @@ final class ArrayOfRuleTest extends ProcessingTestCase
 	{
 		parent::setUp();
 		$this->rule = new ArrayOfRule();
-		$this->ruleManager->addRule(AlwaysInvalidRule::class, new AlwaysInvalidRule());
+		$this->ruleManager->addRule(new AlwaysInvalidRule());
 	}
 
 	public function testProcessValid(): void

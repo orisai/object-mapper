@@ -4,6 +4,7 @@ namespace Orisai\ObjectMapper\Rules;
 
 use Orisai\Exceptions\Logic\InvalidArgument;
 use Orisai\ObjectMapper\Args\Args;
+use function get_class;
 use function in_array;
 use function sprintf;
 
@@ -31,12 +32,11 @@ final class DefaultRuleManager implements RuleManager
 	}
 
 	/**
-	 * @param class-string<Rule<Args>>             $type
 	 * @param Rule<Args> $rule
 	 */
-	public function addRule(string $type, Rule $rule): void
+	public function addRule(Rule $rule): void
 	{
-		$this->instances[$type] = $rule;
+		$this->instances[get_class($rule)] = $rule;
 	}
 
 }
