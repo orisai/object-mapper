@@ -13,4 +13,6 @@ interface WithTypeAndValue extends CheckedException
 
 	public function getValue(): Value;
 
+	public function dropValue(): void;
+
 }

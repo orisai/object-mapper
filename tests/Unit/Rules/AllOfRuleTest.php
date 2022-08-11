@@ -74,11 +74,12 @@ final class AllOfRuleTest extends ProcessingTestCase
 
 			self::assertTrue($type->isSubtypeInvalid(1));
 			self::assertFalse($type->isSubtypeSkipped(1));
+			self::assertFalse($type->getInvalidSubtypes()[1]->getValue()->has());
 
 			self::assertFalse($type->isSubtypeInvalid(2));
 			self::assertTrue($type->isSubtypeSkipped(2));
 
-			self::assertFalse($exception->getValue()->has());
+			self::assertTrue($exception->getValue()->has());
 		}
 
 		self::assertNotNull($exception);
@@ -110,11 +111,12 @@ final class AllOfRuleTest extends ProcessingTestCase
 
 			self::assertTrue($type->isSubtypeInvalid(0));
 			self::assertFalse($type->isSubtypeSkipped(0));
+			self::assertFalse($type->getInvalidSubtypes()[0]->getValue()->has());
 
 			self::assertFalse($type->isSubtypeInvalid(1));
 			self::assertTrue($type->isSubtypeSkipped(1));
 
-			self::assertFalse($exception->getValue()->has());
+			self::assertTrue($exception->getValue()->has());
 		}
 
 		self::assertNotNull($exception);

@@ -567,7 +567,7 @@ final class DefaultProcessor implements Processor
 				throw InvalidData::create($type, Value::none());
 			}
 
-			throw InvalidData::create($type, Value::of($data));
+			throw InvalidData::create($type, $exception->getValue());
 		}
 
 		return $data;

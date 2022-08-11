@@ -84,12 +84,13 @@ final class ArrayOfRule extends MultiValueRule
 	 */
 	public function processValue($value, Args $args, FieldContext $context): array
 	{
+		$initValue = $value;
 		$type = $this->createType($args, $context);
 
 		if (!is_array($value)) {
 			$type->markInvalid();
 
-			throw ValueDoesNotMatch::create($type, Value::of($value));
+			throw ValueDoesNotMatch::create($type, Value::of($initValue));
 		}
 
 		if ($args->minItems !== null && count($value) < $args->minItems) {
@@ -99,7 +100,7 @@ final class ArrayOfRule extends MultiValueRule
 		if ($args->maxItems !== null && count($value) > $args->maxItems) {
 			$type->markParameterInvalid(self::MaxItems);
 
-			throw ValueDoesNotMatch::create($type, Value::of($value));
+			throw ValueDoesNotMatch::create($type, Value::of($initValue));
 		}
 
 		$itemMeta = $args->itemRuleMeta;
@@ -146,7 +147,7 @@ final class ArrayOfRule extends MultiValueRule
 		if ($hasInvalidParameters || $type->hasInvalidPairs()) {
 			throw ValueDoesNotMatch::create(
 				$type,
-				$hasInvalidParameters ? Value::of($value) : Value::none(),
+				$hasInvalidParameters ? Value::of($initValue) : Value::none(),
 			);
 		}
 

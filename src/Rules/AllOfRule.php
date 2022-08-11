@@ -20,6 +20,7 @@ final class AllOfRule extends CompoundRule
 	 */
 	public function processValue($value, Args $args, FieldContext $context)
 	{
+		$initValue = $value;
 		$type = $this->createType($args, $context);
 		$anyValidationFailed = false;
 
@@ -40,13 +41,14 @@ final class AllOfRule extends CompoundRule
 					$context,
 				);
 			} catch (ValueDoesNotMatch | InvalidData $exception) {
+				$exception->dropValue(); // May be mutated by rules
 				$type->overwriteInvalidSubtype($key, $exception);
 				$anyValidationFailed = true;
 			}
 		}
 
 		if ($anyValidationFailed) {
-			throw ValueDoesNotMatch::create($type, Value::none());
+			throw ValueDoesNotMatch::create($type, Value::of($initValue));
 		}
 
 		return $value;

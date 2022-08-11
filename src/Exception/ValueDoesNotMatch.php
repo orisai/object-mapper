@@ -41,4 +41,9 @@ final class ValueDoesNotMatch extends DomainException implements WithTypeAndValu
 		return $this->value;
 	}
 
+	public function dropValue(): void
+	{
+		$this->value = Value::none();
+	}
+
 }

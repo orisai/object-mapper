@@ -39,4 +39,9 @@ final class InvalidData extends DomainException implements WithTypeAndValue
 		return $this->value;
 	}
 
+	public function dropValue(): void
+	{
+		$this->value = Value::none();
+	}
+
 }

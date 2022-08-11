@@ -116,7 +116,7 @@ final class FloatRule implements Rule
 		}
 
 		if (!is_float($value)) {
-			throw ValueDoesNotMatch::create($this->createType($args, $context), Value::of($value));
+			throw ValueDoesNotMatch::create($this->createType($args, $context), Value::of($initValue));
 		}
 
 		$invalidParameters = [];

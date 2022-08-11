@@ -55,6 +55,8 @@ final class BoolRule implements Rule
 	 */
 	public function processValue($value, Args $args, FieldContext $context): bool
 	{
+		$initValue = $value;
+
 		if (!is_bool($value)) {
 			$value = $this->tryConvert($value, $args);
 		}
@@ -63,7 +65,7 @@ final class BoolRule implements Rule
 			return $value;
 		}
 
-		throw ValueDoesNotMatch::create($this->createType($args, $context), Value::of($value));
+		throw ValueDoesNotMatch::create($this->createType($args, $context), Value::of($initValue));
 	}
 
 	/**
