@@ -4,33 +4,16 @@ namespace Orisai\ObjectMapper\Meta;
 
 use ReflectionClass;
 use function array_keys;
-use function array_map;
 use function array_merge;
 use function array_unique;
 use function assert;
 use function class_implements;
 use function class_parents;
 use function class_uses;
-use function filemtime;
 use function get_parent_class;
-use function md5;
-use function serialize;
 
 final class ClassModificationsChecker
 {
-
-	/**
-	 * @param class-string $class
-	 */
-	public static function getLastModificationTimeHash(string $class): string
-	{
-		$modificationTimes = array_map(
-			static fn (string $type): int => filemtime((new ReflectionClass($type))->getFileName()),
-			self::getAllTypes($class),
-		);
-
-		return md5(serialize($modificationTimes));
-	}
 
 	/**
 	 * @param class-string $class
@@ -38,10 +21,17 @@ final class ClassModificationsChecker
 	 */
 	public static function getSourceFiles(string $class): array
 	{
-		return array_map(
-			static fn (string $type): string => (new ReflectionClass($type))->getFileName(),
-			self::getAllTypes($class),
-		);
+		$files = [];
+		foreach (self::getAllTypes($class) as $type) {
+			$fileName = (new ReflectionClass($type))->getFileName();
+			if ($fileName === false) { // is internal
+				continue;
+			}
+
+			$files[] = $fileName;
+		}
+
+		return $files;
 	}
 
 	/**
