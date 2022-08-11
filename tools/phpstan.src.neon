@@ -28,6 +28,10 @@ parameters:
 		- message: '#^Method (.+)ClassModificationsChecker\:\:getAllTypes\(\) should return array\<class\-string\> but returns array\<int, \(int\|string\)\>\.$#'
 		  path: ../src/Meta/ClassModificationsChecker.php
 		  count: 1
+		# PHPStan thinks that class_uses returns array<string> instead of array<class-string>
+		- message: '#^Method (.+)ClassModificationsChecker\:\:getClassUsesRecursively\(\) should return array\<class\-string\> but returns array\<string>\.$#'
+		  path: ../src/Meta/ClassModificationsChecker.php
+		  count: 1
 		# Generics
 		# Generics - class-string-map https://psalm.dev/r/155368cea8
 		- message: '#^Property (.+) with generic interface Orisai\\ObjectMapper\\Rules\\Rule does not specify its types\: T_ARGS$#'

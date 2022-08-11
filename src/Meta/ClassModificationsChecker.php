@@ -10,7 +10,7 @@ use function assert;
 use function class_implements;
 use function class_parents;
 use function class_uses;
-use function get_parent_class;
+use function trait_exists;
 
 final class ClassModificationsChecker
 {
@@ -50,31 +50,46 @@ final class ClassModificationsChecker
 			[$class => null]
 			+ $parents
 			+ $implements
-			+ self::getUsedTraits($class),
+			+ self::getTraits($class),
 		);
 	}
 
 	/**
 	 * @param class-string $class
-	 * @return array<string>
+	 * @return array<class-string>
 	 */
-	private static function getUsedTraits(string $class): array
+	private static function getTraits(string $class): array
 	{
-		$traits = [];
+		$traitsByClass = [];
+		$traitsByClass[] = self::getClassUsesRecursively($class);
 
-		do {
-			$uses = class_uses($class);
-			assert($uses !== false);
-			$traits = array_merge($uses, $traits);
-		} while ($class = get_parent_class($class));
-
-		foreach ($traits as $trait => $same) {
-			$uses = class_uses($trait);
-			assert($uses !== false);
-			$traits = array_merge($uses, $traits);
+		$parents = class_parents($class);
+		assert($parents !== false);
+		foreach ($parents as $parent) {
+			$traitsByClass[] = self::getClassUsesRecursively($parent);
 		}
 
-		return array_unique($traits);
+		return array_unique(array_merge(...$traitsByClass));
+	}
+
+	/**
+	 * @param class-string $class
+	 * @return array<class-string>
+	 */
+	private static function getClassUsesRecursively(string $class): array
+	{
+		$traits = class_uses($class);
+		assert($traits !== false);
+
+		$traitsByTrait = [];
+		$traitsByTrait[] = $traits;
+
+		foreach ($traits as $trait) {
+			assert(trait_exists($trait));
+			$traitsByTrait[] = self::getClassUsesRecursively($trait);
+		}
+
+		return array_merge(...$traitsByTrait);
 	}
 
 }
