@@ -13,7 +13,7 @@ use function count;
 use function sprintf;
 
 /**
- * @phpstan-implements Rule<CompoundRuleArgs>
+ * @phpstan-implements Rule<CompoundArgs>
  */
 abstract class CompoundRule implements Rule
 {
@@ -21,7 +21,7 @@ abstract class CompoundRule implements Rule
 	/** @internal */
 	public const Rules = 'rules';
 
-	public function resolveArgs(array $args, RuleArgsContext $context): CompoundRuleArgs
+	public function resolveArgs(array $args, RuleArgsContext $context): CompoundArgs
 	{
 		$checker = new ArgsChecker($args, static::class);
 		$checker->checkAllowedArgs([self::Rules]);
@@ -48,16 +48,16 @@ abstract class CompoundRule implements Rule
 			$rules[$key] = $resolver->resolveRuleMeta($rule, $context);
 		}
 
-		return new CompoundRuleArgs($rules);
+		return new CompoundArgs($rules);
 	}
 
 	public function getArgsType(): string
 	{
-		return CompoundRuleArgs::class;
+		return CompoundArgs::class;
 	}
 
 	/**
-	 * @param CompoundRuleArgs $args
+	 * @param CompoundArgs $args
 	 */
 	public function createType(Args $args, TypeContext $context): CompoundType
 	{

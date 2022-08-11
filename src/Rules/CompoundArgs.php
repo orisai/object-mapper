@@ -8,7 +8,7 @@ use Orisai\ObjectMapper\Meta\Runtime\RuleRuntimeMeta;
 /**
  * @internal
  */
-final class CompoundRuleArgs implements Args
+final class CompoundArgs implements Args
 {
 
 	/** @var array<RuleRuntimeMeta<Args>> */

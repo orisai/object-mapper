@@ -13,8 +13,8 @@ final class AnyOfRule extends CompoundRule
 {
 
 	/**
-	 * @param mixed            $value
-	 * @param CompoundRuleArgs $args
+	 * @param mixed        $value
+	 * @param CompoundArgs $args
 	 * @return mixed
 	 * @throws ValueDoesNotMatch
 	 */

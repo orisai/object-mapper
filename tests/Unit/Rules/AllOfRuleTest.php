@@ -8,7 +8,7 @@ use Orisai\ObjectMapper\Exception\ValueDoesNotMatch;
 use Orisai\ObjectMapper\Meta\Compile\RuleCompileMeta;
 use Orisai\ObjectMapper\Meta\Runtime\RuleRuntimeMeta;
 use Orisai\ObjectMapper\Rules\AllOfRule;
-use Orisai\ObjectMapper\Rules\CompoundRuleArgs;
+use Orisai\ObjectMapper\Rules\CompoundArgs;
 use Orisai\ObjectMapper\Rules\MappedObjectArgs;
 use Orisai\ObjectMapper\Rules\MappedObjectRule;
 use Orisai\ObjectMapper\Rules\MixedRule;
@@ -36,7 +36,7 @@ final class AllOfRuleTest extends ProcessingTestCase
 	{
 		$processed = $this->rule->processValue(
 			'value',
-			new CompoundRuleArgs([
+			new CompoundArgs([
 				new RuleRuntimeMeta(MixedRule::class, new EmptyArgs()),
 				new RuleRuntimeMeta(MixedRule::class, new EmptyArgs()),
 			]),
@@ -53,7 +53,7 @@ final class AllOfRuleTest extends ProcessingTestCase
 		try {
 			$this->rule->processValue(
 				'value',
-				new CompoundRuleArgs([
+				new CompoundArgs([
 					new RuleRuntimeMeta(MixedRule::class, new EmptyArgs()),
 					new RuleRuntimeMeta(AlwaysInvalidRule::class, new EmptyArgs()),
 					new RuleRuntimeMeta(MixedRule::class, new EmptyArgs()),
@@ -92,7 +92,7 @@ final class AllOfRuleTest extends ProcessingTestCase
 		try {
 			$this->rule->processValue(
 				null,
-				new CompoundRuleArgs([
+				new CompoundArgs([
 					new RuleRuntimeMeta(MappedObjectRule::class, new MappedObjectArgs(
 						DefaultsVO::class,
 					)),
@@ -124,7 +124,7 @@ final class AllOfRuleTest extends ProcessingTestCase
 
 	public function testType(): void
 	{
-		$args = new CompoundRuleArgs([
+		$args = new CompoundArgs([
 			new RuleRuntimeMeta(MixedRule::class, new EmptyArgs()),
 			new RuleRuntimeMeta(MixedRule::class, new EmptyArgs()),
 			new RuleRuntimeMeta(AlwaysInvalidRule::class, new EmptyArgs()),
