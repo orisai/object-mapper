@@ -8,6 +8,8 @@ use Orisai\ObjectMapper\Args\ArgsChecker;
 use Orisai\ObjectMapper\Context\RuleArgsContext;
 use Orisai\ObjectMapper\Context\TypeContext;
 use Orisai\ObjectMapper\Meta\Compile\RuleCompileMeta;
+use Orisai\ObjectMapper\Meta\Runtime\RuleRuntimeMeta;
+use Orisai\ObjectMapper\PhpTypes\Node;
 use Orisai\ObjectMapper\Types\CompoundType;
 use function count;
 use function sprintf;
@@ -64,14 +66,53 @@ abstract class CompoundRule implements Rule
 		$type = $this->createCompoundType();
 
 		foreach ($args->rules as $key => $nestedRuleMeta) {
-			$nestedRule = $context->getRule($nestedRuleMeta->getType());
-			$nestedRuleArgs = $nestedRuleMeta->getArgs();
-			$type->addSubtype($key, $nestedRule->createType($nestedRuleArgs, $context));
+			[$subNodeRule, $subNodeArgs] = $this->getSubNodeRuleArgs($nestedRuleMeta, $context);
+			$type->addSubtype($key, $subNodeRule->createType($subNodeArgs, $context));
 		}
 
 		return $type;
 	}
 
 	abstract protected function createCompoundType(): CompoundType;
+
+	/**
+	 * @param RuleRuntimeMeta<Args> $meta
+	 * @return array{Rule<Args>, Args}
+	 */
+	private function getSubNodeRuleArgs(RuleRuntimeMeta $meta, TypeContext $context): array
+	{
+		$rule = $context->getRule($meta->getType());
+		$args = $meta->getArgs();
+
+		return [$rule, $args];
+	}
+
+	/**
+	 * @return array<int, Node>
+	 */
+	protected function getExpectedInputTypeNodes(CompoundRuleArgs $args, TypeContext $context): array
+	{
+		$nodes = [];
+		foreach ($args->rules as $ruleMeta) {
+			[$subNodeRule, $subNodeArgs] = $this->getSubNodeRuleArgs($ruleMeta, $context);
+			$nodes[] = $subNodeRule->getExpectedInputType($subNodeArgs, $context);
+		}
+
+		return $nodes;
+	}
+
+	/**
+	 * @return array<int, Node>
+	 */
+	protected function getReturnTypeNodes(CompoundRuleArgs $args, TypeContext $context): array
+	{
+		$nodes = [];
+		foreach ($args->rules as $ruleMeta) {
+			[$subNodeRule, $subNodeArgs] = $this->getSubNodeRuleArgs($ruleMeta, $context);
+			$nodes[] = $subNodeRule->getReturnType($subNodeArgs, $context);
+		}
+
+		return $nodes;
+	}
 
 }

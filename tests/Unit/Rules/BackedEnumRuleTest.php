@@ -131,4 +131,43 @@ final class BackedEnumRuleTest extends ProcessingTestCase
 		self::assertSame(['foo', 'bar'], $type->getValues());
 	}
 
+	/**
+	 * @dataProvider providePhpNode
+	 */
+	public function testPhpNode(BackedEnumArgs $args, string $input, string $output): void
+	{
+		self::assertSame(
+			$input,
+			(string) $this->rule->getExpectedInputType($args, $this->fieldContext()),
+		);
+
+		self::assertSame(
+			$output,
+			(string) $this->rule->getReturnType($args, $this->fieldContext()),
+		);
+	}
+
+	public function providePhpNode(): Generator
+	{
+		yield [
+			new BackedEnumArgs(ExampleStringEnum::class),
+			"('foo'|'bar')",
+			ExampleStringEnum::class,
+		];
+
+		$class = ExampleStringEnum::class;
+
+		yield [
+			new BackedEnumArgs(ExampleStringEnum::class, true),
+			"('foo'|'bar')",
+			"($class|null)",
+		];
+
+		yield [
+			new BackedEnumArgs(ExampleIntEnum::class),
+			'(0|1)',
+			ExampleIntEnum::class,
+		];
+	}
+
 }

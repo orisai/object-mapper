@@ -218,4 +218,53 @@ final class StringRuleTest extends ProcessingTestCase
 		self::assertSame('/[\s\S]/', $type->getParameter(StringRule::Pattern)->getValue());
 	}
 
+	/**
+	 * @dataProvider providePhpNode
+	 */
+	public function testPhpNode(StringArgs $args, string $input, string $output): void
+	{
+		self::assertSame(
+			$input,
+			(string) $this->rule->getExpectedInputType($args, $this->fieldContext()),
+		);
+
+		self::assertSame(
+			$output,
+			(string) $this->rule->getReturnType($args, $this->fieldContext()),
+		);
+	}
+
+	public function providePhpNode(): Generator
+	{
+		yield [
+			new StringArgs(),
+			'string',
+			'string',
+		];
+
+		yield [
+			new StringArgs(null, true, 0),
+			'non-empty-string',
+			'non-empty-string',
+		];
+
+		yield [
+			new StringArgs(null, true, 1),
+			'non-empty-string',
+			'non-empty-string',
+		];
+
+		yield [
+			new StringArgs(null, false, 1),
+			'non-empty-string',
+			'non-empty-string',
+		];
+
+		yield [
+			new StringArgs(null, false, 0),
+			'string',
+			'string',
+		];
+	}
+
 }

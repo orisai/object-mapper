@@ -7,6 +7,8 @@ use Orisai\ObjectMapper\Args\EmptyArgs;
 use Orisai\ObjectMapper\Context\FieldContext;
 use Orisai\ObjectMapper\Context\TypeContext;
 use Orisai\ObjectMapper\Exception\ValueDoesNotMatch;
+use Orisai\ObjectMapper\PhpTypes\Node;
+use Orisai\ObjectMapper\PhpTypes\SimpleNode;
 use Orisai\ObjectMapper\Types\SimpleValueType;
 use Orisai\ObjectMapper\Types\Value;
 use function is_object;
@@ -39,6 +41,22 @@ final class ObjectRule implements Rule
 	public function createType(Args $args, TypeContext $context): SimpleValueType
 	{
 		return new SimpleValueType('object');
+	}
+
+	/**
+	 * @param EmptyArgs $args
+	 */
+	public function getExpectedInputType(Args $args, TypeContext $context): Node
+	{
+		return new SimpleNode('object');
+	}
+
+	/**
+	 * @param EmptyArgs $args
+	 */
+	public function getReturnType(Args $args, TypeContext $context): Node
+	{
+		return $this->getExpectedInputType($args, $context);
 	}
 
 }

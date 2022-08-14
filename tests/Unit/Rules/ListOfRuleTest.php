@@ -2,6 +2,7 @@
 
 namespace Tests\Orisai\ObjectMapper\Unit\Rules;
 
+use Generator;
 use Orisai\ObjectMapper\Args\EmptyArgs;
 use Orisai\ObjectMapper\Exception\ValueDoesNotMatch;
 use Orisai\ObjectMapper\Meta\DefaultValueMeta;
@@ -9,6 +10,8 @@ use Orisai\ObjectMapper\Meta\Runtime\RuleRuntimeMeta;
 use Orisai\ObjectMapper\Rules\ListOfRule;
 use Orisai\ObjectMapper\Rules\MixedRule;
 use Orisai\ObjectMapper\Rules\MultiValueArgs;
+use Orisai\ObjectMapper\Rules\NullArgs;
+use Orisai\ObjectMapper\Rules\NullRule;
 use Orisai\ObjectMapper\Rules\StringArgs;
 use Orisai\ObjectMapper\Rules\StringRule;
 use Orisai\ObjectMapper\Types\ArrayType;
@@ -226,6 +229,59 @@ final class ListOfRuleTest extends ProcessingTestCase
 		self::assertSame(10, $type->getParameter(ListOfRule::MinItems)->getValue());
 		self::assertTrue($type->hasParameter(ListOfRule::MaxItems));
 		self::assertSame(100, $type->getParameter(ListOfRule::MaxItems)->getValue());
+	}
+
+	/**
+	 * @dataProvider providePhpNode
+	 */
+	public function testPhpNode(MultiValueArgs $args, string $input, string $output): void
+	{
+		self::assertSame(
+			$input,
+			(string) $this->rule->getExpectedInputType($args, $this->fieldContext()),
+		);
+
+		self::assertSame(
+			$output,
+			(string) $this->rule->getReturnType($args, $this->fieldContext()),
+		);
+	}
+
+	public function providePhpNode(): Generator
+	{
+		yield [
+			new MultiValueArgs(
+				new RuleRuntimeMeta(MixedRule::class, new EmptyArgs()),
+			),
+			'list<mixed>',
+			'list<mixed>',
+		];
+
+		yield [
+			new MultiValueArgs(
+				new RuleRuntimeMeta(MixedRule::class, new EmptyArgs()),
+				0,
+			),
+			'list<mixed>',
+			'list<mixed>',
+		];
+
+		yield [
+			new MultiValueArgs(
+				new RuleRuntimeMeta(MixedRule::class, new EmptyArgs()),
+				1,
+			),
+			'non-empty-list<mixed>',
+			'non-empty-list<mixed>',
+		];
+
+		yield [
+			new MultiValueArgs(
+				new RuleRuntimeMeta(NullRule::class, new NullArgs(true)),
+			),
+			"list<(null|'')>",
+			'list<null>',
+		];
 	}
 
 }

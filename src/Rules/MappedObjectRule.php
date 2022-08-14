@@ -9,7 +9,12 @@ use Orisai\ObjectMapper\Context\RuleArgsContext;
 use Orisai\ObjectMapper\Context\TypeContext;
 use Orisai\ObjectMapper\Exception\InvalidData;
 use Orisai\ObjectMapper\MappedObject;
+use Orisai\ObjectMapper\Meta\Runtime\PropertyRuntimeMeta;
+use Orisai\ObjectMapper\Meta\Runtime\RuleRuntimeMeta;
 use Orisai\ObjectMapper\Modifiers\FieldNameModifier;
+use Orisai\ObjectMapper\PhpTypes\ClassReferenceNode;
+use Orisai\ObjectMapper\PhpTypes\Node;
+use Orisai\ObjectMapper\PhpTypes\SimpleNode;
 use Orisai\ObjectMapper\Types\MappedObjectType;
 use function array_keys;
 use function assert;
@@ -72,12 +77,9 @@ final class MappedObjectRule implements Rule
 
 		foreach ($propertyNames as $propertyName) {
 			$propertyMeta = $propertiesMeta[$propertyName];
-			$propertyRuleMeta = $propertyMeta->getRule();
-			$propertyRule = $context->getRule($propertyRuleMeta->getType());
-			$propertyArgs = $propertyRuleMeta->getArgs();
+			[$propertyRule, $propertyArgs] = $this->getPropertyRuleArgs($propertyMeta->getRule(), $context);
 
-			$fieldNameMeta = $propertyMeta->getModifier(FieldNameModifier::class);
-			$fieldName = $fieldNameMeta !== null ? $fieldNameMeta->getArgs()->name : $propertyName;
+			$fieldName = $this->getFieldName($propertyMeta, $propertyName);
 
 			$type->addField(
 				$fieldName,
@@ -86,6 +88,59 @@ final class MappedObjectRule implements Rule
 		}
 
 		return $type;
+	}
+
+	/**
+	 * @param MappedObjectArgs $args
+	 */
+	public function getExpectedInputType(Args $args, TypeContext $context): ClassReferenceNode
+	{
+		$propertiesMeta = $context->getMeta($args->type)->getProperties();
+		$propertyNames = array_keys($propertiesMeta);
+
+		$structure = [];
+		foreach ($propertyNames as $propertyName) {
+			$propertyMeta = $propertiesMeta[$propertyName];
+			[$propertyRule, $propertyArgs] = $this->getPropertyRuleArgs($propertyMeta->getRule(), $context);
+
+			$fieldName = $this->getFieldName($propertyMeta, $propertyName);
+
+			$structure[$fieldName] = $propertyRule->getExpectedInputType($propertyArgs, $context);
+		}
+
+		return new ClassReferenceNode($args->type, $structure);
+	}
+
+	/**
+	 * @param MappedObjectArgs $args
+	 */
+	public function getReturnType(Args $args, TypeContext $context): Node
+	{
+		return new SimpleNode($args->type);
+	}
+
+	/**
+	 * @param RuleRuntimeMeta<Args> $meta
+	 * @return array{Rule<Args>, Args}
+	 */
+	private function getPropertyRuleArgs(RuleRuntimeMeta $meta, TypeContext $context): array
+	{
+		$rule = $context->getRule($meta->getType());
+		$args = $meta->getArgs();
+
+		return [$rule, $args];
+	}
+
+	/**
+	 * @return int|string
+	 */
+	private function getFieldName(PropertyRuntimeMeta $propertyMeta, string $propertyName)
+	{
+		$fieldNameMeta = $propertyMeta->getModifier(FieldNameModifier::class);
+
+		return $fieldNameMeta !== null
+			? $fieldNameMeta->getArgs()->name
+			: $propertyName;
 	}
 
 }

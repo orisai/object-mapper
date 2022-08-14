@@ -10,6 +10,8 @@ use Orisai\ObjectMapper\Context\TypeContext;
 use Orisai\ObjectMapper\Exception\InvalidData;
 use Orisai\ObjectMapper\Exception\ValueDoesNotMatch;
 use Orisai\ObjectMapper\Meta\Compile\RuleCompileMeta;
+use Orisai\ObjectMapper\PhpTypes\MultiValueNode;
+use Orisai\ObjectMapper\PhpTypes\Node;
 use Orisai\ObjectMapper\Types\ArrayType;
 use Orisai\ObjectMapper\Types\Value;
 use Orisai\Utils\Arrays\ArrayMerger;
@@ -77,7 +79,7 @@ final class ArrayOfRule extends MultiValueRule
 	}
 
 	/**
-	 * @param mixed $value
+	 * @param mixed       $value
 	 * @param ArrayOfArgs $args
 	 * @return array<mixed>
 	 * @throws ValueDoesNotMatch
@@ -163,14 +165,10 @@ final class ArrayOfRule extends MultiValueRule
 	 */
 	public function createType(Args $args, TypeContext $context): ArrayType
 	{
-		$itemMeta = $args->itemRuleMeta;
-		$itemRule = $context->getRule($itemMeta->getType());
-		$itemArgs = $itemMeta->getArgs();
+		[$keyRule, $keyArgs] = $this->getKeyRuleArgs($args, $context);
+		[$itemRule, $itemArgs] = $this->getItemRuleArgs($args, $context);
 
-		$keyMeta = $args->keyRuleMeta;
-		if ($keyMeta !== null) {
-			$keyRule = $context->getRule($keyMeta->getType());
-			$keyArgs = $keyMeta->getArgs();
+		if ($keyRule !== null && $keyArgs !== null) {
 			$keyType = $keyRule->createType($keyArgs, $context);
 		}
 
@@ -188,6 +186,66 @@ final class ArrayOfRule extends MultiValueRule
 		}
 
 		return $type;
+	}
+
+	/**
+	 * @param ArrayOfArgs $args
+	 */
+	public function getExpectedInputType(Args $args, TypeContext $context): Node
+	{
+		[$keyRule, $keyArgs] = $this->getKeyRuleArgs($args, $context);
+		[$itemRule, $itemArgs] = $this->getItemRuleArgs($args, $context);
+
+		if ($keyRule !== null && $keyArgs !== null) {
+			$keyNode = $keyRule->getExpectedInputType($keyArgs, $context);
+		}
+
+		return new MultiValueNode(
+			$this->getNodeName($args),
+			$keyNode ?? null,
+			$itemRule->getExpectedInputType($itemArgs, $context),
+		);
+	}
+
+	/**
+	 * @param ArrayOfArgs $args
+	 */
+	public function getReturnType(Args $args, TypeContext $context): Node
+	{
+		[$keyRule, $keyArgs] = $this->getKeyRuleArgs($args, $context);
+		[$itemRule, $itemArgs] = $this->getItemRuleArgs($args, $context);
+
+		if ($keyRule !== null && $keyArgs !== null) {
+			$keyNode = $keyRule->getReturnType($keyArgs, $context);
+		}
+
+		return new MultiValueNode(
+			$this->getNodeName($args),
+			$keyNode ?? null,
+			$itemRule->getReturnType($itemArgs, $context),
+		);
+	}
+
+	private function getNodeName(ArrayOfArgs $args): string
+	{
+		return ($args->minItems ?? 0) > 0 ? 'non-empty-array' : 'array';
+	}
+
+	/**
+	 * @return array{Rule<Args>, Args}|array{null, null}
+	 */
+	private function getKeyRuleArgs(ArrayOfArgs $args, TypeContext $context): array
+	{
+		$keyRuleMeta = $args->keyRuleMeta;
+
+		if ($keyRuleMeta === null) {
+			return [null, null];
+		}
+
+		$keyRule = $context->getRule($keyRuleMeta->getType());
+		$keyArgs = $keyRuleMeta->getArgs();
+
+		return [$keyRule, $keyArgs];
 	}
 
 }

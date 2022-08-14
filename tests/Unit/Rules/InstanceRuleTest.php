@@ -111,4 +111,29 @@ final class InstanceRuleTest extends ProcessingTestCase
 		);
 	}
 
+	/**
+	 * @dataProvider providePhpNode
+	 */
+	public function testPhpNode(InstanceArgs $args, string $input, string $output): void
+	{
+		self::assertSame(
+			$input,
+			(string) $this->rule->getExpectedInputType($args, $this->fieldContext()),
+		);
+
+		self::assertSame(
+			$output,
+			(string) $this->rule->getReturnType($args, $this->fieldContext()),
+		);
+	}
+
+	public function providePhpNode(): Generator
+	{
+		yield [
+			new InstanceArgs(stdClass::class),
+			stdClass::class,
+			stdClass::class,
+		];
+	}
+
 }

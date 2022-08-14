@@ -8,6 +8,7 @@ use Orisai\ObjectMapper\Context\RuleArgsContext;
 use Orisai\ObjectMapper\Context\TypeContext;
 use Orisai\ObjectMapper\Exception\InvalidData;
 use Orisai\ObjectMapper\Exception\ValueDoesNotMatch;
+use Orisai\ObjectMapper\PhpTypes\Node;
 use Orisai\ObjectMapper\Types\Type;
 
 /**
@@ -40,5 +41,15 @@ interface Rule
 	 * @phpstan-param T_ARGS $args
 	 */
 	public function createType(Args $args, TypeContext $context): Type;
+
+	/**
+	 * @phpstan-param T_ARGS $args
+	 */
+	public function getExpectedInputType(Args $args, TypeContext $context): Node;
+
+	/**
+	 * @phpstan-param T_ARGS $args
+	 */
+	public function getReturnType(Args $args, TypeContext $context): Node;
 
 }

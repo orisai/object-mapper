@@ -2,6 +2,7 @@
 
 namespace Tests\Orisai\ObjectMapper\Unit\Rules;
 
+use Generator;
 use Orisai\Exceptions\Logic\InvalidArgument;
 use Orisai\ObjectMapper\Args\EmptyArgs;
 use Orisai\ObjectMapper\Exception\ValueDoesNotMatch;
@@ -12,6 +13,10 @@ use Orisai\ObjectMapper\Rules\CompoundRuleArgs;
 use Orisai\ObjectMapper\Rules\MappedObjectArgs;
 use Orisai\ObjectMapper\Rules\MappedObjectRule;
 use Orisai\ObjectMapper\Rules\MixedRule;
+use Orisai\ObjectMapper\Rules\NullArgs;
+use Orisai\ObjectMapper\Rules\NullRule;
+use Orisai\ObjectMapper\Rules\StringArgs;
+use Orisai\ObjectMapper\Rules\StringRule;
 use Orisai\ObjectMapper\Types\CompoundType;
 use Orisai\ObjectMapper\Types\MessageType;
 use Orisai\ObjectMapper\Types\SimpleValueType;
@@ -163,6 +168,43 @@ final class AnyOfRuleTest extends ProcessingTestCase
 			],
 			$this->ruleArgsContext(),
 		);
+	}
+
+	/**
+	 * @dataProvider providePhpNode
+	 */
+	public function testPhpNode(CompoundRuleArgs $args, string $input, string $output): void
+	{
+		self::assertSame(
+			$input,
+			(string) $this->rule->getExpectedInputType($args, $this->fieldContext()),
+		);
+
+		self::assertSame(
+			$output,
+			(string) $this->rule->getReturnType($args, $this->fieldContext()),
+		);
+	}
+
+	public function providePhpNode(): Generator
+	{
+		yield [
+			new CompoundRuleArgs([
+				new RuleRuntimeMeta(StringRule::class, new StringArgs()),
+				new RuleRuntimeMeta(NullRule::class, new NullArgs()),
+			]),
+			'(string|null)',
+			'(string|null)',
+		];
+
+		yield [
+			new CompoundRuleArgs([
+				new RuleRuntimeMeta(StringRule::class, new StringArgs()),
+				new RuleRuntimeMeta(NullRule::class, new NullArgs(true)),
+			]),
+			"(string|(null|''))",
+			'(string|null)',
+		];
 	}
 
 }

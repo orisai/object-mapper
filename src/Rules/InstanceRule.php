@@ -9,6 +9,8 @@ use Orisai\ObjectMapper\Context\FieldContext;
 use Orisai\ObjectMapper\Context\RuleArgsContext;
 use Orisai\ObjectMapper\Context\TypeContext;
 use Orisai\ObjectMapper\Exception\ValueDoesNotMatch;
+use Orisai\ObjectMapper\PhpTypes\Node;
+use Orisai\ObjectMapper\PhpTypes\SimpleNode;
 use Orisai\ObjectMapper\Types\SimpleValueType;
 use Orisai\ObjectMapper\Types\Value;
 use function class_exists;
@@ -68,6 +70,22 @@ final class InstanceRule implements Rule
 	public function createType(Args $args, TypeContext $context): SimpleValueType
 	{
 		return new SimpleValueType($args->type);
+	}
+
+	/**
+	 * @param InstanceArgs $args
+	 */
+	public function getExpectedInputType(Args $args, TypeContext $context): Node
+	{
+		return new SimpleNode($args->type);
+	}
+
+	/**
+	 * @param InstanceArgs $args
+	 */
+	public function getReturnType(Args $args, TypeContext $context): Node
+	{
+		return $this->getExpectedInputType($args, $context);
 	}
 
 }
