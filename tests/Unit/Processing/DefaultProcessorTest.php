@@ -247,6 +247,21 @@ stringg: Field is unknown, did you mean `string`?',
 		);
 	}
 
+	public function testUnknownValuesAllowed(): void
+	{
+		$options = new Options();
+		$options->setAllowUnknownProperties();
+
+		$exception = null;
+		try {
+			$this->processor->process(['unknown' => true], EmptyVO::class, $options);
+		} catch (InvalidData $exception) {
+			// Checked bellow
+		}
+
+		self::assertNull($exception);
+	}
+
 	public function testDefaultValues(): void
 	{
 		$data = [];

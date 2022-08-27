@@ -11,6 +11,8 @@ final class Options
 
 	private RequiredFields $requiredFields;
 
+	private bool $allowUnknownProperties = false;
+
 	private bool $preFillDefaultValues = false;
 
 	private bool $fillRawValues = false;
@@ -31,6 +33,19 @@ final class Options
 	public function getRequiredFields(): RequiredFields
 	{
 		return $this->requiredFields;
+	}
+
+	public function isAllowUnknownProperties(): bool
+	{
+		return $this->allowUnknownProperties;
+	}
+
+	/**
+	 * Do not treat unknown properties in input value as errors if object is valid anyway
+	 */
+	public function setAllowUnknownProperties(bool $allowUnknownProperties = true): void
+	{
+		$this->allowUnknownProperties = $allowUnknownProperties;
 	}
 
 	/**
