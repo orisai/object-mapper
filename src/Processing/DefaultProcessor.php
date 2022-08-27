@@ -274,6 +274,7 @@ final class DefaultProcessor implements Processor
 	): array
 	{
 		$type = $mappedObjectContext->getType();
+		$options = $mappedObjectContext->getOptions();
 
 		$meta = $callContext->getMeta();
 		$propertiesMeta = $meta->getProperties();
@@ -291,6 +292,10 @@ final class DefaultProcessor implements Processor
 			if (!isset($propertiesMeta[$propertyName])) {
 				// Remove field from data
 				unset($data[$fieldName]);
+
+				if ($options->isAllowUnknownProperties()) {
+					continue;
+				}
 
 				// Add error to type
 				$hintedPropertyName = Helpers::getSuggestion($propertyNames, $propertyName);
