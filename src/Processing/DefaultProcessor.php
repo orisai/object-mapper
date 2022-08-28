@@ -396,7 +396,7 @@ final class DefaultProcessor implements Processor
 
 		$missingProperties = $this->findMissingProperties($data, $callContext);
 		$requiredFields = $options->getRequiredFields();
-		$fillDefaultValues = $initializeObjects || $options->isPreFillDefaultValues();
+		$fillDefaultValues = $initializeObjects || $options->isPrefillDefaultValues();
 
 		$skippedProperties = $this->getSkippedProperties($callContext);
 

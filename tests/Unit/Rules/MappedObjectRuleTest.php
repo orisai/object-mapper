@@ -24,7 +24,7 @@ final class MappedObjectRuleTest extends ProcessingTestCase
 	public function testProcessValid(): void
 	{
 		$options = new Options();
-		$options->setPreFillDefaultValues();
+		$options->setPrefillDefaultValues();
 
 		$processed = $this->rule->processValue(
 			[],

@@ -13,7 +13,7 @@ final class Options
 
 	private bool $allowUnknownProperties = false;
 
-	private bool $preFillDefaultValues = false;
+	private bool $prefillDefaultValues = false;
 
 	private bool $fillRawValues = false;
 
@@ -43,9 +43,9 @@ final class Options
 	/**
 	 * Do not treat unknown properties in input value as errors if object is valid anyway
 	 */
-	public function setAllowUnknownProperties(bool $allowUnknownProperties = true): void
+	public function setAllowUnknownProperties(bool $allow = true): void
 	{
-		$this->allowUnknownProperties = $allowUnknownProperties;
+		$this->allowUnknownProperties = $allow;
 	}
 
 	/**
@@ -53,14 +53,14 @@ final class Options
 	 * Used only if objects are not initialized (array is returned, not VO)
 	 * Used only if default values are not required to be sent (by RequiredFields::all())
 	 */
-	public function setPreFillDefaultValues(bool $preFillDefaultValues = true): void
+	public function setPrefillDefaultValues(bool $prefill = true): void
 	{
-		$this->preFillDefaultValues = $preFillDefaultValues;
+		$this->prefillDefaultValues = $prefill;
 	}
 
-	public function isPreFillDefaultValues(): bool
+	public function isPrefillDefaultValues(): bool
 	{
-		return $this->preFillDefaultValues;
+		return $this->prefillDefaultValues;
 	}
 
 	/**
@@ -69,9 +69,9 @@ final class Options
 	 * Use only for debug, it may lead to significant raw data grow in bigger hierarchies
 	 * 		 you can set data to a custom property in before class callback, if are always needed
 	 */
-	public function setFillRawValues(bool $fillRawValues = true): void
+	public function setFillRawValues(bool $fill = true): void
 	{
-		$this->fillRawValues = $fillRawValues;
+		$this->fillRawValues = $fill;
 	}
 
 	public function isFillRawValues(): bool

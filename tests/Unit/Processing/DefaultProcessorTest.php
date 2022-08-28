@@ -286,7 +286,7 @@ stringg: Field is unknown, did you mean `string`?',
 
 		// Pre-fill defaults
 		$options = new Options();
-		$options->setPreFillDefaultValues();
+		$options->setPrefillDefaultValues();
 		$processed = $this->processor->processWithoutMapping($data, DefaultsVO::class, $options);
 		self::assertSame(
 			[
@@ -317,7 +317,7 @@ stringg: Field is unknown, did you mean `string`?',
 	public function testNoInitialization(): void
 	{
 		$options = new Options();
-		$options->setPreFillDefaultValues();
+		$options->setPrefillDefaultValues();
 
 		$instance = new stdClass();
 		$instance->foo = 'bar';
@@ -392,7 +392,7 @@ stringg: Field is unknown, did you mean `string`?',
 	public function testCallbacks(): void
 	{
 		$options = new Options();
-		$options->setPreFillDefaultValues();
+		$options->setPrefillDefaultValues();
 		$options->addDynamicContext(new CallbacksVoContext(DefaultsVO::class));
 
 		$data = [
