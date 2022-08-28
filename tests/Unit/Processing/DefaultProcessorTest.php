@@ -250,7 +250,7 @@ stringg: Field is unknown, did you mean `string`?',
 	public function testUnknownValuesAllowed(): void
 	{
 		$options = new Options();
-		$options->setAllowUnknownProperties();
+		$options->setAllowUnknownFields();
 
 		$exception = null;
 		try {

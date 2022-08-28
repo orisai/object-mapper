@@ -293,7 +293,7 @@ final class DefaultProcessor implements Processor
 				// Remove field from data
 				unset($data[$fieldName]);
 
-				if ($options->isAllowUnknownProperties()) {
+				if ($options->isAllowUnknownFields()) {
 					continue;
 				}
 
