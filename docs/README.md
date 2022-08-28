@@ -64,7 +64,6 @@ $ruleManager = new DefaultRuleManager();
 $cache = new ArrayMetaCache();
 $resolverFactory = new DefaultMetaResolverFactory($ruleManager);
 $metaLoader = new MetaLoader($cache, $sourceManager, $resolverFactory);
-$metaResolver = $resolverFactory->create($metaLoader);
 
 $processor = new DefaultProcessor(
 	$metaLoader,
@@ -83,7 +82,6 @@ services:
 			- addSource(Orisai\ObjectMapper\Attributes\AttributesMetaSource())
 	orisai.objectMapper.metaCache: Orisai\ObjectMapper\Bridge\NetteCache\NetteMetaCache(debugMode: %debugMode%)
 	orisai.objectMapper.metaResolver.factory: Orisai\ObjectMapper\Meta\DefaultMetaResolverFactory
-	orisai.objectMapper.metaResolver: @orisai.objectMapper.metaResolver.factory::create()
 	orisai.objectMapper.metaLoader: Orisai\ObjectMapper\Meta\MetaLoader
 	orisai.objectMapper.ruleManager:
 		factory: Orisai\ObjectMapper\Rules\DefaultRuleManager
