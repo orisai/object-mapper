@@ -41,6 +41,7 @@ Raw data mapping to validated objects
 	- [Returned value](#returned-value)
 	- [Dependencies](#dependencies)
 	- [Context](#callback-context)
+- [Annotations and attributes](#annotations-and-attributes)
 - [Object creator](#object-creator)
 
 ## Setup
@@ -1515,6 +1516,34 @@ $context->hasDefaultValue(); // bool
 $context->getDefaultValue(); // mixed|exception
 $context->getFieldName(); // int|string
 $context->getPropertyName(); // string
+```
+
+## Annotations and attributes
+
+Since PHP 8.1 all annotations can be written as attributes.
+
+```php
+use Orisai\ObjectMapper\Attributes\Expect\MixedValue;
+use Orisai\ObjectMapper\MappedObject;
+
+final class WithAnnotationsAndAttributesInput extends MappedObject
+{
+
+    /** @MixedValue() */
+    public mixed $usesAnnotation;
+
+    #[MixedValue()]
+    public mixed $usesAttribute;
+
+}
+```
+
+```php
+$data = [
+	'usesAnnotation' => 'value',
+	'usesAttribute' => 'value'
+];
+$input = $processor->process($data, WithAnnotationsAndAttributesInput::class); // WithAnnotationsAndAttributesInput
 ```
 
 ## Object creator
