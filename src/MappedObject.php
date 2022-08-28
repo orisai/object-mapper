@@ -23,16 +23,25 @@ abstract class MappedObject
 	/** @var mixed */
 	private $rawValues;
 
+	/**
+	 * @internal
+	 */
 	public function setSkippedPropertiesContext(?SkippedPropertiesContext $context): void
 	{
 		$this->skippedPropertiesContext = $context;
 	}
 
+	/**
+	 * @internal
+	 */
 	public function hasSkippedPropertiesContext(): bool
 	{
 		return $this->skippedPropertiesContext !== null;
 	}
 
+	/**
+	 * @internal
+	 */
 	public function getSkippedPropertiesContext(): SkippedPropertiesContext
 	{
 		if ($this->skippedPropertiesContext === null) {
@@ -45,6 +54,8 @@ abstract class MappedObject
 
 	/**
 	 * @param mixed $values
+	 *
+	 * @internal
 	 */
 	public function setRawValues($values): void
 	{
