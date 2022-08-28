@@ -203,7 +203,7 @@ final class AttributesMetaSource implements MetaSource
 	private function getClassAttributes(ReflectionClass $class): array
 	{
 		$attributesBySource = [];
-		if (PHP_VERSION_ID >= 8_01_00) {
+		if (PHP_VERSION_ID >= 8_00_00) {
 			$attributesBySource[] = $this->reflectionAttributesToInstances(
 				$class->getAttributes(),
 			);
@@ -220,7 +220,7 @@ final class AttributesMetaSource implements MetaSource
 	private function getPropertyAttributes(ReflectionProperty $property): array
 	{
 		$attributesBySource = [];
-		if (PHP_VERSION_ID >= 8_01_00) {
+		if (PHP_VERSION_ID >= 8_00_00) {
 			$attributesBySource[] = $this->reflectionAttributesToInstances(
 				$property->getAttributes(),
 			);

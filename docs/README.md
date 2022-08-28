@@ -1520,7 +1520,7 @@ $context->getPropertyName(); // string
 
 ## Annotations and attributes
 
-Since PHP 8.1 all annotations can be written as attributes.
+Since PHP 8.0 annotations can be written as attributes.
 
 ```php
 use Orisai\ObjectMapper\Attributes\Expect\MixedValue;

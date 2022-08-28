@@ -821,8 +821,8 @@ arrayOfMixed: array<mixed>',
 
 	public function testAttributes(): void
 	{
-		if (PHP_VERSION_ID < 8_01_00) {
-			self::markTestSkipped('Attributes are supported on PHP 8.1+');
+		if (PHP_VERSION_ID < 8_00_00) {
+			self::markTestSkipped('Attributes are supported on PHP 8.0+');
 		}
 
 		$data = [
