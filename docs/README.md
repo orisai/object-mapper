@@ -87,7 +87,7 @@ services:
 	orisai.objectMapper.metaLoader: Orisai\ObjectMapper\Meta\MetaLoader
 	orisai.objectMapper.ruleManager:
 		factory: Orisai\ObjectMapper\Rules\DefaultRuleManager
-	orisai.objectMapper.objectCreator: Orisai\ObjectMapper\Processing\DefaultObjectCreator
+	orisai.objectMapper.objectCreator: Orisai\ObjectMapper\Bridge\NetteDI\LazyObjectCreator
 	orisai.objectMapper.processor: Orisai\ObjectMapper\Processing\DefaultProcessor
 ```
 
