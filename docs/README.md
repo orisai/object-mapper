@@ -30,6 +30,7 @@ Raw data mapping to validated objects
 		- [MappedObject](#mappedobject-rule)
 		- [URL](#url-rule)
 - [Optional fields and default values](#optional-fields-and-default-values)
+- [Allow unknown fields](#allow-unknown-fields)
 - [Mapping field names to properties](#mapping-field-names-to-properties)
 - [Processing modes](#processing-modes)
 	- [All fields are required](#all-fields-are-required)
@@ -1050,6 +1051,34 @@ final class NullableVariantsInput extends MappedObject
     public $string;
 
 }
+```
+
+## Allow unknown fields
+
+Make unknown fields allowed instead of throwing exception.
+
+Unknown fields are removed from data and are not available in mapped object.
+
+```php
+use Orisai\ObjectMapper\MappedObject;
+
+final class WithUnknownValuesInput extends MappedObject
+{
+
+}
+```
+
+```php
+use Orisai\ObjectMapper\Processing\Options;
+
+$data = [
+	'unknown' => 'any value',
+];
+$options = new Options();
+$options->setAllowUnknownFields();
+
+// No exception is thrown
+$input = $processor->process($data, WithUnknownValuesInput::class, $options); // WithUnknownValuesInput
 ```
 
 ## Mapping field names to properties
