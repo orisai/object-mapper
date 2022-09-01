@@ -2,6 +2,9 @@
 
 Raw data mapping to validated objects
 
+Ideal for validation of API POST data, configurations, serialized and any other raw data and automatic mapping
+of them to type-safe objects.
+
 ## Content
 
 - [Setup](#setup)

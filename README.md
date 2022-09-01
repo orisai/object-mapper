@@ -5,7 +5,9 @@
 </h1>
 
 <p align="center">
-    Raw data mapping to validated objects
+	Raw data mapping to validated objects <br><br>
+	Ideal for validation of POST data, configurations, serialized and any other raw data and automatic mapping
+	of them to type-safe objects.
 </p>
 
 <p align="center">
