@@ -449,6 +449,36 @@ Parameters:
 	- default `false` - empty strings are not cast
 	- e.g. `''`, `'   '`, `"\t"` ,`"\t\n\r""`
 
+When we use `string|null` it may be useful to typecast empty string to null:
+
+```php
+use Orisai\ObjectMapper\Attributes\Expect\AnyOf;
+use Orisai\ObjectMapper\Attributes\Expect\NullValue;
+use Orisai\ObjectMapper\Attributes\Expect\StringValue;
+use Orisai\ObjectMapper\MappedObject;
+
+final class NullInput extends MappedObject
+{
+
+    /**
+     * @AnyOf({
+     *     @StringValue(notEmpty=true),
+     *     @NullValue(castEmptyString=true),
+     * })
+     */
+    public ?string $field;
+
+}
+```
+
+```php
+$data = [
+	'field' => '',
+];
+$input = $processor->process($data, NullInput::class);
+// $input == NullInput(field: null)
+```
+
 ### object rule
 
 Expects any object
@@ -811,7 +841,8 @@ $data = [
 	'field' => 'foo',
 	'anotherField' => 'unknown value',
 ];
-$input = $processor->process($data, BackedEnumInput::class); // BackedEnumInput
+$input = $processor->process($data, BackedEnumInput::class);
+// $input == BackedEnumInput(field: ExampleEnum::Foo, anotherField: null)
 ```
 
 Parameters:
@@ -822,6 +853,34 @@ Parameters:
 - `allowUnknown`
 	- for unknown values rule returns null instead of failing
 	- default `false`
+
+As an alternative to `allowUnknown` we may use `BackedEnum|string`:
+
+```php
+use Orisai\ObjectMapper\Attributes\Expect\AnyOf;
+use Orisai\ObjectMapper\Attributes\Expect\BackedEnumValue;
+use Orisai\ObjectMapper\Attributes\Expect\StringValue;
+use Orisai\ObjectMapper\MappedObject;
+
+final class BackedEnumInput extends MappedObject
+{
+
+	#[AnyOf([
+		new BackedEnumValue(ExampleEnum::class),
+		new StringValue(),
+	])]
+	public ExampleEnum|string $field;
+
+}
+```
+
+```php
+$data = [
+	'field' => 'unknown value',
+];
+$input = $processor->process($data, BackedEnumInput::class);
+// $input == BackedEnumInput(field: 'unknown value')
+```
 
 ### DateTime rule
 
