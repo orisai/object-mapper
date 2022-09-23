@@ -182,9 +182,10 @@ final class BoolInput extends MappedObject
 ```php
 $data = [
 	'field' => true,
-	'anotherField' => 1,
+	'anotherField' => 0,
 ];
-$input = $processor->process($data, BoolInput::class); // BoolInput
+$input = $processor->process($data, BoolInput::class);
+// $input == BoolInput(field: true, anotherField: false)
 ```
 
 Parameters:
@@ -231,7 +232,8 @@ $data = [
 	'field' => 1,
 	'anotherField' => 'first',
 ];
-$input = $processor->process($data, ArrayEnumInput::class); // ArrayEnumInput
+$input = $processor->process($data, ArrayEnumInput::class);
+// $input == ArrayEnumInput(field: 1, anotherField: 'first')
 ```
 
 Parameters:
@@ -268,9 +270,10 @@ final class FloatInput extends MappedObject
 ```php
 $data = [
 	'field' => 666.666,
-	'anotherField' => '6.66',
+	'anotherField' => '4.2',
 ];
-$input = $processor->process($data, FloatInput::class); // FloatInput
+$input = $processor->process($data, FloatInput::class);
+// $input == FloatInput(field: 666.666, anotherField: 4.2)
 ```
 
 Parameters:
@@ -316,7 +319,8 @@ final class InstanceofInput extends MappedObject
 $data = [
 	'field' => new stdClass(),
 ];
-$input = $processor->process($data, InstanceofInput::class); // InstanceofInput
+$input = $processor->process($data, InstanceofInput::class);
+// $input == InstanceofInput(field: \stdClass())
 ```
 
 Parameters:
@@ -354,7 +358,8 @@ $data = [
 	'field' => 666,
 	'anotherField' => '42',
 ];
-$input = $processor->process($data, IntInput::class); // IntInput
+$input = $processor->process($data, IntInput::class);
+// $input == IntInput(field: 666, anotherField: 42)
 ```
 
 Parameters:
@@ -401,6 +406,7 @@ $data = [
 	'field' => 'anything',
 ];
 $input = $processor->process($data, MixedInput::class); // MixedInput
+// $input == MixedInput(field: 'anything')
 ```
 
 Parameters:
@@ -438,7 +444,8 @@ $data = [
 	'field' => null,
 	'anotherField' => '',
 ];
-$input = $processor->process($data, NullInput::class); // NullInput
+$input = $processor->process($data, NullInput::class);
+// $input == NullInput(field: null, anotherField: null)
 ```
 
 Parameters:
@@ -502,7 +509,8 @@ final class ObjectInput extends MappedObject
 $data = [
 	'field' => $anyObject,
 ];
-$input = $processor->process($data, ObjectInput::class); // ObjectInput
+$input = $processor->process($data, ObjectInput::class);
+// $input == ObjectInput(field: $anyObject)
 ```
 
 Parameters:
@@ -533,7 +541,8 @@ final class ScalarInput extends MappedObject
 $data = [
 	'field' => 'any scalar value',
 ];
-$input = $processor->process($data, ScalarInput::class); // ScalarInput
+$input = $processor->process($data, ScalarInput::class);
+// $input == ScalarInput(field: 'any scalar value')
 ```
 
 Parameters:
@@ -568,7 +577,8 @@ $data = [
 	'field' => 'string',
 	'anotherField' => 'abcdef',
 ];
-$input = $processor->process($data, StringInput::class); // StringInput
+$input = $processor->process($data, StringInput::class);
+// $input == StringInput(field: 'string', anotherField: 'abcdef')
 ```
 
 Parameters:
@@ -622,7 +632,8 @@ final class AllOfInput extends MappedObject
 ```
 
 ```php
-$input = $processor->process(['field' => 'https://example.com'], AllOfInput::class); // AllOfInput
+$input = $processor->process(['field' => 'https://example.com'], AllOfInput::class);
+// $input == AllOfInput(field: 'https://example.com')
 ```
 
 Parameters:
@@ -663,9 +674,12 @@ final class AnyOfInput extends MappedObject
 ```
 
 ```php
-$input = $processor->process(['field' => 'string'], AnyOfInput::class); // AnyOfInput
-$input = $processor->process(['field' => 123], AnyOfInput::class); // AnyOfInput
-$input = $processor->process(['field' => null], AnyOfInput::class); // AnyOfInput
+$input = $processor->process(['field' => 'string'], AnyOfInput::class);
+// $input == AnyOfInput(field: 'string')
+$input = $processor->process(['field' => 123], AnyOfInput::class);
+// $input == AnyOfInput(field: 123)
+$input = $processor->process(['field' => null], AnyOfInput::class);
+// $input == AnyOfInput(field: null)
 ```
 
 Parameters:
@@ -706,7 +720,7 @@ final class ArrayOfInput extends MappedObject
      *      mergeDefaults=true,
      * )
      */
-    public array $anotherField = ['key' => 1];
+    public array $anotherField = ['key1' => 1, 'key2' => 999];
 
 }
 ```
@@ -714,9 +728,10 @@ final class ArrayOfInput extends MappedObject
 ```php
 $data = [
 	'field' => ['anything', 1234, true, null],
-	'anotherField' => ['key1' => 1, 'key2' => 2],
+	'anotherField' => ['key2' => 2, 'key3' => 3],
 ];
-$input = $processor->process($data, ArrayOfInput::class); // ArrayOfInput
+$input = $processor->process($data, ArrayOfInput::class);
+// $input == ArrayOfInput(field: ['anything', 1234, true, null], anotherField: ['key1': 1, 'key2': 2, 'key3': 3])
 ```
 
 Parameters:
@@ -773,7 +788,7 @@ final class ListOfInput extends MappedObject
      *      mergeDefaults=true,
      * )
      */
-    public array $anotherField = ['value'];
+    public array $anotherField = ['default'];
 
 }
 ```
@@ -783,7 +798,8 @@ $data = [
 	'field' => ['anything', 1234, true, null],
 	'anotherField' => ['one', 'two'],
 ];
-$input = $processor->process($data, ListOfInput::class); // ListOfInput
+$input = $processor->process($data, ListOfInput::class);
+// $input == ListOfInput(field: ['anything', 1234, true, null], anotherField: ['one', 'two', 'default'])
 ```
 
 Parameters:
@@ -911,7 +927,8 @@ $data = [
 	'field' => '2013-04-12T16:40:00-04:00',
 	'anotherField' => 1365799200,
 ];
-$input = $processor->process($data, DateTimeInput::class); // DateTimeInput
+$input = $processor->process($data, DateTimeInput::class);
+// $input == DateTimeInput(field: \DateTimeImmutable(), anotherField: \DateTime())
 ```
 
 Parameters:
@@ -969,7 +986,8 @@ $data = [
 		'field' => 'string',
 	],
 ];
-$input = $processor->process($data, MappedObjectInput::class); // MappedObjectInput
+$input = $processor->process($data, MappedObjectInput::class);
+// $input == MappedObjectInputInput(field: InnerInput(field: 'string'))
 ```
 
 Parameters:
@@ -999,7 +1017,8 @@ final class UrlInput extends MappedObject
 $data = [
 	'field' => 'https://example.com',
 ];
-$input = $processor->process($data, UrlInput::class); // UrlInput
+$input = $processor->process($data, UrlInput::class);
+// $input == UrlInput(field: 'https://example.com')
 ```
 
 Parameters:
@@ -1139,7 +1158,8 @@ $options = new Options();
 $options->setAllowUnknownFields();
 
 // No exception is thrown
-$input = $processor->process($data, WithUnknownValuesInput::class, $options); // WithUnknownValuesInput
+$input = $processor->process($data, WithUnknownValuesInput::class, $options);
+// $input == WithUnknownValuesInput()
 ```
 
 ## Mapping field names to properties
@@ -1166,7 +1186,8 @@ final class DefaultMappingInput extends MappedObject
 $data = [
 	'field' => 'anything',
 ];
-$input = $processor->process($data, DefaultMappingInput::class); // DefaultMappingInput
+$input = $processor->process($data, DefaultMappingInput::class);
+// $input == DefaultMappingInput(field: 'anything')
 ```
 
 We may change that by defining field name for property:
@@ -1184,7 +1205,7 @@ final class CustomMappingInput extends MappedObject
      * @MixedValue()
      * @FieldName("customFieldName")
      */
-    public $field;
+    public $property;
 
 }
 ```
@@ -1195,7 +1216,8 @@ We then have to send key from `@FieldName` instead of property name:
 $data = [
 	'customFieldName' => 'anything',
 ];
-$input = $processor->process($data, CustomMappingInput::class); // CustomMappingInput
+$input = $processor->process($data, CustomMappingInput::class);
+// $input == CustomMappingInput(property: 'anything')
 ```
 
 ## Processing modes
@@ -1228,6 +1250,7 @@ $data = [
 ];
 
 $input = $processor->process($data, ModesExampleInput::class); // ModesExampleInput
+// $input == ModesExampleInput(required: true, optional: true)
 
 $input->required; // true
 $input->optional; // true, default
@@ -1249,7 +1272,8 @@ $data = [
 $options = new Options();
 $options->setRequiredFields(RequiredFields::all());
 
-$input = $processor->process($data, ModesExampleInput::class, $options); // ModesExampleInput
+$input = $processor->process($data, ModesExampleInput::class, $options);
+// $input == ModesExampleInput(required: true, optional: false)
 
 $input->required; // true
 $input->optional; // true
@@ -1273,7 +1297,8 @@ $data = [];
 $options = new Options();
 $options->setRequiredFields(RequiredFields::none());
 
-$input = $processor->process($data, ModesExampleInput::class, $options); // ModesExampleInput
+$input = $processor->process($data, ModesExampleInput::class, $options);
+// $input == ModesExampleInput(required: __UNSET__, optional: __UNSET__)
 
 $input->isInitialized('required'); // false
 $input->required; // Error, property is not set
