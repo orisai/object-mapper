@@ -410,7 +410,7 @@ final class DefaultProcessor implements Processor
 			$defaultMeta = $propertyMeta->getDefault();
 			$missingField = $this->propertyNameToFieldName($missingProperty, $propertyMeta);
 
-			if ($requiredFields->name === RequiredFields::nonDefault()->name && $defaultMeta->hasValue()) {
+			if ($requiredFields === RequiredFields::nonDefault() && $defaultMeta->hasValue()) {
 				// Add default value if defaults are not required and should be used
 				// If VOs are initialized then values are always prefilled - user can work with them in after callback,
 				//   and they are defined by VO anyway
@@ -418,7 +418,7 @@ final class DefaultProcessor implements Processor
 					$data[$missingField] = $defaultMeta->getValue();
 				}
 			} elseif (
-				$requiredFields->name === RequiredFields::nonDefault()->name
+				$requiredFields === RequiredFields::nonDefault()
 				&& is_a($propertyMeta->getRule()->getType(), MappedObjectRule::class, true)
 			) {
 				// Try to initialize object from empty array when no data given
@@ -436,7 +436,7 @@ final class DefaultProcessor implements Processor
 						InvalidData::create($exception->getType(), Value::none()),
 					);
 				}
-			} elseif ($requiredFields->name !== RequiredFields::none()->name && !$type->isFieldInvalid($missingField)) {
+			} elseif ($requiredFields !== RequiredFields::none() && !$type->isFieldInvalid($missingField)) {
 				// Field is missing and have no default value, mark as invalid
 				$propertyRuleMeta = $propertyMeta->getRule();
 				$propertyRule = $this->ruleManager->getRule($propertyRuleMeta->getType());

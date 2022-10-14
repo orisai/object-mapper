@@ -18,7 +18,7 @@ final class RequiredFieldsTest extends TestCase
 		self::assertSame(3, RequiredFields::none()->value);
 		self::assertSame('none', RequiredFields::none()->name);
 
-		self::assertEquals(
+		self::assertSame(
 			[
 				RequiredFields::nonDefault(),
 				RequiredFields::all(),
@@ -27,8 +27,8 @@ final class RequiredFieldsTest extends TestCase
 			RequiredFields::cases(),
 		);
 
-		self::assertEquals(RequiredFields::nonDefault(), RequiredFields::from(1));
-		self::assertEquals(RequiredFields::nonDefault(), RequiredFields::tryFrom(1));
+		self::assertSame(RequiredFields::nonDefault(), RequiredFields::from(1));
+		self::assertSame(RequiredFields::nonDefault(), RequiredFields::tryFrom(1));
 
 		self::assertNull(RequiredFields::tryFrom(4));
 		$this->expectException(ValueError::class);
