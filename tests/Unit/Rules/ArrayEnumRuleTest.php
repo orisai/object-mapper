@@ -54,11 +54,11 @@ final class ArrayEnumRuleTest extends ProcessingTestCase
 
 	/**
 	 * @param mixed        $value
-	 * @param array<mixed> $expectedValues
+	 * @param array<mixed> $expectedCases
 	 *
 	 * @dataProvider provideInvalidValues
 	 */
-	public function testProcessInvalid($value, ArrayEnumArgs $args, array $expectedValues): void
+	public function testProcessInvalid($value, ArrayEnumArgs $args, array $expectedCases): void
 	{
 		$exception = null;
 
@@ -72,7 +72,7 @@ final class ArrayEnumRuleTest extends ProcessingTestCase
 			$type = $exception->getType();
 			self::assertInstanceOf(EnumType::class, $type);
 
-			self::assertSame($expectedValues, $type->getValues());
+			self::assertSame($expectedCases, $type->getCases());
 			self::assertSame($value, $exception->getValue()->get());
 		}
 
@@ -108,7 +108,7 @@ final class ArrayEnumRuleTest extends ProcessingTestCase
 			$type,
 		);
 
-		self::assertSame(['foo', 'bar'], $type->getValues());
+		self::assertSame(['foo', 'bar'], $type->getCases());
 	}
 
 }

@@ -10,10 +10,10 @@ final class EnumTypeTest extends TestCase
 
 	public function testType(): void
 	{
-		$values = ['lorem', 'ipsum', 123];
+		$cases = ['lorem', 'ipsum', 123];
 
-		$type = new EnumType($values);
-		self::assertSame($values, $type->getValues());
+		$type = new EnumType($cases);
+		self::assertSame($cases, $type->getCases());
 	}
 
 }

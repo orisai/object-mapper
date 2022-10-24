@@ -200,7 +200,7 @@ Parameters:
 
 > For PHP 8.1+, check [BackedEnum rule](#backedenum-rule)
 
-Expects any of values from given list
+Expects any of cases from given list
 
 ```php
 use Orisai\ObjectMapper\Attributes\Expect\ArrayEnumValue;
@@ -209,19 +209,19 @@ use Orisai\ObjectMapper\MappedObject;
 final class ArrayEnumInput extends MappedObject
 {
 
-    public const Values = [
+    public const Cases = [
         'first' => 1,
         'second' => 2,
         'third' => 3,
     ];
 
     /**
-     * @ArrayEnumValue(Input::Values)
+     * @ArrayEnumValue(ArrayEnumInput::Cases)
      */
     public int $field;
 
     /**
-     * @ArrayEnumValue(values=Input::Values, useKeys=true)
+     * @ArrayEnumValue(cases=ArrayEnumInput::Cases, useKeys=true)
      */
     public string $anotherField;
 

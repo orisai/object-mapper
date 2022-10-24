@@ -97,13 +97,13 @@ final class BackedEnumRule implements Rule
 	 */
 	public function createType(Args $args, TypeContext $context): EnumType
 	{
-		return new EnumType($this->getEnumValues($args));
+		return new EnumType($this->getEnumCases($args));
 	}
 
 	/**
 	 * @return array<int, int|string>
 	 */
-	private function getEnumValues(BackedEnumArgs $args): array
+	private function getEnumCases(BackedEnumArgs $args): array
 	{
 		$class = $args->class;
 

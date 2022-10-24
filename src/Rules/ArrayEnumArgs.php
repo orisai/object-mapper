@@ -11,7 +11,7 @@ final class ArrayEnumArgs implements Args
 {
 
 	/** @var array<int|string, mixed> */
-	public array $values;
+	public array $cases;
 
 	public bool $useKeys;
 
@@ -20,7 +20,7 @@ final class ArrayEnumArgs implements Args
 	 */
 	public function __construct(array $values, bool $useKeys = false)
 	{
-		$this->values = $values;
+		$this->cases = $values;
 		$this->useKeys = $useKeys;
 	}
 

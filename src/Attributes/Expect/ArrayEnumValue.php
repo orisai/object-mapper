@@ -17,7 +17,7 @@ final class ArrayEnumValue implements RuleAttribute
 {
 
 	/** @var array<mixed> */
-	private array $values;
+	private array $cases;
 
 	private bool $useKeys;
 
@@ -26,7 +26,7 @@ final class ArrayEnumValue implements RuleAttribute
 	 */
 	public function __construct(array $values, bool $useKeys = false)
 	{
-		$this->values = $values;
+		$this->cases = $values;
 		$this->useKeys = $useKeys;
 	}
 
@@ -38,7 +38,7 @@ final class ArrayEnumValue implements RuleAttribute
 	public function getArgs(): array
 	{
 		return [
-			'values' => $this->values,
+			'cases' => $this->cases,
 			'useKeys' => $this->useKeys,
 		];
 	}

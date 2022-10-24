@@ -25,26 +25,26 @@ final class ArrayEnumRule implements Rule
 {
 
 	private const
-		Values = 'values',
+		Cases = 'cases',
 		UseKeys = 'useKeys';
 
 	public function resolveArgs(array $args, RuleArgsContext $context): ArrayEnumArgs
 	{
 		$checker = new ArgsChecker($args, self::class);
-		$checker->checkAllowedArgs([self::Values, self::UseKeys]);
+		$checker->checkAllowedArgs([self::Cases, self::UseKeys]);
 
-		$checker->checkRequiredArg(self::Values);
-		$values = $checker->checkArray(self::Values);
+		$checker->checkRequiredArg(self::Cases);
+		$cases = $checker->checkArray(self::Cases);
 
-		foreach ($values as $value) {
-			if (!is_scalar($value) && $value !== null) {
+		foreach ($cases as $case) {
+			if (!is_scalar($case) && $case !== null) {
 				throw InvalidArgument::create()
 					->withMessage(sprintf(
 						'Argument "%s" given to "%s" expected to be array of "%s", one of values was "%s".',
-						self::Values,
+						self::Cases,
 						self::class,
 						'string|int|float|bool|null',
-						gettype($value),
+						gettype($case),
 					));
 			}
 		}
@@ -54,7 +54,7 @@ final class ArrayEnumRule implements Rule
 			$useKeys = $checker->checkBool(self::UseKeys);
 		}
 
-		return new ArrayEnumArgs($values, $useKeys);
+		return new ArrayEnumArgs($cases, $useKeys);
 	}
 
 	public function getArgsType(): string
@@ -70,7 +70,7 @@ final class ArrayEnumRule implements Rule
 	 */
 	public function processValue($value, Args $args, FieldContext $context)
 	{
-		if (in_array($value, $this->getEnumValues($args), true)) {
+		if (in_array($value, $this->getEnumCases($args), true)) {
 			return $value;
 		}
 
@@ -82,17 +82,17 @@ final class ArrayEnumRule implements Rule
 	 */
 	public function createType(Args $args, TypeContext $context): EnumType
 	{
-		return new EnumType($this->getEnumValues($args));
+		return new EnumType($this->getEnumCases($args));
 	}
 
 	/**
 	 * @return array<mixed>
 	 */
-	private function getEnumValues(ArrayEnumArgs $args): array
+	private function getEnumCases(ArrayEnumArgs $args): array
 	{
 		return $args->useKeys
-			? array_keys($args->values)
-			: array_values($args->values);
+			? array_keys($args->cases)
+			: array_values($args->cases);
 	}
 
 }

@@ -260,7 +260,7 @@ final class ErrorVisualPrinter implements ErrorPrinter, TypePrinter
 	 */
 	private function printEnumType(EnumType $type)
 	{
-		return $this->converter->printEnum($type->getValues());
+		return $this->converter->printEnum($type->getCases());
 	}
 
 	/**

@@ -6,22 +6,22 @@ final class EnumType implements Type
 {
 
 	/** @var array<mixed> */
-	private array $values;
+	private array $cases;
 
 	/**
-	 * @param array<mixed> $values
+	 * @param array<mixed> $cases
 	 */
-	public function __construct(array $values)
+	public function __construct(array $cases)
 	{
-		$this->values = $values;
+		$this->cases = $cases;
 	}
 
 	/**
 	 * @return array<mixed>
 	 */
-	public function getValues(): array
+	public function getCases(): array
 	{
-		return $this->values;
+		return $this->cases;
 	}
 
 }

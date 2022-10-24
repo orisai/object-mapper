@@ -57,7 +57,7 @@ final class TypeVisualPrinterTest extends TestCase
 
 	public function testEnum(): void
 	{
-		$values = [
+		$cases = [
 			'key' => 'foo',
 			'key2' => 'bar',
 			'key3' => 123,
@@ -65,7 +65,7 @@ final class TypeVisualPrinterTest extends TestCase
 			'key5' => true,
 			'key6' => false,
 		];
-		$type = new EnumType($values);
+		$type = new EnumType($cases);
 
 		self::assertSame(
 			'enum(foo, bar, 123, 123.456, true, false)',
