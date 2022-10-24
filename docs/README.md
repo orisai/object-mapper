@@ -28,12 +28,13 @@ of them to type-safe objects.
 		- [Array of keys and items](#array-of-keys-and-items-rule)
 		- [List of items](#list-of-items-rule)
 	- [Value objects](#value-objects)
-        - [BackedEnum](#backedenum-rule)
+		- [BackedEnum](#backedenum-rule)
 		- [DateTime](#datetime-rule)
 		- [MappedObject](#mappedobject-rule)
 		- [URL](#url-rule)
 - [Optional fields and default values](#optional-fields-and-default-values)
 - [Allow unknown fields](#allow-unknown-fields)
+	- [Ambiguous definitions with unknown fields allowed](#ambiguous-definitions-with-unknown-fields-allowed)
 - [Mapping field names to properties](#mapping-field-names-to-properties)
 - [Processing modes](#processing-modes)
 	- [All fields are required](#all-fields-are-required)
@@ -1160,6 +1161,58 @@ $options->setAllowUnknownFields();
 // No exception is thrown
 $input = $processor->process($data, WithUnknownValuesInput::class, $options);
 // $input == WithUnknownValuesInput()
+```
+
+### Ambiguous definitions with unknown fields allowed
+
+If we combine via [any of](#any-of-rules---) two [mapped objects](#mappedobject-rule), where one requires `id`
+and `name` and second requires only `id`, then the one with more fields (`id`, `name`) must be listed in any of first.
+
+If the object with `id` only was defined first, and we send `id` and `name`, when unknown fields are allowed,
+then `name` would be treated as an unknown field and object with `id` only would be created.
+
+```php
+use Orisai\ObjectMapper\Attributes\Expect\AnyOf;
+use Orisai\ObjectMapper\Attributes\Expect\IntValue;
+use Orisai\ObjectMapper\Attributes\Expect\MappedObjectValue;
+use Orisai\ObjectMapper\Attributes\Expect\StringValue;
+use Orisai\ObjectMapper\MappedObject;
+
+final class MainInput extends MappedObject
+{
+
+	/**
+	 * @var FullInput|IdOnlyInput
+	 * @AnyOf({
+	 *     @MappedObjectValue(FullInput::class),
+	 *     @MappedObjectValue(IdOnlyInput::class),
+	 * })
+	 */
+	public MappedObject $ambiguous;
+
+}
+
+final class FullInput extends MappedObject
+{
+
+	/** @IntValue(min=0) */
+	public int $id;
+
+	/**
+	 * @var non-empty-string
+	 * @StringValue(notEmpty=true)
+	 */
+	public string $name;
+
+}
+
+final class IdOnlyInput extends MappedObject
+{
+
+	/** @IntValue(min=0) */
+	public int $id;
+
+}
 ```
 
 ## Mapping field names to properties
