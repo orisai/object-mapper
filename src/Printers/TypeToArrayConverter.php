@@ -24,7 +24,7 @@ final class TypeToArrayConverter implements TypeToPrimitiveConverter
 		return [
 			'type' => 'simple',
 			'name' => $name,
-			'parameters' => $parameters,
+			'parameters' => $this->printParameters($parameters),
 		];
 	}
 
@@ -32,22 +32,24 @@ final class TypeToArrayConverter implements TypeToPrimitiveConverter
 	{
 		return [
 			'type' => 'enum',
-			'parameters' => $values,
+			'cases' => $values,
 		];
 	}
 
 	/**
 	 * @param array<int|string, TypeParameter> $parameters
-	 * @return array<mixed>
+	 * @return array<array{key: int|string, value?: mixed}>
 	 */
 	public function printParameters(array $parameters): array
 	{
 		$processed = [];
 		foreach ($parameters as $parameter) {
-			$processed[] = [
-				'key' => $parameter->getKey(),
-				'value' => $parameter->getValue(),
-			];
+			$item = ['key' => $parameter->getKey()];
+			if ($parameter->hasValue()) {
+				$item['value'] = $parameter->getValue();
+			}
+
+			$processed[] = $item;
 		}
 
 		return $processed;
