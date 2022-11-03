@@ -13,9 +13,9 @@ final class RequiredFields
 		None = 3;
 
 	private const ValuesAndNames = [
-		self::NonDefault => 'nonDefault',
-		self::All => 'all',
-		self::None => 'none',
+		self::NonDefault => 'NonDefault',
+		self::All => 'All',
+		self::None => 'None',
 	];
 
 	/** @readonly */

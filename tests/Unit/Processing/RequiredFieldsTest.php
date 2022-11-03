@@ -12,11 +12,11 @@ final class RequiredFieldsTest extends TestCase
 	public function test(): void
 	{
 		self::assertSame(1, RequiredFields::nonDefault()->value);
-		self::assertSame('nonDefault', RequiredFields::nonDefault()->name);
+		self::assertSame('NonDefault', RequiredFields::nonDefault()->name);
 		self::assertSame(2, RequiredFields::all()->value);
-		self::assertSame('all', RequiredFields::all()->name);
+		self::assertSame('All', RequiredFields::all()->name);
 		self::assertSame(3, RequiredFields::none()->value);
-		self::assertSame('none', RequiredFields::none()->name);
+		self::assertSame('None', RequiredFields::none()->name);
 
 		self::assertSame(
 			[
