@@ -109,14 +109,18 @@ abstract class BaseCallback implements Callback
 
 		$method = $class->getMethod($methodName);
 
-		if (!$method->isPublic()) {
+		if ($method->isPrivate() && !$class->isFinal()) {
+			// If you are reading this and want full support of private methods:
+			//		- method must be called in context of class which defines it
+			//		- private methods with same name in parent and child class must be unambiguous
+			//		- both static and non-static methods must work
 			throw InvalidArgument::create()
 				->withMessage(sprintf(
-					'Argument "%s" given to "%s" is expected to be public method of "%s", "%s method %s" given.',
+					'Argument "%s" given to "%s" is expected to be public or protected method of "%s", ' .
+					'private method %s" given. To use private method, change class to final.',
 					self::Method,
 					static::class,
 					$class->getName(),
-					$method->isProtected() ? 'protected' : 'private',
 					$methodName,
 				));
 		}
@@ -139,7 +143,7 @@ abstract class BaseCallback implements Callback
 		if ($paramsCount > 2) {
 			throw InvalidArgument::create()
 				->withMessage(sprintf(
-					'Callback method %ss::%s should have only 2 parameters, %s given',
+					'Callback method %s::%s should have only 2 parameters, %s given',
 					$class->getName(),
 					$method->getName(),
 					$paramsCount,
@@ -269,9 +273,19 @@ abstract class BaseCallback implements Callback
 
 		$method = $args->method;
 
-		$callbackOutput = $args->isStatic
-			? $holder->getClass()::$method($data, $context)
-			: $holder->getInstance()->$method($data, $context);
+		if ($args->isStatic) {
+			$class = $holder->getClass();
+			$fn = static fn () => $class::$method($data, $context);
+			$fn = $fn->bindTo(null, $class);
+		} else {
+			$instance = $holder->getInstance();
+			// Closure with bound instance cannot be static
+			// phpcs:disable SlevomatCodingStandard.Functions.StaticClosure.ClosureNotStatic
+			$fn = fn () => $instance->$method($data, $context);
+			$fn = $fn->bindTo($instance, $instance);
+		}
+
+		$callbackOutput = $fn();
 
 		return $args->returnsValue ? $callbackOutput : $data;
 	}

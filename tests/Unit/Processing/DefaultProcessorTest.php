@@ -20,6 +20,7 @@ use Tests\Orisai\ObjectMapper\Doubles\AfterClassCallbackValueDoesNotMatchVO;
 use Tests\Orisai\ObjectMapper\Doubles\AttributesVO;
 use Tests\Orisai\ObjectMapper\Doubles\BeforeClassCallbackMixedValueVO;
 use Tests\Orisai\ObjectMapper\Doubles\BeforeClassCallbackValueDoesNotMatchVO;
+use Tests\Orisai\ObjectMapper\Doubles\CallbacksVisibilityVO;
 use Tests\Orisai\ObjectMapper\Doubles\CallbacksVO;
 use Tests\Orisai\ObjectMapper\Doubles\CallbacksVoContext;
 use Tests\Orisai\ObjectMapper\Doubles\DefaultsVO;
@@ -445,6 +446,28 @@ stringg: Field is unknown, did you mean `string`?',
 		self::assertSame('defaultValue_immutable', $vo->immutableDefaultValue);
 		self::assertSame('overriddenValue', $vo->requiredValue);
 		self::assertSame('givenByConstructor', $vo->callbackSetValue);
+	}
+
+	public function testCallbacksVisibility(): void
+	{
+		$data = [
+			'public' => 'a',
+			'protected' => 'b',
+			'private' => 'c',
+			'publicStatic' => 'd',
+			'protectedStatic' => 'e',
+			'privateStatic' => 'f',
+		];
+
+		$vo = $this->processor->process($data, CallbacksVisibilityVO::class);
+
+		self::assertInstanceOf(CallbacksVisibilityVO::class, $vo);
+		self::assertSame('a-public', $vo->public);
+		self::assertSame('b-protected', $vo->protected);
+		self::assertSame('c-private', $vo->private);
+		self::assertSame('d-public-static', $vo->publicStatic);
+		self::assertSame('e-protected-static', $vo->protectedStatic);
+		self::assertSame('f-private-static', $vo->privateStatic);
 	}
 
 	public function testPropertyCallbacksFailure(): void

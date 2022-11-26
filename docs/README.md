@@ -1378,7 +1378,7 @@ final class WithCallbackInput extends MappedObject
 	 */
 	public string $field;
 
-	public static function afterField(string $value, FieldContext $context): string
+	private static function afterField(string $value, FieldContext $context): string
 	{
 		return $value;
 	}
@@ -1393,6 +1393,9 @@ In all callbacks are used [field names](#mapping-field-names-to-properties), not
 In [field callbacks](#field-callbacks), current field name can be accessed via [context](#callback-context).
 
 Callbacks can be both static and non-static, object mapper initializes object to call non-static callbacks when needed.
+
+Callbacks can have any visibility - public, protected or private. However, private callbacks are allowed only on final
+classes.
 
 ### Mapped object callbacks
 
@@ -1430,7 +1433,7 @@ final class WithMappedObjectCallbacksInput extends MappedObject
      * @param mixed $value
      * @return mixed
      */
-	public static function beforeObject($value, MappedObjectContext $context)
+	private static function beforeObject($value, MappedObjectContext $context)
 	{
 		return $value;
 	}
@@ -1439,7 +1442,7 @@ final class WithMappedObjectCallbacksInput extends MappedObject
      * @param array<int|string, mixed> $value
      * @return array<int|string, mixed>
      */
-	public static function afterObject(array $value, MappedObjectContext $context): array
+	private static function afterObject(array $value, MappedObjectContext $context): array
 	{
 		return $value;
 	}
@@ -1486,12 +1489,12 @@ final class WithFieldCallbacksInput extends MappedObject
      * @param mixed $value
      * @return mixed
      */
-	public static function beforeField($value, FieldContext $context)
+	private static function beforeField($value, FieldContext $context)
 	{
 		return $value;
 	}
 
-	public static function afterField(string $value, FieldContext $context): string
+	private static function afterField(string $value, FieldContext $context): string
 	{
 		return $value;
 	}
@@ -1516,7 +1519,7 @@ final class WithNotInvokedCallbackInput extends MappedObject
 	 */
 	public string $field = 'default';
 
-	public static function afterField(string $value, FieldContext $context): string
+	private static function afterField(string $value, FieldContext $context): string
 	{
 		return $value;
 	}
@@ -1554,7 +1557,7 @@ final class WithReturningCallbackInput extends MappedObject
      * @param mixed $value
      * @return mixed
      */
-	public static function afterField($value)
+	private static function afterField($value)
 	{
 		return $value;
 	}
@@ -1580,7 +1583,7 @@ final class WithNotReturningCallbackInput extends MappedObject
      */
 	public string $removed;
 
-	public static function afterRemoved(string $value): void
+	private static function afterRemoved(string $value): void
 	{
 		throw ValueDoesNotMatch::createFromString('Field is removed', Value::of($value));
 	}
@@ -1621,7 +1624,7 @@ final class WithComplexCallbackInput extends MappedObject
      * @param mixed $value
      * @return mixed
      */
-	public function afterField($value)
+	private function afterField($value)
 	{
 		if (!$this->service->valueMatchesCriteria($value)) {
 			throw ValueDoesNotMatch::createFromString('Value does not match criteria ABC.', Value::of($value))
