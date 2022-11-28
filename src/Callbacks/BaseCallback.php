@@ -275,17 +275,15 @@ abstract class BaseCallback implements Callback
 
 		if ($args->isStatic) {
 			$class = $holder->getClass();
-			$fn = static fn () => $class::$method($data, $context);
-			$fn = $fn->bindTo(null, $class);
+			$callbackOutput = (static fn () => $class::$method($data, $context))
+				->bindTo(null, $class)();
 		} else {
 			$instance = $holder->getInstance();
 			// Closure with bound instance cannot be static
 			// phpcs:disable SlevomatCodingStandard.Functions.StaticClosure.ClosureNotStatic
-			$fn = fn () => $instance->$method($data, $context);
-			$fn = $fn->bindTo($instance, $instance);
+			$callbackOutput = (fn () => $instance->$method($data, $context))
+				->bindTo($instance, $instance)();
 		}
-
-		$callbackOutput = $fn();
 
 		return $args->returnsValue ? $callbackOutput : $data;
 	}
