@@ -8,6 +8,8 @@ use Orisai\ObjectMapper\Context\FieldContext;
 use Orisai\ObjectMapper\Context\RuleArgsContext;
 use Orisai\ObjectMapper\Context\TypeContext;
 use Orisai\ObjectMapper\Exception\ValueDoesNotMatch;
+use Orisai\ObjectMapper\PhpTypes\Node;
+use Orisai\ObjectMapper\PhpTypes\SimpleNode;
 use Orisai\ObjectMapper\Types\SimpleValueType;
 use Orisai\ObjectMapper\Types\Value;
 use function is_string;
@@ -124,6 +126,26 @@ final class StringRule implements Rule
 		}
 
 		return $type;
+	}
+
+	/**
+	 * @param StringArgs $args
+	 */
+	public function getExpectedInputType(Args $args, TypeContext $context): Node
+	{
+		if ($args->notEmpty || ($args->minLength ?? 0) > 0) {
+			return new SimpleNode('non-empty-string');
+		}
+
+		return new SimpleNode('string');
+	}
+
+	/**
+	 * @param StringArgs $args
+	 */
+	public function getReturnType(Args $args, TypeContext $context): Node
+	{
+		return $this->getExpectedInputType($args, $context);
 	}
 
 }

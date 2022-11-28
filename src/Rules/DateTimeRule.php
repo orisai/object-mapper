@@ -13,6 +13,9 @@ use Orisai\ObjectMapper\Context\FieldContext;
 use Orisai\ObjectMapper\Context\RuleArgsContext;
 use Orisai\ObjectMapper\Context\TypeContext;
 use Orisai\ObjectMapper\Exception\ValueDoesNotMatch;
+use Orisai\ObjectMapper\PhpTypes\CompoundNode;
+use Orisai\ObjectMapper\PhpTypes\Node;
+use Orisai\ObjectMapper\PhpTypes\SimpleNode;
 use Orisai\ObjectMapper\Types\SimpleValueType;
 use Orisai\ObjectMapper\Types\Value;
 use ReflectionClass;
@@ -170,6 +173,33 @@ final class DateTimeRule implements Rule
 		}
 
 		return $type;
+	}
+
+	/**
+	 * @param DateTimeArgs $args
+	 */
+	public function getExpectedInputType(Args $args, TypeContext $context): Node
+	{
+		if ($args->format === self::FormatTimestamp) {
+			return new SimpleNode('int');
+		}
+
+		if ($args->format === self::FormatAny) {
+			return CompoundNode::createOrType([
+				new SimpleNode('int'),
+				new SimpleNode('string'),
+			]);
+		}
+
+		return new SimpleNode('string');
+	}
+
+	/**
+	 * @param DateTimeArgs $args
+	 */
+	public function getReturnType(Args $args, TypeContext $context): Node
+	{
+		return new SimpleNode($args->type);
 	}
 
 }

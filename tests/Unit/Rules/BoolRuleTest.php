@@ -156,4 +156,35 @@ final class BoolRuleTest extends ProcessingTestCase
 		self::assertFalse($type->getParameter('acceptsBoolLike')->hasValue());
 	}
 
+	/**
+	 * @dataProvider providePhpNode
+	 */
+	public function testPhpNode(BoolArgs $args, string $input, string $output): void
+	{
+		self::assertSame(
+			$input,
+			(string) $this->rule->getExpectedInputType($args, $this->fieldContext()),
+		);
+
+		self::assertSame(
+			$output,
+			(string) $this->rule->getReturnType($args, $this->fieldContext()),
+		);
+	}
+
+	public function providePhpNode(): Generator
+	{
+		yield [
+			new BoolArgs(),
+			'bool',
+			'bool',
+		];
+
+		yield [
+			new BoolArgs(true),
+			"(bool|'true'|'false'|1|0)",
+			'bool',
+		];
+	}
+
 }

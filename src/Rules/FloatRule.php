@@ -9,6 +9,9 @@ use Orisai\ObjectMapper\Context\FieldContext;
 use Orisai\ObjectMapper\Context\RuleArgsContext;
 use Orisai\ObjectMapper\Context\TypeContext;
 use Orisai\ObjectMapper\Exception\ValueDoesNotMatch;
+use Orisai\ObjectMapper\PhpTypes\CompoundNode;
+use Orisai\ObjectMapper\PhpTypes\Node;
+use Orisai\ObjectMapper\PhpTypes\SimpleNode;
 use Orisai\ObjectMapper\Types\SimpleValueType;
 use Orisai\ObjectMapper\Types\Value;
 use function is_float;
@@ -183,6 +186,55 @@ final class FloatRule implements Rule
 		}
 
 		return $value;
+	}
+
+	/**
+	 * @param FloatArgs $args
+	 */
+	public function getExpectedInputType(Args $args, TypeContext $context): Node
+	{
+		$intNode = $this->createFloatNode($args);
+
+		if (!$args->castNumericString) {
+			return $intNode;
+		}
+
+		return CompoundNode::createOrType([
+			$intNode,
+			new SimpleNode('numeric-string'),
+		]);
+	}
+
+	/**
+	 * @param FloatArgs $args
+	 */
+	public function getReturnType(Args $args, TypeContext $context): Node
+	{
+		return $this->createFloatNode($args);
+	}
+
+	private function createFloatNode(FloatArgs $args): Node
+	{
+		$min = $args->min;
+		if ($args->unsigned && ($min ?? 0.0) <= 0.0) {
+			$min = 0.0;
+		}
+
+		$max = $args->max;
+
+		if ($min !== null && $max !== null) {
+			return new SimpleNode("float<$min, $max>");
+		}
+
+		if ($min !== null) {
+			return new SimpleNode("float<$min, max>");
+		}
+
+		if ($max !== null) {
+			return new SimpleNode("float<min, $max>");
+		}
+
+		return new SimpleNode('float');
 	}
 
 }

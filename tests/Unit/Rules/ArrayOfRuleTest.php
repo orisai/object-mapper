@@ -2,6 +2,7 @@
 
 namespace Tests\Orisai\ObjectMapper\Unit\Rules;
 
+use Generator;
 use Orisai\ObjectMapper\Args\EmptyArgs;
 use Orisai\ObjectMapper\Exception\ValueDoesNotMatch;
 use Orisai\ObjectMapper\Exception\WithTypeAndValue;
@@ -10,6 +11,8 @@ use Orisai\ObjectMapper\Meta\Runtime\RuleRuntimeMeta;
 use Orisai\ObjectMapper\Rules\ArrayOfArgs;
 use Orisai\ObjectMapper\Rules\ArrayOfRule;
 use Orisai\ObjectMapper\Rules\MixedRule;
+use Orisai\ObjectMapper\Rules\NullArgs;
+use Orisai\ObjectMapper\Rules\NullRule;
 use Orisai\ObjectMapper\Rules\StringArgs;
 use Orisai\ObjectMapper\Rules\StringRule;
 use Orisai\ObjectMapper\Types\ArrayType;
@@ -251,6 +254,71 @@ final class ArrayOfRuleTest extends ProcessingTestCase
 		self::assertSame(10, $type->getParameter(ArrayOfRule::MinItems)->getValue());
 		self::assertTrue($type->hasParameter(ArrayOfRule::MaxItems));
 		self::assertSame(100, $type->getParameter(ArrayOfRule::MaxItems)->getValue());
+	}
+
+	/**
+	 * @dataProvider providePhpNode
+	 */
+	public function testPhpNode(ArrayOfArgs $args, string $input, string $output): void
+	{
+		self::assertSame(
+			$input,
+			(string) $this->rule->getExpectedInputType($args, $this->fieldContext()),
+		);
+
+		self::assertSame(
+			$output,
+			(string) $this->rule->getReturnType($args, $this->fieldContext()),
+		);
+	}
+
+	public function providePhpNode(): Generator
+	{
+		yield [
+			new ArrayOfArgs(
+				new RuleRuntimeMeta(MixedRule::class, new EmptyArgs()),
+			),
+			'array<mixed>',
+			'array<mixed>',
+		];
+
+		yield [
+			new ArrayOfArgs(
+				new RuleRuntimeMeta(MixedRule::class, new EmptyArgs()),
+				new RuleRuntimeMeta(StringRule::class, new StringArgs()),
+			),
+			'array<string, mixed>',
+			'array<string, mixed>',
+		];
+
+		yield [
+			new ArrayOfArgs(
+				new RuleRuntimeMeta(MixedRule::class, new EmptyArgs()),
+				null,
+				0,
+			),
+			'array<mixed>',
+			'array<mixed>',
+		];
+
+		yield [
+			new ArrayOfArgs(
+				new RuleRuntimeMeta(MixedRule::class, new EmptyArgs()),
+				null,
+				1,
+			),
+			'non-empty-array<mixed>',
+			'non-empty-array<mixed>',
+		];
+
+		yield [
+			new ArrayOfArgs(
+				new RuleRuntimeMeta(NullRule::class, new NullArgs(true)),
+				new RuleRuntimeMeta(NullRule::class, new NullArgs(true)),
+			),
+			"array<(null|''), (null|'')>",
+			'array<null, null>',
+		];
 	}
 
 }

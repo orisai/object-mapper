@@ -104,4 +104,29 @@ final class UrlRuleTest extends ProcessingTestCase
 		);
 	}
 
+	/**
+	 * @dataProvider providePhpNode
+	 */
+	public function testPhpNode(EmptyArgs $args, string $input, string $output): void
+	{
+		self::assertSame(
+			$input,
+			(string) $this->rule->getExpectedInputType($args, $this->fieldContext()),
+		);
+
+		self::assertSame(
+			$output,
+			(string) $this->rule->getReturnType($args, $this->fieldContext()),
+		);
+	}
+
+	public function providePhpNode(): Generator
+	{
+		yield [
+			new EmptyArgs(),
+			'string',
+			'string',
+		];
+	}
+
 }

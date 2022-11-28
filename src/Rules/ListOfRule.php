@@ -10,6 +10,8 @@ use Orisai\ObjectMapper\Context\TypeContext;
 use Orisai\ObjectMapper\Exception\InvalidData;
 use Orisai\ObjectMapper\Exception\ValueDoesNotMatch;
 use Orisai\ObjectMapper\Meta\Compile\RuleCompileMeta;
+use Orisai\ObjectMapper\PhpTypes\MultiValueNode;
+use Orisai\ObjectMapper\PhpTypes\Node;
 use Orisai\ObjectMapper\Types\ArrayType;
 use Orisai\ObjectMapper\Types\SimpleValueType;
 use Orisai\ObjectMapper\Types\Value;
@@ -144,9 +146,7 @@ final class ListOfRule extends MultiValueRule
 	 */
 	public function createType(Args $args, TypeContext $context): ArrayType
 	{
-		$itemMeta = $args->itemRuleMeta;
-		$itemRule = $context->getRule($itemMeta->getType());
-		$itemArgs = $itemMeta->getArgs();
+		[$itemRule, $itemArgs] = $this->getItemRuleArgs($args, $context);
 
 		$type = ArrayType::forList(
 			$this->createKeyType(),
@@ -170,6 +170,39 @@ final class ListOfRule extends MultiValueRule
 		$type->addKeyParameter(self::Continuous);
 
 		return $type;
+	}
+
+	/**
+	 * @param MultiValueArgs $args
+	 */
+	public function getExpectedInputType(Args $args, TypeContext $context): Node
+	{
+		[$itemRule, $itemArgs] = $this->getItemRuleArgs($args, $context);
+
+		return new MultiValueNode(
+			$this->getNodeName($args),
+			null,
+			$itemRule->getExpectedInputType($itemArgs, $context),
+		);
+	}
+
+	/**
+	 * @param MultiValueArgs $args
+	 */
+	public function getReturnType(Args $args, TypeContext $context): Node
+	{
+		[$itemRule, $itemArgs] = $this->getItemRuleArgs($args, $context);
+
+		return new MultiValueNode(
+			$this->getNodeName($args),
+			null,
+			$itemRule->getReturnType($itemArgs, $context),
+		);
+	}
+
+	private function getNodeName(MultiValueArgs $args): string
+	{
+		return ($args->minItems ?? 0) > 0 ? 'non-empty-list' : 'list';
 	}
 
 }

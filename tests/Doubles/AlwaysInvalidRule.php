@@ -7,6 +7,8 @@ use Orisai\ObjectMapper\Args\EmptyArgs;
 use Orisai\ObjectMapper\Context\FieldContext;
 use Orisai\ObjectMapper\Context\TypeContext;
 use Orisai\ObjectMapper\Exception\ValueDoesNotMatch;
+use Orisai\ObjectMapper\PhpTypes\Node;
+use Orisai\ObjectMapper\PhpTypes\SimpleNode;
 use Orisai\ObjectMapper\Rules\NoArgsRule;
 use Orisai\ObjectMapper\Rules\Rule;
 use Orisai\ObjectMapper\Types\MessageType;
@@ -37,6 +39,22 @@ final class AlwaysInvalidRule implements Rule
 	public function createType(Args $args, TypeContext $context): MessageType
 	{
 		return new MessageType('Always invalid');
+	}
+
+	/**
+	 * @param EmptyArgs $args
+	 */
+	public function getExpectedInputType(Args $args, TypeContext $context): Node
+	{
+		return new SimpleNode('TODO');
+	}
+
+	/**
+	 * @param EmptyArgs $args
+	 */
+	public function getReturnType(Args $args, TypeContext $context): Node
+	{
+		return new SimpleNode('TODO');
 	}
 
 }

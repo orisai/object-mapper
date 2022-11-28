@@ -11,6 +11,10 @@ use Orisai\ObjectMapper\Context\FieldContext;
 use Orisai\ObjectMapper\Context\RuleArgsContext;
 use Orisai\ObjectMapper\Context\TypeContext;
 use Orisai\ObjectMapper\Exception\ValueDoesNotMatch;
+use Orisai\ObjectMapper\PhpTypes\CompoundNode;
+use Orisai\ObjectMapper\PhpTypes\LiteralNode;
+use Orisai\ObjectMapper\PhpTypes\Node;
+use Orisai\ObjectMapper\PhpTypes\SimpleNode;
 use Orisai\ObjectMapper\Types\EnumType;
 use Orisai\ObjectMapper\Types\Value;
 use TypeError;
@@ -113,6 +117,46 @@ final class BackedEnumRule implements Rule
 		}
 
 		return $values;
+	}
+
+	/**
+	 * @param BackedEnumArgs $args
+	 */
+	public function getExpectedInputType(Args $args, TypeContext $context): Node
+	{
+		return CompoundNode::createOrType($this->createNodes($args));
+	}
+
+	/**
+	 * @param BackedEnumArgs $args
+	 */
+	public function getReturnType(Args $args, TypeContext $context): Node
+	{
+		$return = new SimpleNode($args->class);
+
+		if ($args->allowUnknown) {
+			return CompoundNode::createOrType([
+				$return,
+				new SimpleNode('null'),
+			]);
+		}
+
+		return $return;
+	}
+
+	/**
+	 * @return array<int, Node>
+	 */
+	private function createNodes(BackedEnumArgs $args): array
+	{
+		$class = $args->class;
+
+		$nodes = [];
+		foreach ($class::cases() as $case) {
+			$nodes[] = new LiteralNode($case->value);
+		}
+
+		return $nodes;
 	}
 
 }

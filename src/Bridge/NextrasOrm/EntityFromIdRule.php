@@ -13,6 +13,8 @@ use Orisai\ObjectMapper\Context\TypeContext;
 use Orisai\ObjectMapper\Exception\InvalidData;
 use Orisai\ObjectMapper\Exception\ValueDoesNotMatch;
 use Orisai\ObjectMapper\Meta\Compile\RuleCompileMeta;
+use Orisai\ObjectMapper\PhpTypes\Node;
+use Orisai\ObjectMapper\PhpTypes\SimpleNode;
 use Orisai\ObjectMapper\Rules\Rule;
 use Orisai\ObjectMapper\Types\SimpleValueType;
 use Orisai\ObjectMapper\Types\Value;
@@ -127,6 +129,26 @@ final class EntityFromIdRule implements Rule
 	public function createType(Args $args, TypeContext $context): SimpleValueType
 	{
 		return new SimpleValueType($args->name);
+	}
+
+	/**
+	 * @param EntityFromIdArgs $args
+	 */
+	public function getExpectedInputType(Args $args, TypeContext $context): Node
+	{
+		$ruleMeta = $args->idRule;
+		$rule = $context->getRule($ruleMeta->getType());
+		$ruleArgs = $ruleMeta->getArgs();
+
+		return $rule->getExpectedInputType($ruleArgs, $context);
+	}
+
+	/**
+	 * @param EntityFromIdArgs $args
+	 */
+	public function getReturnType(Args $args, TypeContext $context): Node
+	{
+		return new SimpleNode($args->entity);
 	}
 
 }

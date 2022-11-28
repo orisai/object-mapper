@@ -7,6 +7,9 @@ use Orisai\ObjectMapper\Args\EmptyArgs;
 use Orisai\ObjectMapper\Context\FieldContext;
 use Orisai\ObjectMapper\Context\TypeContext;
 use Orisai\ObjectMapper\Exception\ValueDoesNotMatch;
+use Orisai\ObjectMapper\PhpTypes\CompoundNode;
+use Orisai\ObjectMapper\PhpTypes\Node;
+use Orisai\ObjectMapper\PhpTypes\SimpleNode;
 use Orisai\ObjectMapper\Types\CompoundType;
 use Orisai\ObjectMapper\Types\SimpleValueType;
 use Orisai\ObjectMapper\Types\Value;
@@ -68,6 +71,27 @@ final class ScalarRule implements Rule
 			new SimpleValueType('string'),
 			new SimpleValueType('bool'),
 		];
+	}
+
+	/**
+	 * @param EmptyArgs $args
+	 */
+	public function getExpectedInputType(Args $args, TypeContext $context): Node
+	{
+		return CompoundNode::createOrType([
+			new SimpleNode('int'),
+			new SimpleNode('float'),
+			new SimpleNode('string'),
+			new SimpleNode('bool'),
+		]);
+	}
+
+	/**
+	 * @param EmptyArgs $args
+	 */
+	public function getReturnType(Args $args, TypeContext $context): Node
+	{
+		return $this->getExpectedInputType($args, $context);
 	}
 
 }

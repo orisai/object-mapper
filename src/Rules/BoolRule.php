@@ -8,6 +8,10 @@ use Orisai\ObjectMapper\Context\FieldContext;
 use Orisai\ObjectMapper\Context\RuleArgsContext;
 use Orisai\ObjectMapper\Context\TypeContext;
 use Orisai\ObjectMapper\Exception\ValueDoesNotMatch;
+use Orisai\ObjectMapper\PhpTypes\CompoundNode;
+use Orisai\ObjectMapper\PhpTypes\LiteralNode;
+use Orisai\ObjectMapper\PhpTypes\Node;
+use Orisai\ObjectMapper\PhpTypes\SimpleNode;
 use Orisai\ObjectMapper\Types\SimpleValueType;
 use Orisai\ObjectMapper\Types\Value;
 use function is_bool;
@@ -102,6 +106,33 @@ final class BoolRule implements Rule
 		}
 
 		return $value;
+	}
+
+	/**
+	 * @param BoolArgs $args
+	 */
+	public function getExpectedInputType(Args $args, TypeContext $context): Node
+	{
+		if (!$args->castBoolLike) {
+			return new SimpleNode('bool');
+		}
+
+		$nodes = [];
+		$nodes[] = new SimpleNode('bool');
+
+		foreach (self::CastMap as $input => $output) {
+			$nodes[] = new LiteralNode($input);
+		}
+
+		return CompoundNode::createOrType($nodes);
+	}
+
+	/**
+	 * @param BoolArgs $args
+	 */
+	public function getReturnType(Args $args, TypeContext $context): Node
+	{
+		return new SimpleNode('bool');
 	}
 
 }

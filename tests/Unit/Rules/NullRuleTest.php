@@ -134,4 +134,35 @@ final class NullRuleTest extends ProcessingTestCase
 		self::assertFalse($type->getParameter('acceptsEmptyString')->hasValue());
 	}
 
+	/**
+	 * @dataProvider providePhpNode
+	 */
+	public function testPhpNode(NullArgs $args, string $input, string $output): void
+	{
+		self::assertSame(
+			$input,
+			(string) $this->rule->getExpectedInputType($args, $this->fieldContext()),
+		);
+
+		self::assertSame(
+			$output,
+			(string) $this->rule->getReturnType($args, $this->fieldContext()),
+		);
+	}
+
+	public function providePhpNode(): Generator
+	{
+		yield [
+			new NullArgs(),
+			'null',
+			'null',
+		];
+
+		yield [
+			new NullArgs(true),
+			"(null|'')",
+			'null',
+		];
+	}
+
 }

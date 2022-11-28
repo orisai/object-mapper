@@ -8,6 +8,10 @@ use Orisai\ObjectMapper\Context\FieldContext;
 use Orisai\ObjectMapper\Context\RuleArgsContext;
 use Orisai\ObjectMapper\Context\TypeContext;
 use Orisai\ObjectMapper\Exception\ValueDoesNotMatch;
+use Orisai\ObjectMapper\PhpTypes\CompoundNode;
+use Orisai\ObjectMapper\PhpTypes\LiteralNode;
+use Orisai\ObjectMapper\PhpTypes\Node;
+use Orisai\ObjectMapper\PhpTypes\SimpleNode;
 use Orisai\ObjectMapper\Types\SimpleValueType;
 use Orisai\ObjectMapper\Types\Value;
 use function is_string;
@@ -40,7 +44,7 @@ final class NullRule implements Rule
 	}
 
 	/**
-	 * @param mixed $value
+	 * @param mixed    $value
 	 * @param NullArgs $args
 	 * @return null
 	 * @throws ValueDoesNotMatch
@@ -83,6 +87,29 @@ final class NullRule implements Rule
 		}
 
 		return $value;
+	}
+
+	/**
+	 * @param NullArgs $args
+	 */
+	public function getExpectedInputType(Args $args, TypeContext $context): Node
+	{
+		if ($args->castEmptyString) {
+			return CompoundNode::createOrType([
+				new SimpleNode('null'),
+				new LiteralNode(''),
+			]);
+		}
+
+		return new SimpleNode('null');
+	}
+
+	/**
+	 * @param NullArgs $args
+	 */
+	public function getReturnType(Args $args, TypeContext $context): Node
+	{
+		return new SimpleNode('null');
 	}
 
 }

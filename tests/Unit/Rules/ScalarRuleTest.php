@@ -126,4 +126,29 @@ final class ScalarRuleTest extends ProcessingTestCase
 		self::assertSame('bool', $subtypes[3]->getName());
 	}
 
+	/**
+	 * @dataProvider providePhpNode
+	 */
+	public function testPhpNode(EmptyArgs $args, string $input, string $output): void
+	{
+		self::assertSame(
+			$input,
+			(string) $this->rule->getExpectedInputType($args, $this->fieldContext()),
+		);
+
+		self::assertSame(
+			$output,
+			(string) $this->rule->getReturnType($args, $this->fieldContext()),
+		);
+	}
+
+	public function providePhpNode(): Generator
+	{
+		yield [
+			new EmptyArgs(),
+			'(int|float|string|bool)',
+			'(int|float|string|bool)',
+		];
+	}
+
 }

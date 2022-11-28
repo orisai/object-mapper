@@ -235,4 +235,71 @@ final class FloatRuleTest extends ProcessingTestCase
 		self::assertFalse($type->getParameter('acceptsNumericString')->hasValue());
 	}
 
+	/**
+	 * @dataProvider providePhpNode
+	 */
+	public function testPhpNode(FloatArgs $args, string $input, string $output): void
+	{
+		self::assertSame(
+			$input,
+			(string) $this->rule->getExpectedInputType($args, $this->fieldContext()),
+		);
+
+		self::assertSame(
+			$output,
+			(string) $this->rule->getReturnType($args, $this->fieldContext()),
+		);
+	}
+
+	public function providePhpNode(): Generator
+	{
+		yield [
+			new FloatArgs(),
+			'float',
+			'float',
+		];
+
+		yield [
+			new FloatArgs(null, 100),
+			'float<min, 100>',
+			'float<min, 100>',
+		];
+
+		yield [
+			new FloatArgs(100, null),
+			'float<100, max>',
+			'float<100, max>',
+		];
+
+		yield [
+			new FloatArgs(-200.5, -100.7),
+			'float<-200.5, -100.7>',
+			'float<-200.5, -100.7>',
+		];
+
+		yield [
+			new FloatArgs(100, null, true),
+			'float<100, max>',
+			'float<100, max>',
+		];
+
+		yield [
+			new FloatArgs(-1, null, true),
+			'float<0, max>',
+			'float<0, max>',
+		];
+
+		yield [
+			new FloatArgs(null, null, true),
+			'float<0, max>',
+			'float<0, max>',
+		];
+
+		yield [
+			new FloatArgs(null, null, false, true),
+			'(float|numeric-string)',
+			'float',
+		];
+	}
+
 }

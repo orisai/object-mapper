@@ -213,4 +213,71 @@ final class IntRuleTest extends ProcessingTestCase
 		self::assertFalse($type->getParameter('acceptsNumericString')->hasValue());
 	}
 
+	/**
+	 * @dataProvider providePhpNode
+	 */
+	public function testPhpNode(IntArgs $args, string $input, string $output): void
+	{
+		self::assertSame(
+			$input,
+			(string) $this->rule->getExpectedInputType($args, $this->fieldContext()),
+		);
+
+		self::assertSame(
+			$output,
+			(string) $this->rule->getReturnType($args, $this->fieldContext()),
+		);
+	}
+
+	public function providePhpNode(): Generator
+	{
+		yield [
+			new IntArgs(),
+			'int',
+			'int',
+		];
+
+		yield [
+			new IntArgs(null, 100),
+			'int<min, 100>',
+			'int<min, 100>',
+		];
+
+		yield [
+			new IntArgs(100, null),
+			'int<100, max>',
+			'int<100, max>',
+		];
+
+		yield [
+			new IntArgs(-200, -100),
+			'int<-200, -100>',
+			'int<-200, -100>',
+		];
+
+		yield [
+			new IntArgs(100, null, true),
+			'int<100, max>',
+			'int<100, max>',
+		];
+
+		yield [
+			new IntArgs(-1, null, true),
+			'int<0, max>',
+			'int<0, max>',
+		];
+
+		yield [
+			new IntArgs(null, null, true),
+			'int<0, max>',
+			'int<0, max>',
+		];
+
+		yield [
+			new IntArgs(null, null, false, true),
+			'(int|numeric-string)',
+			'int',
+		];
+	}
+
 }

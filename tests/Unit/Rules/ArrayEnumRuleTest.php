@@ -111,4 +111,41 @@ final class ArrayEnumRuleTest extends ProcessingTestCase
 		self::assertSame(['foo', 'bar'], $type->getCases());
 	}
 
+	/**
+	 * @dataProvider providePhpNode
+	 */
+	public function testPhpNode(ArrayEnumArgs $args, string $input, string $output): void
+	{
+		self::assertSame(
+			$input,
+			(string) $this->rule->getExpectedInputType($args, $this->fieldContext()),
+		);
+
+		self::assertSame(
+			$output,
+			(string) $this->rule->getReturnType($args, $this->fieldContext()),
+		);
+	}
+
+	public function providePhpNode(): Generator
+	{
+		yield [
+			new ArrayEnumArgs(['foo', 'bar']),
+			"('foo'|'bar')",
+			"('foo'|'bar')",
+		];
+
+		yield [
+			new ArrayEnumArgs(['foo' => 123, 'bar' => 456], true),
+			"('foo'|'bar')",
+			"('foo'|'bar')",
+		];
+
+		yield [
+			new ArrayEnumArgs(['foo' => 123, 'bar' => 456]),
+			'(123|456)',
+			'(123|456)',
+		];
+	}
+
 }

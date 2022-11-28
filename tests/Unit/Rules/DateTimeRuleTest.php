@@ -198,4 +198,47 @@ final class DateTimeRuleTest extends ProcessingTestCase
 		self::assertSame(DateTimeInterface::COOKIE, $type->getParameter(DateTimeRule::Format)->getValue());
 	}
 
+	/**
+	 * @dataProvider providePhpNode
+	 */
+	public function testPhpNode(DateTimeArgs $args, string $input, string $output): void
+	{
+		self::assertSame(
+			$input,
+			(string) $this->rule->getExpectedInputType($args, $this->fieldContext()),
+		);
+
+		self::assertSame(
+			$output,
+			(string) $this->rule->getReturnType($args, $this->fieldContext()),
+		);
+	}
+
+	public function providePhpNode(): Generator
+	{
+		yield [
+			new DateTimeArgs(),
+			'string',
+			DateTimeImmutable::class,
+		];
+
+		yield [
+			new DateTimeArgs(DateTimeInterface::ATOM, DateTime::class),
+			'string',
+			DateTime::class,
+		];
+
+		yield [
+			new DateTimeArgs(DateTimeRule::FormatTimestamp),
+			'int',
+			DateTimeImmutable::class,
+		];
+
+		yield [
+			new DateTimeArgs(DateTimeRule::FormatAny),
+			'(int|string)',
+			DateTimeImmutable::class,
+		];
+	}
+
 }

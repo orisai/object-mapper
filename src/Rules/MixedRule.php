@@ -6,6 +6,8 @@ use Orisai\ObjectMapper\Args\Args;
 use Orisai\ObjectMapper\Args\EmptyArgs;
 use Orisai\ObjectMapper\Context\FieldContext;
 use Orisai\ObjectMapper\Context\TypeContext;
+use Orisai\ObjectMapper\PhpTypes\Node;
+use Orisai\ObjectMapper\PhpTypes\SimpleNode;
 use Orisai\ObjectMapper\Types\SimpleValueType;
 
 /**
@@ -32,6 +34,22 @@ final class MixedRule implements Rule
 	public function createType(Args $args, TypeContext $context): SimpleValueType
 	{
 		return new SimpleValueType('mixed');
+	}
+
+	/**
+	 * @param EmptyArgs $args
+	 */
+	public function getExpectedInputType(Args $args, TypeContext $context): Node
+	{
+		return new SimpleNode('mixed');
+	}
+
+	/**
+	 * @param EmptyArgs $args
+	 */
+	public function getReturnType(Args $args, TypeContext $context): Node
+	{
+		return $this->getExpectedInputType($args, $context);
 	}
 
 }

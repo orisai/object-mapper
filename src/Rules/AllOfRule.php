@@ -4,8 +4,11 @@ namespace Orisai\ObjectMapper\Rules;
 
 use Orisai\ObjectMapper\Args\Args;
 use Orisai\ObjectMapper\Context\FieldContext;
+use Orisai\ObjectMapper\Context\TypeContext;
 use Orisai\ObjectMapper\Exception\InvalidData;
 use Orisai\ObjectMapper\Exception\ValueDoesNotMatch;
+use Orisai\ObjectMapper\PhpTypes\CompoundNode;
+use Orisai\ObjectMapper\PhpTypes\Node;
 use Orisai\ObjectMapper\Types\CompoundType;
 use Orisai\ObjectMapper\Types\Value;
 
@@ -57,6 +60,26 @@ final class AllOfRule extends CompoundRule
 	protected function createCompoundType(): CompoundType
 	{
 		return CompoundType::createAndType();
+	}
+
+	/**
+	 * @param CompoundRuleArgs $args
+	 */
+	public function getExpectedInputType(Args $args, TypeContext $context): Node
+	{
+		return CompoundNode::createAndType(
+			$this->getExpectedInputTypeNodes($args, $context),
+		);
+	}
+
+	/**
+	 * @param CompoundRuleArgs $args
+	 */
+	public function getReturnType(Args $args, TypeContext $context): Node
+	{
+		return CompoundNode::createAndType(
+			$this->getReturnTypeNodes($args, $context),
+		);
 	}
 
 }
