@@ -29,6 +29,7 @@ use Tests\Orisai\ObjectMapper\Doubles\FieldNamesVO;
 use Tests\Orisai\ObjectMapper\Doubles\InitializingVO;
 use Tests\Orisai\ObjectMapper\Doubles\NoDefaultsVO;
 use Tests\Orisai\ObjectMapper\Doubles\PropertiesInitVO;
+use Tests\Orisai\ObjectMapper\Doubles\PropertiesVisibilityVO;
 use Tests\Orisai\ObjectMapper\Doubles\PropertyCallbacksFailureVO;
 use Tests\Orisai\ObjectMapper\Doubles\SkippedPropertiesVO;
 use Tests\Orisai\ObjectMapper\Doubles\StructuresVO;
@@ -313,6 +314,22 @@ stringg: Field is unknown, did you mean `string`?',
 
 		self::assertInstanceOf(DefaultsVO::class, $vo);
 		self::assertSame('custom', $vo->string);
+	}
+
+	public function testPropertiesVisibility(): void
+	{
+		$data = [
+			'public' => 'public',
+			'protected' => 'protected',
+			'private' => 'private',
+		];
+
+		$vo = $this->processor->process($data, PropertiesVisibilityVO::class);
+
+		self::assertInstanceOf(PropertiesVisibilityVO::class, $vo);
+		self::assertSame('public', $vo->public);
+		self::assertSame('protected', $vo->getProtected());
+		self::assertSame('private', $vo->getPrivate());
 	}
 
 	public function testNoInitialization(): void

@@ -35,7 +35,8 @@ of them to type-safe objects.
 - [Optional fields and default values](#optional-fields-and-default-values)
 - [Allow unknown fields](#allow-unknown-fields)
 	- [Ambiguous definitions with unknown fields allowed](#ambiguous-definitions-with-unknown-fields-allowed)
-- [Mapping field names to properties](#mapping-field-names-to-properties)
+- [Mapped properties](#mapped-properties)
+	- [Mapping field names to properties](#mapping-field-names-to-properties)
 - [Processing modes](#processing-modes)
 	- [All fields are required](#all-fields-are-required)
 	- [No fields are required](#no-fields-are-required)
@@ -1215,7 +1216,16 @@ final class IdOnlyInput extends MappedObject
 }
 ```
 
-## Mapping field names to properties
+## Mapped properties
+
+A property, to be handled by processor during mapping from data fields to properties, must:
+
+- Define a single [rule](#rules)
+- Be non-static
+- Has public or protected visibility
+	- Or has final visibility and be defined in a final class
+
+### Mapping field names to properties
 
 Keys from input data (fields) are mapped to object properties of the same name, like shown in following example:
 

@@ -12,7 +12,7 @@ parameters:
 		  count: 3
 		- message: '#^Variable property access on \$this\(Orisai\\ObjectMapper\\MappedObject\).$#'
 		  path: ../src/MappedObject.php
-		  count: 1
+		  count: 2
 		# Callback call
 		- message: '#^Variable static method call on class-string\<Orisai\\ObjectMapper\\MappedObject\>\.$#'
 		  path: ../src/Callbacks/BaseCallback.php

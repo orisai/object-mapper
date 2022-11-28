@@ -96,13 +96,24 @@ abstract class MappedObject
 			return $prop;
 		}
 
+		$prop = false;
 		try {
 			$ref = new ReflectionProperty($class, $name);
 		} catch (ReflectionException $e) {
-			return $prop = false;
+			return $prop;
 		}
 
-		return $prop = ($ref->isPublic() && !$ref->isStatic());
+		if (
+			!$ref->isStatic()
+			&& (
+				!$ref->isPrivate()
+				|| $ref->getDeclaringClass()->isFinal()
+			)
+		) {
+			$prop = true;
+		}
+
+		return $prop;
 	}
 
 	/**
@@ -121,7 +132,8 @@ abstract class MappedObject
 		$class = static::class;
 
 		if (self::hasProperty($class, $name)) {
-			$this->$name = $value;
+			(fn () => $this->$name = $value)
+				->bindTo($this, $this)();
 		} else {
 			ObjectHelpers::strictSet($class, $name);
 		}
@@ -130,6 +142,13 @@ abstract class MappedObject
 	final public function __isset(string $name): bool
 	{
 		return false;
+	}
+
+	public function __unset(string $name): void
+	{
+		(function () use ($name): void {
+			unset($this->$name);
+		})->bindTo($this, $this)();
 	}
 
 	/**

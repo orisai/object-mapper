@@ -105,10 +105,20 @@ final class MetaResolver
 		DefaultValueMeta $defaultValue
 	): PropertyRuntimeMeta
 	{
-		if (!$property->isPublic() || $property->isStatic()) {
+		if ($property->isStatic()) {
 			throw InvalidArgument::create()
 				->withMessage(sprintf(
-					'Property %s::$%s is not valid mapped property, \'%s\' supports only non-static public properties to be mapped.',
+					'Property %s::$%s is not valid mapped property, \'%s\' supports only non-static properties to be mapped.',
+					$property->getDeclaringClass()->getName(),
+					$property->getName(),
+					MappedObject::class,
+				));
+		}
+
+		if ($property->isPrivate() && !$property->getDeclaringClass()->isFinal()) {
+			throw InvalidArgument::create()
+				->withMessage(sprintf(
+					'Property %s::$%s is not valid mapped property, \'%s\' supports private properties to be mapped only in final classes.',
 					$property->getDeclaringClass()->getName(),
 					$property->getName(),
 					MappedObject::class,
