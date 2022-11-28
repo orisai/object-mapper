@@ -66,14 +66,15 @@ use Orisai\ObjectMapper\Rules\DefaultRuleManager;
 $sourceManager = new DefaultMetaSourceManager();
 $sourceManager->addSource(new AttributesMetaSource());
 $ruleManager = new DefaultRuleManager();
+$objectCreator = new DefaultObjectCreator();
 $cache = new ArrayMetaCache();
-$resolverFactory = new DefaultMetaResolverFactory($ruleManager);
+$resolverFactory = new DefaultMetaResolverFactory($ruleManager, $objectCreator);
 $metaLoader = new MetaLoader($cache, $sourceManager, $resolverFactory);
 
 $processor = new DefaultProcessor(
 	$metaLoader,
 	$ruleManager,
-	new DefaultObjectCreator(),
+	$objectCreator,
 );
 ```
 

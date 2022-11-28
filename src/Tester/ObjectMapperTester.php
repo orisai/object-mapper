@@ -21,8 +21,9 @@ final class ObjectMapperTester
 		$sourceManager = new DefaultMetaSourceManager();
 		$sourceManager->addSource(new AttributesMetaSource());
 
+		$objectCreator = new DefaultObjectCreator();
 		$cache = new ArrayMetaCache();
-		$resolverFactory = new DefaultMetaResolverFactory($ruleManager);
+		$resolverFactory = new DefaultMetaResolverFactory($ruleManager, $objectCreator);
 		$metaLoader = new MetaLoader($cache, $sourceManager, $resolverFactory);
 		$metaResolver = $resolverFactory->create($metaLoader);
 

@@ -2,6 +2,7 @@
 
 namespace Orisai\ObjectMapper\Meta;
 
+use Orisai\ObjectMapper\Processing\ObjectCreator;
 use Orisai\ObjectMapper\Rules\RuleManager;
 
 final class DefaultMetaResolverFactory implements MetaResolverFactory
@@ -9,14 +10,17 @@ final class DefaultMetaResolverFactory implements MetaResolverFactory
 
 	private RuleManager $ruleManager;
 
-	public function __construct(RuleManager $ruleManager)
+	private ObjectCreator $objectCreator;
+
+	public function __construct(RuleManager $ruleManager, ObjectCreator $objectCreator)
 	{
 		$this->ruleManager = $ruleManager;
+		$this->objectCreator = $objectCreator;
 	}
 
 	public function create(MetaLoader $loader): MetaResolver
 	{
-		return new MetaResolver($loader, $this->ruleManager);
+		return new MetaResolver($loader, $this->ruleManager, $this->objectCreator);
 	}
 
 }

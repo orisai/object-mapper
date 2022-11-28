@@ -23,6 +23,7 @@ use Orisai\ObjectMapper\Meta\Runtime\RuleRuntimeMeta;
 use Orisai\ObjectMapper\Meta\Runtime\RuntimeMeta;
 use Orisai\ObjectMapper\Modifiers\FieldNameModifier;
 use Orisai\ObjectMapper\Modifiers\Modifier;
+use Orisai\ObjectMapper\Processing\ObjectCreator;
 use Orisai\ObjectMapper\Rules\MixedRule;
 use Orisai\ObjectMapper\Rules\NullRule;
 use Orisai\ObjectMapper\Rules\RuleManager;
@@ -45,10 +46,13 @@ final class MetaResolver
 
 	private RuleManager $ruleManager;
 
-	public function __construct(MetaLoader $loader, RuleManager $ruleManager)
+	private ObjectCreator $objectCreator;
+
+	public function __construct(MetaLoader $loader, RuleManager $ruleManager, ObjectCreator $objectCreator)
 	{
 		$this->loader = $loader;
 		$this->ruleManager = $ruleManager;
+		$this->objectCreator = $objectCreator;
 	}
 
 	/**
@@ -71,11 +75,21 @@ final class MetaResolver
 		$context = ResolverArgsContext::forClass($class, $this);
 		$classMeta = $meta->getClass();
 
+		$this->checkObjectCanBeInstantiated($class);
+
 		return new ClassRuntimeMeta(
 			$this->resolveCallbacksMeta($classMeta, $context),
 			$this->resolveDocsMeta($classMeta, $context),
 			$this->resolveModifiersMeta($classMeta, $context),
 		);
+	}
+
+	/**
+	 * @param ReflectionClass<MappedObject> $class
+	 */
+	private function checkObjectCanBeInstantiated(ReflectionClass $class): void
+	{
+		$this->objectCreator->createInstance($class->getName());
 	}
 
 	/**
