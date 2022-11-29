@@ -23,6 +23,7 @@ use Tests\Orisai\ObjectMapper\Doubles\BeforeClassCallbackValueDoesNotMatchVO;
 use Tests\Orisai\ObjectMapper\Doubles\CallbacksVisibilityVO;
 use Tests\Orisai\ObjectMapper\Doubles\CallbacksVO;
 use Tests\Orisai\ObjectMapper\Doubles\CallbacksVoContext;
+use Tests\Orisai\ObjectMapper\Doubles\ConstructorUsingVO;
 use Tests\Orisai\ObjectMapper\Doubles\DefaultsVO;
 use Tests\Orisai\ObjectMapper\Doubles\EmptyVO;
 use Tests\Orisai\ObjectMapper\Doubles\FieldNamesVO;
@@ -405,6 +406,15 @@ stringg: Field is unknown, did you mean `string`?',
 		self::assertNull($vo->stdClassOrNull);
 
 		self::assertSame($data, $vo->getRawValues());
+	}
+
+	public function testDontUseConstructor(): void
+	{
+		$vo = new ConstructorUsingVO('string');
+		self::assertSame('string', $vo->string);
+
+		$vo = $this->processor->process(['string' => 'string'], ConstructorUsingVO::class);
+		self::assertSame('string', $vo->string);
 	}
 
 	public function testCallbacks(): void

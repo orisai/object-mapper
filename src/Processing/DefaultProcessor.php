@@ -70,10 +70,11 @@ final class DefaultProcessor implements Processor
 	{
 		$options ??= new Options();
 		$type = $this->createMappedObjectType($class);
-		$holder = $this->createHolder($class);
+		$meta = $this->metaLoader->load($class);
+		$holder = $this->createHolder($class, $meta->getClass());
 
 		$mappedObjectContext = $this->createMappedObjectContext($options, $type, true);
-		$callContext = $this->createProcessorRunContext($class, $holder);
+		$callContext = $this->createProcessorRunContext($class, $meta, $holder);
 
 		$processedData = $this->processData($data, $mappedObjectContext, $callContext);
 
@@ -93,10 +94,11 @@ final class DefaultProcessor implements Processor
 	{
 		$options ??= new Options();
 		$type = $this->createMappedObjectType($class);
-		$holder = $this->createHolder($class);
+		$meta = $this->metaLoader->load($class);
+		$holder = $this->createHolder($class, $meta->getClass());
 
 		$mappedObjectContext = $this->createMappedObjectContext($options, $type, false);
-		$callContext = $this->createProcessorRunContext($class, $holder);
+		$callContext = $this->createProcessorRunContext($class, $meta, $holder);
 
 		return $this->processData($data, $mappedObjectContext, $callContext);
 	}
@@ -187,10 +189,12 @@ final class DefaultProcessor implements Processor
 	 * @param ObjectHolder<RC> $holder
 	 * @return ProcessorCallContext<RC>
 	 */
-	private function createProcessorRunContext(string $class, ObjectHolder $holder): ProcessorCallContext
+	private function createProcessorRunContext(
+		string $class,
+		RuntimeMeta $meta,
+		ObjectHolder $holder
+	): ProcessorCallContext
 	{
-		$meta = $this->metaLoader->load($class);
-
 		return new ProcessorCallContext($class, $holder, $meta);
 	}
 
@@ -669,9 +673,9 @@ final class DefaultProcessor implements Processor
 	 * @param H|null          $object
 	 * @return ObjectHolder<H>
 	 */
-	private function createHolder(string $class, ?MappedObject $object = null): ObjectHolder
+	private function createHolder(string $class, ClassRuntimeMeta $meta, ?MappedObject $object = null): ObjectHolder
 	{
-		return new ObjectHolder($this->creator, $class, $object);
+		return new ObjectHolder($this->creator, $meta, $class, $object);
 	}
 
 	// ////////////// //
@@ -707,8 +711,9 @@ final class DefaultProcessor implements Processor
 		$mappedObjectContext = $this->createMappedObjectContext($options, $type, true);
 		$skippedProperties = $skippedPropertiesContext->getSkippedProperties();
 
-		$holder = $this->createHolder($class, $object);
-		$callContext = $this->createProcessorRunContext($class, $holder);
+		$meta = $this->metaLoader->load($class);
+		$holder = $this->createHolder($class, $meta->getClass(), $object);
+		$callContext = $this->createProcessorRunContext($class, $meta, $holder);
 		$propertiesMeta = $this->metaLoader->load($class)->getProperties();
 
 		foreach ($properties as $propertyName) {

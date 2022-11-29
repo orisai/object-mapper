@@ -5,6 +5,7 @@ namespace Orisai\ObjectMapper\Bridge\NetteDI;
 use Nette\DI\Container;
 use Orisai\ObjectMapper\MappedObject;
 use Orisai\ObjectMapper\Processing\ObjectCreator;
+use ReflectionClass;
 use function assert;
 
 final class LazyObjectCreator implements ObjectCreator
@@ -17,8 +18,12 @@ final class LazyObjectCreator implements ObjectCreator
 		$this->container = $container;
 	}
 
-	public function createInstance(string $class): MappedObject
+	public function createInstance(string $class, bool $useConstructor): MappedObject
 	{
+		if (!$useConstructor) {
+			return (new ReflectionClass($class))->newInstanceWithoutConstructor();
+		}
+
 		$object = $this->container->createInstance($class);
 		assert($object instanceof $class);
 

@@ -21,6 +21,7 @@ use Orisai\ObjectMapper\Meta\Runtime\ModifierRuntimeMeta;
 use Orisai\ObjectMapper\Meta\Runtime\PropertyRuntimeMeta;
 use Orisai\ObjectMapper\Meta\Runtime\RuleRuntimeMeta;
 use Orisai\ObjectMapper\Meta\Runtime\RuntimeMeta;
+use Orisai\ObjectMapper\Modifiers\CreateWithoutConstructorModifier;
 use Orisai\ObjectMapper\Modifiers\FieldNameModifier;
 use Orisai\ObjectMapper\Modifiers\Modifier;
 use Orisai\ObjectMapper\Processing\ObjectCreator;
@@ -75,21 +76,26 @@ final class MetaResolver
 		$context = ResolverArgsContext::forClass($class, $this);
 		$classMeta = $meta->getClass();
 
-		$this->checkObjectCanBeInstantiated($class);
-
-		return new ClassRuntimeMeta(
+		$runtimeMeta = new ClassRuntimeMeta(
 			$this->resolveCallbacksMeta($classMeta, $context),
 			$this->resolveDocsMeta($classMeta, $context),
 			$this->resolveModifiersMeta($classMeta, $context),
 		);
+
+		$this->checkObjectCanBeInstantiated($class, $runtimeMeta);
+
+		return $runtimeMeta;
 	}
 
 	/**
 	 * @param ReflectionClass<MappedObject> $class
 	 */
-	private function checkObjectCanBeInstantiated(ReflectionClass $class): void
+	private function checkObjectCanBeInstantiated(ReflectionClass $class, ClassRuntimeMeta $meta): void
 	{
-		$this->objectCreator->createInstance($class->getName());
+		$this->objectCreator->createInstance(
+			$class->getName(),
+			$meta->getModifier(CreateWithoutConstructorModifier::class) === null,
+		);
 	}
 
 	/**

@@ -48,6 +48,7 @@ of them to type-safe objects.
 	- [Context](#callback-context)
 - [Annotations and attributes](#annotations-and-attributes)
 - [Object creator](#object-creator)
+- [Create without constructor](#create-without-constructor)
 - [Metadata validation and preloading](#metadata-validation-and-preloading)
 
 ## Setup
@@ -1711,6 +1712,41 @@ we have to use different one for that use-case:
 - `Orisai\ObjectMapper\Bridge\NetteDI\LazyObjectCreator` - injects autowired dependencies
   from [Nette DIC](https://github.com/nette/di)
 - Implement `Orisai\ObjectMapper\Processing\ObjectCreator` ourself
+
+## Create without constructor
+
+Processor uses [object creator](#object-creator) to inject dependencies for [callbacks](#callbacks) via mapped object
+constructor. This makes object creation viable only via `$processor->process()`. To create a mapped object manually,
+without object mapper, use `CreateWithoutConstructor` modifier.
+
+```php
+use Orisai\ObjectMapper\Attributes\Expect\StringValue;
+use Orisai\ObjectMapper\Attributes\Modifiers\CreateWithoutConstructor;
+use Orisai\ObjectMapper\MappedObject;
+
+/**
+ * @CreateWithoutConstructor()
+ */
+final class ConstructorUsingVO extends MappedObject
+{
+
+	/** @StringValue() */
+	public string $string;
+
+	public function __construct(string $string)
+	{
+		$this->string = $string;
+	}
+
+}
+```
+
+With this modifier, both manual and object mapper approach work
+
+```php
+$vo = new ConstructorUsingVO('string');
+$vo = $processor->process(['string' => 'string'], ConstructorUsingVO::class); // ConstructorUsingVO
+```
 
 ## Metadata validation and preloading
 

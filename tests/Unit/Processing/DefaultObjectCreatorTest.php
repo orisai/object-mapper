@@ -6,6 +6,7 @@ use Orisai\Exceptions\Logic\InvalidState;
 use Orisai\ObjectMapper\Processing\DefaultObjectCreator;
 use Orisai\ObjectMapper\Processing\ObjectCreator;
 use PHPUnit\Framework\TestCase;
+use Tests\Orisai\ObjectMapper\Doubles\ConstructorUsingVO;
 use Tests\Orisai\ObjectMapper\Doubles\DependentVO;
 use Tests\Orisai\ObjectMapper\Doubles\EmptyVO;
 use function sprintf;
@@ -17,7 +18,7 @@ final class DefaultObjectCreatorTest extends TestCase
 	{
 		$creator = new DefaultObjectCreator();
 
-		$instance = $creator->createInstance(EmptyVO::class);
+		$instance = $creator->createInstance(EmptyVO::class, true);
 		self::assertInstanceOf(EmptyVO::class, $instance);
 	}
 
@@ -32,7 +33,18 @@ final class DefaultObjectCreatorTest extends TestCase
 
 		$creator = new DefaultObjectCreator();
 
-		$creator->createInstance(DependentVO::class);
+		$creator->createInstance(DependentVO::class, true);
+	}
+
+	public function testDontUseConstructor(): void
+	{
+		$vo = new ConstructorUsingVO('string');
+		self::assertTrue($vo->isInitialized('string'));
+		self::assertSame('string', $vo->string);
+
+		$creator = new DefaultObjectCreator();
+		$vo = $creator->createInstance(ConstructorUsingVO::class, false);
+		self::assertFalse($vo->isInitialized('string'));
 	}
 
 }

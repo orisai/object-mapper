@@ -12,6 +12,6 @@ interface ObjectCreator
 	 * @param class-string<T> $class
 	 * @return T
 	 */
-	public function createInstance(string $class): MappedObject;
+	public function createInstance(string $class, bool $useConstructor): MappedObject;
 
 }

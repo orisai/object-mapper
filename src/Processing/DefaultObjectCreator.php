@@ -9,10 +9,15 @@ use ReflectionClass;
 final class DefaultObjectCreator implements ObjectCreator
 {
 
-	public function createInstance(string $class): MappedObject
+	public function createInstance(string $class, bool $useConstructor): MappedObject
 	{
 		$reflection = new ReflectionClass($class);
 
+		if (!$useConstructor) {
+			return $reflection->newInstanceWithoutConstructor();
+		}
+
+		// TODO - tohle by mohlo být jen při načítání metadat, není třeba pro runtime
 		$ctor = $reflection->getConstructor();
 		if ($ctor !== null && $ctor->getNumberOfRequiredParameters() !== 0) {
 			$selfClass = self::class;
