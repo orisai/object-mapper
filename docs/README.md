@@ -48,6 +48,7 @@ of them to type-safe objects.
 	- [Context](#callback-context)
 - [Annotations and attributes](#annotations-and-attributes)
 - [Object creator](#object-creator)
+- [Metadata validation and preloading](#metadata-validation-and-preloading)
 
 ## Setup
 
@@ -1710,3 +1711,12 @@ we have to use different one for that use-case:
 - `Orisai\ObjectMapper\Bridge\NetteDI\LazyObjectCreator` - injects autowired dependencies
   from [Nette DIC](https://github.com/nette/di)
 - Implement `Orisai\ObjectMapper\Processing\ObjectCreator` ourself
+
+## Metadata validation and preloading
+
+Object metadata (annotations/attributes) are validated and saved when `$processor->process()` is first called. To check
+metadata validity in advance, without mapping to an actual object, use `MetaLoader`
+
+```php
+$metaLoader->load(ExampleMappedObject::class);
+```
