@@ -734,20 +734,25 @@ final class DefaultProcessor implements Processor
 			$fieldContext = $this->createFieldContext($mappedObjectContext, $propertyMeta, $fieldName, $propertyName);
 
 			// Process field value with property rules
-			try {
-				$processed = $skippedPropertyContext->isDefault()
-					? $skippedPropertyContext->getValue()
-					: $this->processProperty(
+			if ($skippedPropertyContext->isDefault()) {
+				$processed = $skippedPropertyContext->getValue();
+			} else {
+				try {
+					$processed = $this->processProperty(
 						$skippedPropertyContext->getValue(),
 						$fieldContext,
 						$callContext,
 						$propertyMeta,
 					);
-				$object->$propertyName = $processed;
-				$skippedPropertiesContext->removeSkippedProperty($propertyName);
-			} catch (ValueDoesNotMatch | InvalidData $exception) {
-				$type->overwriteInvalidField($fieldName, $exception);
+				} catch (ValueDoesNotMatch | InvalidData $exception) {
+					$type->overwriteInvalidField($fieldName, $exception);
+
+					continue;
+				}
 			}
+
+			$object->$propertyName = $processed;
+			$skippedPropertiesContext->removeSkippedProperty($propertyName);
 		}
 
 		// If any of fields is invalid, throw error
