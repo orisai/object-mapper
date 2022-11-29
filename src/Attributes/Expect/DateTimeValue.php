@@ -26,7 +26,7 @@ final class DateTimeValue implements RuleAttribute
 	/**
 	 * @param class-string<DateTimeInterface> $type
 	 */
-	public function __construct(string $type = DateTimeImmutable::class, string $format = DateTimeInterface::ATOM)
+	public function __construct(string $type = DateTimeImmutable::class, string $format = DateTimeRule::FormatIsoCompat)
 	{
 		$this->type = $type;
 		$this->format = $format;

@@ -33,7 +33,7 @@ final class DateTimeRuleTest extends ProcessingTestCase
 	{
 		$processed = $this->rule->processValue(
 			$value,
-			new DateTimeArgs($format),
+			new DateTimeArgs(DateTimeImmutable::class, $format),
 			$this->fieldContext(),
 		);
 
@@ -41,7 +41,7 @@ final class DateTimeRuleTest extends ProcessingTestCase
 
 		$instantiated = $this->rule->processValue(
 			$value,
-			new DateTimeArgs($format),
+			new DateTimeArgs(DateTimeImmutable::class, $format),
 			$this->fieldContext(null, null, true),
 		);
 
@@ -49,7 +49,7 @@ final class DateTimeRuleTest extends ProcessingTestCase
 
 		$instantiatedType = $this->rule->processValue(
 			$value,
-			new DateTimeArgs($format, DateTime::class),
+			new DateTimeArgs(DateTime::class, $format),
 			$this->fieldContext(null, null, true),
 		);
 
@@ -66,6 +66,8 @@ final class DateTimeRuleTest extends ProcessingTestCase
 		yield ['1879-03-14', DateTimeRule::FormatAny];
 		yield ['2013-04-12T16:40:00-04:00', DateTimeRule::FormatAny];
 		yield ['2013-04-12T16:40:00-04:00', DateTimeInterface::ATOM];
+		yield ['2013-04-12T16:40:00-04:00', DateTimeRule::FormatIsoCompat];
+		yield ['2013-04-12T16:40:00.000Z', DateTimeRule::FormatIsoCompat];
 		yield ['1389312000', DateTimeRule::FormatTimestamp];
 		yield [1_389_312_000, DateTimeRule::FormatTimestamp];
 		yield ['1389312000', DateTimeRule::FormatAny];
@@ -90,7 +92,7 @@ final class DateTimeRuleTest extends ProcessingTestCase
 		try {
 			$this->rule->processValue(
 				$value,
-				new DateTimeArgs($format),
+				new DateTimeArgs(DateTimeImmutable::class, $format),
 				$this->fieldContext(),
 			);
 		} catch (ValueDoesNotMatch $exception) {
@@ -163,12 +165,12 @@ final class DateTimeRuleTest extends ProcessingTestCase
 		self::assertSame('datetime', $type->getName());
 		self::assertCount(1, $type->getParameters());
 		self::assertTrue($type->hasParameter(DateTimeRule::Format));
-		self::assertSame(DateTimeInterface::ATOM, $type->getParameter(DateTimeRule::Format)->getValue());
+		self::assertSame('Y-m-d\TH:i:sP | Y-m-d\TH:i:s.v\Z', $type->getParameter(DateTimeRule::Format)->getValue());
 	}
 
 	public function testTypeWithTimestamp(): void
 	{
-		$args = new DateTimeArgs(DateTimeRule::FormatTimestamp);
+		$args = new DateTimeArgs(DateTimeImmutable::class, DateTimeRule::FormatTimestamp);
 
 		$type = $this->rule->createType($args, $this->typeContext);
 
@@ -183,7 +185,7 @@ final class DateTimeRuleTest extends ProcessingTestCase
 
 	public function testTypeWithArgs(): void
 	{
-		$args = new DateTimeArgs(DateTimeInterface::COOKIE);
+		$args = new DateTimeArgs(DateTimeImmutable::class, DateTimeInterface::COOKIE);
 
 		$type = $this->rule->createType($args, $this->typeContext);
 

@@ -941,12 +941,14 @@ Parameters:
 	- default `DateTimeImmutable`
 - `format`
 	- expected date-time format
-	- default `DateTimeInterface::ATOM`
-		- expects standard ISO 8601 format
-		- e.g. `2013-04-12T16:40:00-04:00`
+	- default `DateTimeRule::FormatIsoCompat`
+		- expects standard ISO 8601 format as defined by
+			- `DateTimeInterface::ATOM`
+			- and JS ISO format `Y-m-d\TH:i:s.v\Z`
+		- e.g. `2013-04-12T16:40:00-04:00`, `2013-04-12T16:40:00.000Z`
 	- accepts any of the formats which are [supported by PHP](https://www.php.net/manual/en/datetime.formats.php)
-	- to try auto-parse date-time of unknown format, use format `any`
-	- for timestamp use format `timestamp`
+	- to try auto-parse date-time of unknown format, use format `any` (`DateTimeRule::FormatAny`)
+	- for timestamp use format `timestamp` (`DateTimeRule::FormatTimestamp`)
 
 ### MappedObject rule
 

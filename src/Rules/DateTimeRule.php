@@ -5,6 +5,7 @@ namespace Orisai\ObjectMapper\Rules;
 use DateTime;
 use DateTimeImmutable;
 use DateTimeInterface;
+use DateTimeZone;
 use Nette\Utils\Validators;
 use Orisai\Exceptions\Logic\InvalidArgument;
 use Orisai\ObjectMapper\Args\Args;
@@ -38,14 +39,17 @@ final class DateTimeRule implements Rule
 		Type = 'type';
 
 	public const FormatTimestamp = 'timestamp',
-		FormatAny = 'any';
+		FormatAny = 'any',
+		FormatIsoCompat = 'iso_compat';
+
+	private const JsIsoFormat = 'Y-m-d\TH:i:s.v\Z';
 
 	public function resolveArgs(array $args, RuleArgsContext $context): DateTimeArgs
 	{
 		$checker = new ArgsChecker($args, self::class);
 		$checker->checkAllowedArgs([self::Format, self::Type]);
 
-		$format = DateTimeInterface::ATOM;
+		$format = self::FormatIsoCompat;
 		if ($checker->hasArg(self::Format)) {
 			$format = $checker->checkString(self::Format);
 		}
@@ -72,7 +76,7 @@ final class DateTimeRule implements Rule
 			}
 		}
 
-		return new DateTimeArgs($format, $type);
+		return new DateTimeArgs($type, $format);
 	}
 
 	public function getArgsType(): string
@@ -126,6 +130,14 @@ final class DateTimeRule implements Rule
 
 				throw ValueDoesNotMatch::create($type, Value::of($value));
 			}
+		} elseif ($format === self::FormatIsoCompat) {
+			$datetime = $stringValue !== ''
+				&& substr($stringValue, -1) === 'Z'
+				? $classType::createFromFormat(self::JsIsoFormat, $stringValue, new DateTimeZone('UTC'))
+				: $classType::createFromFormat(
+					DateTimeInterface::ATOM,
+					$stringValue,
+				);
 		} else {
 			$datetime = $classType::createFromFormat($format, $stringValue);
 		}
@@ -165,8 +177,13 @@ final class DateTimeRule implements Rule
 
 		$type = new SimpleValueType('datetime');
 
-		if ($args->format !== self::FormatAny) {
-			$type->addKeyValueParameter('format', $args->format);
+		$format = $args->format;
+		if ($format === self::FormatIsoCompat) {
+			$format = DateTimeInterface::ATOM . ' | ' . self::JsIsoFormat;
+		}
+
+		if ($format !== self::FormatAny) {
+			$type->addKeyValueParameter('format', $format);
 		}
 
 		return $type;
