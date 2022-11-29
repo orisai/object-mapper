@@ -1720,3 +1720,12 @@ metadata validity in advance, without mapping to an actual object, use `MetaLoad
 ```php
 $metaLoader->load(ExampleMappedObject::class);
 ```
+
+To preload all objects from a path, use:
+
+```php
+$metaLoader->preloadFromPaths([
+	__DIR__ . '/path1',
+	__DIR__ . '/path2',
+]);
+```

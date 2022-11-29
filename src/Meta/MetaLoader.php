@@ -2,13 +2,16 @@
 
 namespace Orisai\ObjectMapper\Meta;
 
+use Nette\Loaders\RobotLoader;
 use Orisai\Exceptions\Logic\InvalidArgument;
 use Orisai\Exceptions\Logic\NotImplemented;
 use Orisai\ObjectMapper\MappedObject;
 use Orisai\ObjectMapper\Meta\Runtime\RuntimeMeta;
 use ReflectionClass;
+use function assert;
 use function class_exists;
 use function count;
+use function is_subclass_of;
 
 final class MetaLoader
 {
@@ -89,6 +92,36 @@ final class MetaLoader
 		$this->cache->save($class, $meta);
 
 		return $this->arrayCache[$class] = $meta;
+	}
+
+	/**
+	 * @param list<string> $paths
+	 */
+	public function preloadFromPaths(array $paths): void
+	{
+		$loader = new RobotLoader();
+		foreach ($paths as $path) {
+			$loader->addDirectory($path);
+		}
+
+		$loader->rebuild();
+
+		foreach ($loader->getIndexedClasses() as $class => $file) {
+			assert(class_exists($class));
+			$classRef = new ReflectionClass($class);
+
+			if (!$classRef->isSubclassOf(MappedObject::class)) {
+				continue;
+			}
+
+			assert(is_subclass_of($class, MappedObject::class));
+
+			if (!$classRef->isInstantiable()) {
+				continue;
+			}
+
+			$this->load($class);
+		}
 	}
 
 	private function getResolver(): MetaResolver

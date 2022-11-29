@@ -20,6 +20,7 @@
 		"php": ">=7.4.0 <8.2.0",
 		"ext-mbstring": "*",
 		"doctrine/annotations": "^1.12.1",
+		"nette/robot-loader": "^3.4.0",
 		"nette/utils": "^3.1.0",
 		"orisai/exceptions": "^1.0.0",
 		"orisai/utils": "^1.0.0"
