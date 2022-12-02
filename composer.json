@@ -19,7 +19,6 @@
 	"require": {
 		"php": ">=7.4.0 <8.2.0",
 		"ext-mbstring": "*",
-		"doctrine/annotations": "^1.12.1",
 		"nette/robot-loader": "^3.4.0",
 		"nette/utils": "^3.1.0",
 		"orisai/exceptions": "^1.0.0",
@@ -27,6 +26,7 @@
 	},
 	"require-dev": {
 		"brianium/paratest": "^6.3.0",
+		"doctrine/annotations": "^1.12.1",
 		"infection/infection": "^0.26.0",
 		"nette/caching": "^3.0",
 		"nette/di": "^3.0.0",

@@ -22,6 +22,7 @@ use ReflectionAttribute;
 use ReflectionClass;
 use ReflectionProperty;
 use function array_merge;
+use function class_exists;
 use function get_class;
 use function is_a;
 use function sprintf;
@@ -30,11 +31,15 @@ use const PHP_VERSION_ID;
 final class AttributesMetaSource implements MetaSource
 {
 
-	private Reader $reader;
+	private ?Reader $reader;
 
 	public function __construct(?Reader $reader = null)
 	{
-		$this->reader = $reader ?? new AnnotationReader();
+		if ($reader === null && class_exists(AnnotationReader::class)) {
+			$reader = new AnnotationReader();
+		}
+
+		$this->reader = $reader;
 	}
 
 	public function load(ReflectionClass $class): CompileMeta
@@ -209,7 +214,9 @@ final class AttributesMetaSource implements MetaSource
 			);
 		}
 
-		$attributesBySource[] = $this->reader->getClassAnnotations($class);
+		if ($this->reader !== null) {
+			$attributesBySource[] = $this->reader->getClassAnnotations($class);
+		}
 
 		return array_merge(...$attributesBySource);
 	}
@@ -226,7 +233,9 @@ final class AttributesMetaSource implements MetaSource
 			);
 		}
 
-		$attributesBySource[] = $this->reader->getPropertyAnnotations($property);
+		if ($this->reader !== null) {
+			$attributesBySource[] = $this->reader->getPropertyAnnotations($property);
+		}
 
 		return array_merge(...$attributesBySource);
 	}
