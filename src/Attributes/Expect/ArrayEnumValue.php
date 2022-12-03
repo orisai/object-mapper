@@ -22,11 +22,11 @@ final class ArrayEnumValue implements RuleAttribute
 	private bool $useKeys;
 
 	/**
-	 * @param array<mixed> $values
+	 * @param array<mixed> $cases
 	 */
-	public function __construct(array $values, bool $useKeys = false)
+	public function __construct(array $cases, bool $useKeys = false)
 	{
-		$this->cases = $values;
+		$this->cases = $cases;
 		$this->useKeys = $useKeys;
 	}
 
