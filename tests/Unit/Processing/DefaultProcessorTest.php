@@ -32,6 +32,7 @@ use Tests\Orisai\ObjectMapper\Doubles\NoDefaultsVO;
 use Tests\Orisai\ObjectMapper\Doubles\PropertiesInitVO;
 use Tests\Orisai\ObjectMapper\Doubles\PropertiesVisibilityVO;
 use Tests\Orisai\ObjectMapper\Doubles\PropertyCallbacksFailureVO;
+use Tests\Orisai\ObjectMapper\Doubles\SelfReferenceVO;
 use Tests\Orisai\ObjectMapper\Doubles\SkippedPropertiesVO;
 use Tests\Orisai\ObjectMapper\Doubles\StructuresVO;
 use Tests\Orisai\ObjectMapper\Doubles\TransformingVO;
@@ -415,6 +416,49 @@ stringg: Field is unknown, did you mean `string`?',
 
 		$vo = $this->processor->process(['string' => 'string'], ConstructorUsingVO::class);
 		self::assertSame('string', $vo->string);
+	}
+
+	public function testSelfReference(): void
+	{
+		$data = [
+			'selfOrNull' => [
+				'selfOrNull' => null,
+			],
+		];
+
+		$vo = $this->processor->process($data, SelfReferenceVO::class);
+
+		self::assertInstanceOf(SelfReferenceVO::class, $vo->selfOrNull);
+		self::assertNull($vo->selfOrNull->selfOrNull);
+	}
+
+	public function testSelfReferenceFail(): void
+	{
+		$vo = null;
+		$exception = null;
+		$data = [
+			'selfOrNull' => 'string',
+		];
+
+		try {
+			$vo = $this->processor->process($data, SelfReferenceVO::class);
+		} catch (InvalidData $exception) {
+			// Checked bellow
+		}
+
+		self::assertNull($vo);
+		self::assertInstanceOf(InvalidData::class, $exception);
+
+		self::assertSame(
+			<<<'MSG'
+selfOrNull: shape{
+	selfOrNull: shape{
+		selfOrNull: possible cyclical reference
+	}||null
+}||null
+MSG,
+			$this->formatter->printError($exception),
+		);
 	}
 
 	public function testCallbacks(): void

@@ -11,6 +11,9 @@ use Orisai\ObjectMapper\Exception\InvalidData;
 use Orisai\ObjectMapper\MappedObject;
 use Orisai\ObjectMapper\Modifiers\FieldNameModifier;
 use Orisai\ObjectMapper\Types\MappedObjectType;
+use Orisai\ObjectMapper\Types\MessageType;
+use Throwable;
+use function array_key_exists;
 use function array_keys;
 use function assert;
 use function is_a;
@@ -23,6 +26,9 @@ final class MappedObjectRule implements Rule
 
 	private const Type = 'type';
 
+	/** @var array<string, null> */
+	private array $alreadyResolved = [];
+
 	public function resolveArgs(array $args, RuleArgsContext $context): MappedObjectArgs
 	{
 		$checker = new ArgsChecker($args, self::class);
@@ -33,8 +39,17 @@ final class MappedObjectRule implements Rule
 		$type = $checker->checkString(self::Type);
 
 		// Load object to ensure whole hierarchy is valid even if not used
-		// Note: Loading as class should be always array cached and in runtime should be metadata resolved only once so it has no performance impact
-		$context->getMetaLoader()->load($args[self::Type]);
+		if (!array_key_exists($type, $this->alreadyResolved)) {
+			$this->alreadyResolved[$type] = null;
+			try {
+				$context->getMetaLoader()->load($type);
+			} catch (Throwable $e) {
+				unset($this->alreadyResolved[$type]);
+
+				throw $e;
+			}
+		}
+
 		assert(is_a($type, MappedObject::class, true));
 
 		return new MappedObjectArgs($type);
@@ -65,10 +80,30 @@ final class MappedObjectRule implements Rule
 	 */
 	public function createType(Args $args, TypeContext $context): MappedObjectType
 	{
+		static $selfs = [];
+
 		$propertiesMeta = $context->getMeta($args->type)->getProperties();
 		$propertyNames = array_keys($propertiesMeta);
 
 		$type = new MappedObjectType($args->type);
+
+		if (array_key_exists($args->type, $selfs)) {
+			foreach ($propertyNames as $propertyName) {
+				$propertyMeta = $propertiesMeta[$propertyName];
+
+				$fieldNameMeta = $propertyMeta->getModifier(FieldNameModifier::class);
+				$fieldName = $fieldNameMeta !== null ? $fieldNameMeta->getArgs()->name : $propertyName;
+
+				$type->addField(
+					$fieldName,
+					new MessageType('possible cyclical reference'),
+				);
+			}
+
+			return $type;
+		}
+
+		$selfs[$args->type] = 1;
 
 		foreach ($propertyNames as $propertyName) {
 			$propertyMeta = $propertiesMeta[$propertyName];
@@ -84,6 +119,8 @@ final class MappedObjectRule implements Rule
 				$propertyRule->createType($propertyArgs, $context),
 			);
 		}
+
+		unset($selfs[$args->type]);
 
 		return $type;
 	}
