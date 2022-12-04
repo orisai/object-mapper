@@ -3,6 +3,8 @@
 namespace Orisai\ObjectMapper\Processing;
 
 use Orisai\Exceptions\Logic\InvalidState;
+use Orisai\Exceptions\Message;
+use Orisai\ObjectMapper\Attributes\Modifiers\CreateWithoutConstructor;
 use Orisai\ObjectMapper\MappedObject;
 use ReflectionClass;
 
@@ -22,10 +24,17 @@ final class DefaultObjectCreator implements ObjectCreator
 		if ($ctor !== null && $ctor->getNumberOfRequiredParameters() !== 0) {
 			$selfClass = self::class;
 			$creatorClass = ObjectCreator::class;
+			$skipConstructorClass = CreateWithoutConstructor::class;
+
+			$message = Message::create()
+				->withContext("Creating instance of class '$class' via $selfClass.")
+				->withProblem('Class has required constructor arguments and could not be created.')
+				->withSolution(
+					"Use another '$creatorClass' implementation or skip constructor with '$skipConstructorClass'.",
+				);
 
 			throw InvalidState::create()
-				->withMessage("$selfClass is unable to create object with required constructor arguments. " .
-					"You may want use some other $creatorClass implementation.");
+				->withMessage($message);
 		}
 
 		return new $class();

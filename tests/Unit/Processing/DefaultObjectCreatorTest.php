@@ -4,12 +4,10 @@ namespace Tests\Orisai\ObjectMapper\Unit\Processing;
 
 use Orisai\Exceptions\Logic\InvalidState;
 use Orisai\ObjectMapper\Processing\DefaultObjectCreator;
-use Orisai\ObjectMapper\Processing\ObjectCreator;
 use PHPUnit\Framework\TestCase;
 use Tests\Orisai\ObjectMapper\Doubles\ConstructorUsingVO;
 use Tests\Orisai\ObjectMapper\Doubles\DependentVO;
 use Tests\Orisai\ObjectMapper\Doubles\EmptyVO;
-use function sprintf;
 
 final class DefaultObjectCreatorTest extends TestCase
 {
@@ -25,11 +23,17 @@ final class DefaultObjectCreatorTest extends TestCase
 	public function testFailure(): void
 	{
 		$this->expectException(InvalidState::class);
-		$this->expectExceptionMessage(sprintf(
-			'%s is unable to create object with required constructor arguments. You may want use some other %s implementation.',
-			DefaultObjectCreator::class,
-			ObjectCreator::class,
-		));
+		$this->expectExceptionMessage(
+			<<<'MSG'
+Context: Creating instance of class
+         'Tests\Orisai\ObjectMapper\Doubles\DependentVO' via
+         Orisai\ObjectMapper\Processing\DefaultObjectCreator.
+Problem: Class has required constructor arguments and could not be created.
+Solution: Use another 'Orisai\ObjectMapper\Processing\ObjectCreator'
+          implementation or skip constructor with
+          'Orisai\ObjectMapper\Attributes\Modifiers\CreateWithoutConstructor'.
+MSG,
+		);
 
 		$creator = new DefaultObjectCreator();
 
