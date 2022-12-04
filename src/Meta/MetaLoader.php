@@ -66,7 +66,7 @@ final class MetaLoader
 
 		assert(is_subclass_of($class, MappedObject::class));
 
-		if (!$classRef->isInstantiable()) {
+		if ($classRef->isAbstract() || $classRef->isInterface() || $classRef->isTrait()) {
 			throw InvalidArgument::create()
 				->withMessage("Class '$class' must be instantiable.");
 		}
@@ -115,7 +115,7 @@ final class MetaLoader
 
 			assert(is_subclass_of($class, MappedObject::class));
 
-			if (!$classRef->isInstantiable()) {
+			if ($classRef->isAbstract() || $classRef->isInterface() || $classRef->isTrait()) {
 				continue;
 			}
 
