@@ -423,7 +423,9 @@ stringg: Field is unknown, did you mean `string`?',
 		$data = [
 			'selfOrNull' => [
 				'selfOrNull' => null,
+				'another' => 'string',
 			],
+			'another' => 'string',
 		];
 
 		$vo = $this->processor->process($data, SelfReferenceVO::class);
@@ -438,6 +440,7 @@ stringg: Field is unknown, did you mean `string`?',
 		$exception = null;
 		$data = [
 			'selfOrNull' => 'string',
+			'another' => 'string',
 		];
 
 		try {
@@ -453,8 +456,10 @@ stringg: Field is unknown, did you mean `string`?',
 			<<<'MSG'
 selfOrNull: shape{
 	selfOrNull: shape{
-		selfOrNull: possible cyclical reference
+		selfOrNull: circular reference
+		another: string
 	}||null
+	another: string
 }||null
 MSG,
 			$this->formatter->printError($exception),

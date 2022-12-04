@@ -87,37 +87,27 @@ final class MappedObjectRule implements Rule
 
 		$type = new MappedObjectType($args->type);
 
-		if (array_key_exists($args->type, $selfs)) {
-			foreach ($propertyNames as $propertyName) {
-				$propertyMeta = $propertiesMeta[$propertyName];
-
-				$fieldNameMeta = $propertyMeta->getModifier(FieldNameModifier::class);
-				$fieldName = $fieldNameMeta !== null ? $fieldNameMeta->getArgs()->name : $propertyName;
-
-				$type->addField(
-					$fieldName,
-					new MessageType('possible cyclical reference'),
-				);
-			}
-
-			return $type;
-		}
-
-		$selfs[$args->type] = 1;
-
 		foreach ($propertyNames as $propertyName) {
 			$propertyMeta = $propertiesMeta[$propertyName];
-			$propertyRuleMeta = $propertyMeta->getRule();
-			$propertyRule = $context->getRule($propertyRuleMeta->getType());
-			$propertyArgs = $propertyRuleMeta->getArgs();
+
+			if (isset($selfs[$args->type][$propertyName])) {
+				$propertyType = new MessageType('circular reference');
+			} else {
+				$selfs[$args->type][$propertyName] = 1;
+
+				$propertyRuleMeta = $propertyMeta->getRule();
+				$propertyRule = $context->getRule($propertyRuleMeta->getType());
+				$propertyArgs = $propertyRuleMeta->getArgs();
+
+				$propertyType = $propertyRule->createType($propertyArgs, $context);
+			}
+
+			unset($selfs[$args->type][$propertyName]);
 
 			$fieldNameMeta = $propertyMeta->getModifier(FieldNameModifier::class);
 			$fieldName = $fieldNameMeta !== null ? $fieldNameMeta->getArgs()->name : $propertyName;
 
-			$type->addField(
-				$fieldName,
-				$propertyRule->createType($propertyArgs, $context),
-			);
+			$type->addField($fieldName, $propertyType);
 		}
 
 		unset($selfs[$args->type]);
