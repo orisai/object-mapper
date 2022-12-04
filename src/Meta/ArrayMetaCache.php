@@ -11,17 +11,11 @@ final class ArrayMetaCache implements MetaCache
 	/** @var array<class-string<MappedObject>, RuntimeMeta> */
 	private array $cache = [];
 
-	/**
-	 * @param class-string<MappedObject> $class
-	 */
 	public function load(string $class): ?RuntimeMeta
 	{
 		return $this->cache[$class] ?? null;
 	}
 
-	/**
-	 * @param class-string<MappedObject> $class
-	 */
 	public function save(string $class, RuntimeMeta $meta): void
 	{
 		$this->cache[$class] = $meta;

@@ -16,7 +16,7 @@ use function is_subclass_of;
 final class MetaLoader
 {
 
-	/** @var array<class-string<MappedObject>, RuntimeMeta> */
+	/** @var array<string, RuntimeMeta> */
 	private array $arrayCache;
 
 	private MetaCache $cache;
@@ -38,9 +38,6 @@ final class MetaLoader
 		$this->resolverFactory = $resolverFactory;
 	}
 
-	/**
-	 * @param class-string<MappedObject> $class
-	 */
 	public function load(string $class): RuntimeMeta
 	{
 		if (isset($this->arrayCache[$class])) {
@@ -66,6 +63,8 @@ final class MetaLoader
 			throw InvalidArgument::create()
 				->withMessage("Class '$class' should be subclass of '$mappedObjectClass'.");
 		}
+
+		assert(is_subclass_of($class, MappedObject::class));
 
 		if (!$classRef->isInstantiable()) {
 			throw InvalidArgument::create()

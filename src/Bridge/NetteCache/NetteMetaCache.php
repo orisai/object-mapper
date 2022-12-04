@@ -24,17 +24,11 @@ final class NetteMetaCache implements MetaCache
 		$this->debugMode = $debugMode;
 	}
 
-	/**
-	 * @param class-string<MappedObject> $class
-	 */
 	public function load(string $class): ?RuntimeMeta
 	{
 		return $this->cache->load($class);
 	}
 
-	/**
-	 * @param class-string<MappedObject> $class
-	 */
 	public function save(string $class, RuntimeMeta $meta): void
 	{
 		$this->cache->save($class, $meta, $this->getDependencies($class));

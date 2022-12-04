@@ -20,10 +20,6 @@ parameters:
 		- message: '#^Variable method call on Orisai\\ObjectMapper\\MappedObject\.$#'
 		  path: ../src/Callbacks/BaseCallback.php
 		  count: 1
-		# Intentional check
-		- message: "#^Call to method ReflectionClass\\<(.+)MappedObject\\>\\:\\:isSubclassOf\\(\\) with '(.+)MappedObject' will always evaluate to true\\.$#"
-		  path: ../src/Meta/MetaLoader.php
-		  count: 1
 		# PHPStan thinks that class_implements returns array<string> instead of array<class-string>
 		- message: '#^Method (.+)ClassModificationsChecker\:\:getAllTypes\(\) should return array\<class\-string\> but returns array\<int, \(int\|string\)\>\.$#'
 		  path: ../src/Meta/ClassModificationsChecker.php

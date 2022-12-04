@@ -8,9 +8,6 @@ use Orisai\ObjectMapper\Meta\Runtime\RuntimeMeta;
 interface MetaCache
 {
 
-	/**
-	 * @param class-string<MappedObject> $class
-	 */
 	public function load(string $class): ?RuntimeMeta;
 
 	/**
