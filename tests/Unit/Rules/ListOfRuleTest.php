@@ -193,7 +193,7 @@ final class ListOfRuleTest extends ProcessingTestCase
 			new RuleRuntimeMeta(MixedRule::class, new EmptyArgs()),
 		);
 
-		$type = $this->rule->createType($args, $this->typeContext);
+		$type = $this->rule->createType($args, $this->createTypeContext());
 
 		self::assertEquals(
 			$this->rule->createType($args, $this->fieldContext()),
@@ -212,7 +212,7 @@ final class ListOfRuleTest extends ProcessingTestCase
 			100,
 		);
 
-		$type = $this->rule->createType($args, $this->typeContext);
+		$type = $this->rule->createType($args, $this->createTypeContext());
 
 		self::assertEquals(
 			$this->rule->createType($args, $this->fieldContext()),

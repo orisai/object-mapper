@@ -37,7 +37,7 @@ final class AnyOfRule extends CompoundRule
 				$value = $nestedRule->processValue(
 					$value,
 					$nestedRuleArgs,
-					$context,
+					$context->createClone(),
 				);
 
 				$anyValidationSucceeded = true;

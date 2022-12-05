@@ -2,6 +2,7 @@
 
 namespace Orisai\ObjectMapper\Types;
 
+use Closure;
 use Orisai\ObjectMapper\Exception\WithTypeAndValue;
 use Orisai\ObjectMapper\MappedObject;
 
@@ -13,7 +14,7 @@ final class MappedObjectType implements Type
 	/** @var class-string<MappedObject> */
 	private string $class;
 
-	/** @var array<Type> */
+	/** @var array<Type|Closure(): Type> */
 	private array $fields = [];
 
 	/** @var array<WithTypeAndValue> */
@@ -39,9 +40,10 @@ final class MappedObjectType implements Type
 	}
 
 	/**
-	 * @param int|string $field
+	 * @param int|string           $field
+	 * @param Type|Closure(): Type $type
 	 */
-	public function addField($field, Type $type): void
+	public function addField($field, $type): void
 	{
 		$this->fields[$field] = $type;
 	}
@@ -60,7 +62,16 @@ final class MappedObjectType implements Type
 	 */
 	public function getFields(): array
 	{
-		return $this->fields;
+		$fields = [];
+		foreach ($this->fields as $field => $type) {
+			if ($type instanceof Closure) {
+				$type = $type();
+			}
+
+			$fields[$field] = $type;
+		}
+
+		return $fields;
 	}
 
 	/**

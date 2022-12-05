@@ -108,4 +108,22 @@ final class MappedObjectTypeTest extends TestCase
 		);
 	}
 
+	public function testFieldFromClosure(): void
+	{
+		$type = new MappedObjectType(DefaultsVO::class);
+		$type->addField('field', static fn (): MessageType => new MessageType('test'));
+
+		$expectedFields = [
+			'field' => new MessageType('test'),
+		];
+
+		$fields = $type->getFields();
+		self::assertEquals($expectedFields, $fields);
+		self::assertNotSame($expectedFields, $fields);
+
+		$fields2 = $type->getFields();
+		self::assertEquals($fields, $fields2);
+		self::assertNotSame($fields, $fields2);
+	}
+
 }

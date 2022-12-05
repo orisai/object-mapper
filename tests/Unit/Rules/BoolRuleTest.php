@@ -127,7 +127,7 @@ final class BoolRuleTest extends ProcessingTestCase
 	{
 		$args = new BoolArgs();
 
-		$type = $this->rule->createType($args, $this->typeContext);
+		$type = $this->rule->createType($args, $this->createTypeContext());
 
 		self::assertEquals(
 			$this->rule->createType($args, $this->fieldContext()),
@@ -142,7 +142,7 @@ final class BoolRuleTest extends ProcessingTestCase
 	{
 		$args = new BoolArgs(true);
 
-		$type = $this->rule->createType($args, $this->typeContext);
+		$type = $this->rule->createType($args, $this->createTypeContext());
 
 		self::assertEquals(
 			$this->rule->createType($args, $this->fieldContext()),

@@ -71,7 +71,7 @@ final class MappedObjectRuleTest extends ProcessingTestCase
 	{
 		$args = new MappedObjectArgs(DefaultsVO::class);
 
-		$type = $this->rule->createType($args, $this->typeContext);
+		$type = $this->rule->createType($args, $this->createTypeContext());
 
 		self::assertEquals(
 			$this->rule->createType($args, $this->fieldContext()),

@@ -117,7 +117,7 @@ final class ListOfRule extends MultiValueRule
 				$value[$key] = $itemRule->processValue(
 					$item,
 					$itemArgs,
-					$context,
+					$context->createClone(),
 				);
 			} catch (ValueDoesNotMatch | InvalidData $exception) {
 				$type->addInvalidValue($key, $exception);
@@ -150,7 +150,7 @@ final class ListOfRule extends MultiValueRule
 
 		$type = ArrayType::forList(
 			$this->createKeyType(),
-			$itemRule->createType($itemArgs, $context),
+			$itemRule->createType($itemArgs, $context->createClone()),
 		);
 
 		if ($args->minItems !== null) {

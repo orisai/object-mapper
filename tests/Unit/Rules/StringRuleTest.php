@@ -183,7 +183,7 @@ final class StringRuleTest extends ProcessingTestCase
 	{
 		$args = new StringArgs();
 
-		$type = $this->rule->createType($args, $this->typeContext);
+		$type = $this->rule->createType($args, $this->createTypeContext());
 
 		self::assertEquals(
 			$this->rule->createType($args, $this->fieldContext()),
@@ -198,7 +198,7 @@ final class StringRuleTest extends ProcessingTestCase
 	{
 		$args = new StringArgs('/[\s\S]/', true, 1, 10);
 
-		$type = $this->rule->createType($args, $this->typeContext);
+		$type = $this->rule->createType($args, $this->createTypeContext());
 
 		self::assertEquals(
 			$this->rule->createType($args, $this->fieldContext()),

@@ -3,6 +3,8 @@
 namespace Orisai\ObjectMapper\Processing;
 
 use Orisai\Exceptions\Logic\InvalidState;
+use Orisai\ObjectMapper\MappedObject;
+use function array_keys;
 use function get_class;
 use function sprintf;
 
@@ -19,6 +21,9 @@ final class Options
 
 	/** @var array<class-string, object> */
 	private array $dynamicContexts = [];
+
+	/** @var array<class-string<MappedObject>, true> */
+	private array $processedClasses = [];
 
 	public function __construct()
 	{
@@ -108,6 +113,33 @@ final class Options
 		}
 
 		return $this->dynamicContexts[$class];
+	}
+
+	/**
+	 * @param class-string<MappedObject> $class
+	 */
+	public function withProcessedClass(string $class): self
+	{
+		$self = clone $this;
+		$self->processedClasses[$class] = true;
+
+		return $self;
+	}
+
+	/**
+	 * @return list<class-string<MappedObject>>
+	 */
+	public function getProcessedClasses(): array
+	{
+		return array_keys($this->processedClasses);
+	}
+
+	/**
+	 * @return static
+	 */
+	public function createClone(): self
+	{
+		return clone $this;
 	}
 
 }

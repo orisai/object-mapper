@@ -155,7 +155,7 @@ final class DateTimeRuleTest extends ProcessingTestCase
 	{
 		$args = new DateTimeArgs();
 
-		$type = $this->rule->createType($args, $this->typeContext);
+		$type = $this->rule->createType($args, $this->createTypeContext());
 
 		self::assertEquals(
 			$this->rule->createType($args, $this->fieldContext()),
@@ -172,7 +172,7 @@ final class DateTimeRuleTest extends ProcessingTestCase
 	{
 		$args = new DateTimeArgs(DateTimeImmutable::class, DateTimeRule::FormatTimestamp);
 
-		$type = $this->rule->createType($args, $this->typeContext);
+		$type = $this->rule->createType($args, $this->createTypeContext());
 
 		self::assertEquals(
 			$this->rule->createType($args, $this->fieldContext()),
@@ -187,7 +187,7 @@ final class DateTimeRuleTest extends ProcessingTestCase
 	{
 		$args = new DateTimeArgs(DateTimeImmutable::class, DateTimeInterface::COOKIE);
 
-		$type = $this->rule->createType($args, $this->typeContext);
+		$type = $this->rule->createType($args, $this->createTypeContext());
 
 		self::assertEquals(
 			$this->rule->createType($args, $this->fieldContext()),

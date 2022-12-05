@@ -103,7 +103,7 @@ final class ScalarRuleTest extends ProcessingTestCase
 	{
 		$args = new EmptyArgs();
 
-		$type = $this->rule->createType($args, $this->typeContext);
+		$type = $this->rule->createType($args, $this->createTypeContext());
 
 		self::assertEquals(
 			$this->rule->createType($args, $this->fieldContext()),
