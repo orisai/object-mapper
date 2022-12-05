@@ -458,10 +458,7 @@ stringg: Field is unknown, did you mean `string`?',
 		self::assertSame(
 			<<<'MSG'
 selfOrNull: shape{
-	selfOrNull: shape{
-		selfOrNull: circular reference
-		another: string
-	}||null
+	selfOrNull: shape{}||null
 	another: string
 }||null
 MSG,
@@ -525,11 +522,10 @@ MSG,
 			<<<'MSG'
 b: shape{
 	c: shape{
-		as: list<int(continuous), shape{
-			b: circular reference
-		}>
+		as: list<int(continuous), shape{}>
 	}||null
 }
+stringOrNull: string||null
 MSG,
 			$this->formatter->printError($exception),
 		);

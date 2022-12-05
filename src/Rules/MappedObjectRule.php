@@ -2,6 +2,7 @@
 
 namespace Orisai\ObjectMapper\Rules;
 
+use Closure;
 use Orisai\ObjectMapper\Args\Args;
 use Orisai\ObjectMapper\Args\ArgsChecker;
 use Orisai\ObjectMapper\Context\FieldContext;
@@ -9,13 +10,15 @@ use Orisai\ObjectMapper\Context\RuleArgsContext;
 use Orisai\ObjectMapper\Context\TypeContext;
 use Orisai\ObjectMapper\Exception\InvalidData;
 use Orisai\ObjectMapper\MappedObject;
+use Orisai\ObjectMapper\Meta\Runtime\PropertyRuntimeMeta;
 use Orisai\ObjectMapper\Modifiers\FieldNameModifier;
 use Orisai\ObjectMapper\Types\MappedObjectType;
-use Orisai\ObjectMapper\Types\MessageType;
+use Orisai\ObjectMapper\Types\Type;
 use Throwable;
 use function array_key_exists;
 use function array_keys;
 use function assert;
+use function in_array;
 use function is_a;
 
 /**
@@ -70,9 +73,14 @@ final class MappedObjectRule implements Rule
 	{
 		$processor = $context->getProcessor();
 
+		$options = $context->getOptions()->createClone();
+		foreach ($context->getProcessedClasses() as $class) {
+			$options = $options->withProcessedClass($class);
+		}
+
 		return $context->shouldMapDataToObjects()
-			? $processor->process($value, $args->type, $context->getOptions())
-			: $processor->processWithoutMapping($value, $args->type, $context->getOptions());
+			? $processor->process($value, $args->type, $options)
+			: $processor->processWithoutMapping($value, $args->type, $options);
 	}
 
 	/**
@@ -80,39 +88,53 @@ final class MappedObjectRule implements Rule
 	 */
 	public function createType(Args $args, TypeContext $context): MappedObjectType
 	{
-		static $selfs = [];
-
 		$propertiesMeta = $context->getMeta($args->type)->getProperties();
 		$propertyNames = array_keys($propertiesMeta);
 
-		$type = new MappedObjectType($args->type);
+		if (in_array($args->type, $context->getProcessedClasses(), true)) {
+			return new MappedObjectType($args->type);
+		}
 
+		$type = new MappedObjectType($args->type);
 		foreach ($propertyNames as $propertyName) {
 			$propertyMeta = $propertiesMeta[$propertyName];
 
-			if (isset($selfs[$args->type][$propertyName])) {
-				$propertyType = new MessageType('circular reference');
-			} else {
-				$selfs[$args->type][$propertyName] = 1;
-
-				$propertyRuleMeta = $propertyMeta->getRule();
-				$propertyRule = $context->getRule($propertyRuleMeta->getType());
-				$propertyArgs = $propertyRuleMeta->getArgs();
-
-				$propertyType = $propertyRule->createType($propertyArgs, $context);
-			}
-
-			unset($selfs[$args->type][$propertyName]);
-
-			$fieldNameMeta = $propertyMeta->getModifier(FieldNameModifier::class);
-			$fieldName = $fieldNameMeta !== null ? $fieldNameMeta->getArgs()->name : $propertyName;
-
-			$type->addField($fieldName, $propertyType);
+			$type->addField(
+				$this->getFieldName($propertyMeta, $propertyName),
+				$this->getTypeCreator($propertyMeta, $context, $args),
+			);
 		}
 
-		unset($selfs[$args->type]);
-
 		return $type;
+	}
+
+	/**
+	 * @return int|string
+	 */
+	private function getFieldName(PropertyRuntimeMeta $propertyMeta, string $propertyName)
+	{
+		$fieldNameMeta = $propertyMeta->getModifier(FieldNameModifier::class);
+
+		return $fieldNameMeta !== null ? $fieldNameMeta->getArgs()->name : $propertyName;
+	}
+
+	/**
+	 * @return Closure(): Type
+	 */
+	private function getTypeCreator(
+		PropertyRuntimeMeta $propertyMeta,
+		TypeContext $context,
+		MappedObjectArgs $args
+	): Closure
+	{
+		$propertyRuleMeta = $propertyMeta->getRule();
+		$propertyRule = $context->getRule($propertyRuleMeta->getType());
+		$propertyArgs = $propertyRuleMeta->getArgs();
+
+		return static fn (): Type => $propertyRule->createType(
+			$propertyArgs,
+			$context->withProcessedClass($args->type),
+		);
 	}
 
 }

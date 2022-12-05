@@ -45,4 +45,15 @@ abstract class BaseFieldContext extends TypeContext
 		return $this->initializeObjects;
 	}
 
+	/**
+	 * @return static
+	 */
+	public function createClone(): self
+	{
+		$clone = parent::createClone();
+		$clone->options = clone $this->options;
+
+		return $clone;
+	}
+
 }

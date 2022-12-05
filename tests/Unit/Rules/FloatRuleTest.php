@@ -200,7 +200,7 @@ final class FloatRuleTest extends ProcessingTestCase
 	{
 		$args = $this->rule->resolveArgs([], $this->ruleArgsContext());
 
-		$type = $this->rule->createType($args, $this->typeContext);
+		$type = $this->rule->createType($args, $this->createTypeContext());
 
 		self::assertEquals(
 			$this->rule->createType($args, $this->fieldContext()),
@@ -215,7 +215,7 @@ final class FloatRuleTest extends ProcessingTestCase
 	{
 		$args = new FloatArgs(10, 100, true, true);
 
-		$type = $this->rule->createType($args, $this->typeContext);
+		$type = $this->rule->createType($args, $this->createTypeContext());
 
 		self::assertEquals(
 			$this->rule->createType($args, $this->fieldContext()),

@@ -121,7 +121,7 @@ final class BackedEnumRuleTest extends ProcessingTestCase
 	{
 		$args = new BackedEnumArgs(ExampleStringEnum::class);
 
-		$type = $this->rule->createType($args, $this->typeContext);
+		$type = $this->rule->createType($args, $this->createTypeContext());
 
 		self::assertEquals(
 			$this->rule->createType($args, $this->fieldContext()),

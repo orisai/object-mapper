@@ -53,8 +53,6 @@ final class DefaultProcessor implements Processor
 
 	private ObjectCreator $objectCreator;
 
-	private ?TypeContext $typeContext = null;
-
 	public function __construct(MetaLoader $metaLoader, RuleManager $ruleManager, ObjectCreator $objectCreator)
 	{
 		$this->metaLoader = $metaLoader;
@@ -69,7 +67,7 @@ final class DefaultProcessor implements Processor
 	public function process($data, string $class, ?Options $options = null): MappedObject
 	{
 		$options ??= new Options();
-		$type = $this->createMappedObjectType($class);
+		$type = $this->createMappedObjectType($class, $options);
 		$meta = $this->metaLoader->load($class);
 		$holder = $this->createHolder($class, $meta->getClass());
 
@@ -93,7 +91,7 @@ final class DefaultProcessor implements Processor
 	public function processWithoutMapping($data, string $class, ?Options $options = null): array
 	{
 		$options ??= new Options();
-		$type = $this->createMappedObjectType($class);
+		$type = $this->createMappedObjectType($class, $options);
 		$meta = $this->metaLoader->load($class);
 		$holder = $this->createHolder($class, $meta->getClass());
 
@@ -103,13 +101,15 @@ final class DefaultProcessor implements Processor
 		return $this->processData($data, $mappedObjectContext, $callContext);
 	}
 
-	private function getTypeContext(): TypeContext
+	private function createTypeContext(Options $options): TypeContext
 	{
-		if ($this->typeContext === null) {
-			$this->typeContext = new TypeContext($this->metaLoader, $this->ruleManager);
+		$context = new TypeContext($this->metaLoader, $this->ruleManager);
+
+		foreach ($options->getProcessedClasses() as $class) {
+			$context = $context->withProcessedClass($class);
 		}
 
-		return $this->typeContext;
+		return $context;
 	}
 
 	// /////////////// //
@@ -159,11 +159,11 @@ final class DefaultProcessor implements Processor
 	/**
 	 * @param class-string<MappedObject> $class
 	 */
-	private function createMappedObjectType(string $class): MappedObjectType
+	private function createMappedObjectType(string $class, Options $options): MappedObjectType
 	{
 		return $this->ruleManager->getRule(MappedObjectRule::class)->createType(
 			new MappedObjectArgs($class),
-			$this->getTypeContext(),
+			$this->createTypeContext($options),
 		);
 	}
 
@@ -432,8 +432,8 @@ final class DefaultProcessor implements Processor
 				assert($mappedObjectArgs instanceof MappedObjectArgs);
 				try {
 					$data[$missingField] = $initializeObjects
-						? $this->process([], $mappedObjectArgs->type, $options)
-						: $this->processWithoutMapping([], $mappedObjectArgs->type, $options);
+						? $this->process([], $mappedObjectArgs->type, $options->createClone())
+						: $this->processWithoutMapping([], $mappedObjectArgs->type, $options->createClone());
 				} catch (InvalidData $exception) {
 					$type->overwriteInvalidField(
 						$missingField,
@@ -449,7 +449,7 @@ final class DefaultProcessor implements Processor
 					ValueDoesNotMatch::create(
 						$propertyRule->createType(
 							$propertyRuleMeta->getArgs(),
-							$this->getTypeContext(),
+							$this->createTypeContext($options),
 						),
 						Value::none(),
 					),
@@ -495,7 +495,7 @@ final class DefaultProcessor implements Processor
 			$this->metaLoader,
 			$this->ruleManager,
 			$this,
-			$mappedObjectContext->getOptions(),
+			$mappedObjectContext->getOptions()->createClone(),
 			$parentType->getFields()[$fieldName],
 			$meta->getDefault(),
 			$mappedObjectContext->shouldMapDataToObjects(),

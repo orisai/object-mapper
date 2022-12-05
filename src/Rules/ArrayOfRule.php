@@ -122,7 +122,7 @@ final class ArrayOfRule extends MultiValueRule
 
 			if ($keyRule !== null && $keyArgs !== null) {
 				try {
-					$key = $keyRule->processValue($key, $keyArgs, $context);
+					$key = $keyRule->processValue($key, $keyArgs, $context->createClone());
 				} catch (ValueDoesNotMatch | InvalidData $exception) {
 					$keyException = $exception;
 				}
@@ -132,7 +132,7 @@ final class ArrayOfRule extends MultiValueRule
 				$value[$key] = $itemRule->processValue(
 					$item,
 					$itemArgs,
-					$context,
+					$context->createClone(),
 				);
 			} catch (ValueDoesNotMatch | InvalidData $exception) {
 				$itemException = $exception;
@@ -171,12 +171,12 @@ final class ArrayOfRule extends MultiValueRule
 		if ($keyMeta !== null) {
 			$keyRule = $context->getRule($keyMeta->getType());
 			$keyArgs = $keyMeta->getArgs();
-			$keyType = $keyRule->createType($keyArgs, $context);
+			$keyType = $keyRule->createType($keyArgs, $context->createClone());
 		}
 
 		$type = ArrayType::forArray(
 			$keyType ?? null,
-			$itemRule->createType($itemArgs, $context),
+			$itemRule->createType($itemArgs, $context->createClone()),
 		);
 
 		if ($args->minItems !== null) {

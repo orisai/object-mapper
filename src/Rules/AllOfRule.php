@@ -38,7 +38,7 @@ final class AllOfRule extends CompoundRule
 				$value = $nestedRule->processValue(
 					$value,
 					$nestedRuleArgs,
-					$context,
+					$context->createClone(),
 				);
 			} catch (ValueDoesNotMatch | InvalidData $exception) {
 				$exception->dropValue(); // May be mutated by rules

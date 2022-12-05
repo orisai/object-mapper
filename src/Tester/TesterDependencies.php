@@ -25,8 +25,6 @@ final class TesterDependencies
 
 	public Processor $processor;
 
-	public TypeContext $typeContext;
-
 	/**
 	 * @internal
 	 * @see ObjectMapperTester::buildDependencies()
@@ -42,12 +40,16 @@ final class TesterDependencies
 		$this->metaResolver = $metaResolver;
 		$this->ruleManager = $ruleManager;
 		$this->processor = $processor;
-		$this->typeContext = new TypeContext($metaLoader, $ruleManager);
 	}
 
 	public function createRuleArgsContext(ReflectionProperty $property): RuleArgsContext
 	{
 		return new RuleArgsContext($property, $this->ruleManager, $this->metaLoader, $this->metaResolver);
+	}
+
+	public function createTypeContext(): TypeContext
+	{
+		return new TypeContext($this->metaLoader, $this->ruleManager);
 	}
 
 	public function createFieldContext(
@@ -60,7 +62,7 @@ final class TesterDependencies
 			$this->metaLoader,
 			$this->ruleManager,
 			$this->processor,
-			$options ?? new Options(),
+			$options !== null ? clone $options : new Options(),
 			new MessageType('test'),
 			$defaultValueMeta ?? DefaultValueMeta::fromNothing(),
 			$initializeObjects,

@@ -178,7 +178,7 @@ final class IntRuleTest extends ProcessingTestCase
 	{
 		$args = new IntArgs();
 
-		$type = $this->rule->createType($args, $this->typeContext);
+		$type = $this->rule->createType($args, $this->createTypeContext());
 
 		self::assertEquals(
 			$this->rule->createType($args, $this->fieldContext()),
@@ -193,7 +193,7 @@ final class IntRuleTest extends ProcessingTestCase
 	{
 		$args = new IntArgs(10, 100, true, true);
 
-		$type = $this->rule->createType($args, $this->typeContext);
+		$type = $this->rule->createType($args, $this->createTypeContext());
 
 		self::assertEquals(
 			$this->rule->createType($args, $this->fieldContext()),

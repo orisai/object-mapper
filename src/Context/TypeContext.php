@@ -7,6 +7,7 @@ use Orisai\ObjectMapper\Meta\MetaLoader;
 use Orisai\ObjectMapper\Meta\Runtime\RuntimeMeta;
 use Orisai\ObjectMapper\Rules\Rule;
 use Orisai\ObjectMapper\Rules\RuleManager;
+use function array_keys;
 
 class TypeContext
 {
@@ -14,6 +15,9 @@ class TypeContext
 	private MetaLoader $metaLoader;
 
 	private RuleManager $ruleManager;
+
+	/** @var array<class-string<MappedObject>, true> */
+	private array $processedClasses = [];
 
 	public function __construct(MetaLoader $metaLoader, RuleManager $ruleManager)
 	{
@@ -37,6 +41,33 @@ class TypeContext
 	public function getRule(string $rule): Rule
 	{
 		return $this->ruleManager->getRule($rule);
+	}
+
+	/**
+	 * @param class-string<MappedObject> $class
+	 */
+	public function withProcessedClass(string $class): self
+	{
+		$self = clone $this;
+		$self->processedClasses[$class] = true;
+
+		return $self;
+	}
+
+	/**
+	 * @return list<class-string<MappedObject>>
+	 */
+	public function getProcessedClasses(): array
+	{
+		return array_keys($this->processedClasses);
+	}
+
+	/**
+	 * @return static
+	 */
+	public function createClone(): self
+	{
+		return clone $this;
 	}
 
 }

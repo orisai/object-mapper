@@ -105,7 +105,7 @@ final class NullRuleTest extends ProcessingTestCase
 	{
 		$args = new NullArgs();
 
-		$type = $this->rule->createType($args, $this->typeContext);
+		$type = $this->rule->createType($args, $this->createTypeContext());
 
 		self::assertEquals(
 			$this->rule->createType($args, $this->fieldContext()),
@@ -120,7 +120,7 @@ final class NullRuleTest extends ProcessingTestCase
 	{
 		$args = new NullArgs(true);
 
-		$type = $this->rule->createType($args, $this->typeContext);
+		$type = $this->rule->createType($args, $this->createTypeContext());
 
 		self::assertEquals(
 			$this->rule->createType($args, $this->fieldContext()),

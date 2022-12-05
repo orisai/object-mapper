@@ -28,8 +28,6 @@ abstract class ProcessingTestCase extends TestCase
 
 	protected Processor $processor;
 
-	protected TypeContext $typeContext;
-
 	protected function setUp(): void
 	{
 		$tester = new ObjectMapperTester();
@@ -38,7 +36,6 @@ abstract class ProcessingTestCase extends TestCase
 		$this->ruleManager = $deps->ruleManager;
 		$this->metaLoader = $deps->metaLoader;
 		$this->processor = $deps->processor;
-		$this->typeContext = $deps->typeContext;
 	}
 
 	protected function ruleArgsContext(?ReflectionProperty $property = null): RuleArgsContext
@@ -49,6 +46,11 @@ abstract class ProcessingTestCase extends TestCase
 		}
 
 		return $this->dependencies->createRuleArgsContext($property);
+	}
+
+	protected function createTypeContext(): TypeContext
+	{
+		return new TypeContext($this->metaLoader, $this->ruleManager);
 	}
 
 	protected function fieldContext(
