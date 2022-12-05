@@ -23,6 +23,9 @@ use Tests\Orisai\ObjectMapper\Doubles\BeforeClassCallbackValueDoesNotMatchVO;
 use Tests\Orisai\ObjectMapper\Doubles\CallbacksVisibilityVO;
 use Tests\Orisai\ObjectMapper\Doubles\CallbacksVO;
 use Tests\Orisai\ObjectMapper\Doubles\CallbacksVoContext;
+use Tests\Orisai\ObjectMapper\Doubles\CircularAVO;
+use Tests\Orisai\ObjectMapper\Doubles\CircularBVO;
+use Tests\Orisai\ObjectMapper\Doubles\CircularCVO;
 use Tests\Orisai\ObjectMapper\Doubles\ConstructorUsingVO;
 use Tests\Orisai\ObjectMapper\Doubles\DefaultsVO;
 use Tests\Orisai\ObjectMapper\Doubles\EmptyVO;
@@ -461,6 +464,72 @@ selfOrNull: shape{
 	}||null
 	another: string
 }||null
+MSG,
+			$this->formatter->printError($exception),
+		);
+	}
+
+	public function testCircularReference(): void
+	{
+		$data = [
+			'b' => [
+				'c' => [
+					'as' => [
+						[
+							'b' => ['c' => null],
+						],
+						[
+							'b' => [
+								'c' => ['as' => []],
+							],
+						],
+					],
+				],
+			],
+		];
+
+		$a = $this->processor->process($data, CircularAVO::class);
+
+		$b = $a->b;
+		self::assertInstanceOf(CircularBVO::class, $b);
+
+		$c = $b->c;
+		self::assertInstanceOf(CircularCVO::class, $c);
+
+		$as = $c->as;
+		self::assertCount(2, $as);
+
+		$a1 = $as[0];
+		self::assertNull($a1->b->c);
+
+		$a2 = $as[1];
+		self::assertSame([], $a2->b->c->as);
+	}
+
+	public function testCircularReferenceFail(): void
+	{
+		$vo = null;
+		$exception = null;
+		$data = null;
+
+		try {
+			$vo = $this->processor->process($data, CircularAVO::class);
+		} catch (InvalidData $exception) {
+			// Checked bellow
+		}
+
+		self::assertNull($vo);
+		self::assertInstanceOf(InvalidData::class, $exception);
+
+		self::assertSame(
+			<<<'MSG'
+b: shape{
+	c: shape{
+		as: list<int(continuous), shape{
+			b: circular reference
+		}>
+	}||null
+}
 MSG,
 			$this->formatter->printError($exception),
 		);
