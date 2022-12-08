@@ -34,7 +34,6 @@ final class ErrorVisualPrinter implements ErrorPrinter, TypePrinter
 	}
 
 	/**
-	 * @param array<string> $pathNodes
 	 * @return T
 	 */
 	public function printError(InvalidData $exception, array $pathNodes = [])

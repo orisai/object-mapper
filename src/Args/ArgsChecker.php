@@ -19,14 +19,14 @@ use function sprintf;
 final class ArgsChecker
 {
 
-	/** @var array<mixed> */
+	/** @var array<int|string, mixed> */
 	private array $args;
 
 	private string $class;
 
 	/**
 	 * @param class-string $class
-	 * @param array<mixed> $args
+	 * @param array<int|string, mixed> $args
 	 */
 	public function __construct(array $args, string $class)
 	{
@@ -43,7 +43,7 @@ final class ArgsChecker
 
 		foreach ($actualArgNames as $name) {
 			if (!in_array($name, $argNames, true)) {
-				$hint = Helpers::getSuggestion($argNames, $name);
+				$hint = Helpers::getSuggestion($argNames, (string) $name);
 
 				throw InvalidArgument::create()
 					->withMessage(sprintf(

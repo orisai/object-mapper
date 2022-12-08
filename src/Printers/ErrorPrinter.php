@@ -8,7 +8,7 @@ interface ErrorPrinter
 {
 
 	/**
-	 * @param array<string> $pathNodes
+	 * @param array<int, string> $pathNodes
 	 * @return mixed
 	 */
 	public function printError(InvalidData $exception, array $pathNodes = []);

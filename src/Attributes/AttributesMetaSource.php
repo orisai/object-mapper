@@ -203,7 +203,7 @@ final class AttributesMetaSource implements MetaSource
 
 	/**
 	 * @param ReflectionClass<MappedObject> $class
-	 * @return array<int, object>
+	 * @return array<object>
 	 */
 	private function getClassAttributes(ReflectionClass $class): array
 	{
@@ -222,7 +222,7 @@ final class AttributesMetaSource implements MetaSource
 	}
 
 	/**
-	 * @return array<int, object>
+	 * @return array<object>
 	 */
 	private function getPropertyAttributes(ReflectionProperty $property): array
 	{
@@ -241,8 +241,8 @@ final class AttributesMetaSource implements MetaSource
 	}
 
 	/**
-	 * @param array<int, ReflectionAttribute<object>> $reflectionAttributes
-	 * @return array<int, object>
+	 * @param array<ReflectionAttribute<object>> $reflectionAttributes
+	 * @return list<object>
 	 */
 	private function reflectionAttributesToInstances(array $reflectionAttributes): array
 	{
