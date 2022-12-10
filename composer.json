@@ -2,10 +2,19 @@
 	"name": "orisai/object-mapper",
 	"description": "Raw data mapping to validated objects",
 	"keywords": [
+		"api",
+		"array",
+		"conversion",
+		"hydrator",
 		"orisai",
-		"object mapper",
+		"mapper",
+		"mapping",
+		"object",
+		"parser",
+		"parsing",
+		"schema",
 		"validation",
-		"data mapping"
+		"validator"
 	],
 	"type": "library",
 	"license": "MPL-2.0",
