@@ -83,18 +83,11 @@ $processor = new DefaultProcessor(
 With Nette:
 
 ```neon
-services:
-	orisai.objectMapper.metaSourceManager:
-		factory: Orisai\ObjectMapper\Meta\DefaultMetaSourceManager
-		setup:
-			- addSource(Orisai\ObjectMapper\Attributes\AttributesMetaSource())
-	orisai.objectMapper.metaCache: Orisai\ObjectMapper\Bridge\NetteCache\NetteMetaCache(debugMode: %debugMode%)
-	orisai.objectMapper.metaResolver.factory: Orisai\ObjectMapper\Meta\DefaultMetaResolverFactory
-	orisai.objectMapper.metaLoader: Orisai\ObjectMapper\Meta\MetaLoader
-	orisai.objectMapper.ruleManager:
-		factory: Orisai\ObjectMapper\Rules\DefaultRuleManager
-	orisai.objectMapper.objectCreator: Orisai\ObjectMapper\Bridge\NetteDI\LazyObjectCreator
-	orisai.objectMapper.processor: Orisai\ObjectMapper\Processing\DefaultProcessor
+extensions:
+	orisai.objectMapper: Orisai\ObjectMapper\Bridge\NetteDI\ObjectMapperExtension
+
+orisai.objectMapper:
+	debug: %debugMode%
 ```
 
 ## Quick start

@@ -41,6 +41,7 @@
 		"nette/di": "^3.0.0",
 		"nextras/orm": "^4.0.0",
 		"orisai/coding-standard": "^3.0.0",
+		"orisai/nette-di": "^1.2.0",
 		"phpbench/phpbench": "^1.0.0",
 		"phpstan/extension-installer": "^1.0.0",
 		"phpstan/phpstan": "^1.0.0",
