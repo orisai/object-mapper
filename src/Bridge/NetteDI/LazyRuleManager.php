@@ -8,6 +8,7 @@ use Orisai\ObjectMapper\Args\Args;
 use Orisai\ObjectMapper\Rules\Rule;
 use Orisai\ObjectMapper\Rules\RuleManager;
 use function assert;
+use function get_class;
 use function in_array;
 use function sprintf;
 
@@ -37,8 +38,18 @@ final class LazyRuleManager implements RuleManager
 			return $this->instances[$rule] = new $rule();
 		}
 
-		if (isset($this->services[$rule])) {
-			$instance = $this->container->getService($this->services[$rule]);
+		$serviceName = $this->services[$rule] ?? null;
+		if ($serviceName !== null) {
+			$instance = $this->container->getService($serviceName);
+
+			$instanceClass = get_class($instance);
+			if ($instanceClass !== $rule) {
+				throw InvalidArgument::create()
+					->withMessage(
+						"Service '$serviceName' should be exactly the same as '$rule', '$instanceClass' given.",
+					);
+			}
+
 			assert($instance instanceof Rule);
 
 			return $this->instances[$rule] = $instance;
