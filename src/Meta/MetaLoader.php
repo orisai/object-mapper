@@ -19,7 +19,7 @@ final class MetaLoader
 	/** @var array<string, RuntimeMeta> */
 	private array $arrayCache;
 
-	private MetaCache $cache;
+	private MetaCache $metaCache;
 
 	private MetaSourceManager $sourceManager;
 
@@ -28,12 +28,12 @@ final class MetaLoader
 	private ?MetaResolver $resolver = null;
 
 	public function __construct(
-		MetaCache $cache,
+		MetaCache $metaCache,
 		MetaSourceManager $sourceManager,
 		MetaResolverFactory $resolverFactory
 	)
 	{
-		$this->cache = $cache;
+		$this->metaCache = $metaCache;
 		$this->sourceManager = $sourceManager;
 		$this->resolverFactory = $resolverFactory;
 	}
@@ -44,7 +44,7 @@ final class MetaLoader
 			return $this->arrayCache[$class];
 		}
 
-		$meta = $this->cache->load($class);
+		$meta = $this->metaCache->load($class);
 
 		if ($meta !== null) {
 			return $this->arrayCache[$class] = $meta;
@@ -88,7 +88,7 @@ final class MetaLoader
 
 		$meta = $this->getResolver()->resolve($classRef, $sourceMeta);
 
-		$this->cache->save($class, $meta);
+		$this->metaCache->save($class, $meta);
 
 		return $this->arrayCache[$class] = $meta;
 	}

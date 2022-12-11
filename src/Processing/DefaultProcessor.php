@@ -51,15 +51,15 @@ final class DefaultProcessor implements Processor
 
 	private RuleManager $ruleManager;
 
-	private ObjectCreator $creator;
+	private ObjectCreator $objectCreator;
 
 	private ?TypeContext $typeContext = null;
 
-	public function __construct(MetaLoader $metaLoader, RuleManager $ruleManager, ObjectCreator $creator)
+	public function __construct(MetaLoader $metaLoader, RuleManager $ruleManager, ObjectCreator $objectCreator)
 	{
 		$this->metaLoader = $metaLoader;
 		$this->ruleManager = $ruleManager;
-		$this->creator = $creator;
+		$this->objectCreator = $objectCreator;
 	}
 
 	/**
@@ -675,7 +675,7 @@ final class DefaultProcessor implements Processor
 	 */
 	private function createHolder(string $class, ClassRuntimeMeta $meta, ?MappedObject $object = null): ObjectHolder
 	{
-		return new ObjectHolder($this->creator, $meta, $class, $object);
+		return new ObjectHolder($this->objectCreator, $meta, $class, $object);
 	}
 
 	// ////////////// //
