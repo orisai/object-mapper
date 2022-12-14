@@ -53,7 +53,13 @@ of them to type-safe objects.
 
 ## Setup
 
-Basic:
+Install with [Composer](https://getcomposer.org)
+
+```sh
+composer require orisai/object-mapper
+```
+
+Configure processor:
 
 ```php
 use Orisai\ObjectMapper\Attributes\AttributesMetaSource;
@@ -80,7 +86,7 @@ $processor = new DefaultProcessor(
 );
 ```
 
-With Nette:
+Or, if you use Nette, just register extension:
 
 ```neon
 extensions:
