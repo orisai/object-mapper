@@ -35,7 +35,7 @@
 	},
 	"require-dev": {
 		"brianium/paratest": "^6.3.0",
-		"doctrine/annotations": "^1.12.1",
+		"doctrine/annotations": "^1.12.1|^2.0.0",
 		"infection/infection": "^0.26.0",
 		"nette/caching": "^3.0",
 		"nette/di": "^3.0.0",
