@@ -30,4 +30,9 @@ final class LazyObjectCreator implements ObjectCreator
 		return $object;
 	}
 
+	public function checkClassIsInstantiable(string $class, bool $useConstructor): void
+	{
+		$this->createInstance($class, $useConstructor);
+	}
+
 }

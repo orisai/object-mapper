@@ -13,13 +13,23 @@ final class DefaultObjectCreator implements ObjectCreator
 
 	public function createInstance(string $class, bool $useConstructor): MappedObject
 	{
+		if (!$useConstructor) {
+			return (new ReflectionClass($class))->newInstanceWithoutConstructor();
+		}
+
+		return new $class();
+	}
+
+	public function checkClassIsInstantiable(string $class, bool $useConstructor): void
+	{
 		$reflection = new ReflectionClass($class);
 
 		if (!$useConstructor) {
-			return $reflection->newInstanceWithoutConstructor();
+			$reflection->newInstanceWithoutConstructor();
+
+			return;
 		}
 
-		// TODO - tohle by mohlo být jen při načítání metadat, není třeba pro runtime
 		$ctor = $reflection->getConstructor();
 		if ($ctor !== null && $ctor->getNumberOfRequiredParameters() !== 0) {
 			$selfClass = self::class;
@@ -37,7 +47,7 @@ final class DefaultObjectCreator implements ObjectCreator
 				->withMessage($message);
 		}
 
-		return new $class();
+		new $class();
 	}
 
 }

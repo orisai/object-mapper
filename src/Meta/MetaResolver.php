@@ -92,7 +92,7 @@ final class MetaResolver
 	 */
 	private function checkObjectCanBeInstantiated(ReflectionClass $class, ClassRuntimeMeta $meta): void
 	{
-		$this->objectCreator->createInstance(
+		$this->objectCreator->checkClassIsInstantiable(
 			$class->getName(),
 			$meta->getModifier(CreateWithoutConstructorModifier::class) === null,
 		);

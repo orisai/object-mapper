@@ -2,6 +2,7 @@
 
 namespace Tests\Orisai\ObjectMapper\Unit\Processing;
 
+use ArgumentCountError;
 use Orisai\Exceptions\Logic\InvalidState;
 use Orisai\ObjectMapper\Processing\DefaultObjectCreator;
 use PHPUnit\Framework\TestCase;
@@ -15,6 +16,9 @@ final class DefaultObjectCreatorTest extends TestCase
 	public function testCreate(): void
 	{
 		$creator = new DefaultObjectCreator();
+
+		// Just checking it does not fail
+		$creator->checkClassIsInstantiable(EmptyVO::class, true);
 
 		$instance = $creator->createInstance(EmptyVO::class, true);
 		self::assertInstanceOf(EmptyVO::class, $instance);
@@ -36,7 +40,14 @@ MSG,
 		);
 
 		$creator = new DefaultObjectCreator();
+		$creator->checkClassIsInstantiable(DependentVO::class, true);
+	}
 
+	public function testRuntimeFailure(): void
+	{
+		$this->expectException(ArgumentCountError::class);
+
+		$creator = new DefaultObjectCreator();
 		$creator->createInstance(DependentVO::class, true);
 	}
 
@@ -47,6 +58,10 @@ MSG,
 		self::assertSame('string', $vo->string);
 
 		$creator = new DefaultObjectCreator();
+
+		// Just checking it does not fail
+		$creator->checkClassIsInstantiable(EmptyVO::class, true);
+
 		$vo = $creator->createInstance(ConstructorUsingVO::class, false);
 		self::assertFalse($vo->isInitialized('string'));
 	}

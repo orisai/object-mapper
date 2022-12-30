@@ -14,4 +14,9 @@ interface ObjectCreator
 	 */
 	public function createInstance(string $class, bool $useConstructor): MappedObject;
 
+	/**
+	 * @param class-string<MappedObject> $class
+	 */
+	public function checkClassIsInstantiable(string $class, bool $useConstructor): void;
+
 }
