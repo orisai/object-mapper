@@ -55,12 +55,15 @@ final class DefaultProcessor implements Processor
 
 	private SkippedPropertiesContextMap $skippedMap;
 
+	private RawValuesMap $rawValuesMap;
+
 	public function __construct(MetaLoader $metaLoader, RuleManager $ruleManager, ObjectCreator $objectCreator)
 	{
 		$this->metaLoader = $metaLoader;
 		$this->ruleManager = $ruleManager;
 		$this->objectCreator = $objectCreator;
 		$this->skippedMap = new SkippedPropertiesContextMap();
+		$this->rawValuesMap = new RawValuesMap();
 	}
 
 	/**
@@ -643,7 +646,7 @@ final class DefaultProcessor implements Processor
 
 		// Set raw data
 		if ($options->isFillRawValues()) {
-			$object->setRawValues($rawData);
+			$this->rawValuesMap->setRawValues($object, $rawData);
 		}
 
 		// Reset mapped properties state
@@ -679,6 +682,14 @@ final class DefaultProcessor implements Processor
 	private function createHolder(string $class, ClassRuntimeMeta $meta, ?MappedObject $object = null): ObjectHolder
 	{
 		return new ObjectHolder($this->objectCreator, $meta, $class, $object);
+	}
+
+	/**
+	 * @return mixed
+	 */
+	public function getRawValues(MappedObject $object)
+	{
+		return $this->rawValuesMap->getRawValues($object);
 	}
 
 	// ////////////// //

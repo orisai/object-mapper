@@ -10,5 +10,9 @@ parameters:
 
 	ignoreErrors:
 		# Tests are expected to throw exceptions
-		- message: "#^Method (.+) throws checked exception (.+) but it's missing from the PHPDoc @throws tag\\.$#"
-		  path: %currentWorkingDirectory%/tests/Unit
+		- message: '#^Method (.+) throws checked exception (.+) but it''s missing from the PHPDoc @throws tag\.$#'
+		  path: ../tests/Unit
+
+		# Temporary workaround
+		- message: '#^Property (.+)\:\:\$processor \((.+)DefaultProcessor\) does not accept (.+)\\Processor\.$#'
+		  path: ../tests/Toolkit/ProcessingTestCase.php

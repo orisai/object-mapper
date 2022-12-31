@@ -3,49 +3,14 @@
 namespace Orisai\ObjectMapper;
 
 use Nette\Utils\ObjectHelpers;
-use Orisai\Exceptions\Logic\InvalidState;
-use Orisai\ObjectMapper\Processing\Options;
 use ReflectionException;
 use ReflectionProperty;
-use function sprintf;
 
 /**
  * Base class required for mapped objects
  */
 abstract class MappedObject
 {
-
-	private bool $hasRawValues = false;
-
-	/** @var mixed */
-	private $rawValues;
-
-	/**
-	 * @param mixed $values
-	 *
-	 * @internal
-	 */
-	public function setRawValues($values): void
-	{
-		$this->hasRawValues = true;
-		$this->rawValues = $values;
-	}
-
-	/**
-	 * @return mixed
-	 */
-	public function getRawValues()
-	{
-		if (!$this->hasRawValues) {
-			throw InvalidState::create()
-				->withMessage(sprintf(
-					'Cannot get raw values as they were never set. You may achieve it by setting %s::setFillRawValues(true)',
-					Options::class,
-				));
-		}
-
-		return $this->rawValues;
-	}
 
 	public function isInitialized(string $property): bool
 	{

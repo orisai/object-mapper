@@ -409,7 +409,7 @@ stringg: Field is unknown, did you mean `string`?',
 		self::assertSame(123.456, $vo->float);
 		self::assertNull($vo->stdClassOrNull);
 
-		self::assertSame($data, $vo->getRawValues());
+		self::assertSame($data, $this->processor->getRawValues($vo));
 	}
 
 	public function testDontUseConstructor(): void
@@ -655,7 +655,7 @@ validationFailed: string',
 			$this->formatter->printError($exception),
 		);
 		$vo = $this->processor->process(true, BeforeClassCallbackMixedValueVO::class, $options);
-		self::assertTrue($vo->getRawValues());
+		self::assertTrue($this->processor->getRawValues($vo));
 	}
 
 	public function testBeforeClassCallbackRuleException(): void
