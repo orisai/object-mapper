@@ -12,11 +12,6 @@ use ReflectionProperty;
 abstract class MappedObject
 {
 
-	public function isInitialized(string $property): bool
-	{
-		return (new ReflectionProperty($this, $property))->isInitialized($this);
-	}
-
 	/**
 	 * Checks if the public non-static property exists.
 	 */

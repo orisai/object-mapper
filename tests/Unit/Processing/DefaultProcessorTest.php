@@ -13,6 +13,7 @@ use Orisai\ObjectMapper\Printers\ErrorVisualPrinter;
 use Orisai\ObjectMapper\Printers\TypeToStringConverter;
 use Orisai\ObjectMapper\Processing\Options;
 use Orisai\ObjectMapper\Processing\RequiredFields;
+use ReflectionProperty;
 use stdClass;
 use Tests\Orisai\ObjectMapper\Doubles\AfterClassCallbackCurrentTypeInvalidDataVO;
 use Tests\Orisai\ObjectMapper\Doubles\AfterClassCallbackNewTypeInvalidDataVO;
@@ -759,9 +760,9 @@ validationFailed: string',
 			'required' => null,
 		], PropertiesInitVO::class, $options);
 
-		self::assertTrue($vo->isInitialized('required'));
-		self::assertTrue($vo->isInitialized('optional'));
-		self::assertTrue($vo->isInitialized('structure'));
+		self::assertTrue($this->isInitialized($vo, 'required'));
+		self::assertTrue($this->isInitialized($vo, 'optional'));
+		self::assertTrue($this->isInitialized($vo, 'structure'));
 
 		self::assertNull($vo->required);
 		self::assertNull($vo->optional);
@@ -779,9 +780,9 @@ validationFailed: string',
 			'structure' => [],
 		], PropertiesInitVO::class, $options);
 
-		self::assertTrue($vo->isInitialized('required'));
-		self::assertTrue($vo->isInitialized('optional'));
-		self::assertTrue($vo->isInitialized('structure'));
+		self::assertTrue($this->isInitialized($vo, 'required'));
+		self::assertTrue($this->isInitialized($vo, 'optional'));
+		self::assertTrue($this->isInitialized($vo, 'structure'));
 
 		self::assertNull($vo->required);
 		self::assertNull($vo->optional);
@@ -824,9 +825,9 @@ arrayOfMixed: array<mixed>',
 
 		$vo = $this->processor->process([], PropertiesInitVO::class, $options);
 
-		self::assertFalse($vo->isInitialized('required'));
-		self::assertFalse($vo->isInitialized('optional'));
-		self::assertFalse($vo->isInitialized('structure'));
+		self::assertFalse($this->isInitialized($vo, 'required'));
+		self::assertFalse($this->isInitialized($vo, 'optional'));
+		self::assertFalse($this->isInitialized($vo, 'structure'));
 
 		$vo = $this->processor->process([
 			'required' => null,
@@ -834,9 +835,9 @@ arrayOfMixed: array<mixed>',
 			'structure' => [],
 		], PropertiesInitVO::class, $options);
 
-		self::assertTrue($vo->isInitialized('required'));
-		self::assertTrue($vo->isInitialized('optional'));
-		self::assertTrue($vo->isInitialized('structure'));
+		self::assertTrue($this->isInitialized($vo, 'required'));
+		self::assertTrue($this->isInitialized($vo, 'optional'));
+		self::assertTrue($this->isInitialized($vo, 'structure'));
 
 		self::assertNull($vo->required);
 		self::assertNull($vo->optional);
@@ -869,8 +870,8 @@ arrayOfMixed: array<mixed>',
 
 		self::assertSame('required', $vo->required);
 		self::assertSame('optional', $vo->optional);
-		self::assertFalse($vo->isInitialized('requiredSkipped'));
-		self::assertFalse($vo->isInitialized('optionalSkipped'));
+		self::assertFalse($this->isInitialized($vo, 'requiredSkipped'));
+		self::assertFalse($this->isInitialized($vo, 'optionalSkipped'));
 
 		$this->processor->processSkippedProperties([
 			'requiredSkipped',
@@ -997,6 +998,11 @@ arrayOfMixed: array<mixed>',
 
 		self::assertInstanceOf(AttributesVO::class, $vo);
 		self::assertSame('foo', $vo->string);
+	}
+
+	private function isInitialized(MappedObject $object, string $property): bool
+	{
+		return (new ReflectionProperty($object, $property))->isInitialized($object);
 	}
 
 }

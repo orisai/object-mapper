@@ -1349,7 +1349,7 @@ $input->optional; // true
 ### No fields are required
 
 We can make all fields optional. This is useful for partial updates, like PATCH requests in REST APIs. Only changed
-fields are sent, and we have to check which ones are available with `$mappedObject->isInitialized('property');`.
+fields are sent, and we have to check which ones are available with reflection.
 
 Unlike with default mode, mapped object are not auto-initialized as described
 under [mapped object rule](#mappedobject-rule). At least empty array (`[]`) should be sent to initialize them.
@@ -1367,9 +1367,9 @@ $options->setRequiredFields(RequiredFields::none());
 $input = $processor->process($data, ModesExampleInput::class, $options);
 // $input == ModesExampleInput(required: __UNSET__, optional: __UNSET__)
 
-$input->isInitialized('required'); // false
+(new ReflectionProperty($input, 'required'))->isInitialized($input); // false
 $input->required; // Error, property is not set
-$input->isInitialized('optional'); // false
+(new ReflectionProperty($input, 'optional'))->isInitialized($input); // false
 $input->optional; // Error, property is not set
 ```
 

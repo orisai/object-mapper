@@ -4,8 +4,10 @@ namespace Tests\Orisai\ObjectMapper\Unit\Processing;
 
 use ArgumentCountError;
 use Orisai\Exceptions\Logic\InvalidState;
+use Orisai\ObjectMapper\MappedObject;
 use Orisai\ObjectMapper\Processing\DefaultObjectCreator;
 use PHPUnit\Framework\TestCase;
+use ReflectionProperty;
 use Tests\Orisai\ObjectMapper\Doubles\ConstructorUsingVO;
 use Tests\Orisai\ObjectMapper\Doubles\DependentVO;
 use Tests\Orisai\ObjectMapper\Doubles\EmptyVO;
@@ -54,7 +56,7 @@ MSG,
 	public function testDontUseConstructor(): void
 	{
 		$vo = new ConstructorUsingVO('string');
-		self::assertTrue($vo->isInitialized('string'));
+		self::assertTrue($this->isInitialized($vo, 'string'));
 		self::assertSame('string', $vo->string);
 
 		$creator = new DefaultObjectCreator();
@@ -63,7 +65,12 @@ MSG,
 		$creator->checkClassIsInstantiable(EmptyVO::class, true);
 
 		$vo = $creator->createInstance(ConstructorUsingVO::class, false);
-		self::assertFalse($vo->isInitialized('string'));
+		self::assertFalse($this->isInitialized($vo, 'string'));
+	}
+
+	private function isInitialized(MappedObject $object, string $property): bool
+	{
+		return (new ReflectionProperty($object, $property))->isInitialized($object);
 	}
 
 }
