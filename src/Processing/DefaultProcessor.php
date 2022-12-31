@@ -31,6 +31,8 @@ use Orisai\ObjectMapper\Rules\RuleManager;
 use Orisai\ObjectMapper\Types\MappedObjectType;
 use Orisai\ObjectMapper\Types\MessageType;
 use Orisai\ObjectMapper\Types\Value;
+use ReflectionException;
+use ReflectionProperty;
 use stdClass;
 use function array_diff;
 use function array_key_exists;
@@ -652,13 +654,13 @@ final class DefaultProcessor implements Processor
 		// Reset mapped properties state
 		$propertiesMeta = $callContext->getMeta()->getProperties();
 		foreach ($propertiesMeta as $propertyName => $propertyMeta) {
-			unset($object->$propertyName);
+			$this->objectUnset($object, $propertyName);
 		}
 
 		// Set processed data
 		foreach ($data as $fieldName => $value) {
 			$propertyName = $this->fieldNameToPropertyName($fieldName, $meta);
-			$object->$propertyName = $value;
+			$this->objectSet($object, $propertyName, $value);
 		}
 
 		// Set skipped properties
@@ -690,6 +692,62 @@ final class DefaultProcessor implements Processor
 	public function getRawValues(MappedObject $object)
 	{
 		return $this->rawValuesMap->getRawValues($object);
+	}
+
+	/**
+	 * @param mixed $value
+	 */
+	private function objectSet(MappedObject $object, string $name, $value): void
+	{
+		if ($this->objectHasProperty($object, $name)) {
+			// phpcs:disable SlevomatCodingStandard.Functions.StaticClosure
+			(fn () => $object->$name = $value)
+				->bindTo($object, $object)();
+			// phpcs:enable
+		}
+	}
+
+	private function objectUnset(MappedObject $object, string $name): void
+	{
+		// phpcs:disable SlevomatCodingStandard.Functions.StaticClosure
+		(function () use ($object, $name): void {
+			unset($object->$name);
+		})->bindTo($object, $object)();
+		// phpcs:enable
+	}
+
+	/**
+	 * Checks if the public non-static property exists.
+	 */
+	private function objectHasProperty(MappedObject $object, string $name): bool
+	{
+		$class = get_class($object);
+
+		static $cache;
+		$prop = &$cache[$class][$name];
+
+		if ($prop !== null) {
+			return $prop;
+		}
+
+		$prop = false;
+		try {
+			$ref = new ReflectionProperty($class, $name);
+		} catch (ReflectionException $e) {
+			return $prop;
+		}
+
+		if (
+			!$ref->isStatic()
+			&& (
+				!$ref->isPrivate()
+				|| $ref->getDeclaringClass()->isFinal()
+			)
+		) {
+			$prop = true;
+		}
+
+		return $prop;
 	}
 
 	// ////////////// //
@@ -765,7 +823,7 @@ final class DefaultProcessor implements Processor
 				}
 			}
 
-			$object->$propertyName = $processed;
+			$this->objectSet($object, $propertyName, $processed);
 			$skippedPropertiesContext->removeSkippedProperty($propertyName);
 		}
 

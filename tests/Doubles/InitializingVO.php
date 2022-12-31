@@ -9,7 +9,7 @@ use Orisai\ObjectMapper\Attributes\Expect\MappedObjectValue;
 use Orisai\ObjectMapper\MappedObject;
 use stdClass;
 
-final class InitializingVO extends MappedObject
+final class InitializingVO implements MappedObject
 {
 
 	/** @DateTimeValue() */

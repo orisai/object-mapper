@@ -11,7 +11,7 @@ use Orisai\ObjectMapper\Types\Value;
 /**
  * @After(method="after")
  */
-final class AfterClassCallbackValueDoesNotMatchVO extends MappedObject
+final class AfterClassCallbackValueDoesNotMatchVO implements MappedObject
 {
 
 	/** @StringValue() */

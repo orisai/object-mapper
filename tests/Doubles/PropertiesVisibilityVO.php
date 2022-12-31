@@ -5,7 +5,7 @@ namespace Tests\Orisai\ObjectMapper\Doubles;
 use Orisai\ObjectMapper\Attributes\Expect\StringValue;
 use Orisai\ObjectMapper\MappedObject;
 
-final class PropertiesVisibilityVO extends MappedObject
+final class PropertiesVisibilityVO implements MappedObject
 {
 
 	/** @StringValue() */

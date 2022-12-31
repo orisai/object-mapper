@@ -46,7 +46,7 @@ use Orisai\ObjectMapper\MappedObject;
 use Orisai\ObjectMapper\Attributes\Expect\MappedObjectValue;
 use Orisai\ObjectMapper\Attributes\Expect\StringValue;
 
-final class UserInput extends MappedObject
+final class UserInput implements MappedObject
 {
 
 	/** @StringValue(notEmpty=true) */
@@ -64,7 +64,7 @@ final class UserInput extends MappedObject
 ```php
 use Orisai\ObjectMapper\MappedObject;
 
-final class UserAddressInput extends MappedObject
+final class UserAddressInput implements MappedObject
 {
 	// ...
 }

@@ -9,7 +9,7 @@ use Orisai\ObjectMapper\Attributes\Expect\NullValue;
 use Orisai\ObjectMapper\Attributes\Expect\StringValue;
 use Orisai\ObjectMapper\MappedObject;
 
-final class DefaultsVO extends MappedObject
+final class DefaultsVO implements MappedObject
 {
 
 	/** @StringValue() */

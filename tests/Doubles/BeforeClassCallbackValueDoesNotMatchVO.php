@@ -10,7 +10,7 @@ use Orisai\ObjectMapper\Types\Value;
 /**
  * @Before(method="before")
  */
-final class BeforeClassCallbackValueDoesNotMatchVO extends MappedObject
+final class BeforeClassCallbackValueDoesNotMatchVO implements MappedObject
 {
 
 	/**

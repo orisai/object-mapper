@@ -6,7 +6,7 @@ use Orisai\ObjectMapper\Attributes\Expect\ArrayOf;
 use Orisai\ObjectMapper\Attributes\Expect\IntValue;
 use Orisai\ObjectMapper\MappedObject;
 
-final class ArrayOfIntVO extends MappedObject
+final class ArrayOfIntVO implements MappedObject
 {
 
 	/**

@@ -8,7 +8,7 @@ use Orisai\ObjectMapper\Attributes\Expect\MappedObjectValue;
 use Orisai\ObjectMapper\Attributes\Expect\MixedValue;
 use Orisai\ObjectMapper\MappedObject;
 
-final class StructuresVO extends MappedObject
+final class StructuresVO implements MappedObject
 {
 
 	/** @MappedObjectValue(DefaultsVO::class) */

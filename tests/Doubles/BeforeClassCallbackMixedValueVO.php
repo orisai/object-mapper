@@ -8,7 +8,7 @@ use Orisai\ObjectMapper\MappedObject;
 /**
  * @Before(method="before")
  */
-final class BeforeClassCallbackMixedValueVO extends MappedObject
+final class BeforeClassCallbackMixedValueVO implements MappedObject
 {
 
 	/**

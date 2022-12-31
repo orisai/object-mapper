@@ -6,7 +6,7 @@ use Orisai\ObjectMapper\Attributes\Callbacks\After;
 use Orisai\ObjectMapper\Attributes\Expect\StringValue;
 use Orisai\ObjectMapper\MappedObject;
 
-final class CallbacksVisibilityVO extends MappedObject
+final class CallbacksVisibilityVO implements MappedObject
 {
 
 	/**

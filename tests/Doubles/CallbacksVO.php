@@ -20,7 +20,7 @@ use function is_array;
  * @Before(method="beforeClass", runtime=CallbackRuntime::Always)
  * @After(method="afterClass", runtime=CallbackRuntime::Always)
  */
-final class CallbacksVO extends MappedObject
+final class CallbacksVO implements MappedObject
 {
 
 	private string $constructorGivenValue;

@@ -15,7 +15,7 @@ use function is_array;
  * @Before(method="beforeClass")
  * @After(method="afterClass")
  */
-final class PropertyCallbacksFailureVO extends MappedObject
+final class PropertyCallbacksFailureVO implements MappedObject
 {
 
 	/**

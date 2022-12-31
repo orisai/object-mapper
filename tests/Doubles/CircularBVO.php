@@ -7,7 +7,7 @@ use Orisai\ObjectMapper\Attributes\Expect\MappedObjectValue;
 use Orisai\ObjectMapper\Attributes\Expect\NullValue;
 use Orisai\ObjectMapper\MappedObject;
 
-final class CircularBVO extends MappedObject
+final class CircularBVO implements MappedObject
 {
 
 	/**

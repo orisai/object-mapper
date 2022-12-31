@@ -14,7 +14,7 @@ use Orisai\ObjectMapper\Types\Value;
 /**
  * @After(method="after")
  */
-final class AfterClassCallbackNewTypeInvalidDataVO extends MappedObject
+final class AfterClassCallbackNewTypeInvalidDataVO implements MappedObject
 {
 
 	/** @StringValue() */

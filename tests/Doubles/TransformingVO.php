@@ -11,7 +11,7 @@ use Orisai\ObjectMapper\Attributes\Expect\NullValue;
 use Orisai\ObjectMapper\MappedObject;
 use stdClass;
 
-final class TransformingVO extends MappedObject
+final class TransformingVO implements MappedObject
 {
 
 	/** @BoolValue(castBoolLike=true) */

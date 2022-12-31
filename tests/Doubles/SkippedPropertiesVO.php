@@ -6,7 +6,7 @@ use Orisai\ObjectMapper\Attributes\Expect\StringValue;
 use Orisai\ObjectMapper\Attributes\Modifiers\Skipped;
 use Orisai\ObjectMapper\MappedObject;
 
-final class SkippedPropertiesVO extends MappedObject
+final class SkippedPropertiesVO implements MappedObject
 {
 
 	/** @StringValue() */

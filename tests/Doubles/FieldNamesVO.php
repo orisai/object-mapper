@@ -6,7 +6,7 @@ use Orisai\ObjectMapper\Attributes\Expect\StringValue;
 use Orisai\ObjectMapper\Attributes\Modifiers\FieldName;
 use Orisai\ObjectMapper\MappedObject;
 
-final class FieldNamesVO extends MappedObject
+final class FieldNamesVO implements MappedObject
 {
 
 	/** @StringValue() */

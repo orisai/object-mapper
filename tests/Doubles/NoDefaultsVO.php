@@ -11,7 +11,7 @@ use Orisai\ObjectMapper\Attributes\Expect\NullValue;
 use Orisai\ObjectMapper\Attributes\Expect\StringValue;
 use Orisai\ObjectMapper\MappedObject;
 
-final class NoDefaultsVO extends MappedObject
+final class NoDefaultsVO implements MappedObject
 {
 
 	/** @StringValue() */

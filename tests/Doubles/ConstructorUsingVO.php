@@ -9,7 +9,7 @@ use Orisai\ObjectMapper\MappedObject;
 /**
  * @CreateWithoutConstructor()
  */
-final class ConstructorUsingVO extends MappedObject
+final class ConstructorUsingVO implements MappedObject
 {
 
 	/** @StringValue() */

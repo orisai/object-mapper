@@ -6,7 +6,7 @@ use Orisai\ObjectMapper\Attributes\Expect\ListOf;
 use Orisai\ObjectMapper\Attributes\Expect\MappedObjectValue;
 use Orisai\ObjectMapper\MappedObject;
 
-final class CircularCVO extends MappedObject
+final class CircularCVO implements MappedObject
 {
 
 	/** @ListOf(@MappedObjectValue(CircularAVO::class)) */

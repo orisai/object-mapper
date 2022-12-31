@@ -104,7 +104,7 @@ After you have finished [setup](#setup), define a mapped object:
 use Orisai\ObjectMapper\MappedObject;
 use Orisai\ObjectMapper\Attributes\Expect\StringValue;
 
-final class UserInput extends MappedObject
+final class UserInput implements MappedObject
 {
 
 	/** @StringValue(notEmpty=true) */
@@ -171,7 +171,7 @@ Expects bool
 use Orisai\ObjectMapper\Attributes\Expect\BoolValue;
 use Orisai\ObjectMapper\MappedObject;
 
-final class BoolInput extends MappedObject
+final class BoolInput implements MappedObject
 {
 
     /** @BoolValue() */
@@ -209,7 +209,7 @@ Expects any of cases from given list
 use Orisai\ObjectMapper\Attributes\Expect\ArrayEnumValue;
 use Orisai\ObjectMapper\MappedObject;
 
-final class ArrayEnumInput extends MappedObject
+final class ArrayEnumInput implements MappedObject
 {
 
     public const Cases = [
@@ -256,7 +256,7 @@ Expects float or int
 use Orisai\ObjectMapper\Attributes\Expect\FloatValue;
 use Orisai\ObjectMapper\MappedObject;
 
-final class FloatInput extends MappedObject
+final class FloatInput implements MappedObject
 {
 
     /** @FloatValue() */
@@ -310,7 +310,7 @@ use Orisai\ObjectMapper\Attributes\Expect\InstanceOfValue;
 use Orisai\ObjectMapper\MappedObject;
 use stdClass;
 
-final class InstanceofInput extends MappedObject
+final class InstanceofInput implements MappedObject
 {
 
     /** @InstanceOfValue(stdClass::class) */
@@ -342,7 +342,7 @@ Expects int
 use Orisai\ObjectMapper\Attributes\Expect\IntValue;
 use Orisai\ObjectMapper\MappedObject;
 
-final class IntInput extends MappedObject
+final class IntInput implements MappedObject
 {
 
     /** @IntValue() */
@@ -393,7 +393,7 @@ Expects any value
 use Orisai\ObjectMapper\Attributes\Expect\MixedValue;
 use Orisai\ObjectMapper\MappedObject;
 
-final class MixedInput extends MappedObject
+final class MixedInput implements MappedObject
 {
 
     /**
@@ -425,7 +425,7 @@ Expects null
 use Orisai\ObjectMapper\Attributes\Expect\NullValue;
 use Orisai\ObjectMapper\MappedObject;
 
-final class NullInput extends MappedObject
+final class NullInput implements MappedObject
 {
 
     /**
@@ -468,7 +468,7 @@ use Orisai\ObjectMapper\Attributes\Expect\NullValue;
 use Orisai\ObjectMapper\Attributes\Expect\StringValue;
 use Orisai\ObjectMapper\MappedObject;
 
-final class NullInput extends MappedObject
+final class NullInput implements MappedObject
 {
 
     /**
@@ -500,7 +500,7 @@ Expects any object
 use Orisai\ObjectMapper\Attributes\Expect\ObjectValue;
 use Orisai\ObjectMapper\MappedObject;
 
-final class ObjectInput extends MappedObject
+final class ObjectInput implements MappedObject
 {
 
     /** @ObjectValue() */
@@ -529,7 +529,7 @@ Expects any scalar value - int|float|string|bool
 use Orisai\ObjectMapper\Attributes\Expect\ScalarValue;
 use Orisai\ObjectMapper\MappedObject;
 
-final class ScalarInput extends MappedObject
+final class ScalarInput implements MappedObject
 {
 
     /**
@@ -561,7 +561,7 @@ Expects string
 use Orisai\ObjectMapper\Attributes\Expect\StringValue;
 use Orisai\ObjectMapper\MappedObject;
 
-final class StringInput extends MappedObject
+final class StringInput implements MappedObject
 {
 
     /** @StringValue() */
@@ -621,7 +621,7 @@ use Orisai\ObjectMapper\Attributes\Expect\StringValue;
 use Orisai\ObjectMapper\Attributes\Expect\Url;
 use Orisai\ObjectMapper\MappedObject;
 
-final class AllOfInput extends MappedObject
+final class AllOfInput implements MappedObject
 {
 
     /**
@@ -661,7 +661,7 @@ use Orisai\ObjectMapper\Attributes\Expect\NullValue;
 use Orisai\ObjectMapper\Attributes\Expect\StringValue;
 use Orisai\ObjectMapper\MappedObject;
 
-final class AnyOfInput extends MappedObject
+final class AnyOfInput implements MappedObject
 {
 
     /**
@@ -703,7 +703,7 @@ use Orisai\ObjectMapper\Attributes\Expect\MixedValue;
 use Orisai\ObjectMapper\Attributes\Expect\StringValue;
 use Orisai\ObjectMapper\MappedObject;
 
-final class ArrayOfInput extends MappedObject
+final class ArrayOfInput implements MappedObject
 {
 
     /**
@@ -772,7 +772,7 @@ use Orisai\ObjectMapper\Attributes\Expect\StringValue;
 use Orisai\ObjectMapper\Attributes\Expect\MixedValue;
 use Orisai\ObjectMapper\MappedObject;
 
-final class ListOfInput extends MappedObject
+final class ListOfInput implements MappedObject
 {
 
     /**
@@ -837,7 +837,7 @@ Expects value of a `BackedEnum` case
 use Orisai\ObjectMapper\Attributes\Expect\BackedEnumValue;
 use Orisai\ObjectMapper\MappedObject;
 
-final class BackedEnumInput extends MappedObject
+final class BackedEnumInput implements MappedObject
 {
 
 	#[BackedEnumValue(ExampleEnum::class)]
@@ -882,7 +882,7 @@ use Orisai\ObjectMapper\Attributes\Expect\BackedEnumValue;
 use Orisai\ObjectMapper\Attributes\Expect\StringValue;
 use Orisai\ObjectMapper\MappedObject;
 
-final class BackedEnumInput extends MappedObject
+final class BackedEnumInput implements MappedObject
 {
 
 	#[AnyOf([
@@ -914,7 +914,7 @@ use DateTimeImmutable;
 use Orisai\ObjectMapper\Attributes\Expect\DateTimeValue;
 use Orisai\ObjectMapper\MappedObject;
 
-final class DateTimeInput extends MappedObject
+final class DateTimeInput implements MappedObject
 {
 
     /** @DateTimeValue() */
@@ -967,7 +967,7 @@ use Orisai\ObjectMapper\Attributes\Expect\MappedObjectValue;
 use Orisai\ObjectMapper\Attributes\Expect\StringValue;
 use Orisai\ObjectMapper\MappedObject;
 
-final class MappedObjectInput extends MappedObject
+final class MappedObjectInput implements MappedObject
 {
 
     /** @MappedObjectValue(InnerInput::class) */
@@ -975,7 +975,7 @@ final class MappedObjectInput extends MappedObject
 
 }
 
-class InnerInput extends MappedObject
+class InnerInput implements MappedObject
 {
 
     /**
@@ -1010,7 +1010,7 @@ Expects valid url address
 use Orisai\ObjectMapper\Attributes\Expect\Url;
 use Orisai\ObjectMapper\MappedObject;
 
-final class UrlInput extends MappedObject
+final class UrlInput implements MappedObject
 {
 
     /** @Url() */
@@ -1039,7 +1039,7 @@ Each field can be made optional by assigning default value to property:
 use Orisai\ObjectMapper\Attributes\Expect\StringValue;
 use Orisai\ObjectMapper\MappedObject;
 
-final class OptionalInput extends MappedObject
+final class OptionalInput implements MappedObject
 {
 
     /** @StringValue() */
@@ -1055,7 +1055,7 @@ which are impossible to send:
 use Orisai\ObjectMapper\Attributes\Expect\StringValue;
 use Orisai\ObjectMapper\MappedObject;
 
-final class AnotherOptionalInput extends MappedObject
+final class AnotherOptionalInput implements MappedObject
 {
 
     /** @StringValue() */
@@ -1076,7 +1076,7 @@ use Orisai\ObjectMapper\Attributes\Expect\NullValue;
 use Orisai\ObjectMapper\Attributes\Expect\StringValue;
 use Orisai\ObjectMapper\MappedObject;
 
-final class NullableVariantsInput extends MappedObject
+final class NullableVariantsInput implements MappedObject
 {
 
     /**
@@ -1148,7 +1148,7 @@ Unknown fields are removed from data and are not available in mapped object.
 ```php
 use Orisai\ObjectMapper\MappedObject;
 
-final class WithUnknownValuesInput extends MappedObject
+final class WithUnknownValuesInput implements MappedObject
 {
 
 }
@@ -1183,7 +1183,7 @@ use Orisai\ObjectMapper\Attributes\Expect\MappedObjectValue;
 use Orisai\ObjectMapper\Attributes\Expect\StringValue;
 use Orisai\ObjectMapper\MappedObject;
 
-final class MainInput extends MappedObject
+final class MainInput implements MappedObject
 {
 
 	/**
@@ -1197,7 +1197,7 @@ final class MainInput extends MappedObject
 
 }
 
-final class FullInput extends MappedObject
+final class FullInput implements MappedObject
 {
 
 	/** @IntValue(min=0) */
@@ -1211,7 +1211,7 @@ final class FullInput extends MappedObject
 
 }
 
-final class IdOnlyInput extends MappedObject
+final class IdOnlyInput implements MappedObject
 {
 
 	/** @IntValue(min=0) */
@@ -1237,7 +1237,7 @@ Keys from input data (fields) are mapped to object properties of the same name, 
 use Orisai\ObjectMapper\Attributes\Expect\MixedValue;
 use Orisai\ObjectMapper\MappedObject;
 
-final class DefaultMappingInput extends MappedObject
+final class DefaultMappingInput implements MappedObject
 {
 
     /**
@@ -1264,7 +1264,7 @@ use Orisai\ObjectMapper\Attributes\Expect\MixedValue;
 use Orisai\ObjectMapper\Attributes\Modifiers\FieldName;
 use Orisai\ObjectMapper\MappedObject;
 
-final class CustomMappingInput extends MappedObject
+final class CustomMappingInput implements MappedObject
 {
 
     /**
@@ -1299,7 +1299,7 @@ see [default values](#optional-fields-and-default-values)). By default, you have
 use Orisai\ObjectMapper\Attributes\Expect\BoolValue;
 use Orisai\ObjectMapper\MappedObject;
 
-final class ModesExampleInput extends MappedObject
+final class ModesExampleInput implements MappedObject
 {
 
     /** @BoolValue() */
@@ -1383,7 +1383,7 @@ use Orisai\ObjectMapper\Attributes\Callbacks\After;
 use Orisai\ObjectMapper\Attributes\Expect\StringValue;
 use Orisai\ObjectMapper\Context\FieldContext;
 
-final class WithCallbackInput extends MappedObject
+final class WithCallbackInput implements MappedObject
 {
 
 	/**
@@ -1440,7 +1440,7 @@ use Orisai\ObjectMapper\Context\MappedObjectContext;
  * @Before("beforeObject")
  * @After("afterObject")
  */
-final class WithMappedObjectCallbacksInput extends MappedObject
+final class WithMappedObjectCallbacksInput implements MappedObject
 {
 
 	/**
@@ -1489,7 +1489,7 @@ use Orisai\ObjectMapper\Attributes\Callbacks\After;
 use Orisai\ObjectMapper\Attributes\Expect\StringValue;
 use Orisai\ObjectMapper\Context\FieldContext;
 
-final class WithFieldCallbacksInput extends MappedObject
+final class WithFieldCallbacksInput implements MappedObject
 {
 
 	/**
@@ -1524,7 +1524,7 @@ use Orisai\ObjectMapper\Attributes\Callbacks\After;
 use Orisai\ObjectMapper\Attributes\Expect\StringValue;
 use Orisai\ObjectMapper\Context\FieldContext;
 
-final class WithNotInvokedCallbackInput extends MappedObject
+final class WithNotInvokedCallbackInput implements MappedObject
 {
 
 	/**
@@ -1557,7 +1557,7 @@ use Orisai\ObjectMapper\MappedObject;
 use Orisai\ObjectMapper\Attributes\Callbacks\After;
 use Orisai\ObjectMapper\Attributes\Expect\MixedValue;
 
-final class WithReturningCallbackInput extends MappedObject
+final class WithReturningCallbackInput implements MappedObject
 {
 
 	/**
@@ -1588,7 +1588,7 @@ use Orisai\ObjectMapper\Attributes\Expect\StringValue;
 use Orisai\ObjectMapper\Exception\ValueDoesNotMatch;
 use Orisai\ObjectMapper\Types\Value;
 
-final class WithNotReturningCallbackInput extends MappedObject
+final class WithNotReturningCallbackInput implements MappedObject
 {
 
 	/**
@@ -1618,7 +1618,7 @@ use Orisai\ObjectMapper\Attributes\Expect\MixedValue;
 use Orisai\ObjectMapper\Exception\ValueDoesNotMatch;
 use Orisai\ObjectMapper\Types\Value;
 
-final class WithComplexCallbackInput extends MappedObject
+final class WithComplexCallbackInput implements MappedObject
 {
 
 	private ExampleService $service;
@@ -1681,7 +1681,7 @@ Since PHP 8.0 annotations can be written as attributes.
 use Orisai\ObjectMapper\Attributes\Expect\MixedValue;
 use Orisai\ObjectMapper\MappedObject;
 
-final class WithAnnotationsAndAttributesInput extends MappedObject
+final class WithAnnotationsAndAttributesInput implements MappedObject
 {
 
     /** @MixedValue() */
@@ -1726,7 +1726,7 @@ use Orisai\ObjectMapper\MappedObject;
 /**
  * @CreateWithoutConstructor()
  */
-final class ConstructorUsingVO extends MappedObject
+final class ConstructorUsingVO implements MappedObject
 {
 
 	/** @StringValue() */

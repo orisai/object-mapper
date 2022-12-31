@@ -5,7 +5,7 @@ namespace Tests\Orisai\ObjectMapper\Doubles;
 use Orisai\ObjectMapper\MappedObject;
 use stdClass;
 
-final class DependentVO extends MappedObject
+final class DependentVO implements MappedObject
 {
 
 	public ?stdClass $class = null;
