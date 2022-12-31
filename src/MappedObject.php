@@ -4,7 +4,6 @@ namespace Orisai\ObjectMapper;
 
 use Nette\Utils\ObjectHelpers;
 use Orisai\Exceptions\Logic\InvalidState;
-use Orisai\ObjectMapper\Context\SkippedPropertiesContext;
 use Orisai\ObjectMapper\Processing\Options;
 use ReflectionException;
 use ReflectionProperty;
@@ -16,41 +15,10 @@ use function sprintf;
 abstract class MappedObject
 {
 
-	private ?SkippedPropertiesContext $skippedPropertiesContext = null;
-
 	private bool $hasRawValues = false;
 
 	/** @var mixed */
 	private $rawValues;
-
-	/**
-	 * @internal
-	 */
-	public function setSkippedPropertiesContext(?SkippedPropertiesContext $context): void
-	{
-		$this->skippedPropertiesContext = $context;
-	}
-
-	/**
-	 * @internal
-	 */
-	public function hasSkippedPropertiesContext(): bool
-	{
-		return $this->skippedPropertiesContext !== null;
-	}
-
-	/**
-	 * @internal
-	 */
-	public function getSkippedPropertiesContext(): SkippedPropertiesContext
-	{
-		if ($this->skippedPropertiesContext === null) {
-			throw InvalidState::create()
-				->withMessage('Check partial object existence with hasSkippedPropertiesContext()');
-		}
-
-		return $this->skippedPropertiesContext;
-	}
 
 	/**
 	 * @param mixed $values

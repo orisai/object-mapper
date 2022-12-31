@@ -53,11 +53,14 @@ final class DefaultProcessor implements Processor
 
 	private ObjectCreator $objectCreator;
 
+	private SkippedPropertiesContextMap $skippedMap;
+
 	public function __construct(MetaLoader $metaLoader, RuleManager $ruleManager, ObjectCreator $objectCreator)
 	{
 		$this->metaLoader = $metaLoader;
 		$this->ruleManager = $ruleManager;
 		$this->objectCreator = $objectCreator;
+		$this->skippedMap = new SkippedPropertiesContextMap();
 	}
 
 	/**
@@ -658,11 +661,11 @@ final class DefaultProcessor implements Processor
 		// Set skipped properties
 		$skippedProperties = $callContext->getSkippedProperties();
 		if ($skippedProperties !== []) {
-			$partial = new SkippedPropertiesContext($type, $options);
-			$object->setSkippedPropertiesContext($partial);
+			$skippedContext = new SkippedPropertiesContext($type, $options);
+			$this->skippedMap->setSkippedPropertiesContext($object, $skippedContext);
 
 			foreach ($skippedProperties as $propertyName => $skippedPropertyContext) {
-				$partial->addSkippedProperty($propertyName, $skippedPropertyContext);
+				$skippedContext->addSkippedProperty($propertyName, $skippedPropertyContext);
 			}
 		}
 	}
@@ -695,7 +698,7 @@ final class DefaultProcessor implements Processor
 		$class = get_class($object);
 
 		// Object has no skipped properties
-		if (!$object->hasSkippedPropertiesContext()) {
+		if (!$this->skippedMap->hasSkippedPropertiesContext($object)) {
 			throw InvalidState::create()
 				->withMessage(sprintf(
 					'Cannot initialize properties "%s" of "%s" instance because it has no skipped properties.',
@@ -704,7 +707,7 @@ final class DefaultProcessor implements Processor
 				));
 		}
 
-		$skippedPropertiesContext = $object->getSkippedPropertiesContext();
+		$skippedPropertiesContext = $this->skippedMap->getSkippedPropertiesContext($object);
 
 		$type = $skippedPropertiesContext->getType();
 		$options ??= $skippedPropertiesContext->getOptions();
@@ -762,7 +765,7 @@ final class DefaultProcessor implements Processor
 
 		// Object is fully initialized, remove partial context
 		if ($skippedPropertiesContext->getSkippedProperties() === []) {
-			$object->setSkippedPropertiesContext(null);
+			$this->skippedMap->setSkippedPropertiesContext($object, null);
 		}
 	}
 
