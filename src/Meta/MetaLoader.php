@@ -53,7 +53,11 @@ final class MetaLoader
 		$classRef = $this->validateClass($class);
 		$meta = $this->createRuntimeMeta($classRef);
 
-		$this->metaCache->save($classRef->getName(), $meta);
+		$this->metaCache->save(
+			$classRef->getName(),
+			$meta,
+			ClassModificationsChecker::getSourceFiles($classRef),
+		);
 
 		return $meta;
 	}

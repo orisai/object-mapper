@@ -16,7 +16,7 @@ final class ArrayMetaCache implements MetaCache
 		return $this->cache[$class] ?? null;
 	}
 
-	public function save(string $class, RuntimeMeta $meta): void
+	public function save(string $class, RuntimeMeta $meta, array $fileDependencies): void
 	{
 		$this->cache[$class] = $meta;
 	}

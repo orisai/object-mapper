@@ -10,19 +10,10 @@ final class ClassModificationsChecker
 {
 
 	/**
-	 * @param class-string $class
-	 * @return array<string>
-	 */
-	public static function getSourceFiles(string $class): array
-	{
-		return self::get(new ReflectionClass($class));
-	}
-
-	/**
 	 * @param ReflectionClass<object> $class
 	 * @return list<string>
 	 */
-	private static function get(ReflectionClass $class): array
+	public static function getSourceFiles(ReflectionClass $class): array
 	{
 		if ($class->isInternal()) {
 			return [];
@@ -32,15 +23,15 @@ final class ClassModificationsChecker
 
 		$parent = $class->getParentClass();
 		if ($parent !== false) {
-			$filesByReflector[] = self::get($parent);
+			$filesByReflector[] = self::getSourceFiles($parent);
 		}
 
 		foreach ($class->getInterfaces() as $interface) {
-			$filesByReflector[] = self::get($interface);
+			$filesByReflector[] = self::getSourceFiles($interface);
 		}
 
 		foreach ($class->getTraits() as $trait) {
-			$filesByReflector[] = self::get($trait);
+			$filesByReflector[] = self::getSourceFiles($trait);
 		}
 
 		$file = $class->getFileName();

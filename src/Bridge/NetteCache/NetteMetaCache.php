@@ -4,8 +4,6 @@ namespace Orisai\ObjectMapper\Bridge\NetteCache;
 
 use Nette\Caching\Cache;
 use Nette\Caching\Storage;
-use Orisai\ObjectMapper\MappedObject;
-use Orisai\ObjectMapper\Meta\ClassModificationsChecker;
 use Orisai\ObjectMapper\Meta\MetaCache;
 use Orisai\ObjectMapper\Meta\Runtime\RuntimeMeta;
 
@@ -29,19 +27,19 @@ final class NetteMetaCache implements MetaCache
 		return $this->cache->load($class);
 	}
 
-	public function save(string $class, RuntimeMeta $meta): void
+	public function save(string $class, RuntimeMeta $meta, array $fileDependencies): void
 	{
-		$this->cache->save($class, $meta, $this->getDependencies($class));
+		$this->cache->save($class, $meta, $this->getDependencies($fileDependencies));
 	}
 
 	/**
-	 * @param class-string<MappedObject> $class
+	 * @param list<string> $fileDependencies
 	 * @return array<mixed>
 	 */
-	private function getDependencies(string $class): array
+	private function getDependencies(array $fileDependencies): array
 	{
 		return $this->debugMode
-			? [Cache::FILES => ClassModificationsChecker::getSourceFiles($class)]
+			? [Cache::FILES => $fileDependencies]
 			: [];
 	}
 

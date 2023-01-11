@@ -12,7 +12,8 @@ interface MetaCache
 
 	/**
 	 * @param class-string<MappedObject> $class
+	 * @param list<string> $fileDependencies
 	 */
-	public function save(string $class, RuntimeMeta $meta): void;
+	public function save(string $class, RuntimeMeta $meta, array $fileDependencies): void;
 
 }
