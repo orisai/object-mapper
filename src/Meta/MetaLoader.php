@@ -44,12 +44,25 @@ final class MetaLoader
 			return $this->arrayCache[$class];
 		}
 
-		$meta = $this->metaCache->load($class);
+		return $this->arrayCache[$class] = $this->metaCache->load($class)
+			?? $this->getRuntimeMeta($class);
+	}
 
-		if ($meta !== null) {
-			return $this->arrayCache[$class] = $meta;
-		}
+	private function getRuntimeMeta(string $class): RuntimeMeta
+	{
+		$classRef = $this->validateClass($class);
+		$meta = $this->createRuntimeMeta($classRef);
 
+		$this->metaCache->save($classRef->getName(), $meta);
+
+		return $meta;
+	}
+
+	/**
+	 * @return ReflectionClass<MappedObject>
+	 */
+	private function validateClass(string $class): ReflectionClass
+	{
 		if (!class_exists($class)) {
 			throw InvalidArgument::create()
 				->withMessage("Class '$class' does not exist");
@@ -71,6 +84,14 @@ final class MetaLoader
 				->withMessage("Class '$class' must be instantiable.");
 		}
 
+		return $classRef;
+	}
+
+	/**
+	 * @param ReflectionClass<MappedObject> $class
+	 */
+	private function createRuntimeMeta(ReflectionClass $class): RuntimeMeta
+	{
 		if (count($this->sourceManager->getAll()) > 1) {
 			throw NotImplemented::create()
 				->withMessage('Only one source is supported at this moment.');
@@ -78,19 +99,15 @@ final class MetaLoader
 
 		$sourceMeta = null;
 		foreach ($this->sourceManager->getAll() as $source) {
-			$sourceMeta = $source->load($classRef);
+			$sourceMeta = $source->load($class);
 		}
 
 		if ($sourceMeta === null) {
 			throw InvalidArgument::create()
-				->withMessage("No metadata for class $class");
+				->withMessage("No metadata for class {$class->getName()}");
 		}
 
-		$meta = $this->getResolver()->resolve($classRef, $sourceMeta);
-
-		$this->metaCache->save($class, $meta);
-
-		return $this->arrayCache[$class] = $meta;
+		return $this->getResolver()->resolve($class, $sourceMeta);
 	}
 
 	/**
