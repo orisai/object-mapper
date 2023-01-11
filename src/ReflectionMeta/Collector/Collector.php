@@ -2,7 +2,7 @@
 
 namespace Orisai\ObjectMapper\ReflectionMeta\Collector;
 
-use Orisai\ObjectMapper\ReflectionMeta\Meta\ClassMeta;
+use Orisai\ObjectMapper\ReflectionMeta\Meta\HierarchicClassMeta;
 use ReflectionClass;
 
 interface Collector
@@ -10,10 +10,10 @@ interface Collector
 
 	/**
 	 * @template T of object
-	 * @param ReflectionClass<object> $collectedClass
-	 * @param class-string<T>         $attributeClass
-	 * @return non-empty-list<ClassMeta<T>>
+	 * @param ReflectionClass<object> $from
+	 * @param class-string<T>         $collected
+	 * @return HierarchicClassMeta<T>
 	 */
-	public function collect(ReflectionClass $collectedClass, string $attributeClass): array;
+	public function collect(ReflectionClass $from, string $collected): HierarchicClassMeta;
 
 }

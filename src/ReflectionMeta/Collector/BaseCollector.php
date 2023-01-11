@@ -3,7 +3,7 @@
 namespace Orisai\ObjectMapper\ReflectionMeta\Collector;
 
 use Orisai\ObjectMapper\ReflectionMeta\Meta\ClassConstantMeta;
-use Orisai\ObjectMapper\ReflectionMeta\Meta\ClassMeta;
+use Orisai\ObjectMapper\ReflectionMeta\Meta\HierarchicClassMeta;
 use Orisai\ObjectMapper\ReflectionMeta\Meta\MethodMeta;
 use Orisai\ObjectMapper\ReflectionMeta\Meta\ParameterMeta;
 use Orisai\ObjectMapper\ReflectionMeta\Meta\PropertyMeta;
@@ -19,12 +19,30 @@ use ReflectionClassConstant;
 use ReflectionMethod;
 use ReflectionParameter;
 use ReflectionProperty;
-use function array_reverse;
-use function array_values;
-use function ksort;
 
 abstract class BaseCollector implements Collector
 {
+
+	public function collect(ReflectionClass $from, string $collected): HierarchicClassMeta
+	{
+		return new HierarchicClassMeta(
+			$this->createAboveReflectorSource(new ClassSource($from)),
+			$this->createParentMeta($from, $collected),
+			$this->createInterfacesMeta($from, $collected),
+			$this->createTraitsMeta($from, $collected),
+			$this->getClassReflectorAttributes($from, $collected),
+			$this->createClassConstantsMeta($from, $collected),
+			$this->createPropertiesMeta($from, $collected),
+			$this->createMethodsMeta($from, $collected),
+		);
+	}
+
+	/**
+	 * @template S of ReflectorSource
+	 * @param S $target
+	 * @return AboveReflectorSource<S>
+	 */
+	abstract protected function createAboveReflectorSource(ReflectorSource $target): AboveReflectorSource;
 
 	/**
 	 * @template T of object
@@ -36,20 +54,71 @@ abstract class BaseCollector implements Collector
 
 	/**
 	 * @template T of object
-	 * @param class-string<T> $attributeClass
-	 * @return list<T>
+	 * @param ReflectionClass<object> $class
+	 * @param class-string<T>         $attributeClass
+	 * @return HierarchicClassMeta<T>|null
 	 */
-	abstract protected function getPropertyReflectorAttributes(
-		ReflectionProperty $property,
-		string $attributeClass
-	): array;
+	private function createParentMeta(ReflectionClass $class, string $attributeClass): ?HierarchicClassMeta
+	{
+		$parentClass = $class->getParentClass();
+
+		if ($parentClass === false) {
+			return null;
+		}
+
+		return $this->collect($parentClass, $attributeClass);
+	}
 
 	/**
 	 * @template T of object
-	 * @param class-string<T> $attributeClass
-	 * @return list<T>
+	 * @param ReflectionClass<object> $class
+	 * @param class-string<T>         $attributeClass
+	 * @return list<HierarchicClassMeta<T>>
 	 */
-	abstract protected function getMethodReflectorAttributes(ReflectionMethod $method, string $attributeClass): array;
+	private function createInterfacesMeta(ReflectionClass $class, string $attributeClass): array
+	{
+		$interfaces = [];
+		foreach ($class->getInterfaces() as $interface) {
+			$interfaces[] = $this->collect($interface, $attributeClass);
+		}
+
+		return $interfaces;
+	}
+
+	/**
+	 * @template T of object
+	 * @param ReflectionClass<object> $class
+	 * @param class-string<T>         $attributeClass
+	 * @return list<HierarchicClassMeta<T>>
+	 */
+	private function createTraitsMeta(ReflectionClass $class, string $attributeClass): array
+	{
+		$traits = [];
+		foreach ($class->getTraits() as $trait) {
+			$traits[] = $this->collect($trait, $attributeClass);
+		}
+
+		return $traits;
+	}
+
+	/**
+	 * @template T of object
+	 * @param ReflectionClass<object> $class
+	 * @param class-string<T>         $attributeClass
+	 * @return list<ClassConstantMeta<T>>
+	 */
+	private function createClassConstantsMeta(ReflectionClass $class, string $attributeClass): array
+	{
+		$constants = [];
+		foreach ($class->getReflectionConstants() as $constant) {
+			$constants[] = new ClassConstantMeta(
+				$this->createAboveReflectorSource(new ClassConstantSource($constant)),
+				$this->getClassConstantReflectorAttributes($constant, $attributeClass),
+			);
+		}
+
+		return $constants;
+	}
 
 	/**
 	 * @template T of object
@@ -63,89 +132,12 @@ abstract class BaseCollector implements Collector
 
 	/**
 	 * @template T of object
-	 * @param class-string<T> $attributeClass
-	 * @return list<T>
-	 */
-	abstract protected function getParameterReflectorAttributes(
-		ReflectionParameter $parameter,
-		string $attributeClass
-	): array;
-
-	/**
-	 * @template S of ReflectorSource
-	 * @param S $target
-	 * @return AboveReflectorSource<S>
-	 */
-	abstract protected function createAboveReflectorSource(ReflectorSource $target): AboveReflectorSource;
-
-	public function collect(ReflectionClass $collectedClass, string $attributeClass): array
-	{
-		$collected = [];
-		foreach ($this->getClassReflectors($collectedClass) as $class) {
-			$collected[] = $this->createClassMeta($class, $attributeClass);
-
-			foreach ($this->sortClassReflectors($class->getInterfaces()) as $interface) {
-				$collected[] = $this->createClassMeta($interface, $attributeClass);
-			}
-
-			foreach ($this->sortClassReflectors($class->getTraits()) as $trait) {
-				$collected[] = $this->createClassMeta($trait, $attributeClass);
-			}
-		}
-
-		return $collected;
-	}
-
-	/**
-	 * @template T of object
-	 * @param ReflectionClass<T> $reflector
-	 * @return non-empty-list<ReflectionClass<object>>
-	 */
-	private function getClassReflectors(ReflectionClass $reflector): array
-	{
-		$list = [];
-		while ($reflector !== false) {
-			$list[] = $reflector;
-			$reflector = $reflector->getParentClass();
-		}
-
-		// Sorted from first parent to last child
-		return array_reverse($list);
-	}
-
-	/**
-	 * @template T of object
-	 * @param array<ReflectionClass<T>> $reflectors
-	 * @return list<ReflectionClass<object>>
-	 */
-	private function sortClassReflectors(array $reflectors): array
-	{
-		$sorted = [];
-		foreach ($reflectors as $reflector) {
-			$sorted[$reflector->getName()] = $reflector;
-		}
-
-		ksort($sorted);
-
-		return array_values($sorted);
-	}
-
-	/**
-	 * @template T of object
 	 * @param ReflectionClass<object> $class
 	 * @param class-string<T>         $attributeClass
-	 * @return ClassMeta<T>
+	 * @return list<PropertyMeta<T>>
 	 */
-	private function createClassMeta(ReflectionClass $class, string $attributeClass): ClassMeta
+	private function createPropertiesMeta(ReflectionClass $class, string $attributeClass): array
 	{
-		$constants = [];
-		foreach ($class->getReflectionConstants() as $constant) {
-			$constants[] = new ClassConstantMeta(
-				$this->createAboveReflectorSource(new ClassConstantSource($constant)),
-				$this->getClassConstantReflectorAttributes($constant, $attributeClass),
-			);
-		}
-
 		$properties = [];
 		foreach ($class->getProperties() as $property) {
 			$properties[] = new PropertyMeta(
@@ -154,30 +146,72 @@ abstract class BaseCollector implements Collector
 			);
 		}
 
+		return $properties;
+	}
+
+	/**
+	 * @template T of object
+	 * @param class-string<T> $attributeClass
+	 * @return list<T>
+	 */
+	abstract protected function getPropertyReflectorAttributes(
+		ReflectionProperty $property,
+		string $attributeClass
+	): array;
+
+	/**
+	 * @template T of object
+	 * @param ReflectionClass<object> $class
+	 * @param class-string<T>         $attributeClass
+	 * @return list<MethodMeta<T>>
+	 */
+	private function createMethodsMeta(ReflectionClass $class, string $attributeClass): array
+	{
 		$methods = [];
 		foreach ($class->getMethods() as $method) {
-			$parameters = [];
-			foreach ($method->getParameters() as $parameter) {
-				$parameters[] = new ParameterMeta(
-					$this->createAboveReflectorSource(new ParameterSource($parameter)),
-					$this->getParameterReflectorAttributes($parameter, $attributeClass),
-				);
-			}
-
 			$methods[] = new MethodMeta(
 				$this->createAboveReflectorSource(new MethodSource($method)),
 				$this->getMethodReflectorAttributes($method, $attributeClass),
-				$parameters,
+				$this->createParametersMeta($method, $attributeClass),
 			);
 		}
 
-		return new ClassMeta(
-			$this->createAboveReflectorSource(new ClassSource($class)),
-			$this->getClassReflectorAttributes($class, $attributeClass),
-			$constants,
-			$properties,
-			$methods,
-		);
+		return $methods;
 	}
+
+	/**
+	 * @template T of object
+	 * @param class-string<T> $attributeClass
+	 * @return list<T>
+	 */
+	abstract protected function getMethodReflectorAttributes(ReflectionMethod $method, string $attributeClass): array;
+
+	/**
+	 * @template T of object
+	 * @param class-string<T> $attributeClass
+	 * @return list<ParameterMeta<T>>
+	 */
+	private function createParametersMeta(ReflectionMethod $method, string $attributeClass): array
+	{
+		$parameters = [];
+		foreach ($method->getParameters() as $parameter) {
+			$parameters[] = new ParameterMeta(
+				$this->createAboveReflectorSource(new ParameterSource($parameter)),
+				$this->getParameterReflectorAttributes($parameter, $attributeClass),
+			);
+		}
+
+		return $parameters;
+	}
+
+	/**
+	 * @template T of object
+	 * @param class-string<T> $attributeClass
+	 * @return list<T>
+	 */
+	abstract protected function getParameterReflectorAttributes(
+		ReflectionParameter $parameter,
+		string $attributeClass
+	): array;
 
 }

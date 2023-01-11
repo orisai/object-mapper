@@ -20,6 +20,7 @@ use Orisai\ObjectMapper\Meta\MetaSource;
 use Orisai\ObjectMapper\ReflectionMeta\Collector\AnnotationsCollector;
 use Orisai\ObjectMapper\ReflectionMeta\Collector\AttributesCollector;
 use Orisai\ObjectMapper\ReflectionMeta\Meta\ClassMeta;
+use Orisai\ObjectMapper\ReflectionMeta\Meta\HierarchicClassMeta;
 use ReflectionClass;
 use ReflectionProperty;
 use function array_merge;
@@ -65,14 +66,51 @@ final class AttributesMetaSource implements MetaSource
 		$metasByCollector = [];
 
 		if ($this->annotationsCollector !== null) {
-			$metasByCollector[] = $this->annotationsCollector->collect($class, BaseAttribute::class);
+			$metasByCollector[] = $this->hierarchicToFlatClassMeta(
+				$this->annotationsCollector->collect($class, BaseAttribute::class),
+			);
 		}
 
 		if ($this->attributesCollector !== null) {
-			$metasByCollector[] = $this->attributesCollector->collect($class, BaseAttribute::class);
+			$metasByCollector[] = $this->hierarchicToFlatClassMeta(
+				$this->attributesCollector->collect($class, BaseAttribute::class),
+			);
 		}
 
 		return array_merge(...$metasByCollector);
+	}
+
+	/**
+	 * @template T of object
+	 * @param HierarchicClassMeta<T> $meta
+	 * @return list<ClassMeta<T>>
+	 */
+	private function hierarchicToFlatClassMeta(HierarchicClassMeta $meta): array
+	{
+		$metasBySource = [];
+
+		$parent = $meta->getParent();
+		if ($parent !== null) {
+			$metasBySource[] = $this->hierarchicToFlatClassMeta($parent);
+		}
+
+		foreach ($meta->getInterfaces() as $interface) {
+			$metasBySource[] = $this->hierarchicToFlatClassMeta($interface);
+		}
+
+		foreach ($meta->getTraits() as $trait) {
+			$metasBySource[] = $this->hierarchicToFlatClassMeta($trait);
+		}
+
+		$metasBySource[][] = new ClassMeta(
+			$meta->getSource(),
+			$meta->getAttributes(),
+			$meta->getConstants(),
+			$meta->getProperties(),
+			$meta->getMethods(),
+		);
+
+		return array_merge(...$metasBySource);
 	}
 
 	/**
