@@ -3,7 +3,6 @@
 namespace Orisai\ObjectMapper\Attributes;
 
 use Doctrine\Common\Annotations\AnnotationReader;
-use Doctrine\Common\Annotations\Reader;
 use Orisai\Exceptions\Logic\InvalidArgument;
 use Orisai\ObjectMapper\Attributes\Callbacks\CallableAttribute;
 use Orisai\ObjectMapper\Attributes\Docs\DocumentationAttribute;
@@ -18,52 +17,74 @@ use Orisai\ObjectMapper\Meta\Compile\PropertyCompileMeta;
 use Orisai\ObjectMapper\Meta\Compile\RuleCompileMeta;
 use Orisai\ObjectMapper\Meta\DocMeta;
 use Orisai\ObjectMapper\Meta\MetaSource;
-use ReflectionAttribute;
+use Orisai\ObjectMapper\ReflectionMeta\Collector\AnnotationsCollector;
+use Orisai\ObjectMapper\ReflectionMeta\Collector\AttributesCollector;
+use Orisai\ObjectMapper\ReflectionMeta\Meta\ClassMeta;
 use ReflectionClass;
 use ReflectionProperty;
 use function array_merge;
 use function class_exists;
 use function get_class;
-use function is_a;
 use function sprintf;
 use const PHP_VERSION_ID;
 
 final class AttributesMetaSource implements MetaSource
 {
 
-	private ?Reader $reader;
+	private ?AnnotationsCollector $annotationsCollector;
 
-	public function __construct(?Reader $reader = null)
+	private ?AttributesCollector $attributesCollector;
+
+	public function __construct()
 	{
-		if ($reader === null && class_exists(AnnotationReader::class)) {
-			$reader = new AnnotationReader();
-		}
+		$this->annotationsCollector = class_exists(AnnotationReader::class)
+			? new AnnotationsCollector()
+			: null;
 
-		$this->reader = $reader;
+		$this->attributesCollector = PHP_VERSION_ID >= 8_00_00
+			? new AttributesCollector()
+			: null;
 	}
 
 	public function load(ReflectionClass $class): CompileMeta
 	{
+		$metas = $this->getMetas($class);
+
 		return new CompileMeta(
-			$this->loadClassMeta($class),
-			$this->loadPropertiesMeta($class),
+			$this->loadClassMeta($metas),
+			$this->loadPropertiesMeta($class, $metas),
 		);
 	}
 
 	/**
 	 * @param ReflectionClass<MappedObject> $class
+	 * @return list<ClassMeta<BaseAttribute>>
 	 */
-	private function loadClassMeta(ReflectionClass $class): ClassCompileMeta
+	private function getMetas(ReflectionClass $class): array
+	{
+		$metasByCollector = [];
+
+		if ($this->annotationsCollector !== null) {
+			$metasByCollector[] = $this->annotationsCollector->collect($class, BaseAttribute::class);
+		}
+
+		if ($this->attributesCollector !== null) {
+			$metasByCollector[] = $this->attributesCollector->collect($class, BaseAttribute::class);
+		}
+
+		return array_merge(...$metasByCollector);
+	}
+
+	/**
+	 * @param list<ClassMeta<BaseAttribute>> $metas
+	 */
+	private function loadClassMeta(array $metas): ClassCompileMeta
 	{
 		$callbacks = [];
 		$docs = [];
 		$modifiers = [];
 
-		foreach ($this->getClassAttributes($class) as $annotation) {
-			if (!$annotation instanceof BaseAttribute) {
-				continue;
-			}
-
+		foreach ($this->getClassAttributes($metas) as $annotation) {
 			$annotation = $this->checkAnnotationType($annotation);
 
 			if ($annotation instanceof RuleAttribute) {
@@ -97,10 +118,11 @@ final class AttributesMetaSource implements MetaSource
 	}
 
 	/**
-	 * @param ReflectionClass<MappedObject> $class
+	 * @param ReflectionClass<MappedObject>  $class
+	 * @param list<ClassMeta<BaseAttribute>> $metas
 	 * @return array<string, PropertyCompileMeta>
 	 */
-	private function loadPropertiesMeta(ReflectionClass $class): array
+	private function loadPropertiesMeta(ReflectionClass $class, array $metas): array
 	{
 		$properties = [];
 
@@ -110,11 +132,7 @@ final class AttributesMetaSource implements MetaSource
 			$modifiers = [];
 			$rule = null;
 
-			foreach ($this->getPropertyAttributes($property) as $annotation) {
-				if (!$annotation instanceof BaseAttribute) {
-					continue;
-				}
-
+			foreach ($this->getPropertyAttributes($property, $metas) as $annotation) {
 				$annotation = $this->checkAnnotationType($annotation);
 
 				if ($annotation instanceof RuleAttribute) {
@@ -202,57 +220,40 @@ final class AttributesMetaSource implements MetaSource
 	}
 
 	/**
-	 * @param ReflectionClass<MappedObject> $class
-	 * @return array<object>
+	 * @param list<ClassMeta<BaseAttribute>> $metas
+	 * @return list<BaseAttribute>
 	 */
-	private function getClassAttributes(ReflectionClass $class): array
-	{
-		$attributesBySource = [];
-		if (PHP_VERSION_ID >= 8_00_00) {
-			$attributesBySource[] = $this->reflectionAttributesToInstances(
-				$class->getAttributes(),
-			);
-		}
-
-		if ($this->reader !== null) {
-			$attributesBySource[] = $this->reader->getClassAnnotations($class);
-		}
-
-		return array_merge(...$attributesBySource);
-	}
-
-	/**
-	 * @return array<object>
-	 */
-	private function getPropertyAttributes(ReflectionProperty $property): array
-	{
-		$attributesBySource = [];
-		if (PHP_VERSION_ID >= 8_00_00) {
-			$attributesBySource[] = $this->reflectionAttributesToInstances(
-				$property->getAttributes(),
-			);
-		}
-
-		if ($this->reader !== null) {
-			$attributesBySource[] = $this->reader->getPropertyAnnotations($property);
-		}
-
-		return array_merge(...$attributesBySource);
-	}
-
-	/**
-	 * @param array<ReflectionAttribute<object>> $reflectionAttributes
-	 * @return list<object>
-	 */
-	private function reflectionAttributesToInstances(array $reflectionAttributes): array
+	private function getClassAttributes(array $metas): array
 	{
 		$attributes = [];
-		foreach ($reflectionAttributes as $attribute) {
-			if (!is_a($attribute->getName(), BaseAttribute::class, true)) {
-				continue;
+		foreach ($metas as $meta) {
+			foreach ($meta->getAttributes() as $attribute) {
+				$attributes[] = $attribute;
 			}
+		}
 
-			$attributes[] = $attribute->newInstance();
+		return $attributes;
+	}
+
+	/**
+	 * @param list<ClassMeta<BaseAttribute>> $metas
+	 * @return list<BaseAttribute>
+	 */
+	private function getPropertyAttributes(ReflectionProperty $reflector, array $metas): array
+	{
+		$attributes = [];
+		foreach ($metas as $meta) {
+			foreach ($meta->getProperties() as $property) {
+				$propertyReflector = $property->getSource()->getTarget()->getReflector();
+
+				if ($reflector->getName() !== $propertyReflector->getName()) {
+					continue;
+				}
+
+				foreach ($property->getAttributes() as $attribute) {
+					$attributes[] = $attribute;
+				}
+			}
 		}
 
 		return $attributes;
