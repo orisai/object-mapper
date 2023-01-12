@@ -51,9 +51,15 @@ final class AttributesMetaSource implements MetaSource
 	{
 		$metas = $this->getMetas($class);
 
+		$sources = [];
+		foreach ($metas as $meta) {
+			$sources[] = $meta->getSource()->getTarget();
+		}
+
 		return new CompileMeta(
 			$this->loadClassMeta($metas),
 			$this->loadPropertiesMeta($class, $metas),
+			$sources,
 		);
 	}
 

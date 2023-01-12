@@ -2,6 +2,9 @@
 
 namespace Orisai\ObjectMapper\Meta\Compile;
 
+use Orisai\SourceMap\ClassSource;
+use Orisai\SourceMap\FileSource;
+
 final class CompileMeta
 {
 
@@ -10,13 +13,18 @@ final class CompileMeta
 	/** @var array<string, PropertyCompileMeta> */
 	private array $properties;
 
+	/** @var list<ClassSource|FileSource> */
+	private array $sources;
+
 	/**
 	 * @param array<string, PropertyCompileMeta> $properties
+	 * @param list<ClassSource|FileSource>       $sources
 	 */
-	public function __construct(ClassCompileMeta $class, array $properties)
+	public function __construct(ClassCompileMeta $class, array $properties, array $sources)
 	{
 		$this->class = $class;
 		$this->properties = $properties;
+		$this->sources = $sources;
 	}
 
 	public function getClass(): ClassCompileMeta
@@ -30,6 +38,14 @@ final class CompileMeta
 	public function getProperties(): array
 	{
 		return $this->properties;
+	}
+
+	/**
+	 * @return list<ClassSource|FileSource>
+	 */
+	public function getSources(): array
+	{
+		return $this->sources;
 	}
 
 }
