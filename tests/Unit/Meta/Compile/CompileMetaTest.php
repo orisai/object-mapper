@@ -2,6 +2,8 @@
 
 namespace Tests\Orisai\ObjectMapper\Unit\Meta\Compile;
 
+use Orisai\ObjectMapper\Callbacks\BeforeCallback;
+use Orisai\ObjectMapper\Meta\Compile\CallbackCompileMeta;
 use Orisai\ObjectMapper\Meta\Compile\ClassCompileMeta;
 use Orisai\ObjectMapper\Meta\Compile\CompileMeta;
 use Orisai\ObjectMapper\Meta\Compile\PropertyCompileMeta;
@@ -40,6 +42,39 @@ final class CompileMetaTest extends TestCase
 			$sources,
 			$meta->getSources(),
 		);
+		self::assertTrue($meta->hasAnyAttributes());
+	}
+
+	public function testHasAnyAttributes(): void
+	{
+		$meta = new CompileMeta(
+			new ClassCompileMeta([], [], []),
+			[],
+			[],
+		);
+		self::assertFalse($meta->hasAnyAttributes());
+
+		$meta = new CompileMeta(
+			new ClassCompileMeta(
+				[
+					new CallbackCompileMeta(BeforeCallback::class, []),
+				],
+				[],
+				[],
+			),
+			[],
+			[],
+		);
+		self::assertTrue($meta->hasAnyAttributes());
+
+		$meta = new CompileMeta(
+			new ClassCompileMeta([], [], []),
+			[
+				'a' => new PropertyCompileMeta([], [], [], new RuleCompileMeta(MixedRule::class, [])),
+			],
+			[],
+		);
+		self::assertTrue($meta->hasAnyAttributes());
 	}
 
 }

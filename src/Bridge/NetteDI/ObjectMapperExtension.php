@@ -17,11 +17,12 @@ use Orisai\ObjectMapper\Meta\DefaultMetaSourceManager;
 use Orisai\ObjectMapper\Meta\MetaCache;
 use Orisai\ObjectMapper\Meta\MetaLoader;
 use Orisai\ObjectMapper\Meta\MetaResolverFactory;
-use Orisai\ObjectMapper\Meta\MetaSource;
 use Orisai\ObjectMapper\Meta\MetaSourceManager;
 use Orisai\ObjectMapper\Processing\DefaultProcessor;
 use Orisai\ObjectMapper\Processing\ObjectCreator;
 use Orisai\ObjectMapper\Processing\Processor;
+use Orisai\ObjectMapper\ReflectionMeta\Collector\AnnotationsCollector;
+use Orisai\ObjectMapper\ReflectionMeta\Collector\AttributesCollector;
 use Orisai\ObjectMapper\Rules\RuleManager;
 use stdClass;
 use function assert;
@@ -83,18 +84,50 @@ final class ObjectMapperExtension extends CompilerExtension
 			->setType(MetaSourceManager::class)
 			->setAutowired(false);
 
-		$definition->addSetup('addSource', [
-			$this->registerAttributesMetaSource($builder),
-		]);
+		$this->registerAnnotationsMetaSource($definition, $builder);
+		$this->registerAttributesMetaSource($definition, $builder);
 
 		return $definition;
 	}
 
-	private function registerAttributesMetaSource(ContainerBuilder $builder): ServiceDefinition
+	private function registerAnnotationsMetaSource(
+		ServiceDefinition $sourceManagerDefinition,
+		ContainerBuilder $builder
+	): void
 	{
-		return $builder->addDefinition($this->prefix('metaSource.attributes'))
-			->setFactory(AttributesMetaSource::class)
-			->setType(MetaSource::class);
+		if (!AnnotationsCollector::canBeConstructed()) {
+			return;
+		}
+
+		$sourceManagerDefinition->addSetup('addSource', [
+			$builder->addDefinition($this->prefix('metaSource.annotations'))
+				->setFactory(AttributesMetaSource::class, [
+					$builder->addDefinition($this->prefix('metaCollector.annotations'))
+						->setFactory(AnnotationsCollector::class)
+						->setAutowired(false),
+				])
+				->setAutowired(false),
+		]);
+	}
+
+	private function registerAttributesMetaSource(
+		ServiceDefinition $sourceManagerDefinition,
+		ContainerBuilder $builder
+	): void
+	{
+		if (!AttributesCollector::canBeConstructed()) {
+			return;
+		}
+
+		$sourceManagerDefinition->addSetup('addSource', [
+			$builder->addDefinition($this->prefix('metaSource.attributes'))
+				->setFactory(AttributesMetaSource::class, [
+					$builder->addDefinition($this->prefix('metaCollector.attributes'))
+						->setFactory(AttributesCollector::class)
+						->setAutowired(false),
+				])
+				->setAutowired(false),
+		]);
 	}
 
 	private function registerMetaCache(ContainerBuilder $builder, bool $debugMode): ServiceDefinition

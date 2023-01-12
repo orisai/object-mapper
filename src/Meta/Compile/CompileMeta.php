@@ -48,4 +48,10 @@ final class CompileMeta
 		return $this->sources;
 	}
 
+	public function hasAnyAttributes(): bool
+	{
+		return $this->properties !== []
+			|| $this->class->hasAnyAttributes();
+	}
+
 }

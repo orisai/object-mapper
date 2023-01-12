@@ -26,7 +26,7 @@ final class AnnotationsCollector extends BaseCollector
 	public function __construct(?Reader $reader = null)
 	{
 		if ($reader === null) {
-			if (!class_exists(AnnotationReader::class)) {
+			if (!self::canBeConstructed()) {
 				throw InvalidState::create()
 					->withMessage('doctrine/annotations dependency is required');
 			}
@@ -35,6 +35,11 @@ final class AnnotationsCollector extends BaseCollector
 		}
 
 		$this->reader = $reader;
+	}
+
+	public static function canBeConstructed(): bool
+	{
+		return class_exists(AnnotationReader::class);
 	}
 
 	protected function getClassReflectorAttributes(ReflectionClass $class, string $attributeClass): array

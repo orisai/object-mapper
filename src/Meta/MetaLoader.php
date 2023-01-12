@@ -4,16 +4,17 @@ namespace Orisai\ObjectMapper\Meta;
 
 use Nette\Loaders\RobotLoader;
 use Orisai\Exceptions\Logic\InvalidArgument;
-use Orisai\Exceptions\Logic\NotImplemented;
 use Orisai\ObjectMapper\MappedObject;
+use Orisai\ObjectMapper\Meta\Compile\ClassCompileMeta;
+use Orisai\ObjectMapper\Meta\Compile\CompileMeta;
 use Orisai\ObjectMapper\Meta\Runtime\RuntimeMeta;
 use Orisai\SourceMap\ClassSource;
 use ReflectionClass;
+use function array_merge;
 use function array_unique;
 use function array_values;
 use function assert;
 use function class_exists;
-use function count;
 use function is_subclass_of;
 
 final class MetaLoader
@@ -100,23 +101,32 @@ final class MetaLoader
 	 */
 	private function createRuntimeMeta(ReflectionClass $class): array
 	{
-		if (count($this->sourceManager->getAll()) > 1) {
-			throw NotImplemented::create()
-				->withMessage('Only one source is supported at this moment.');
-		}
+		$meta = null;
+		$sourcesByMetaSource = [];
 
-		$sourceMeta = null;
+		// Current sources replace each other (needed for libs offering both annotations and attributes)
+		// Sources modifying previous source are not supported
 		foreach ($this->sourceManager->getAll() as $metaSource) {
 			$sourceMeta = $metaSource->load($class);
+			$sourcesByMetaSource[] = $sourceMeta->getSources();
+
+			if ($sourceMeta->hasAnyAttributes()) {
+				$meta = $sourceMeta;
+
+				break;
+			}
 		}
 
-		if ($sourceMeta === null) {
-			throw InvalidArgument::create()
-				->withMessage("No metadata for class {$class->getName()}");
+		if ($meta === null) {
+			$meta = new CompileMeta(
+				new ClassCompileMeta([], [], []),
+				[],
+				[],
+			);
 		}
 
 		$fileDependencies = [];
-		foreach ($sourceMeta->getSources() as $source) {
+		foreach (array_merge(...$sourcesByMetaSource) as $source) {
 			if ($source instanceof ClassSource) {
 				$fileName = $source->getReflector()->getFileName();
 				if ($fileName === false) {
@@ -130,7 +140,7 @@ final class MetaLoader
 		}
 
 		return [
-			$this->getResolver()->resolve($class, $sourceMeta),
+			$this->getResolver()->resolve($class, $meta),
 			array_values(array_unique($fileDependencies)),
 		];
 	}

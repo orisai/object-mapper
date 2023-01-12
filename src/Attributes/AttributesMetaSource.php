@@ -2,7 +2,6 @@
 
 namespace Orisai\ObjectMapper\Attributes;
 
-use Doctrine\Common\Annotations\AnnotationReader;
 use Orisai\Exceptions\Logic\InvalidArgument;
 use Orisai\ObjectMapper\Attributes\Callbacks\CallableAttribute;
 use Orisai\ObjectMapper\Attributes\Docs\DocumentationAttribute;
@@ -17,34 +16,23 @@ use Orisai\ObjectMapper\Meta\Compile\PropertyCompileMeta;
 use Orisai\ObjectMapper\Meta\Compile\RuleCompileMeta;
 use Orisai\ObjectMapper\Meta\DocMeta;
 use Orisai\ObjectMapper\Meta\MetaSource;
-use Orisai\ObjectMapper\ReflectionMeta\Collector\AnnotationsCollector;
-use Orisai\ObjectMapper\ReflectionMeta\Collector\AttributesCollector;
+use Orisai\ObjectMapper\ReflectionMeta\Collector\Collector;
 use Orisai\ObjectMapper\ReflectionMeta\Meta\ClassMeta;
 use Orisai\ObjectMapper\ReflectionMeta\Meta\HierarchicClassMeta;
 use ReflectionClass;
 use ReflectionProperty;
 use function array_merge;
-use function class_exists;
 use function get_class;
 use function sprintf;
-use const PHP_VERSION_ID;
 
 final class AttributesMetaSource implements MetaSource
 {
 
-	private ?AnnotationsCollector $annotationsCollector;
+	private Collector $collector;
 
-	private ?AttributesCollector $attributesCollector;
-
-	public function __construct()
+	public function __construct(Collector $collector)
 	{
-		$this->annotationsCollector = class_exists(AnnotationReader::class)
-			? new AnnotationsCollector()
-			: null;
-
-		$this->attributesCollector = PHP_VERSION_ID >= 8_00_00
-			? new AttributesCollector()
-			: null;
+		$this->collector = $collector;
 	}
 
 	public function load(ReflectionClass $class): CompileMeta
@@ -69,21 +57,9 @@ final class AttributesMetaSource implements MetaSource
 	 */
 	private function getMetas(ReflectionClass $class): array
 	{
-		$metasByCollector = [];
-
-		if ($this->annotationsCollector !== null) {
-			$metasByCollector[] = $this->hierarchicToFlatClassMeta(
-				$this->annotationsCollector->collect($class, BaseAttribute::class),
-			);
-		}
-
-		if ($this->attributesCollector !== null) {
-			$metasByCollector[] = $this->hierarchicToFlatClassMeta(
-				$this->attributesCollector->collect($class, BaseAttribute::class),
-			);
-		}
-
-		return array_merge(...$metasByCollector);
+		return $this->hierarchicToFlatClassMeta(
+			$this->collector->collect($class, BaseAttribute::class),
+		);
 	}
 
 	/**

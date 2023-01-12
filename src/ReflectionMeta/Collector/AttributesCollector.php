@@ -23,10 +23,15 @@ final class AttributesCollector extends BaseCollector
 
 	public function __construct()
 	{
-		if (PHP_VERSION_ID < 8_00_00) {
+		if (!self::canBeConstructed()) {
 			throw InvalidState::create()
 				->withMessage('Attributes are supported since PHP 8.0');
 		}
+	}
+
+	public static function canBeConstructed(): bool
+	{
+		return PHP_VERSION_ID >= 8_00_00;
 	}
 
 	protected function getClassReflectorAttributes(ReflectionClass $class, string $attributeClass): array

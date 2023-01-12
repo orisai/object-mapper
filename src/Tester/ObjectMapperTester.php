@@ -9,6 +9,8 @@ use Orisai\ObjectMapper\Meta\DefaultMetaSourceManager;
 use Orisai\ObjectMapper\Meta\MetaLoader;
 use Orisai\ObjectMapper\Processing\DefaultObjectCreator;
 use Orisai\ObjectMapper\Processing\DefaultProcessor;
+use Orisai\ObjectMapper\ReflectionMeta\Collector\AnnotationsCollector;
+use Orisai\ObjectMapper\ReflectionMeta\Collector\AttributesCollector;
 use Orisai\ObjectMapper\Rules\DefaultRuleManager;
 
 final class ObjectMapperTester
@@ -19,7 +21,14 @@ final class ObjectMapperTester
 		$ruleManager = new DefaultRuleManager();
 
 		$sourceManager = new DefaultMetaSourceManager();
-		$sourceManager->addSource(new AttributesMetaSource());
+
+		if (AnnotationsCollector::canBeConstructed()) {
+			$sourceManager->addSource(new AttributesMetaSource(new AnnotationsCollector()));
+		}
+
+		if (AttributesCollector::canBeConstructed()) {
+			$sourceManager->addSource(new AttributesMetaSource(new AttributesCollector()));
+		}
 
 		$objectCreator = new DefaultObjectCreator();
 		$cache = new ArrayMetaCache();

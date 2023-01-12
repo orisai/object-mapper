@@ -69,10 +69,13 @@ use Orisai\ObjectMapper\Meta\DefaultMetaSourceManager;
 use Orisai\ObjectMapper\Meta\MetaLoader;
 use Orisai\ObjectMapper\Processing\DefaultObjectCreator;
 use Orisai\ObjectMapper\Processing\DefaultProcessor;
+use Orisai\ObjectMapper\ReflectionMeta\Collector\AnnotationsCollector;
+use Orisai\ObjectMapper\ReflectionMeta\Collector\AttributesCollector;
 use Orisai\ObjectMapper\Rules\DefaultRuleManager;
 
 $sourceManager = new DefaultMetaSourceManager();
-$sourceManager->addSource(new AttributesMetaSource());
+$sourceManager->addSource(new AttributesMetaSource(new AnnotationsCollector())); // For doctrine/annotations
+$sourceManager->addSource(new AttributesMetaSource(new AttributesCollector())); // For PHP 8 attributes
 $ruleManager = new DefaultRuleManager();
 $objectCreator = new DefaultObjectCreator();
 $cache = new ArrayMetaCache();
