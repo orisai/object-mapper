@@ -5,6 +5,8 @@ namespace Orisai\ObjectMapper\Attributes;
 use Orisai\Exceptions\Logic\InvalidArgument;
 use Orisai\ObjectMapper\Attributes\Callbacks\CallableAttribute;
 use Orisai\ObjectMapper\Attributes\Docs\DocumentationAttribute;
+use Orisai\ObjectMapper\Attributes\Expect\AllOf;
+use Orisai\ObjectMapper\Attributes\Expect\AnyOf;
 use Orisai\ObjectMapper\Attributes\Expect\RuleAttribute;
 use Orisai\ObjectMapper\Attributes\Modifiers\ModifierAttribute;
 use Orisai\ObjectMapper\MappedObject;
@@ -163,8 +165,8 @@ final class AttributesMetaSource implements MetaSource
 								'Combine multiple with %s or %s',
 								$class->getName(),
 								$property->getName(),
-								Expect\AnyOf::class,
-								Expect\AllOf::class,
+								AnyOf::class,
+								AllOf::class,
 							));
 					}
 
