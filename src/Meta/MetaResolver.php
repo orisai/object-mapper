@@ -77,7 +77,7 @@ final class MetaResolver
 		$classMeta = $meta->getClass();
 
 		$runtimeMeta = new ClassRuntimeMeta(
-			$this->resolveCallbacksMeta($classMeta, $context),
+			$this->resolveCallbacksMeta($classMeta, $context, $class),
 			$this->resolveDocsMeta($classMeta, $context),
 			$this->resolveModifiersMeta($classMeta, $context),
 		);
@@ -113,16 +113,21 @@ final class MetaResolver
 				$propertyMeta,
 				$property,
 				$defaults[$propertyName] ?? DefaultValueMeta::fromNothing(),
+				$class,
 			);
 		}
 
 		return $array;
 	}
 
+	/**
+	 * @param ReflectionClass<MappedObject> $declaringClass
+	 */
 	private function resolvePropertyMeta(
 		PropertyCompileMeta $meta,
 		ReflectionProperty $property,
-		DefaultValueMeta $defaultValue
+		DefaultValueMeta $defaultValue,
+		ReflectionClass $declaringClass
 	): PropertyRuntimeMeta
 	{
 		if ($property->isStatic()) {
@@ -135,20 +140,10 @@ final class MetaResolver
 				));
 		}
 
-		if ($property->isPrivate() && !$property->getDeclaringClass()->isFinal()) {
-			throw InvalidArgument::create()
-				->withMessage(sprintf(
-					'Property %s::$%s is not valid mapped property, \'%s\' supports private properties to be mapped only in final classes.',
-					$property->getDeclaringClass()->getName(),
-					$property->getName(),
-					MappedObject::class,
-				));
-		}
-
 		$context = ResolverArgsContext::forProperty($property, $this);
 
 		return new PropertyRuntimeMeta(
-			$this->resolveCallbacksMeta($meta, $context),
+			$this->resolveCallbacksMeta($meta, $context, $declaringClass),
 			$this->resolveDocsMeta($meta, $context),
 			$this->resolveModifiersMeta($meta, $context),
 			$this->resolveRuleMeta(
@@ -156,32 +151,44 @@ final class MetaResolver
 				$this->createRuleArgsContext($property),
 			),
 			$defaultValue,
+			$property->getDeclaringClass(),
 		);
 	}
 
 	/**
+	 * @param ReflectionClass<MappedObject> $declaringClass
 	 * @return array<int, CallbackRuntimeMeta<Args>>
 	 */
-	private function resolveCallbacksMeta(NodeCompileMeta $meta, ResolverArgsContext $context): array
+	private function resolveCallbacksMeta(
+		NodeCompileMeta $meta,
+		ResolverArgsContext $context,
+		ReflectionClass $declaringClass
+	): array
 	{
 		$array = [];
 		foreach ($meta->getCallbacks() as $key => $callback) {
-			$array[$key] = $this->resolveCallbackMeta($callback, $context);
+			$array[$key] = $this->resolveCallbackMeta($callback, $context, $declaringClass);
 		}
 
 		return $array;
 	}
 
 	/**
+	 * @param ReflectionClass<MappedObject> $declaringClass
 	 * @return CallbackRuntimeMeta<Args>
 	 */
-	private function resolveCallbackMeta(CallbackCompileMeta $meta, ResolverArgsContext $context): CallbackRuntimeMeta
+	private function resolveCallbackMeta(
+		CallbackCompileMeta $meta,
+		ResolverArgsContext $context,
+		ReflectionClass $declaringClass
+	): CallbackRuntimeMeta
 	{
 		$type = $meta->getType();
 
 		return new CallbackRuntimeMeta(
 			$type,
 			$type::resolveArgs($meta->getArgs(), $context),
+			$declaringClass,
 		);
 	}
 

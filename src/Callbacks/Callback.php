@@ -11,6 +11,7 @@ use Orisai\ObjectMapper\Exception\InvalidData;
 use Orisai\ObjectMapper\Exception\ValueDoesNotMatch;
 use Orisai\ObjectMapper\MappedObject;
 use Orisai\ObjectMapper\Processing\ObjectHolder;
+use ReflectionClass;
 
 /**
  * @phpstan-template T_ARGS of Args
@@ -33,11 +34,18 @@ interface Callback
 	 * @param mixed                            $data
 	 * @param FieldContext|MappedObjectContext $context
 	 * @param ObjectHolder<MappedObject>       $holder
+	 * @param ReflectionClass<MappedObject>    $declaringClass
 	 * @phpstan-param T_ARGS                   $args
 	 * @return mixed
 	 * @throws ValueDoesNotMatch
 	 * @throws InvalidData
 	 */
-	public static function invoke($data, Args $args, ObjectHolder $holder, BaseFieldContext $context);
+	public static function invoke(
+		$data,
+		Args $args,
+		ObjectHolder $holder,
+		BaseFieldContext $context,
+		ReflectionClass $declaringClass
+	);
 
 }

@@ -6,6 +6,7 @@ use Orisai\ObjectMapper\Callbacks\BaseCallbackArgs;
 use Orisai\ObjectMapper\Callbacks\BeforeCallback;
 use Orisai\ObjectMapper\Meta\Runtime\CallbackRuntimeMeta;
 use PHPUnit\Framework\TestCase;
+use ReflectionClass;
 
 final class CallbackRuntimeMetaTest extends TestCase
 {
@@ -14,10 +15,12 @@ final class CallbackRuntimeMetaTest extends TestCase
 	{
 		$type = BeforeCallback::class;
 		$args = new BaseCallbackArgs('method', false, false);
-		$meta = new CallbackRuntimeMeta($type, $args);
+		$declaringClass = new ReflectionClass(self::class);
+		$meta = new CallbackRuntimeMeta($type, $args, $declaringClass);
 
 		self::assertSame($type, $meta->getType());
 		self::assertSame($args, $meta->getArgs());
+		self::assertSame($declaringClass, $meta->getDeclaringClass());
 	}
 
 }

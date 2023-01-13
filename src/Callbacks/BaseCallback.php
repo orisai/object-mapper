@@ -263,7 +263,13 @@ abstract class BaseCallback implements Callback
 	 * @param FieldContext|MappedObjectContext $context
 	 * @return mixed
 	 */
-	public static function invoke($data, Args $args, ObjectHolder $holder, BaseFieldContext $context)
+	public static function invoke(
+		$data,
+		Args $args,
+		ObjectHolder $holder,
+		BaseFieldContext $context,
+		ReflectionClass $declaringClass
+	)
 	{
 		// Callback is skipped for unsupported runtime
 		$runtimes = $context->shouldMapDataToObjects() ? self::InitializationRuntimes : self::ProcessingRuntimes;
@@ -276,13 +282,13 @@ abstract class BaseCallback implements Callback
 		if ($args->isStatic) {
 			$class = $holder->getClass();
 			$callbackOutput = (static fn () => $class::$method($data, $context))
-				->bindTo(null, $class)();
+				->bindTo(null, $declaringClass->getName())();
 		} else {
 			$instance = $holder->getInstance();
 			// Closure with bound instance cannot be static
 			// phpcs:disable SlevomatCodingStandard.Functions.StaticClosure.ClosureNotStatic
 			$callbackOutput = (fn () => $instance->$method($data, $context))
-				->bindTo($instance, $instance)();
+				->bindTo($instance, $declaringClass->getName())();
 		}
 
 		return $args->returnsValue ? $callbackOutput : $data;

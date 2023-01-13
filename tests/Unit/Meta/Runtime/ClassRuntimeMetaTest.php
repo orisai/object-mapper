@@ -12,6 +12,7 @@ use Orisai\ObjectMapper\Meta\Runtime\ModifierRuntimeMeta;
 use Orisai\ObjectMapper\Modifiers\FieldNameArgs;
 use Orisai\ObjectMapper\Modifiers\FieldNameModifier;
 use PHPUnit\Framework\TestCase;
+use ReflectionClass;
 
 final class ClassRuntimeMetaTest extends TestCase
 {
@@ -19,7 +20,11 @@ final class ClassRuntimeMetaTest extends TestCase
 	public function test(): void
 	{
 		$callbacks = [
-			new CallbackRuntimeMeta(BeforeCallback::class, new BaseCallbackArgs('method', false, false)),
+			new CallbackRuntimeMeta(
+				BeforeCallback::class,
+				new BaseCallbackArgs('method', false, false),
+				new ReflectionClass(self::class),
+			),
 		];
 		$docs = [
 			new DocMeta(DescriptionDoc::class, []),

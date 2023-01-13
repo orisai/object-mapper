@@ -31,6 +31,7 @@ use Orisai\ObjectMapper\Rules\RuleManager;
 use Orisai\ObjectMapper\Types\MappedObjectType;
 use Orisai\ObjectMapper\Types\MessageType;
 use Orisai\ObjectMapper\Types\Value;
+use ReflectionClass;
 use ReflectionException;
 use ReflectionProperty;
 use stdClass;
@@ -617,6 +618,7 @@ final class DefaultProcessor implements Processor
 					$callback->getArgs(),
 					$holder,
 					$baseFieldContext,
+					$callback->getDeclaringClass(),
 				);
 			}
 		}
@@ -654,13 +656,14 @@ final class DefaultProcessor implements Processor
 		// Reset mapped properties state
 		$propertiesMeta = $callContext->getMeta()->getProperties();
 		foreach ($propertiesMeta as $propertyName => $propertyMeta) {
-			$this->objectUnset($object, $propertyName);
+			$this->objectUnset($object, $propertyMeta->getDeclaringClass(), $propertyName);
 		}
 
 		// Set processed data
 		foreach ($data as $fieldName => $value) {
 			$propertyName = $this->fieldNameToPropertyName($fieldName, $meta);
-			$this->objectSet($object, $propertyName, $value);
+			$propertyClass = $propertiesMeta[$propertyName]->getDeclaringClass();
+			$this->objectSet($object, $propertyClass, $propertyName, $value);
 		}
 
 		// Set skipped properties
@@ -695,24 +698,28 @@ final class DefaultProcessor implements Processor
 	}
 
 	/**
-	 * @param mixed $value
+	 * @param ReflectionClass<MappedObject> $declaringClass
+	 * @param mixed                         $value
 	 */
-	private function objectSet(MappedObject $object, string $name, $value): void
+	private function objectSet(MappedObject $object, ReflectionClass $declaringClass, string $name, $value): void
 	{
 		if ($this->objectHasProperty($object, $name)) {
 			// phpcs:disable SlevomatCodingStandard.Functions.StaticClosure
 			(fn () => $object->$name = $value)
-				->bindTo($object, $object)();
+				->bindTo($object, $declaringClass->getName())();
 			// phpcs:enable
 		}
 	}
 
-	private function objectUnset(MappedObject $object, string $name): void
+	/**
+	 * @param ReflectionClass<MappedObject> $declaringClass
+	 */
+	private function objectUnset(MappedObject $object, ReflectionClass $declaringClass, string $name): void
 	{
 		// phpcs:disable SlevomatCodingStandard.Functions.StaticClosure
 		(function () use ($object, $name): void {
 			unset($object->$name);
-		})->bindTo($object, $object)();
+		})->bindTo($object, $declaringClass->getName())();
 		// phpcs:enable
 	}
 
@@ -823,7 +830,8 @@ final class DefaultProcessor implements Processor
 				}
 			}
 
-			$this->objectSet($object, $propertyName, $processed);
+			$propertyClass = $callContext->getMeta()->getProperties()[$propertyName]->getDeclaringClass();
+			$this->objectSet($object, $propertyClass, $propertyName, $processed);
 			$skippedPropertiesContext->removeSkippedProperty($propertyName);
 		}
 
