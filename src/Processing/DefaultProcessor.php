@@ -32,8 +32,6 @@ use Orisai\ObjectMapper\Types\MappedObjectType;
 use Orisai\ObjectMapper\Types\MessageType;
 use Orisai\ObjectMapper\Types\Value;
 use ReflectionClass;
-use ReflectionException;
-use ReflectionProperty;
 use stdClass;
 use function array_diff;
 use function array_key_exists;
@@ -703,12 +701,10 @@ final class DefaultProcessor implements Processor
 	 */
 	private function objectSet(MappedObject $object, ReflectionClass $declaringClass, string $name, $value): void
 	{
-		if ($this->objectHasProperty($object, $name)) {
-			// phpcs:disable SlevomatCodingStandard.Functions.StaticClosure
-			(fn () => $object->$name = $value)
-				->bindTo($object, $declaringClass->getName())();
-			// phpcs:enable
-		}
+		// phpcs:disable SlevomatCodingStandard.Functions.StaticClosure
+		(fn () => $object->$name = $value)
+			->bindTo($object, $declaringClass->getName())();
+		// phpcs:enable
 	}
 
 	/**
@@ -721,40 +717,6 @@ final class DefaultProcessor implements Processor
 			unset($object->$name);
 		})->bindTo($object, $declaringClass->getName())();
 		// phpcs:enable
-	}
-
-	/**
-	 * Checks if the public non-static property exists.
-	 */
-	private function objectHasProperty(MappedObject $object, string $name): bool
-	{
-		$class = get_class($object);
-
-		static $cache;
-		$prop = &$cache[$class][$name];
-
-		if ($prop !== null) {
-			return $prop;
-		}
-
-		$prop = false;
-		try {
-			$ref = new ReflectionProperty($class, $name);
-		} catch (ReflectionException $e) {
-			return $prop;
-		}
-
-		if (
-			!$ref->isStatic()
-			&& (
-				!$ref->isPrivate()
-				|| $ref->getDeclaringClass()->isFinal()
-			)
-		) {
-			$prop = true;
-		}
-
-		return $prop;
 	}
 
 	// ////////////// //
