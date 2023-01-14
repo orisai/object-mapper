@@ -13,6 +13,8 @@ use Orisai\SourceMap\ClassSource;
 use Orisai\SourceMap\FileSource;
 use PHPUnit\Framework\TestCase;
 use ReflectionClass;
+use ReflectionProperty;
+use Tests\Orisai\ObjectMapper\Doubles\NoDefaultsVO;
 
 final class CompileMetaTest extends TestCase
 {
@@ -21,7 +23,13 @@ final class CompileMetaTest extends TestCase
 	{
 		$class = new ClassCompileMeta([], [], []);
 		$fields = [
-			'a' => new FieldCompileMeta([], [], [], new RuleCompileMeta(MixedRule::class, [])),
+			'a' => new FieldCompileMeta(
+				[],
+				[],
+				[],
+				new RuleCompileMeta(MixedRule::class, []),
+				new ReflectionProperty(NoDefaultsVO::class, 'string'),
+			),
 		];
 		$sources = [
 			new ClassSource(new ReflectionClass(self::class)),
@@ -70,7 +78,13 @@ final class CompileMetaTest extends TestCase
 		$meta = new CompileMeta(
 			new ClassCompileMeta([], [], []),
 			[
-				'a' => new FieldCompileMeta([], [], [], new RuleCompileMeta(MixedRule::class, [])),
+				'a' => new FieldCompileMeta(
+					[],
+					[],
+					[],
+					new RuleCompileMeta(MixedRule::class, []),
+					new ReflectionProperty(NoDefaultsVO::class, 'string'),
+				),
 			],
 			[],
 		);

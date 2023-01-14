@@ -12,6 +12,8 @@ use Orisai\ObjectMapper\Meta\DocMeta;
 use Orisai\ObjectMapper\Modifiers\FieldNameModifier;
 use Orisai\ObjectMapper\Rules\MixedRule;
 use PHPUnit\Framework\TestCase;
+use ReflectionProperty;
+use Tests\Orisai\ObjectMapper\Doubles\NoDefaultsVO;
 
 final class FieldCompileMetaTest extends TestCase
 {
@@ -28,8 +30,9 @@ final class FieldCompileMetaTest extends TestCase
 			new ModifierCompileMeta(FieldNameModifier::class, []),
 		];
 		$rule = new RuleCompileMeta(MixedRule::class, []);
+		$property = new ReflectionProperty(NoDefaultsVO::class, 'string');
 
-		$meta = new FieldCompileMeta($callbacks, $docs, $modifiers, $rule);
+		$meta = new FieldCompileMeta($callbacks, $docs, $modifiers, $rule, $property);
 
 		self::assertSame(
 			$callbacks,
@@ -46,6 +49,10 @@ final class FieldCompileMetaTest extends TestCase
 		self::assertSame(
 			$rule,
 			$meta->getRule(),
+		);
+		self::assertSame(
+			$property,
+			$meta->getProperty(),
 		);
 	}
 

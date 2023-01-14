@@ -209,6 +209,7 @@ final class AttributesMetaSource implements MetaSource
 				$docs,
 				$modifiers,
 				$rule,
+				$property,
 			);
 		}
 

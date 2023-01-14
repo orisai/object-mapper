@@ -65,7 +65,7 @@ final class MetaResolver
 
 		return new RuntimeMeta(
 			$this->resolveClassMeta($meta, $class),
-			$this->resolveFieldsMeta($meta, $class),
+			$this->resolveFieldsMeta($meta),
 		);
 	}
 
@@ -100,21 +100,18 @@ final class MetaResolver
 	}
 
 	/**
-	 * @param ReflectionClass<MappedObject> $class
 	 * @return array<int|string, FieldRuntimeMeta>
 	 */
-	private function resolveFieldsMeta(CompileMeta $meta, ReflectionClass $class): array
+	private function resolveFieldsMeta(CompileMeta $meta): array
 	{
-		$defaults = $this->resolveDefaultValues($meta, $class);
-
 		$fields = [];
 		foreach ($meta->getFields() as $propertyName => $fieldMeta) {
+			$property = $fieldMeta->getProperty();
 			$fieldName = $this->propertyNameToFieldName($propertyName, $fieldMeta);
 			$fields[$fieldName] = $this->resolveFieldMeta(
 				$fieldMeta,
-				$class->getProperty($propertyName),
-				$defaults[$propertyName] ?? DefaultValueMeta::fromNothing(),
-				$class,
+				$property,
+				$this->getDefaultValue($fieldMeta, $property),
 			);
 		}
 
@@ -135,14 +132,10 @@ final class MetaResolver
 		return $propertyName;
 	}
 
-	/**
-	 * @param ReflectionClass<MappedObject> $declaringClass
-	 */
 	private function resolveFieldMeta(
 		FieldCompileMeta $meta,
 		ReflectionProperty $property,
-		DefaultValueMeta $defaultValue,
-		ReflectionClass $declaringClass
+		DefaultValueMeta $defaultValue
 	): FieldRuntimeMeta
 	{
 		if ($property->isStatic()) {
@@ -158,7 +151,7 @@ final class MetaResolver
 		$context = ResolverArgsContext::forProperty($property, $this);
 
 		return new FieldRuntimeMeta(
-			$this->resolveCallbacksMeta($meta, $context, $declaringClass),
+			$this->resolveCallbacksMeta($meta, $context, $property->getDeclaringClass()),
 			$this->resolveDocsMeta($meta, $context),
 			$this->resolveModifiersMeta($meta, $context),
 			$this->resolveRuleMeta(
@@ -284,33 +277,27 @@ final class MetaResolver
 		return new RuleRuntimeMeta($type, $args);
 	}
 
-	/**
-	 * @param ReflectionClass<MappedObject> $class
-	 * @return array<string, DefaultValueMeta>
-	 */
-	private function resolveDefaultValues(CompileMeta $meta, ReflectionClass $class): array
+	private function getDefaultValue(FieldCompileMeta $meta, ReflectionProperty $property): DefaultValueMeta
 	{
-		$fieldsMeta = [];
-		$fields = $meta->getFields();
-		foreach ($class->getDefaultProperties() as $propertyName => $propertyValue) {
-			// Property is not mapped property
-			if (!isset($fields[$propertyName])) {
-				continue;
-			}
+		$propertyName = $property->getName();
 
-			$isPropertyTyped = $class->getProperty($propertyName)->hasType();
-			$containsNullable = $fields[$propertyName]->getRule()->containsAnyOfRules(
-				[NullRule::class, MixedRule::class],
-			);
-
-			// It's not possible to distinguish between null and uninitialized for properties without type,
-			// default null is used only if validation allows null
-			$fieldsMeta[$propertyName] = $propertyValue === null && !$isPropertyTyped && !$containsNullable
-				? DefaultValueMeta::fromNothing()
-				: DefaultValueMeta::fromValue($propertyValue);
+		$defaults = $property->getDeclaringClass()->getDefaultProperties();
+		if (!array_key_exists($propertyName, $defaults)) {
+			return DefaultValueMeta::fromNothing();
 		}
 
-		return $fieldsMeta;
+		$propertyValue = $defaults[$propertyName];
+
+		$isPropertyTyped = $property->hasType();
+		$containsNullable = $meta->getRule()->containsAnyOfRules(
+			[NullRule::class, MixedRule::class],
+		);
+
+		// It's not possible to distinguish between null and uninitialized for properties without type,
+		// default null is used only if validation allows null
+		return $propertyValue === null && !$isPropertyTyped && !$containsNullable
+			? DefaultValueMeta::fromNothing()
+			: DefaultValueMeta::fromValue($propertyValue);
 	}
 
 	/**
