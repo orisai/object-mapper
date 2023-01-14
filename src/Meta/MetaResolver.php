@@ -61,10 +61,11 @@ final class MetaResolver
 	 */
 	public function resolve(ReflectionClass $class, CompileMeta $meta): RuntimeMeta
 	{
+		$this->checkFieldsPropertiesMap($meta, $class);
+
 		return new RuntimeMeta(
 			$this->resolveClassMeta($meta, $class),
 			$this->resolveFieldsMeta($meta, $class),
-			$this->resolveFieldsPropertiesMap($meta, $class),
 		);
 	}
 
@@ -165,7 +166,7 @@ final class MetaResolver
 				$this->createRuleArgsContext($property),
 			),
 			$defaultValue,
-			$property->getDeclaringClass(),
+			$property,
 		);
 	}
 
@@ -314,9 +315,8 @@ final class MetaResolver
 
 	/**
 	 * @param ReflectionClass<MappedObject> $class
-	 * @return array<int|string, string>
 	 */
-	private function resolveFieldsPropertiesMap(CompileMeta $meta, ReflectionClass $class): array
+	private function checkFieldsPropertiesMap(CompileMeta $meta, ReflectionClass $class): void
 	{
 		$fields = $meta->getFields();
 
@@ -378,8 +378,6 @@ final class MetaResolver
 					->withMessage($message);
 			}
 		}
-
-		return $map;
 	}
 
 	private function createRuleArgsContext(ReflectionProperty $property): RuleArgsContext

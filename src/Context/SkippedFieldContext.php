@@ -2,10 +2,12 @@
 
 namespace Orisai\ObjectMapper\Context;
 
+use ReflectionProperty;
+
 final class SkippedFieldContext
 {
 
-	private string $propertyName;
+	private ReflectionProperty $property;
 
 	/** @var mixed */
 	private $value;
@@ -15,16 +17,16 @@ final class SkippedFieldContext
 	/**
 	 * @param mixed $value
 	 */
-	public function __construct(string $propertyName, $value, bool $isDefault)
+	public function __construct(ReflectionProperty $property, $value, bool $isDefault)
 	{
-		$this->propertyName = $propertyName;
+		$this->property = $property;
 		$this->value = $value;
 		$this->isDefault = $isDefault;
 	}
 
-	public function getPropertyName(): string
+	public function getProperty(): ReflectionProperty
 	{
-		return $this->propertyName;
+		return $this->property;
 	}
 
 	/**

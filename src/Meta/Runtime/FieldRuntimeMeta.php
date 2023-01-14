@@ -3,9 +3,8 @@
 namespace Orisai\ObjectMapper\Meta\Runtime;
 
 use Orisai\ObjectMapper\Args\Args;
-use Orisai\ObjectMapper\MappedObject;
 use Orisai\ObjectMapper\Meta\DefaultValueMeta;
-use ReflectionClass;
+use ReflectionProperty;
 
 final class FieldRuntimeMeta extends NodeRuntimeMeta
 {
@@ -15,12 +14,10 @@ final class FieldRuntimeMeta extends NodeRuntimeMeta
 	/** @var RuleRuntimeMeta<Args> */
 	private RuleRuntimeMeta $rule;
 
-	/** @var ReflectionClass<MappedObject> */
-	private ReflectionClass $declaringClass;
+	private ReflectionProperty $property;
 
 	/**
-	 * @param RuleRuntimeMeta<Args>         $rule
-	 * @param ReflectionClass<MappedObject> $declaringClass
+	 * @param RuleRuntimeMeta<Args> $rule
 	 */
 	public function __construct(
 		array $callbacks,
@@ -28,13 +25,13 @@ final class FieldRuntimeMeta extends NodeRuntimeMeta
 		array $modifiers,
 		RuleRuntimeMeta $rule,
 		DefaultValueMeta $default,
-		ReflectionClass $declaringClass
+		ReflectionProperty $property
 	)
 	{
 		parent::__construct($callbacks, $docs, $modifiers);
 		$this->rule = $rule;
 		$this->default = $default;
-		$this->declaringClass = $declaringClass;
+		$this->property = $property;
 	}
 
 	public function getDefault(): DefaultValueMeta
@@ -50,12 +47,9 @@ final class FieldRuntimeMeta extends NodeRuntimeMeta
 		return $this->rule;
 	}
 
-	/**
-	 * @return ReflectionClass<MappedObject>
-	 */
-	public function getDeclaringClass(): ReflectionClass
+	public function getProperty(): ReflectionProperty
 	{
-		return $this->declaringClass;
+		return $this->property;
 	}
 
 }

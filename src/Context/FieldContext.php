@@ -8,6 +8,7 @@ use Orisai\ObjectMapper\Processing\Options;
 use Orisai\ObjectMapper\Processing\Processor;
 use Orisai\ObjectMapper\Rules\RuleManager;
 use Orisai\ObjectMapper\Types\Type;
+use ReflectionProperty;
 
 final class FieldContext extends BaseFieldContext
 {
@@ -19,7 +20,7 @@ final class FieldContext extends BaseFieldContext
 	/** @var int|string */
 	private $fieldName;
 
-	private string $propertyName;
+	private ReflectionProperty $property;
 
 	/**
 	 * @param int|string $fieldName
@@ -33,14 +34,14 @@ final class FieldContext extends BaseFieldContext
 		DefaultValueMeta $default,
 		bool $initializeObjects,
 		$fieldName,
-		string $propertyName
+		ReflectionProperty $property
 	)
 	{
 		parent::__construct($metaLoader, $ruleManager, $processor, $options, $initializeObjects);
 		$this->type = $type;
 		$this->default = $default;
 		$this->fieldName = $fieldName;
-		$this->propertyName = $propertyName;
+		$this->property = $property;
 	}
 
 	public function getType(): Type
@@ -71,7 +72,7 @@ final class FieldContext extends BaseFieldContext
 
 	public function getPropertyName(): string
 	{
-		return $this->propertyName;
+		return $this->property->getName();
 	}
 
 }

@@ -16,20 +16,21 @@ use Orisai\ObjectMapper\Modifiers\FieldNameArgs;
 use Orisai\ObjectMapper\Modifiers\FieldNameModifier;
 use Orisai\ObjectMapper\Rules\MixedRule;
 use PHPUnit\Framework\TestCase;
-use ReflectionClass;
+use ReflectionProperty;
+use Tests\Orisai\ObjectMapper\Doubles\NoDefaultsVO;
 
 final class FieldRuntimeMetaTest extends TestCase
 {
 
 	public function test(): void
 	{
-		$declaringClass = new ReflectionClass(self::class);
+		$property = new ReflectionProperty(NoDefaultsVO::class, 'string');
 
 		$callbacks = [
 			new CallbackRuntimeMeta(
 				BeforeCallback::class,
 				new BaseCallbackArgs('method', false, false),
-				$declaringClass,
+				$property->getDeclaringClass(),
 			),
 		];
 		$docs = [
@@ -41,7 +42,7 @@ final class FieldRuntimeMetaTest extends TestCase
 		$rule = new RuleRuntimeMeta(MixedRule::class, new EmptyArgs());
 		$default = DefaultValueMeta::fromNothing();
 
-		$meta = new FieldRuntimeMeta($callbacks, $docs, $modifiers, $rule, $default, $declaringClass);
+		$meta = new FieldRuntimeMeta($callbacks, $docs, $modifiers, $rule, $default, $property);
 
 		self::assertSame(
 			$callbacks,
@@ -60,8 +61,8 @@ final class FieldRuntimeMetaTest extends TestCase
 			$meta->getRule(),
 		);
 		self::assertSame(
-			$declaringClass,
-			$meta->getDeclaringClass(),
+			$property,
+			$meta->getProperty(),
 		);
 	}
 

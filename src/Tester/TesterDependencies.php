@@ -67,7 +67,7 @@ final class TesterDependencies
 			$defaultValueMeta ?? DefaultValueMeta::fromNothing(),
 			$initializeObjects,
 			'test',
-			'test',
+			new ReflectionProperty(self::class, 'processor'),
 		);
 	}
 

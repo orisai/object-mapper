@@ -10,7 +10,8 @@ use Orisai\ObjectMapper\Meta\Runtime\RuleRuntimeMeta;
 use Orisai\ObjectMapper\Meta\Runtime\RuntimeMeta;
 use Orisai\ObjectMapper\Rules\MixedRule;
 use PHPUnit\Framework\TestCase;
-use ReflectionClass;
+use ReflectionProperty;
+use Tests\Orisai\ObjectMapper\Doubles\NoDefaultsVO;
 
 final class RuntimeMetaTest extends TestCase
 {
@@ -25,12 +26,11 @@ final class RuntimeMetaTest extends TestCase
 				[],
 				new RuleRuntimeMeta(MixedRule::class, new EmptyArgs()),
 				DefaultValueMeta::fromNothing(),
-				new ReflectionClass(self::class),
+				new ReflectionProperty(NoDefaultsVO::class, 'string'),
 			),
 		];
-		$map = ['field' => 'property'];
 
-		$meta = new RuntimeMeta($class, $fields, $map);
+		$meta = new RuntimeMeta($class, $fields);
 
 		self::assertSame(
 			$class,
@@ -39,10 +39,6 @@ final class RuntimeMetaTest extends TestCase
 		self::assertSame(
 			$fields,
 			$meta->getFields(),
-		);
-		self::assertSame(
-			$map,
-			$meta->getFieldsPropertiesMap(),
 		);
 	}
 

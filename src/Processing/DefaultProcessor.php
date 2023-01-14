@@ -30,7 +30,7 @@ use Orisai\ObjectMapper\Rules\RuleManager;
 use Orisai\ObjectMapper\Types\MappedObjectType;
 use Orisai\ObjectMapper\Types\MessageType;
 use Orisai\ObjectMapper\Types\Value;
-use ReflectionClass;
+use ReflectionProperty;
 use stdClass;
 use function array_diff;
 use function array_key_exists;
@@ -221,16 +221,6 @@ final class DefaultProcessor implements Processor
 		return $data;
 	}
 
-	/**
-	 * @param int|string $fieldName
-	 */
-	private function fieldNameToPropertyName($fieldName, RuntimeMeta $meta): string
-	{
-		$map = $meta->getFieldsPropertiesMap();
-
-		return $map[$fieldName] ?? (string) $fieldName;
-	}
-
 	// /////////////////// //
 	// Properties / Fields //
 	// /////////////////// //
@@ -312,8 +302,12 @@ final class DefaultProcessor implements Processor
 				continue;
 			}
 
-			$propertyName = $this->fieldNameToPropertyName($fieldName, $meta);
-			$fieldContext = $this->createFieldContext($mappedObjectContext, $fieldMeta, $fieldName, $propertyName);
+			$fieldContext = $this->createFieldContext(
+				$mappedObjectContext,
+				$fieldMeta,
+				$fieldName,
+				$fieldMeta->getProperty(),
+			);
 
 			// Skip skipped property
 			if (
@@ -322,7 +316,7 @@ final class DefaultProcessor implements Processor
 			) {
 				$callContext->addSkippedField(
 					$fieldName,
-					new SkippedFieldContext($propertyName, $value, false),
+					new SkippedFieldContext($fieldMeta->getProperty(), $value, false),
 				);
 				unset($data[$fieldName]);
 
@@ -452,7 +446,7 @@ final class DefaultProcessor implements Processor
 				$callContext->addSkippedField(
 					$missingField,
 					new SkippedFieldContext(
-						$this->fieldNameToPropertyName($missingField, $meta),
+						$fieldMeta->getProperty(),
 						$data[$missingField],
 						true,
 					),
@@ -477,7 +471,7 @@ final class DefaultProcessor implements Processor
 		MappedObjectContext $mappedObjectContext,
 		FieldRuntimeMeta $meta,
 		$fieldName,
-		string $propertyName
+		ReflectionProperty $property
 	): FieldContext
 	{
 		$parentType = $mappedObjectContext->getType();
@@ -491,7 +485,7 @@ final class DefaultProcessor implements Processor
 			$meta->getDefault(),
 			$mappedObjectContext->shouldMapDataToObjects(),
 			$fieldName,
-			$propertyName,
+			$property,
 		);
 	}
 
@@ -637,16 +631,13 @@ final class DefaultProcessor implements Processor
 
 		// Reset mapped properties state
 		$fieldsMeta = $meta->getFields();
-		foreach ($fieldsMeta as $fieldName => $fieldMeta) {
-			$propertyName = $this->fieldNameToPropertyName($fieldName, $meta);
-			$this->objectUnset($object, $fieldMeta->getDeclaringClass(), $propertyName);
+		foreach ($fieldsMeta as $fieldMeta) {
+			$this->objectUnset($object, $fieldMeta->getProperty());
 		}
 
 		// Set processed data
 		foreach ($data as $fieldName => $value) {
-			$propertyName = $this->fieldNameToPropertyName($fieldName, $meta);
-			$propertyClass = $fieldsMeta[$fieldName]->getDeclaringClass();
-			$this->objectSet($object, $propertyClass, $propertyName, $value);
+			$this->objectSet($object, $fieldsMeta[$fieldName]->getProperty(), $value);
 		}
 
 		// Set skipped properties
@@ -681,22 +672,24 @@ final class DefaultProcessor implements Processor
 	}
 
 	/**
-	 * @param ReflectionClass<MappedObject> $declaringClass
 	 * @param mixed                         $value
 	 */
-	private function objectSet(MappedObject $object, ReflectionClass $declaringClass, string $name, $value): void
+	private function objectSet(MappedObject $object, ReflectionProperty $property, $value): void
 	{
+		$declaringClass = $property->getDeclaringClass();
+		$name = $property->getName();
+
 		// phpcs:disable SlevomatCodingStandard.Functions.StaticClosure
 		(fn () => $object->$name = $value)
 			->bindTo($object, $declaringClass->getName())();
 		// phpcs:enable
 	}
 
-	/**
-	 * @param ReflectionClass<MappedObject> $declaringClass
-	 */
-	private function objectUnset(MappedObject $object, ReflectionClass $declaringClass, string $name): void
+	private function objectUnset(MappedObject $object, ReflectionProperty $property): void
 	{
+		$declaringClass = $property->getDeclaringClass();
+		$name = $property->getName();
+
 		// phpcs:disable SlevomatCodingStandard.Functions.StaticClosure
 		(function () use ($object, $name): void {
 			unset($object->$name);
@@ -750,9 +743,13 @@ final class DefaultProcessor implements Processor
 			}
 
 			$skippedFieldContext = $skippedFields[$fieldName];
-			$propertyName = $skippedFieldContext->getPropertyName();
 			$fieldMeta = $fieldsMeta[$fieldName];
-			$fieldContext = $this->createFieldContext($mappedObjectContext, $fieldMeta, $fieldName, $propertyName);
+			$fieldContext = $this->createFieldContext(
+				$mappedObjectContext,
+				$fieldMeta,
+				$fieldName,
+				$skippedFieldContext->getProperty(),
+			);
 
 			// Process field value with property rules
 			if ($skippedFieldContext->isDefault()) {
@@ -772,8 +769,7 @@ final class DefaultProcessor implements Processor
 				}
 			}
 
-			$propertyClass = $fieldMeta->getDeclaringClass();
-			$this->objectSet($object, $propertyClass, $propertyName, $processed);
+			$this->objectSet($object, $fieldMeta->getProperty(), $processed);
 			$skippedFieldsContext->removeSkippedField($fieldName);
 		}
 

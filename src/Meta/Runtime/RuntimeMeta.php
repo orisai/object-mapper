@@ -13,18 +13,13 @@ final class RuntimeMeta
 	/** @var array<int|string, FieldRuntimeMeta> */
 	private array $fields;
 
-	/** @var array<int|string, string> */
-	private array $fieldsPropertiesMap;
-
 	/**
 	 * @param array<int|string, FieldRuntimeMeta> $fields
-	 * @param array<int|string, string>           $fieldsPropertiesMap
 	 */
-	public function __construct(ClassRuntimeMeta $class, array $fields, array $fieldsPropertiesMap)
+	public function __construct(ClassRuntimeMeta $class, array $fields)
 	{
 		$this->class = $class;
 		$this->fields = $fields;
-		$this->fieldsPropertiesMap = $fieldsPropertiesMap;
 	}
 
 	public function getClass(): ClassRuntimeMeta
@@ -38,14 +33,6 @@ final class RuntimeMeta
 	public function getFields(): array
 	{
 		return $this->fields;
-	}
-
-	/**
-	 * @return array<int|string, string>
-	 */
-	public function getFieldsPropertiesMap(): array
-	{
-		return $this->fieldsPropertiesMap;
 	}
 
 }
