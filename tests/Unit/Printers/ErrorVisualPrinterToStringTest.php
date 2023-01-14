@@ -22,7 +22,7 @@ final class ErrorVisualPrinterToStringTest extends ErrorVisualPrinterBaseTestCas
 	protected function setUp(): void
 	{
 		$this->converter = new TypeToStringConverter();
-		$this->formatter = new ErrorVisualPrinter($this->converter);
+		$this->printer = new ErrorVisualPrinter($this->converter);
 	}
 
 	/**
@@ -32,7 +32,7 @@ final class ErrorVisualPrinterToStringTest extends ErrorVisualPrinterBaseTestCas
 	{
 		self::assertSame(
 			'test',
-			$this->formatter->printType($type),
+			$this->printer->printType($type),
 		);
 	}
 
@@ -43,7 +43,7 @@ final class ErrorVisualPrinterToStringTest extends ErrorVisualPrinterBaseTestCas
 	{
 		self::assertSame(
 			'string',
-			$this->formatter->printType($type),
+			$this->printer->printType($type),
 		);
 	}
 
@@ -54,7 +54,7 @@ final class ErrorVisualPrinterToStringTest extends ErrorVisualPrinterBaseTestCas
 	{
 		self::assertSame(
 			'int',
-			$this->formatter->printType($type),
+			$this->printer->printType($type),
 		);
 	}
 
@@ -65,7 +65,7 @@ final class ErrorVisualPrinterToStringTest extends ErrorVisualPrinterBaseTestCas
 	{
 		self::assertSame(
 			"int(first: 'value', second)",
-			$this->formatter->printType($type),
+			$this->printer->printType($type),
 		);
 	}
 
@@ -76,7 +76,7 @@ final class ErrorVisualPrinterToStringTest extends ErrorVisualPrinterBaseTestCas
 	{
 		self::assertSame(
 			'enum(foo, bar, 123, 123.456, true, false)',
-			$this->formatter->printType($type),
+			$this->printer->printType($type),
 		);
 	}
 
@@ -87,7 +87,7 @@ final class ErrorVisualPrinterToStringTest extends ErrorVisualPrinterBaseTestCas
 	{
 		self::assertSame(
 			'array',
-			$this->formatter->printType($type1),
+			$this->printer->printType($type1),
 		);
 	}
 
@@ -98,7 +98,7 @@ final class ErrorVisualPrinterToStringTest extends ErrorVisualPrinterBaseTestCas
 	{
 		self::assertSame(
 			'array<test(parameter)>',
-			$this->formatter->printType($type2),
+			$this->printer->printType($type2),
 		);
 	}
 
@@ -109,7 +109,7 @@ final class ErrorVisualPrinterToStringTest extends ErrorVisualPrinterBaseTestCas
 	{
 		self::assertSame(
 			'array<string, test>',
-			$this->formatter->printType($type3),
+			$this->printer->printType($type3),
 		);
 	}
 
@@ -120,7 +120,7 @@ final class ErrorVisualPrinterToStringTest extends ErrorVisualPrinterBaseTestCas
 	{
 		self::assertSame(
 			"array(foo: 'bar', baz: 123)<string, test>",
-			$this->formatter->printType($type4),
+			$this->printer->printType($type4),
 		);
 	}
 
@@ -131,7 +131,7 @@ final class ErrorVisualPrinterToStringTest extends ErrorVisualPrinterBaseTestCas
 	{
 		self::assertSame(
 			'array<string||int, array<string, test>>',
-			$this->formatter->printType($type5),
+			$this->printer->printType($type5),
 		);
 	}
 
@@ -142,7 +142,7 @@ final class ErrorVisualPrinterToStringTest extends ErrorVisualPrinterBaseTestCas
 	{
 		self::assertSame(
 			"array(first: 'value', second)",
-			$this->formatter->printType($type),
+			$this->printer->printType($type),
 		);
 	}
 
@@ -157,7 +157,7 @@ final class ErrorVisualPrinterToStringTest extends ErrorVisualPrinterBaseTestCas
 	0: int(second)
 	123: string => int(first: 'value')
 ]",
-			$this->formatter->printType($type),
+			$this->printer->printType($type),
 		);
 	}
 
@@ -168,7 +168,7 @@ final class ErrorVisualPrinterToStringTest extends ErrorVisualPrinterBaseTestCas
 	{
 		self::assertSame(
 			'list',
-			$this->formatter->printType($type),
+			$this->printer->printType($type),
 		);
 	}
 
@@ -179,7 +179,7 @@ final class ErrorVisualPrinterToStringTest extends ErrorVisualPrinterBaseTestCas
 	{
 		self::assertSame(
 			'list<string>',
-			$this->formatter->printType($type),
+			$this->printer->printType($type),
 		);
 	}
 
@@ -190,7 +190,7 @@ final class ErrorVisualPrinterToStringTest extends ErrorVisualPrinterBaseTestCas
 	{
 		self::assertSame(
 			"list(foo: 'bar')<string>",
-			$this->formatter->printType($type),
+			$this->printer->printType($type),
 		);
 	}
 
@@ -201,7 +201,7 @@ final class ErrorVisualPrinterToStringTest extends ErrorVisualPrinterBaseTestCas
 	{
 		self::assertSame(
 			"list(foo: 'bar')",
-			$this->formatter->printType($type),
+			$this->printer->printType($type),
 		);
 	}
 
@@ -216,7 +216,7 @@ final class ErrorVisualPrinterToStringTest extends ErrorVisualPrinterBaseTestCas
 	1: string
 	test: string
 ]',
-			$this->formatter->printType($type),
+			$this->printer->printType($type),
 		);
 	}
 
@@ -227,7 +227,7 @@ final class ErrorVisualPrinterToStringTest extends ErrorVisualPrinterBaseTestCas
 	{
 		self::assertSame(
 			'string||int',
-			$this->formatter->printType($type),
+			$this->printer->printType($type),
 		);
 	}
 
@@ -239,7 +239,7 @@ final class ErrorVisualPrinterToStringTest extends ErrorVisualPrinterBaseTestCas
 		//TODO - brackets
 		self::assertSame(
 			'int&&float||foo&&bar',
-			$this->formatter->printType($type),
+			$this->printer->printType($type),
 		);
 	}
 
@@ -250,7 +250,7 @@ final class ErrorVisualPrinterToStringTest extends ErrorVisualPrinterBaseTestCas
 	{
 		self::assertSame(
 			'shape{}',
-			$this->formatter->printType($type),
+			$this->printer->printType($type),
 		);
 	}
 
@@ -269,7 +269,7 @@ final class ErrorVisualPrinterToStringTest extends ErrorVisualPrinterBaseTestCas
 	}
 	Whole structure is invalid
 }',
-			$this->formatter->printType($type),
+			$this->printer->printType($type),
 		);
 		self::assertSame(
 			'path > to > error > 0: t
@@ -279,7 +279,7 @@ path > to > error > b: shape{
 	bar: t
 }
 path > to > error > Whole structure is invalid',
-			$this->formatter->printError(
+			$this->printer->printError(
 				InvalidData::create($type, Value::none()),
 				['path', 'to', 'error'],
 			),
@@ -292,7 +292,7 @@ b: shape{
 	bar: t
 }
 Whole structure is invalid',
-			$this->formatter->printError(InvalidData::create($type, Value::none())),
+			$this->printer->printError(InvalidData::create($type, Value::none())),
 		);
 	}
 
@@ -311,7 +311,7 @@ Whole structure is invalid',
 	}
 	Random error
 }',
-			$this->formatter->printType($type),
+			$this->printer->printType($type),
 		);
 		self::assertSame(
 			'path -_- to -_- error -_- 0: overwritten
@@ -319,7 +319,7 @@ path -_- to -_- error -_- b: shape{
 	foo: overwritten
 }
 path -_- to -_- error -_- Random error',
-			$this->formatter->printError(
+			$this->printer->printError(
 				InvalidData::create($type, Value::none()),
 				['path', 'to', 'error'],
 			),
@@ -330,7 +330,7 @@ b: shape{
 	foo: overwritten
 }
 Random error',
-			$this->formatter->printError(InvalidData::create($type, Value::none())),
+			$this->printer->printError(InvalidData::create($type, Value::none())),
 		);
 	}
 

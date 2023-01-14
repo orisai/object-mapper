@@ -25,7 +25,7 @@ use Tests\Orisai\ObjectMapper\Doubles\StructuresVO;
 final class DefaultValuesArrayPrinterTest extends TestCase
 {
 
-	private DefaultValuesArrayPrinter $formatter;
+	private DefaultValuesArrayPrinter $printer;
 
 	private RuleManager $ruleManager;
 
@@ -42,7 +42,7 @@ final class DefaultValuesArrayPrinterTest extends TestCase
 		$cache = new ArrayMetaCache();
 		$resolverFactory = new DefaultMetaResolverFactory($this->ruleManager, $objectCreator);
 		$this->metaLoader = new MetaLoader($cache, $sourceManager, $resolverFactory);
-		$this->formatter = new DefaultValuesArrayPrinter($this->metaLoader);
+		$this->printer = new DefaultValuesArrayPrinter($this->metaLoader);
 	}
 
 	/**
@@ -74,7 +74,7 @@ final class DefaultValuesArrayPrinterTest extends TestCase
 					'bar' => 'baz',
 				],
 			],
-			$this->formatter->printType($type),
+			$this->printer->printType($type),
 		);
 	}
 
@@ -95,10 +95,10 @@ final class DefaultValuesArrayPrinterTest extends TestCase
 					],
 				],
 			],
-			$this->formatter->printType($type),
+			$this->printer->printType($type),
 		);
 
-		$this->formatter->requiredValuePlaceholder = '__REQUIRED__';
+		$this->printer->requiredValuePlaceholder = '__REQUIRED__';
 
 		self::assertSame(
 			[
@@ -118,7 +118,7 @@ final class DefaultValuesArrayPrinterTest extends TestCase
 				],
 				'manyStructures' => '__REQUIRED__',
 			],
-			$this->formatter->printType($type),
+			$this->printer->printType($type),
 		);
 	}
 
@@ -139,10 +139,10 @@ final class DefaultValuesArrayPrinterTest extends TestCase
 					],
 				],
 			],
-			$this->formatter->printType($type),
+			$this->printer->printType($type),
 		);
 
-		$this->formatter->requiredValuePlaceholder = '__REQUIRED__';
+		$this->printer->requiredValuePlaceholder = '__REQUIRED__';
 
 		self::assertSame(
 			[
@@ -160,7 +160,7 @@ final class DefaultValuesArrayPrinterTest extends TestCase
 				'anotherStructureOrArray' => '__REQUIRED__',
 				'manyStructures' => '__REQUIRED__',
 			],
-			$this->formatter->printType($type),
+			$this->printer->printType($type),
 		);
 	}
 

@@ -22,7 +22,7 @@ final class ErrorVisualPrinterToArrayTest extends ErrorVisualPrinterBaseTestCase
 	protected function setUp(): void
 	{
 		$this->converter = new TypeToArrayConverter();
-		$this->formatter = new ErrorVisualPrinter($this->converter);
+		$this->printer = new ErrorVisualPrinter($this->converter);
 	}
 
 	/**
@@ -32,7 +32,7 @@ final class ErrorVisualPrinterToArrayTest extends ErrorVisualPrinterBaseTestCase
 	{
 		self::assertSame(
 			['type' => 'message', 'message' => 'test'],
-			$this->formatter->printType($type),
+			$this->printer->printType($type),
 		);
 	}
 
@@ -45,7 +45,7 @@ final class ErrorVisualPrinterToArrayTest extends ErrorVisualPrinterBaseTestCase
 
 		self::assertSame(
 			['type' => 'simple', 'name' => 'string', 'parameters' => []],
-			$this->formatter->printType($type1),
+			$this->printer->printType($type1),
 		);
 	}
 
@@ -56,7 +56,7 @@ final class ErrorVisualPrinterToArrayTest extends ErrorVisualPrinterBaseTestCase
 	{
 		self::assertSame(
 			['type' => 'simple', 'name' => 'int', 'parameters' => []],
-			$this->formatter->printType($type),
+			$this->printer->printType($type),
 		);
 	}
 
@@ -78,7 +78,7 @@ final class ErrorVisualPrinterToArrayTest extends ErrorVisualPrinterBaseTestCase
 					],
 				],
 			],
-			$this->formatter->printType($type),
+			$this->printer->printType($type),
 		);
 	}
 
@@ -89,7 +89,7 @@ final class ErrorVisualPrinterToArrayTest extends ErrorVisualPrinterBaseTestCase
 	{
 		self::assertSame(
 			['type' => 'enum', 'cases' => $type->getCases()],
-			$this->formatter->printType($type),
+			$this->printer->printType($type),
 		);
 	}
 
@@ -108,7 +108,7 @@ final class ErrorVisualPrinterToArrayTest extends ErrorVisualPrinterBaseTestCase
 				'item' => null,
 				'invalidPairs' => [],
 			],
-			$this->formatter->printType($type1),
+			$this->printer->printType($type1),
 		);
 	}
 
@@ -133,7 +133,7 @@ final class ErrorVisualPrinterToArrayTest extends ErrorVisualPrinterBaseTestCase
 				],
 				'invalidPairs' => [],
 			],
-			$this->formatter->printType($type),
+			$this->printer->printType($type),
 		);
 	}
 
@@ -158,7 +158,7 @@ final class ErrorVisualPrinterToArrayTest extends ErrorVisualPrinterBaseTestCase
 				],
 				'invalidPairs' => [],
 			],
-			$this->formatter->printType($type),
+			$this->printer->printType($type),
 		);
 	}
 
@@ -192,7 +192,7 @@ final class ErrorVisualPrinterToArrayTest extends ErrorVisualPrinterBaseTestCase
 				],
 				'invalidPairs' => [],
 			],
-			$this->formatter->printType($type),
+			$this->printer->printType($type),
 		);
 	}
 
@@ -238,7 +238,7 @@ final class ErrorVisualPrinterToArrayTest extends ErrorVisualPrinterBaseTestCase
 				],
 				'invalidPairs' => [],
 			],
-			$this->formatter->printType($type),
+			$this->printer->printType($type),
 		);
 	}
 
@@ -263,7 +263,7 @@ final class ErrorVisualPrinterToArrayTest extends ErrorVisualPrinterBaseTestCase
 				'item' => null,
 				'invalidPairs' => [],
 			],
-			$this->formatter->printType($type),
+			$this->printer->printType($type),
 		);
 	}
 
@@ -319,7 +319,7 @@ final class ErrorVisualPrinterToArrayTest extends ErrorVisualPrinterBaseTestCase
 					],
 				],
 			],
-			$this->formatter->printType($type),
+			$this->printer->printType($type),
 		);
 	}
 
@@ -336,7 +336,7 @@ final class ErrorVisualPrinterToArrayTest extends ErrorVisualPrinterBaseTestCase
 				'item' => null,
 				'invalidPairs' => [],
 			],
-			$this->formatter->printType($type),
+			$this->printer->printType($type),
 		);
 	}
 
@@ -357,7 +357,7 @@ final class ErrorVisualPrinterToArrayTest extends ErrorVisualPrinterBaseTestCase
 				],
 				'invalidPairs' => [],
 			],
-			$this->formatter->printType($type),
+			$this->printer->printType($type),
 		);
 	}
 
@@ -383,7 +383,7 @@ final class ErrorVisualPrinterToArrayTest extends ErrorVisualPrinterBaseTestCase
 				],
 				'invalidPairs' => [],
 			],
-			$this->formatter->printType($type),
+			$this->printer->printType($type),
 		);
 	}
 
@@ -405,7 +405,7 @@ final class ErrorVisualPrinterToArrayTest extends ErrorVisualPrinterBaseTestCase
 				'item' => null,
 				'invalidPairs' => [],
 			],
-			$this->formatter->printType($type),
+			$this->printer->printType($type),
 		);
 	}
 
@@ -447,7 +447,7 @@ final class ErrorVisualPrinterToArrayTest extends ErrorVisualPrinterBaseTestCase
 					],
 				],
 			],
-			$this->formatter->printType($type),
+			$this->printer->printType($type),
 		);
 	}
 
@@ -471,7 +471,7 @@ final class ErrorVisualPrinterToArrayTest extends ErrorVisualPrinterBaseTestCase
 					],
 
 				]],
-			$this->formatter->printType($type),
+			$this->printer->printType($type),
 		);
 	}
 
@@ -519,7 +519,7 @@ final class ErrorVisualPrinterToArrayTest extends ErrorVisualPrinterBaseTestCase
 				],
 
 			],
-			$this->formatter->printType($type),
+			$this->printer->printType($type),
 		);
 	}
 
@@ -534,7 +534,7 @@ final class ErrorVisualPrinterToArrayTest extends ErrorVisualPrinterBaseTestCase
 				'fields' => [],
 				'errors' => [],
 			],
-			$this->formatter->printType($type),
+			$this->printer->printType($type),
 		);
 	}
 
@@ -582,20 +582,20 @@ final class ErrorVisualPrinterToArrayTest extends ErrorVisualPrinterBaseTestCase
 		];
 		self::assertSame(
 			$printedType,
-			$this->formatter->printType($type),
+			$this->printer->printType($type),
 		);
 		self::assertSame(
 			['path' => [
 				'to' => ['error' => $printedType],
 			]],
-			$this->formatter->printError(
+			$this->printer->printError(
 				InvalidData::create($type, Value::none()),
 				['path', 'to', 'error'],
 			),
 		);
 		self::assertSame(
 			$printedType,
-			$this->formatter->printError(InvalidData::create($type, Value::none())),
+			$this->printer->printError(InvalidData::create($type, Value::none())),
 		);
 	}
 
@@ -634,11 +634,11 @@ final class ErrorVisualPrinterToArrayTest extends ErrorVisualPrinterBaseTestCase
 
 		self::assertSame(
 			$printedType,
-			$this->formatter->printType($type),
+			$this->printer->printType($type),
 		);
 		self::assertSame(
 			$printedType,
-			$this->formatter->printError(InvalidData::create($type, Value::none())),
+			$this->printer->printError(InvalidData::create($type, Value::none())),
 		);
 	}
 

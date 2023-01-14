@@ -47,12 +47,12 @@ use const PHP_VERSION_ID;
 final class DefaultProcessorTest extends ProcessingTestCase
 {
 
-	private ErrorPrinter $formatter;
+	private ErrorPrinter $printer;
 
 	protected function setUp(): void
 	{
 		parent::setUp();
-		$this->formatter = new ErrorVisualPrinter(new TypeToStringConverter());
+		$this->printer = new ErrorVisualPrinter(new TypeToStringConverter());
 	}
 
 	public function testMissingRequiredValues(): void
@@ -83,7 +83,7 @@ manyStructures: array<int(unsigned), shape{
 	untypedNull: null
 	arrayOfMixed: array<mixed>
 }>',
-			$this->formatter->printError($exception),
+			$this->printer->printError($exception),
 		);
 	}
 
@@ -121,7 +121,7 @@ manyStructures: array<int, shape{
 	untypedNull: null
 	arrayOfMixed: array<mixed>
 }>',
-			$this->formatter->printError($exception),
+			$this->printer->printError($exception),
 		);
 	}
 
@@ -163,7 +163,7 @@ manyStructures: array<int, shape{
 		string: string
 	}
 }',
-			$this->formatter->printError($exception),
+			$this->printer->printError($exception),
 		);
 	}
 
@@ -251,7 +251,7 @@ manyStructures: array<int, shape{
 			'unknown: Field is unknown.
 123: Field is unknown.
 stringg: Field is unknown, did you mean `string`?',
-			$this->formatter->printError($exception),
+			$this->printer->printError($exception),
 		);
 	}
 
@@ -463,7 +463,7 @@ selfOrNull: shape{
 	another: string
 }||null
 MSG,
-			$this->formatter->printError($exception),
+			$this->printer->printError($exception),
 		);
 	}
 
@@ -528,7 +528,7 @@ b: shape{
 }
 stringOrNull: string||null
 MSG,
-			$this->formatter->printError($exception),
+			$this->printer->printError($exception),
 		);
 	}
 
@@ -630,7 +630,7 @@ MSG,
 		self::assertSame(
 			'neverValidated: Check before validation failed, field was never validated
 validationFailed: string',
-			$this->formatter->printError($exception),
+			$this->printer->printError($exception),
 		);
 	}
 
@@ -653,7 +653,7 @@ validationFailed: string',
 
 		self::assertSame(
 			'',
-			$this->formatter->printError($exception),
+			$this->printer->printError($exception),
 		);
 		$vo = $this->processor->process(true, BeforeClassCallbackMixedValueVO::class, $options);
 		self::assertTrue($this->processor->getRawValues($vo));
@@ -676,7 +676,7 @@ validationFailed: string',
 
 		self::assertSame(
 			'Error before class',
-			$this->formatter->printError($exception),
+			$this->printer->printError($exception),
 		);
 	}
 
@@ -699,7 +699,7 @@ validationFailed: string',
 
 		self::assertSame(
 			'Error after class',
-			$this->formatter->printError($exception),
+			$this->printer->printError($exception),
 		);
 	}
 
@@ -722,7 +722,7 @@ validationFailed: string',
 
 		self::assertSame(
 			'string: string',
-			$this->formatter->printError($exception),
+			$this->printer->printError($exception),
 		);
 	}
 
@@ -747,7 +747,7 @@ validationFailed: string',
 			'shape{
 	test
 }',
-			$this->formatter->printError($exception),
+			$this->printer->printError($exception),
 		);
 	}
 
@@ -814,7 +814,7 @@ nullableString: string||null
 untypedNullableString: string||null
 untypedNull: null
 arrayOfMixed: array<mixed>',
-			$this->formatter->printError($exception),
+			$this->printer->printError($exception),
 		);
 	}
 
@@ -900,7 +900,7 @@ arrayOfMixed: array<mixed>',
 
 		self::assertSame(
 			'requiredSkipped: string',
-			$this->formatter->printError($exception),
+			$this->printer->printError($exception),
 		);
 	}
 
@@ -923,7 +923,7 @@ arrayOfMixed: array<mixed>',
 		self::assertInstanceOf(InvalidData::class, $exception);
 		self::assertSame(
 			'requiredSkipped: string',
-			$this->formatter->printError($exception),
+			$this->printer->printError($exception),
 		);
 	}
 

@@ -21,7 +21,7 @@ abstract class ErrorVisualPrinterBaseTestCase extends TestCase
 	/** @phpstan-var TConverter */
 	protected TypeToPrimitiveConverter $converter;
 
-	protected ErrorVisualPrinter $formatter;
+	protected ErrorVisualPrinter $printer;
 
 	abstract public function testMessage(MessageType $type): void;
 

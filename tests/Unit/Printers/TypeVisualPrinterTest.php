@@ -19,11 +19,11 @@ use PHPUnit\Framework\TestCase;
 final class TypeVisualPrinterTest extends TestCase
 {
 
-	private TypeVisualPrinter $formatter;
+	private TypeVisualPrinter $printer;
 
 	protected function setUp(): void
 	{
-		$this->formatter = new TypeVisualPrinter(new TypeToStringConverter());
+		$this->printer = new TypeVisualPrinter(new TypeToStringConverter());
 	}
 
 	public function testMessage(): void
@@ -32,7 +32,7 @@ final class TypeVisualPrinterTest extends TestCase
 
 		self::assertSame(
 			'test',
-			$this->formatter->printType($type),
+			$this->printer->printType($type),
 		);
 	}
 
@@ -42,7 +42,7 @@ final class TypeVisualPrinterTest extends TestCase
 
 		self::assertSame(
 			'string',
-			$this->formatter->printType($type1),
+			$this->printer->printType($type1),
 		);
 
 		$type2 = new SimpleValueType('int');
@@ -51,7 +51,7 @@ final class TypeVisualPrinterTest extends TestCase
 
 		self::assertSame(
 			"int(first: 'value', second)",
-			$this->formatter->printType($type2),
+			$this->printer->printType($type2),
 		);
 	}
 
@@ -69,7 +69,7 @@ final class TypeVisualPrinterTest extends TestCase
 
 		self::assertSame(
 			'enum(foo, bar, 123, 123.456, true, false)',
-			$this->formatter->printType($type),
+			$this->printer->printType($type),
 		);
 	}
 
@@ -81,14 +81,14 @@ final class TypeVisualPrinterTest extends TestCase
 
 		self::assertSame(
 			'array<test(parameter)>',
-			$this->formatter->printType($type1),
+			$this->printer->printType($type1),
 		);
 
 		$type2 = ArrayType::forArray(new SimpleValueType('string'), new SimpleValueType('test'));
 
 		self::assertSame(
 			'array<string, test>',
-			$this->formatter->printType($type2),
+			$this->printer->printType($type2),
 		);
 
 		$type3 = ArrayType::forArray(new SimpleValueType('string'), new SimpleValueType('test'));
@@ -97,7 +97,7 @@ final class TypeVisualPrinterTest extends TestCase
 
 		self::assertSame(
 			"array(foo: 'bar', baz: 123)<string, test>",
-			$this->formatter->printType($type3),
+			$this->printer->printType($type3),
 		);
 
 		$type4Key = CompoundType::createOrType();
@@ -110,11 +110,11 @@ final class TypeVisualPrinterTest extends TestCase
 
 		self::assertSame(
 			'string||int',
-			$this->formatter->printType($type4Key),
+			$this->printer->printType($type4Key),
 		);
 		self::assertSame(
 			'array<string||int, array<string, test>>',
-			$this->formatter->printType($type4),
+			$this->printer->printType($type4),
 		);
 	}
 
@@ -124,7 +124,7 @@ final class TypeVisualPrinterTest extends TestCase
 
 		self::assertSame(
 			'list<string>',
-			$this->formatter->printType($type1),
+			$this->printer->printType($type1),
 		);
 
 		$type2 = ArrayType::forList(null, new SimpleValueType('string'));
@@ -132,7 +132,7 @@ final class TypeVisualPrinterTest extends TestCase
 
 		self::assertSame(
 			"list(foo: 'bar')<string>",
-			$this->formatter->printType($type2),
+			$this->printer->printType($type2),
 		);
 	}
 
@@ -153,7 +153,7 @@ final class TypeVisualPrinterTest extends TestCase
 
 		self::assertSame(
 			'int&&float||foo&&bar',
-			$this->formatter->printType($type1),
+			$this->printer->printType($type1),
 		);
 	}
 
@@ -168,7 +168,7 @@ final class TypeVisualPrinterTest extends TestCase
 	0: t
 	a: t
 }',
-			$this->formatter->printType($type1),
+			$this->printer->printType($type1),
 		);
 	}
 
