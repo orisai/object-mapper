@@ -20,8 +20,8 @@ use Orisai\ObjectMapper\Exception\ValueDoesNotMatch;
 use Orisai\ObjectMapper\MappedObject;
 use Orisai\ObjectMapper\Meta\MetaLoader;
 use Orisai\ObjectMapper\Meta\Runtime\ClassRuntimeMeta;
+use Orisai\ObjectMapper\Meta\Runtime\FieldRuntimeMeta;
 use Orisai\ObjectMapper\Meta\Runtime\NodeRuntimeMeta;
-use Orisai\ObjectMapper\Meta\Runtime\PropertyRuntimeMeta;
 use Orisai\ObjectMapper\Meta\Runtime\RuntimeMeta;
 use Orisai\ObjectMapper\Modifiers\SkippedModifier;
 use Orisai\ObjectMapper\Rules\MappedObjectArgs;
@@ -274,8 +274,8 @@ final class DefaultProcessor implements Processor
 		$options = $mappedObjectContext->getOptions();
 
 		$meta = $callContext->getMeta();
-		$propertiesMeta = $meta->getFields();
-		$fieldNames = array_keys($propertiesMeta);
+		$fieldsMeta = $meta->getFields();
+		$fieldNames = array_keys($fieldsMeta);
 
 		foreach ($data as $fieldName => $value) {
 			// Skip invalid field
@@ -283,10 +283,10 @@ final class DefaultProcessor implements Processor
 				continue;
 			}
 
-			$propertyMeta = $propertiesMeta[$fieldName] ?? null;
+			$fieldMeta = $fieldsMeta[$fieldName] ?? null;
 
 			// Unknown field
-			if ($propertyMeta === null) {
+			if ($fieldMeta === null) {
 				// Remove field from data
 				unset($data[$fieldName]);
 
@@ -313,12 +313,12 @@ final class DefaultProcessor implements Processor
 			}
 
 			$propertyName = $this->fieldNameToPropertyName($fieldName, $meta);
-			$fieldContext = $this->createFieldContext($mappedObjectContext, $propertyMeta, $fieldName, $propertyName);
+			$fieldContext = $this->createFieldContext($mappedObjectContext, $fieldMeta, $fieldName, $propertyName);
 
 			// Skip skipped property
 			if (
 				$mappedObjectContext->shouldMapDataToObjects()
-				&& $propertyMeta->getModifier(SkippedModifier::class) !== null
+				&& $fieldMeta->getModifier(SkippedModifier::class) !== null
 			) {
 				$callContext->addSkippedField(
 					$fieldName,
@@ -335,7 +335,7 @@ final class DefaultProcessor implements Processor
 					$value,
 					$fieldContext,
 					$callContext,
-					$propertyMeta,
+					$fieldMeta,
 				);
 			} catch (ValueDoesNotMatch | InvalidData $exception) {
 				$type->overwriteInvalidField($fieldName, $exception);
@@ -385,7 +385,7 @@ final class DefaultProcessor implements Processor
 		$initializeObjects = $mappedObjectContext->shouldMapDataToObjects();
 
 		$meta = $callContext->getMeta();
-		$propertiesMeta = $meta->getFields();
+		$fieldsMeta = $meta->getFields();
 
 		$requiredFields = $options->getRequiredFields();
 		$fillDefaultValues = $initializeObjects || $options->isPrefillDefaultValues();
@@ -398,8 +398,8 @@ final class DefaultProcessor implements Processor
 				continue;
 			}
 
-			$propertyMeta = $propertiesMeta[$missingField];
-			$defaultMeta = $propertyMeta->getDefault();
+			$fieldMeta = $fieldsMeta[$missingField];
+			$defaultMeta = $fieldMeta->getDefault();
 
 			if ($requiredFields === RequiredFields::nonDefault() && $defaultMeta->hasValue()) {
 				// Add default value if defaults are not required and should be used
@@ -410,12 +410,12 @@ final class DefaultProcessor implements Processor
 				}
 			} elseif (
 				$requiredFields === RequiredFields::nonDefault()
-				&& is_a($propertyMeta->getRule()->getType(), MappedObjectRule::class, true)
+				&& is_a($fieldMeta->getRule()->getType(), MappedObjectRule::class, true)
 			) {
 				// Try to initialize object from empty array when no data given
 				// Mapped object in compound type is not supported (allOf, anyOf)
 				// Used only in default mode - if all or none values are required then we need differentiate whether user sent value or not
-				$mappedObjectArgs = $propertyMeta->getRule()->getArgs();
+				$mappedObjectArgs = $fieldMeta->getRule()->getArgs();
 				assert($mappedObjectArgs instanceof MappedObjectArgs);
 				try {
 					$data[$missingField] = $initializeObjects
@@ -429,13 +429,13 @@ final class DefaultProcessor implements Processor
 				}
 			} elseif ($requiredFields !== RequiredFields::none() && !$type->isFieldInvalid($missingField)) {
 				// Field is missing and have no default value, mark as invalid
-				$propertyRuleMeta = $propertyMeta->getRule();
-				$propertyRule = $this->ruleManager->getRule($propertyRuleMeta->getType());
+				$fieldRuleMeta = $fieldMeta->getRule();
+				$fieldRule = $this->ruleManager->getRule($fieldRuleMeta->getType());
 				$type->overwriteInvalidField(
 					$missingField,
 					ValueDoesNotMatch::create(
-						$propertyRule->createType(
-							$propertyRuleMeta->getArgs(),
+						$fieldRule->createType(
+							$fieldRuleMeta->getArgs(),
 							$this->createTypeContext($options),
 						),
 						Value::none(),
@@ -447,7 +447,7 @@ final class DefaultProcessor implements Processor
 			if (
 				array_key_exists($missingField, $data)
 				&& $mappedObjectContext->shouldMapDataToObjects()
-				&& $propertyMeta->getModifier(SkippedModifier::class) !== null
+				&& $fieldMeta->getModifier(SkippedModifier::class) !== null
 			) {
 				$callContext->addSkippedField(
 					$missingField,
@@ -475,7 +475,7 @@ final class DefaultProcessor implements Processor
 	 */
 	private function createFieldContext(
 		MappedObjectContext $mappedObjectContext,
-		PropertyRuntimeMeta $meta,
+		FieldRuntimeMeta $meta,
 		$fieldName,
 		string $propertyName
 	): FieldContext
@@ -506,7 +506,7 @@ final class DefaultProcessor implements Processor
 		$value,
 		FieldContext $fieldContext,
 		ProcessorCallContext $callContext,
-		PropertyRuntimeMeta $meta
+		FieldRuntimeMeta $meta
 	)
 	{
 		$value = $this->applyCallbacks($value, $fieldContext, $callContext, $meta, BeforeCallback::class);
@@ -522,7 +522,7 @@ final class DefaultProcessor implements Processor
 	 * @throws ValueDoesNotMatch
 	 * @throws InvalidData
 	 */
-	private function processPropertyRules($value, FieldContext $fieldContext, PropertyRuntimeMeta $meta)
+	private function processPropertyRules($value, FieldContext $fieldContext, FieldRuntimeMeta $meta)
 	{
 		$ruleMeta = $meta->getRule();
 		$rule = $this->ruleManager->getRule($ruleMeta->getType());
@@ -574,11 +574,11 @@ final class DefaultProcessor implements Processor
 	}
 
 	/**
-	 * @param mixed                                $data
-	 * @param FieldContext|MappedObjectContext     $baseFieldContext
-	 * @param ProcessorCallContext<MappedObject>   $callContext
-	 * @param ClassRuntimeMeta|PropertyRuntimeMeta $meta
-	 * @param class-string<Callback<Args>>         $callbackType
+	 * @param mixed                              $data
+	 * @param FieldContext|MappedObjectContext   $baseFieldContext
+	 * @param ProcessorCallContext<MappedObject> $callContext
+	 * @param ClassRuntimeMeta|FieldRuntimeMeta  $meta
+	 * @param class-string<Callback<Args>>       $callbackType
 	 * @return mixed
 	 * @throws ValueDoesNotMatch
 	 * @throws InvalidData
@@ -636,16 +636,16 @@ final class DefaultProcessor implements Processor
 		}
 
 		// Reset mapped properties state
-		$propertiesMeta = $meta->getFields();
-		foreach ($propertiesMeta as $fieldName => $propertyMeta) {
+		$fieldsMeta = $meta->getFields();
+		foreach ($fieldsMeta as $fieldName => $fieldMeta) {
 			$propertyName = $this->fieldNameToPropertyName($fieldName, $meta);
-			$this->objectUnset($object, $propertyMeta->getDeclaringClass(), $propertyName);
+			$this->objectUnset($object, $fieldMeta->getDeclaringClass(), $propertyName);
 		}
 
 		// Set processed data
 		foreach ($data as $fieldName => $value) {
 			$propertyName = $this->fieldNameToPropertyName($fieldName, $meta);
-			$propertyClass = $propertiesMeta[$fieldName]->getDeclaringClass();
+			$propertyClass = $fieldsMeta[$fieldName]->getDeclaringClass();
 			$this->objectSet($object, $propertyClass, $propertyName, $value);
 		}
 

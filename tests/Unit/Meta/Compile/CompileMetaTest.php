@@ -6,7 +6,7 @@ use Orisai\ObjectMapper\Callbacks\BeforeCallback;
 use Orisai\ObjectMapper\Meta\Compile\CallbackCompileMeta;
 use Orisai\ObjectMapper\Meta\Compile\ClassCompileMeta;
 use Orisai\ObjectMapper\Meta\Compile\CompileMeta;
-use Orisai\ObjectMapper\Meta\Compile\PropertyCompileMeta;
+use Orisai\ObjectMapper\Meta\Compile\FieldCompileMeta;
 use Orisai\ObjectMapper\Meta\Compile\RuleCompileMeta;
 use Orisai\ObjectMapper\Rules\MixedRule;
 use Orisai\SourceMap\ClassSource;
@@ -20,23 +20,23 @@ final class CompileMetaTest extends TestCase
 	public function test(): void
 	{
 		$class = new ClassCompileMeta([], [], []);
-		$properties = [
-			'a' => new PropertyCompileMeta([], [], [], new RuleCompileMeta(MixedRule::class, [])),
+		$fields = [
+			'a' => new FieldCompileMeta([], [], [], new RuleCompileMeta(MixedRule::class, [])),
 		];
 		$sources = [
 			new ClassSource(new ReflectionClass(self::class)),
 			new FileSource(__FILE__),
 		];
 
-		$meta = new CompileMeta($class, $properties, $sources);
+		$meta = new CompileMeta($class, $fields, $sources);
 
 		self::assertSame(
 			$class,
 			$meta->getClass(),
 		);
 		self::assertSame(
-			$properties,
-			$meta->getProperties(),
+			$fields,
+			$meta->getFields(),
 		);
 		self::assertSame(
 			$sources,
@@ -70,7 +70,7 @@ final class CompileMetaTest extends TestCase
 		$meta = new CompileMeta(
 			new ClassCompileMeta([], [], []),
 			[
-				'a' => new PropertyCompileMeta([], [], [], new RuleCompileMeta(MixedRule::class, [])),
+				'a' => new FieldCompileMeta([], [], [], new RuleCompileMeta(MixedRule::class, [])),
 			],
 			[],
 		);

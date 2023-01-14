@@ -5,15 +5,15 @@ namespace Tests\Orisai\ObjectMapper\Unit\Meta\Compile;
 use Orisai\ObjectMapper\Callbacks\BeforeCallback;
 use Orisai\ObjectMapper\Docs\DescriptionDoc;
 use Orisai\ObjectMapper\Meta\Compile\CallbackCompileMeta;
+use Orisai\ObjectMapper\Meta\Compile\FieldCompileMeta;
 use Orisai\ObjectMapper\Meta\Compile\ModifierCompileMeta;
-use Orisai\ObjectMapper\Meta\Compile\PropertyCompileMeta;
 use Orisai\ObjectMapper\Meta\Compile\RuleCompileMeta;
 use Orisai\ObjectMapper\Meta\DocMeta;
 use Orisai\ObjectMapper\Modifiers\FieldNameModifier;
 use Orisai\ObjectMapper\Rules\MixedRule;
 use PHPUnit\Framework\TestCase;
 
-final class PropertyCompileMetaTest extends TestCase
+final class FieldCompileMetaTest extends TestCase
 {
 
 	public function test(): void
@@ -29,7 +29,7 @@ final class PropertyCompileMetaTest extends TestCase
 		];
 		$rule = new RuleCompileMeta(MixedRule::class, []);
 
-		$meta = new PropertyCompileMeta($callbacks, $docs, $modifiers, $rule);
+		$meta = new FieldCompileMeta($callbacks, $docs, $modifiers, $rule);
 
 		self::assertSame(
 			$callbacks,

@@ -2,7 +2,7 @@
 
 namespace Orisai\ObjectMapper\Meta\Compile;
 
-final class PropertyCompileMeta extends NodeCompileMeta
+final class FieldCompileMeta extends NodeCompileMeta
 {
 
 	private RuleCompileMeta $rule;

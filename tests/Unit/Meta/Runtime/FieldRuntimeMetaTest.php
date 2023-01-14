@@ -9,8 +9,8 @@ use Orisai\ObjectMapper\Docs\DescriptionDoc;
 use Orisai\ObjectMapper\Meta\DefaultValueMeta;
 use Orisai\ObjectMapper\Meta\DocMeta;
 use Orisai\ObjectMapper\Meta\Runtime\CallbackRuntimeMeta;
+use Orisai\ObjectMapper\Meta\Runtime\FieldRuntimeMeta;
 use Orisai\ObjectMapper\Meta\Runtime\ModifierRuntimeMeta;
-use Orisai\ObjectMapper\Meta\Runtime\PropertyRuntimeMeta;
 use Orisai\ObjectMapper\Meta\Runtime\RuleRuntimeMeta;
 use Orisai\ObjectMapper\Modifiers\FieldNameArgs;
 use Orisai\ObjectMapper\Modifiers\FieldNameModifier;
@@ -18,7 +18,7 @@ use Orisai\ObjectMapper\Rules\MixedRule;
 use PHPUnit\Framework\TestCase;
 use ReflectionClass;
 
-final class PropertyRuntimeMetaTest extends TestCase
+final class FieldRuntimeMetaTest extends TestCase
 {
 
 	public function test(): void
@@ -41,7 +41,7 @@ final class PropertyRuntimeMetaTest extends TestCase
 		$rule = new RuleRuntimeMeta(MixedRule::class, new EmptyArgs());
 		$default = DefaultValueMeta::fromNothing();
 
-		$meta = new PropertyRuntimeMeta($callbacks, $docs, $modifiers, $rule, $default, $declaringClass);
+		$meta = new FieldRuntimeMeta($callbacks, $docs, $modifiers, $rule, $default, $declaringClass);
 
 		self::assertSame(
 			$callbacks,

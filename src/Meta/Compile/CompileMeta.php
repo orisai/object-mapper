@@ -10,20 +10,20 @@ final class CompileMeta
 
 	private ClassCompileMeta $class;
 
-	/** @var array<string, PropertyCompileMeta> */
-	private array $properties;
+	/** @var array<string, FieldCompileMeta> */
+	private array $fields;
 
 	/** @var list<ClassSource|FileSource> */
 	private array $sources;
 
 	/**
-	 * @param array<string, PropertyCompileMeta> $properties
-	 * @param list<ClassSource|FileSource>       $sources
+	 * @param array<string, FieldCompileMeta> $fields
+	 * @param list<ClassSource|FileSource>    $sources
 	 */
-	public function __construct(ClassCompileMeta $class, array $properties, array $sources)
+	public function __construct(ClassCompileMeta $class, array $fields, array $sources)
 	{
 		$this->class = $class;
-		$this->properties = $properties;
+		$this->fields = $fields;
 		$this->sources = $sources;
 	}
 
@@ -33,11 +33,11 @@ final class CompileMeta
 	}
 
 	/**
-	 * @return array<string, PropertyCompileMeta>
+	 * @return array<string, FieldCompileMeta>
 	 */
-	public function getProperties(): array
+	public function getFields(): array
 	{
-		return $this->properties;
+		return $this->fields;
 	}
 
 	/**
@@ -50,7 +50,7 @@ final class CompileMeta
 
 	public function hasAnyAttributes(): bool
 	{
-		return $this->properties !== []
+		return $this->fields !== []
 			|| $this->class->hasAnyAttributes();
 	}
 

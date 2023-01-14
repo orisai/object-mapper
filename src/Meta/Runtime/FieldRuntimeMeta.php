@@ -7,7 +7,7 @@ use Orisai\ObjectMapper\MappedObject;
 use Orisai\ObjectMapper\Meta\DefaultValueMeta;
 use ReflectionClass;
 
-final class PropertyRuntimeMeta extends NodeRuntimeMeta
+final class FieldRuntimeMeta extends NodeRuntimeMeta
 {
 
 	private DefaultValueMeta $default;

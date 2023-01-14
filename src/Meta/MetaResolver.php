@@ -11,14 +11,14 @@ use Orisai\ObjectMapper\Context\RuleArgsContext;
 use Orisai\ObjectMapper\MappedObject;
 use Orisai\ObjectMapper\Meta\Compile\CallbackCompileMeta;
 use Orisai\ObjectMapper\Meta\Compile\CompileMeta;
+use Orisai\ObjectMapper\Meta\Compile\FieldCompileMeta;
 use Orisai\ObjectMapper\Meta\Compile\ModifierCompileMeta;
 use Orisai\ObjectMapper\Meta\Compile\NodeCompileMeta;
-use Orisai\ObjectMapper\Meta\Compile\PropertyCompileMeta;
 use Orisai\ObjectMapper\Meta\Compile\RuleCompileMeta;
 use Orisai\ObjectMapper\Meta\Runtime\CallbackRuntimeMeta;
 use Orisai\ObjectMapper\Meta\Runtime\ClassRuntimeMeta;
+use Orisai\ObjectMapper\Meta\Runtime\FieldRuntimeMeta;
 use Orisai\ObjectMapper\Meta\Runtime\ModifierRuntimeMeta;
-use Orisai\ObjectMapper\Meta\Runtime\PropertyRuntimeMeta;
 use Orisai\ObjectMapper\Meta\Runtime\RuleRuntimeMeta;
 use Orisai\ObjectMapper\Meta\Runtime\RuntimeMeta;
 use Orisai\ObjectMapper\Modifiers\CreateWithoutConstructorModifier;
@@ -100,32 +100,32 @@ final class MetaResolver
 
 	/**
 	 * @param ReflectionClass<MappedObject> $class
-	 * @return array<int|string, PropertyRuntimeMeta>
+	 * @return array<int|string, FieldRuntimeMeta>
 	 */
 	private function resolveFieldsMeta(CompileMeta $meta, ReflectionClass $class): array
 	{
 		$defaults = $this->resolveDefaultValues($meta, $class);
 
-		$array = [];
-		foreach ($meta->getProperties() as $propertyName => $propertyMeta) {
-			$fieldName = $this->propertyNameToFieldName($propertyName, $propertyMeta);
-			$array[$fieldName] = $this->resolvePropertyMeta(
-				$propertyMeta,
+		$fields = [];
+		foreach ($meta->getFields() as $propertyName => $fieldMeta) {
+			$fieldName = $this->propertyNameToFieldName($propertyName, $fieldMeta);
+			$fields[$fieldName] = $this->resolveFieldMeta(
+				$fieldMeta,
 				$class->getProperty($propertyName),
 				$defaults[$propertyName] ?? DefaultValueMeta::fromNothing(),
 				$class,
 			);
 		}
 
-		return $array;
+		return $fields;
 	}
 
 	/**
 	 * @return int|string
 	 */
-	private function propertyNameToFieldName(string $propertyName, PropertyCompileMeta $propertyMeta)
+	private function propertyNameToFieldName(string $propertyName, FieldCompileMeta $fieldMeta)
 	{
-		foreach ($propertyMeta->getModifiers() as $modifier) {
+		foreach ($fieldMeta->getModifiers() as $modifier) {
 			if ($modifier->getType() === FieldNameModifier::class) {
 				return $modifier->getArgs()[FieldNameModifier::Name];
 			}
@@ -137,12 +137,12 @@ final class MetaResolver
 	/**
 	 * @param ReflectionClass<MappedObject> $declaringClass
 	 */
-	private function resolvePropertyMeta(
-		PropertyCompileMeta $meta,
+	private function resolveFieldMeta(
+		FieldCompileMeta $meta,
 		ReflectionProperty $property,
 		DefaultValueMeta $defaultValue,
 		ReflectionClass $declaringClass
-	): PropertyRuntimeMeta
+	): FieldRuntimeMeta
 	{
 		if ($property->isStatic()) {
 			throw InvalidArgument::create()
@@ -156,7 +156,7 @@ final class MetaResolver
 
 		$context = ResolverArgsContext::forProperty($property, $this);
 
-		return new PropertyRuntimeMeta(
+		return new FieldRuntimeMeta(
 			$this->resolveCallbacksMeta($meta, $context, $declaringClass),
 			$this->resolveDocsMeta($meta, $context),
 			$this->resolveModifiersMeta($meta, $context),
@@ -289,27 +289,27 @@ final class MetaResolver
 	 */
 	private function resolveDefaultValues(CompileMeta $meta, ReflectionClass $class): array
 	{
-		$propertiesMeta = [];
-		$properties = $meta->getProperties();
+		$fieldsMeta = [];
+		$fields = $meta->getFields();
 		foreach ($class->getDefaultProperties() as $propertyName => $propertyValue) {
 			// Property is not mapped property
-			if (!isset($properties[$propertyName])) {
+			if (!isset($fields[$propertyName])) {
 				continue;
 			}
 
 			$isPropertyTyped = $class->getProperty($propertyName)->hasType();
-			$containsNullable = $properties[$propertyName]->getRule()->containsAnyOfRules(
+			$containsNullable = $fields[$propertyName]->getRule()->containsAnyOfRules(
 				[NullRule::class, MixedRule::class],
 			);
 
 			// It's not possible to distinguish between null and uninitialized for properties without type,
 			// default null is used only if validation allows null
-			$propertiesMeta[$propertyName] = $propertyValue === null && !$isPropertyTyped && !$containsNullable
+			$fieldsMeta[$propertyName] = $propertyValue === null && !$isPropertyTyped && !$containsNullable
 				? DefaultValueMeta::fromNothing()
 				: DefaultValueMeta::fromValue($propertyValue);
 		}
 
-		return $propertiesMeta;
+		return $fieldsMeta;
 	}
 
 	/**
@@ -318,12 +318,12 @@ final class MetaResolver
 	 */
 	private function resolveFieldsPropertiesMap(CompileMeta $meta, ReflectionClass $class): array
 	{
-		$properties = $meta->getProperties();
+		$fields = $meta->getFields();
 
 		$map = [];
-		foreach ($properties as $propertyName => $property) {
+		foreach ($fields as $propertyName => $fieldMeta) {
 			$fieldNameMeta = null;
-			foreach ($property->getModifiers() as $modifier) {
+			foreach ($fieldMeta->getModifiers() as $modifier) {
 				if ($modifier->getType() === FieldNameModifier::class) {
 					$fieldNameMeta = $modifier;
 
@@ -356,7 +356,7 @@ final class MetaResolver
 		}
 
 		foreach ($map as $fieldName => $propertyName) {
-			if (array_key_exists($fieldName, $properties) && !in_array($fieldName, $map, true)) {
+			if (array_key_exists($fieldName, $fields) && !in_array($fieldName, $map, true)) {
 				$message = Message::create()
 					->withContext(sprintf(
 						'Trying to define field name for mapped property of `%s`.',

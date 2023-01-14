@@ -5,7 +5,7 @@ namespace Tests\Orisai\ObjectMapper\Unit\Meta\Runtime;
 use Orisai\ObjectMapper\Args\EmptyArgs;
 use Orisai\ObjectMapper\Meta\DefaultValueMeta;
 use Orisai\ObjectMapper\Meta\Runtime\ClassRuntimeMeta;
-use Orisai\ObjectMapper\Meta\Runtime\PropertyRuntimeMeta;
+use Orisai\ObjectMapper\Meta\Runtime\FieldRuntimeMeta;
 use Orisai\ObjectMapper\Meta\Runtime\RuleRuntimeMeta;
 use Orisai\ObjectMapper\Meta\Runtime\RuntimeMeta;
 use Orisai\ObjectMapper\Rules\MixedRule;
@@ -19,7 +19,7 @@ final class RuntimeMetaTest extends TestCase
 	{
 		$class = new ClassRuntimeMeta([], [], []);
 		$fields = [
-			'a' => new PropertyRuntimeMeta(
+			'a' => new FieldRuntimeMeta(
 				[],
 				[],
 				[],

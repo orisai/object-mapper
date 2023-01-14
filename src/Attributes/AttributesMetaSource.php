@@ -13,8 +13,8 @@ use Orisai\ObjectMapper\MappedObject;
 use Orisai\ObjectMapper\Meta\Compile\CallbackCompileMeta;
 use Orisai\ObjectMapper\Meta\Compile\ClassCompileMeta;
 use Orisai\ObjectMapper\Meta\Compile\CompileMeta;
+use Orisai\ObjectMapper\Meta\Compile\FieldCompileMeta;
 use Orisai\ObjectMapper\Meta\Compile\ModifierCompileMeta;
-use Orisai\ObjectMapper\Meta\Compile\PropertyCompileMeta;
 use Orisai\ObjectMapper\Meta\Compile\RuleCompileMeta;
 use Orisai\ObjectMapper\Meta\DocMeta;
 use Orisai\ObjectMapper\Meta\MetaSource;
@@ -142,11 +142,11 @@ final class AttributesMetaSource implements MetaSource
 	/**
 	 * @param ReflectionClass<MappedObject>  $class
 	 * @param list<ClassMeta<BaseAttribute>> $metas
-	 * @return array<string, PropertyCompileMeta>
+	 * @return array<string, FieldCompileMeta>
 	 */
 	private function loadPropertiesMeta(ReflectionClass $class, array $metas): array
 	{
-		$properties = [];
+		$fields = [];
 
 		foreach ($class->getProperties() as $property) {
 			$callbacks = [];
@@ -204,7 +204,7 @@ final class AttributesMetaSource implements MetaSource
 					);
 			}
 
-			$properties[$property->getName()] = new PropertyCompileMeta(
+			$fields[$property->getName()] = new FieldCompileMeta(
 				$callbacks,
 				$docs,
 				$modifiers,
@@ -212,7 +212,7 @@ final class AttributesMetaSource implements MetaSource
 			);
 		}
 
-		return $properties;
+		return $fields;
 	}
 
 	/**

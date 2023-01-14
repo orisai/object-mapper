@@ -10,7 +10,7 @@ use Orisai\ObjectMapper\Context\RuleArgsContext;
 use Orisai\ObjectMapper\Context\TypeContext;
 use Orisai\ObjectMapper\Exception\InvalidData;
 use Orisai\ObjectMapper\MappedObject;
-use Orisai\ObjectMapper\Meta\Runtime\PropertyRuntimeMeta;
+use Orisai\ObjectMapper\Meta\Runtime\FieldRuntimeMeta;
 use Orisai\ObjectMapper\Types\MappedObjectType;
 use Orisai\ObjectMapper\Types\Type;
 use Throwable;
@@ -91,10 +91,10 @@ final class MappedObjectRule implements Rule
 		}
 
 		$type = new MappedObjectType($args->type);
-		foreach ($context->getMeta($args->type)->getFields() as $fieldName => $propertyMeta) {
+		foreach ($context->getMeta($args->type)->getFields() as $fieldName => $fieldMeta) {
 			$type->addField(
 				$fieldName,
-				$this->getTypeCreator($propertyMeta, $context, $args),
+				$this->getTypeCreator($fieldMeta, $context, $args),
 			);
 		}
 
@@ -105,17 +105,17 @@ final class MappedObjectRule implements Rule
 	 * @return Closure(): Type
 	 */
 	private function getTypeCreator(
-		PropertyRuntimeMeta $propertyMeta,
+		FieldRuntimeMeta $fieldMeta,
 		TypeContext $context,
 		MappedObjectArgs $args
 	): Closure
 	{
-		$propertyRuleMeta = $propertyMeta->getRule();
-		$propertyRule = $context->getRule($propertyRuleMeta->getType());
-		$propertyArgs = $propertyRuleMeta->getArgs();
+		$fieldRuleMeta = $fieldMeta->getRule();
+		$fieldRule = $context->getRule($fieldRuleMeta->getType());
+		$fieldArgs = $fieldRuleMeta->getArgs();
 
-		return static fn (): Type => $propertyRule->createType(
-			$propertyArgs,
+		return static fn (): Type => $fieldRule->createType(
+			$fieldArgs,
 			$context->withProcessedClass($args->type),
 		);
 	}
