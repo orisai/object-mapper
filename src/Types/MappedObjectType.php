@@ -14,13 +14,13 @@ final class MappedObjectType implements Type
 	/** @var class-string<MappedObject> */
 	private string $class;
 
-	/** @var array<Type|Closure(): Type> */
+	/** @var array<int|string, Type|Closure(): Type> */
 	private array $fields = [];
 
-	/** @var array<WithTypeAndValue> */
+	/** @var array<int|string, WithTypeAndValue> */
 	private array $invalidFields = [];
 
-	/** @var array<WithTypeAndValue> */
+	/** @var list<WithTypeAndValue> */
 	private array $errors = [];
 
 	/**
@@ -58,7 +58,7 @@ final class MappedObjectType implements Type
 	}
 
 	/**
-	 * @return array<Type>
+	 * @return array<int|string, Type>
 	 */
 	public function getFields(): array
 	{
@@ -75,7 +75,7 @@ final class MappedObjectType implements Type
 	}
 
 	/**
-	 * @return array<WithTypeAndValue>
+	 * @return array<int|string, WithTypeAndValue>
 	 */
 	public function getInvalidFields(): array
 	{
@@ -116,7 +116,7 @@ final class MappedObjectType implements Type
 	}
 
 	/**
-	 * @return array<WithTypeAndValue>
+	 * @return list<WithTypeAndValue>
 	 */
 	public function getErrors(): array
 	{
