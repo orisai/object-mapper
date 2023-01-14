@@ -18,7 +18,7 @@ final class RuntimeMetaTest extends TestCase
 	public function test(): void
 	{
 		$class = new ClassRuntimeMeta([], [], []);
-		$properties = [
+		$fields = [
 			'a' => new PropertyRuntimeMeta(
 				[],
 				[],
@@ -30,15 +30,15 @@ final class RuntimeMetaTest extends TestCase
 		];
 		$map = ['field' => 'property'];
 
-		$meta = new RuntimeMeta($class, $properties, $map);
+		$meta = new RuntimeMeta($class, $fields, $map);
 
 		self::assertSame(
 			$class,
 			$meta->getClass(),
 		);
 		self::assertSame(
-			$properties,
-			$meta->getProperties(),
+			$fields,
+			$meta->getFields(),
 		);
 		self::assertSame(
 			$map,

@@ -11,7 +11,6 @@ use Orisai\ObjectMapper\Context\TypeContext;
 use Orisai\ObjectMapper\Exception\InvalidData;
 use Orisai\ObjectMapper\MappedObject;
 use Orisai\ObjectMapper\Meta\Runtime\PropertyRuntimeMeta;
-use Orisai\ObjectMapper\Modifiers\FieldNameModifier;
 use Orisai\ObjectMapper\Types\MappedObjectType;
 use Orisai\ObjectMapper\Types\Type;
 use Throwable;
@@ -92,24 +91,14 @@ final class MappedObjectRule implements Rule
 		}
 
 		$type = new MappedObjectType($args->type);
-		foreach ($context->getMeta($args->type)->getProperties() as $propertyName => $propertyMeta) {
+		foreach ($context->getMeta($args->type)->getFields() as $fieldName => $propertyMeta) {
 			$type->addField(
-				$this->getFieldName($propertyMeta, $propertyName),
+				$fieldName,
 				$this->getTypeCreator($propertyMeta, $context, $args),
 			);
 		}
 
 		return $type;
-	}
-
-	/**
-	 * @return int|string
-	 */
-	private function getFieldName(PropertyRuntimeMeta $propertyMeta, string $propertyName)
-	{
-		$fieldNameMeta = $propertyMeta->getModifier(FieldNameModifier::class);
-
-		return $fieldNameMeta !== null ? $fieldNameMeta->getArgs()->name : $propertyName;
 	}
 
 	/**

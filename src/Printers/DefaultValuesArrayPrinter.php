@@ -33,7 +33,7 @@ final class DefaultValuesArrayPrinter implements MappedObjectPrinter
 	 */
 	private function printMappedObjectType(MappedObjectType $type): array
 	{
-		$meta = $this->metaLoader->load($type->getClass())->getProperties();
+		$meta = $this->metaLoader->load($type->getClass())->getFields();
 		$formatted = [];
 		$fields = $type->getFields();
 

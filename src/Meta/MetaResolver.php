@@ -63,7 +63,7 @@ final class MetaResolver
 	{
 		return new RuntimeMeta(
 			$this->resolveClassMeta($meta, $class),
-			$this->resolvePropertiesMeta($meta, $class),
+			$this->resolveFieldsMeta($meta, $class),
 			$this->resolveFieldsPropertiesMap($meta, $class),
 		);
 	}
@@ -100,24 +100,38 @@ final class MetaResolver
 
 	/**
 	 * @param ReflectionClass<MappedObject> $class
-	 * @return array<string, PropertyRuntimeMeta>
+	 * @return array<int|string, PropertyRuntimeMeta>
 	 */
-	private function resolvePropertiesMeta(CompileMeta $meta, ReflectionClass $class): array
+	private function resolveFieldsMeta(CompileMeta $meta, ReflectionClass $class): array
 	{
 		$defaults = $this->resolveDefaultValues($meta, $class);
 
 		$array = [];
 		foreach ($meta->getProperties() as $propertyName => $propertyMeta) {
-			$property = $class->getProperty($propertyName);
-			$array[$propertyName] = $this->resolvePropertyMeta(
+			$fieldName = $this->propertyNameToFieldName($propertyName, $propertyMeta);
+			$array[$fieldName] = $this->resolvePropertyMeta(
 				$propertyMeta,
-				$property,
+				$class->getProperty($propertyName),
 				$defaults[$propertyName] ?? DefaultValueMeta::fromNothing(),
 				$class,
 			);
 		}
 
 		return $array;
+	}
+
+	/**
+	 * @return int|string
+	 */
+	private function propertyNameToFieldName(string $propertyName, PropertyCompileMeta $propertyMeta)
+	{
+		foreach ($propertyMeta->getModifiers() as $modifier) {
+			if ($modifier->getType() === FieldNameModifier::class) {
+				return $modifier->getArgs()[FieldNameModifier::Name];
+			}
+		}
+
+		return $propertyName;
 	}
 
 	/**

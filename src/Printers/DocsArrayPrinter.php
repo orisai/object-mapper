@@ -64,7 +64,7 @@ final class DocsArrayPrinter implements MappedObjectPrinter
 	private function printMappedObjectType(MappedObjectType $type): array
 	{
 		$meta = $this->metaLoader->load($type->getClass());
-		$propertiesMeta = $meta->getProperties();
+		$propertiesMeta = $meta->getFields();
 
 		$fields = [];
 		$defaults = $this->defaultsPrinter->printType($type);

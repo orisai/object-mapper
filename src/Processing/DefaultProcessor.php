@@ -23,7 +23,6 @@ use Orisai\ObjectMapper\Meta\Runtime\ClassRuntimeMeta;
 use Orisai\ObjectMapper\Meta\Runtime\NodeRuntimeMeta;
 use Orisai\ObjectMapper\Meta\Runtime\PropertyRuntimeMeta;
 use Orisai\ObjectMapper\Meta\Runtime\RuntimeMeta;
-use Orisai\ObjectMapper\Modifiers\FieldNameModifier;
 use Orisai\ObjectMapper\Modifiers\SkippedModifier;
 use Orisai\ObjectMapper\Rules\MappedObjectArgs;
 use Orisai\ObjectMapper\Rules\MappedObjectRule;
@@ -232,19 +231,6 @@ final class DefaultProcessor implements Processor
 		return $map[$fieldName] ?? (string) $fieldName;
 	}
 
-	/**
-	 * @return int|string
-	 */
-	private function propertyNameToFieldName(string $propertyName, PropertyRuntimeMeta $meta)
-	{
-		$fieldNameMeta = $meta->getModifier(FieldNameModifier::class);
-		if ($fieldNameMeta !== null) {
-			return $fieldNameMeta->getArgs()->name;
-		}
-
-		return $propertyName;
-	}
-
 	// /////////////////// //
 	// Properties / Fields //
 	// /////////////////// //
@@ -288,8 +274,8 @@ final class DefaultProcessor implements Processor
 		$options = $mappedObjectContext->getOptions();
 
 		$meta = $callContext->getMeta();
-		$propertiesMeta = $meta->getProperties();
-		$propertyNames = array_keys($propertiesMeta);
+		$propertiesMeta = $meta->getFields();
+		$fieldNames = array_keys($propertiesMeta);
 
 		foreach ($data as $fieldName => $value) {
 			// Skip invalid field
@@ -297,10 +283,10 @@ final class DefaultProcessor implements Processor
 				continue;
 			}
 
-			$propertyName = $this->fieldNameToPropertyName($fieldName, $meta);
+			$propertyMeta = $propertiesMeta[$fieldName] ?? null;
 
 			// Unknown field
-			if (!isset($propertiesMeta[$propertyName])) {
+			if ($propertyMeta === null) {
 				// Remove field from data
 				unset($data[$fieldName]);
 
@@ -308,15 +294,13 @@ final class DefaultProcessor implements Processor
 					continue;
 				}
 
+				$hintedFieldName = Helpers::getSuggestion(
+					array_map(static fn ($fieldName) => (string) $fieldName, $fieldNames),
+					(string) $fieldName,
+				);
+				$hint = $hintedFieldName !== null ? sprintf(', did you mean `%s`?', $hintedFieldName) : '.';
+
 				// Add error to type
-				$hintedPropertyName = Helpers::getSuggestion($propertyNames, $propertyName);
-				$hintedFieldName = $hintedPropertyName !== null ?
-					$this->propertyNameToFieldName(
-						$hintedPropertyName,
-						$propertiesMeta[$hintedPropertyName],
-					)
-					: null;
-				$hint = ($hintedFieldName !== null ? sprintf(', did you mean `%s`?', $hintedFieldName) : '.');
 				$type->overwriteInvalidField(
 					$fieldName,
 					ValueDoesNotMatch::create(
@@ -328,7 +312,7 @@ final class DefaultProcessor implements Processor
 				continue;
 			}
 
-			$propertyMeta = $propertiesMeta[$propertyName];
+			$propertyName = $this->fieldNameToPropertyName($fieldName, $meta);
 			$fieldContext = $this->createFieldContext($mappedObjectContext, $propertyMeta, $fieldName, $propertyName);
 
 			// Skip skipped property
@@ -364,18 +348,15 @@ final class DefaultProcessor implements Processor
 	/**
 	 * @param array<int|string, mixed>           $data
 	 * @param ProcessorCallContext<MappedObject> $callContext
-	 * @return array<string>
+	 * @return array<int|string>
 	 */
-	private function findMissingProperties(array $data, ProcessorCallContext $callContext): array
+	private function findMissingFields(array $data, ProcessorCallContext $callContext): array
 	{
 		$meta = $callContext->getMeta();
 
 		return array_diff(
-			array_keys($meta->getProperties()),
-			array_map(
-				fn ($fieldName): string => $this->fieldNameToPropertyName($fieldName, $meta),
-				array_keys($data),
-			),
+			array_keys($meta->getFields()),
+			array_keys($data),
 		);
 	}
 
@@ -403,15 +384,17 @@ final class DefaultProcessor implements Processor
 		$options = $mappedObjectContext->getOptions();
 		$initializeObjects = $mappedObjectContext->shouldMapDataToObjects();
 
-		$propertiesMeta = $callContext->getMeta()->getProperties();
+		$meta = $callContext->getMeta();
+		$propertiesMeta = $meta->getFields();
 
-		$missingProperties = $this->findMissingProperties($data, $callContext);
 		$requiredFields = $options->getRequiredFields();
 		$fillDefaultValues = $initializeObjects || $options->isPrefillDefaultValues();
 
 		$skippedProperties = $this->getSkippedProperties($callContext);
 
-		foreach ($missingProperties as $missingProperty) {
+		foreach ($this->findMissingFields($data, $callContext) as $missingField) {
+			$missingProperty = $this->fieldNameToPropertyName($missingField, $meta);
+
 			// Skipped properties are not considered missing, they are just processed later
 			if (in_array($missingProperty, $skippedProperties, true)) {
 				continue;
@@ -419,7 +402,6 @@ final class DefaultProcessor implements Processor
 
 			$propertyMeta = $propertiesMeta[$missingProperty];
 			$defaultMeta = $propertyMeta->getDefault();
-			$missingField = $this->propertyNameToFieldName($missingProperty, $propertyMeta);
 
 			if ($requiredFields === RequiredFields::nonDefault() && $defaultMeta->hasValue()) {
 				// Add default value if defaults are not required and should be used
@@ -652,15 +634,16 @@ final class DefaultProcessor implements Processor
 		}
 
 		// Reset mapped properties state
-		$propertiesMeta = $callContext->getMeta()->getProperties();
-		foreach ($propertiesMeta as $propertyName => $propertyMeta) {
+		$propertiesMeta = $meta->getFields();
+		foreach ($propertiesMeta as $fieldName => $propertyMeta) {
+			$propertyName = $this->fieldNameToPropertyName($fieldName, $meta);
 			$this->objectUnset($object, $propertyMeta->getDeclaringClass(), $propertyName);
 		}
 
 		// Set processed data
 		foreach ($data as $fieldName => $value) {
 			$propertyName = $this->fieldNameToPropertyName($fieldName, $meta);
-			$propertyClass = $propertiesMeta[$propertyName]->getDeclaringClass();
+			$propertyClass = $propertiesMeta[$fieldName]->getDeclaringClass();
 			$this->objectSet($object, $propertyClass, $propertyName, $value);
 		}
 
@@ -755,7 +738,7 @@ final class DefaultProcessor implements Processor
 		$meta = $this->metaLoader->load($class);
 		$holder = $this->createHolder($class, $meta->getClass(), $object);
 		$callContext = $this->createProcessorRunContext($class, $meta, $holder);
-		$propertiesMeta = $this->metaLoader->load($class)->getProperties();
+		$propertiesMeta = $meta->getFields();
 
 		foreach ($properties as $propertyName) {
 			// Property is initialized or does not exist
@@ -769,9 +752,8 @@ final class DefaultProcessor implements Processor
 			}
 
 			$skippedPropertyContext = $skippedProperties[$propertyName];
-			$propertyMeta = $propertiesMeta[$propertyName];
-
 			$fieldName = $skippedPropertyContext->getFieldName();
+			$propertyMeta = $propertiesMeta[$fieldName];
 			$fieldContext = $this->createFieldContext($mappedObjectContext, $propertyMeta, $fieldName, $propertyName);
 
 			// Process field value with property rules
@@ -792,7 +774,7 @@ final class DefaultProcessor implements Processor
 				}
 			}
 
-			$propertyClass = $callContext->getMeta()->getProperties()[$propertyName]->getDeclaringClass();
+			$propertyClass = $propertyMeta->getDeclaringClass();
 			$this->objectSet($object, $propertyClass, $propertyName, $processed);
 			$skippedPropertiesContext->removeSkippedProperty($propertyName);
 		}
