@@ -16,7 +16,6 @@ use Orisai\ObjectMapper\Types\MappedObjectType;
 use Orisai\ObjectMapper\Types\Type;
 use Throwable;
 use function array_key_exists;
-use function array_keys;
 use function assert;
 use function in_array;
 use function is_a;
@@ -88,17 +87,12 @@ final class MappedObjectRule implements Rule
 	 */
 	public function createType(Args $args, TypeContext $context): MappedObjectType
 	{
-		$propertiesMeta = $context->getMeta($args->type)->getProperties();
-		$propertyNames = array_keys($propertiesMeta);
-
 		if (in_array($args->type, $context->getProcessedClasses(), true)) {
 			return new MappedObjectType($args->type);
 		}
 
 		$type = new MappedObjectType($args->type);
-		foreach ($propertyNames as $propertyName) {
-			$propertyMeta = $propertiesMeta[$propertyName];
-
+		foreach ($context->getMeta($args->type)->getProperties() as $propertyName => $propertyMeta) {
 			$type->addField(
 				$this->getFieldName($propertyMeta, $propertyName),
 				$this->getTypeCreator($propertyMeta, $context, $args),
