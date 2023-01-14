@@ -12,8 +12,8 @@ use Orisai\ObjectMapper\Context\BaseFieldContext;
 use Orisai\ObjectMapper\Context\FieldContext;
 use Orisai\ObjectMapper\Context\MappedObjectContext;
 use Orisai\ObjectMapper\Context\ProcessorCallContext;
-use Orisai\ObjectMapper\Context\SkippedPropertiesContext;
-use Orisai\ObjectMapper\Context\SkippedPropertyContext;
+use Orisai\ObjectMapper\Context\SkippedFieldContext;
+use Orisai\ObjectMapper\Context\SkippedFieldsContext;
 use Orisai\ObjectMapper\Context\TypeContext;
 use Orisai\ObjectMapper\Exception\InvalidData;
 use Orisai\ObjectMapper\Exception\ValueDoesNotMatch;
@@ -53,7 +53,7 @@ final class DefaultProcessor implements Processor
 
 	private ObjectCreator $objectCreator;
 
-	private SkippedPropertiesContextMap $skippedMap;
+	private SkippedFieldsContextMap $skippedMap;
 
 	private RawValuesMap $rawValuesMap;
 
@@ -62,7 +62,7 @@ final class DefaultProcessor implements Processor
 		$this->metaLoader = $metaLoader;
 		$this->ruleManager = $ruleManager;
 		$this->objectCreator = $objectCreator;
-		$this->skippedMap = new SkippedPropertiesContextMap();
+		$this->skippedMap = new SkippedFieldsContextMap();
 		$this->rawValuesMap = new RawValuesMap();
 	}
 
@@ -320,9 +320,9 @@ final class DefaultProcessor implements Processor
 				$mappedObjectContext->shouldMapDataToObjects()
 				&& $propertyMeta->getModifier(SkippedModifier::class) !== null
 			) {
-				$callContext->addSkippedProperty(
-					$propertyName,
-					new SkippedPropertyContext($fieldName, $value, false),
+				$callContext->addSkippedField(
+					$fieldName,
+					new SkippedFieldContext($propertyName, $value, false),
 				);
 				unset($data[$fieldName]);
 
@@ -362,11 +362,11 @@ final class DefaultProcessor implements Processor
 
 	/**
 	 * @param ProcessorCallContext<MappedObject> $callContext
-	 * @return array<string>
+	 * @return array<int|string>
 	 */
-	private function getSkippedProperties(ProcessorCallContext $callContext): array
+	private function getSkippedFields(ProcessorCallContext $callContext): array
 	{
-		return array_keys($callContext->getSkippedProperties());
+		return array_keys($callContext->getSkippedFields());
 	}
 
 	/**
@@ -390,17 +390,15 @@ final class DefaultProcessor implements Processor
 		$requiredFields = $options->getRequiredFields();
 		$fillDefaultValues = $initializeObjects || $options->isPrefillDefaultValues();
 
-		$skippedProperties = $this->getSkippedProperties($callContext);
+		$skippedFields = $this->getSkippedFields($callContext);
 
 		foreach ($this->findMissingFields($data, $callContext) as $missingField) {
-			$missingProperty = $this->fieldNameToPropertyName($missingField, $meta);
-
 			// Skipped properties are not considered missing, they are just processed later
-			if (in_array($missingProperty, $skippedProperties, true)) {
+			if (in_array($missingField, $skippedFields, true)) {
 				continue;
 			}
 
-			$propertyMeta = $propertiesMeta[$missingProperty];
+			$propertyMeta = $propertiesMeta[$missingField];
 			$defaultMeta = $propertyMeta->getDefault();
 
 			if ($requiredFields === RequiredFields::nonDefault() && $defaultMeta->hasValue()) {
@@ -451,9 +449,13 @@ final class DefaultProcessor implements Processor
 				&& $mappedObjectContext->shouldMapDataToObjects()
 				&& $propertyMeta->getModifier(SkippedModifier::class) !== null
 			) {
-				$callContext->addSkippedProperty(
-					$missingProperty,
-					new SkippedPropertyContext($missingField, $data[$missingField], true),
+				$callContext->addSkippedField(
+					$missingField,
+					new SkippedFieldContext(
+						$this->fieldNameToPropertyName($missingField, $meta),
+						$data[$missingField],
+						true,
+					),
 				);
 				unset($data[$missingField]);
 
@@ -648,13 +650,13 @@ final class DefaultProcessor implements Processor
 		}
 
 		// Set skipped properties
-		$skippedProperties = $callContext->getSkippedProperties();
-		if ($skippedProperties !== []) {
-			$skippedContext = new SkippedPropertiesContext($type, $options);
-			$this->skippedMap->setSkippedPropertiesContext($object, $skippedContext);
+		$skippedFields = $callContext->getSkippedFields();
+		if ($skippedFields !== []) {
+			$skippedContext = new SkippedFieldsContext($type, $options);
+			$this->skippedMap->setSkippedFieldsContext($object, $skippedContext);
 
-			foreach ($skippedProperties as $propertyName => $skippedPropertyContext) {
-				$skippedContext->addSkippedProperty($propertyName, $skippedPropertyContext);
+			foreach ($skippedFields as $fieldName => $skippedFieldContext) {
+				$skippedContext->addSkippedField($fieldName, $skippedFieldContext);
 			}
 		}
 	}
@@ -706,12 +708,8 @@ final class DefaultProcessor implements Processor
 	// Late processing //
 	// ////////////// //
 
-	/**
-	 * @param array<string> $properties
-	 * @throws InvalidData
-	 */
-	public function processSkippedProperties(
-		array $properties,
+	public function processSkippedFields(
+		array $fields,
 		MappedObject $object,
 		?Options $options = null
 	): void
@@ -719,53 +717,53 @@ final class DefaultProcessor implements Processor
 		$class = get_class($object);
 
 		// Object has no skipped properties
-		if (!$this->skippedMap->hasSkippedPropertiesContext($object)) {
+		if (!$this->skippedMap->hasSkippedFieldsContext($object)) {
 			throw InvalidState::create()
 				->withMessage(sprintf(
-					'Cannot initialize properties "%s" of "%s" instance because it has no skipped properties.',
-					implode(', ', $properties),
+					'Cannot initialize fields "%s" of "%s" instance because it has no skipped fields.',
+					implode(', ', $fields),
 					$class,
 				));
 		}
 
-		$skippedPropertiesContext = $this->skippedMap->getSkippedPropertiesContext($object);
+		$skippedFieldsContext = $this->skippedMap->getSkippedFieldsContext($object);
 
-		$type = $skippedPropertiesContext->getType();
-		$options ??= $skippedPropertiesContext->getOptions();
+		$type = $skippedFieldsContext->getType();
+		$options ??= $skippedFieldsContext->getOptions();
 		$mappedObjectContext = $this->createMappedObjectContext($options, $type, true);
-		$skippedProperties = $skippedPropertiesContext->getSkippedProperties();
+		$skippedFields = $skippedFieldsContext->getSkippedFields();
 
 		$meta = $this->metaLoader->load($class);
 		$holder = $this->createHolder($class, $meta->getClass(), $object);
 		$callContext = $this->createProcessorRunContext($class, $meta, $holder);
-		$propertiesMeta = $meta->getFields();
+		$fieldsMeta = $meta->getFields();
 
-		foreach ($properties as $propertyName) {
+		foreach ($fields as $fieldName) {
 			// Property is initialized or does not exist
-			if (!array_key_exists($propertyName, $skippedProperties)) {
+			if (!array_key_exists($fieldName, $skippedFields)) {
 				throw InvalidState::create()
 					->withMessage(sprintf(
-						'Cannot initialize property "%s" of "%s" instance because it is already initialized or does not exist.',
-						$propertyName,
+						'Cannot initialize field "%s" of "%s" instance because it is already initialized or does not exist.',
+						$fieldName,
 						$class,
 					));
 			}
 
-			$skippedPropertyContext = $skippedProperties[$propertyName];
-			$fieldName = $skippedPropertyContext->getFieldName();
-			$propertyMeta = $propertiesMeta[$fieldName];
-			$fieldContext = $this->createFieldContext($mappedObjectContext, $propertyMeta, $fieldName, $propertyName);
+			$skippedFieldContext = $skippedFields[$fieldName];
+			$propertyName = $skippedFieldContext->getPropertyName();
+			$fieldMeta = $fieldsMeta[$fieldName];
+			$fieldContext = $this->createFieldContext($mappedObjectContext, $fieldMeta, $fieldName, $propertyName);
 
 			// Process field value with property rules
-			if ($skippedPropertyContext->isDefault()) {
-				$processed = $skippedPropertyContext->getValue();
+			if ($skippedFieldContext->isDefault()) {
+				$processed = $skippedFieldContext->getValue();
 			} else {
 				try {
 					$processed = $this->processProperty(
-						$skippedPropertyContext->getValue(),
+						$skippedFieldContext->getValue(),
 						$fieldContext,
 						$callContext,
-						$propertyMeta,
+						$fieldMeta,
 					);
 				} catch (ValueDoesNotMatch | InvalidData $exception) {
 					$type->overwriteInvalidField($fieldName, $exception);
@@ -774,9 +772,9 @@ final class DefaultProcessor implements Processor
 				}
 			}
 
-			$propertyClass = $propertyMeta->getDeclaringClass();
+			$propertyClass = $fieldMeta->getDeclaringClass();
 			$this->objectSet($object, $propertyClass, $propertyName, $processed);
-			$skippedPropertiesContext->removeSkippedProperty($propertyName);
+			$skippedFieldsContext->removeSkippedField($fieldName);
 		}
 
 		// If any of fields is invalid, throw error
@@ -785,8 +783,8 @@ final class DefaultProcessor implements Processor
 		}
 
 		// Object is fully initialized, remove partial context
-		if ($skippedPropertiesContext->getSkippedProperties() === []) {
-			$this->skippedMap->setSkippedPropertiesContext($object, null);
+		if ($skippedFieldsContext->getSkippedFields() === []) {
+			$this->skippedMap->setSkippedFieldsContext($object, null);
 		}
 	}
 

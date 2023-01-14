@@ -37,7 +37,7 @@ use Tests\Orisai\ObjectMapper\Doubles\PropertiesInitVO;
 use Tests\Orisai\ObjectMapper\Doubles\PropertiesVisibilityVO;
 use Tests\Orisai\ObjectMapper\Doubles\PropertyCallbacksFailureVO;
 use Tests\Orisai\ObjectMapper\Doubles\SelfReferenceVO;
-use Tests\Orisai\ObjectMapper\Doubles\SkippedPropertiesVO;
+use Tests\Orisai\ObjectMapper\Doubles\SkippedFieldsVO;
 use Tests\Orisai\ObjectMapper\Doubles\StructuresVO;
 use Tests\Orisai\ObjectMapper\Doubles\TransformingVO;
 use Tests\Orisai\ObjectMapper\Toolkit\ProcessingTestCase;
@@ -866,14 +866,14 @@ arrayOfMixed: array<mixed>',
 		$vo = $this->processor->process([
 			'required' => 'required',
 			'requiredSkipped' => 'requiredSkipped',
-		], SkippedPropertiesVO::class);
+		], SkippedFieldsVO::class);
 
 		self::assertSame('required', $vo->required);
 		self::assertSame('optional', $vo->optional);
 		self::assertFalse($this->isInitialized($vo, 'requiredSkipped'));
 		self::assertFalse($this->isInitialized($vo, 'optionalSkipped'));
 
-		$this->processor->processSkippedProperties([
+		$this->processor->processSkippedFields([
 			'requiredSkipped',
 			'optionalSkipped',
 		], $vo);
@@ -890,7 +890,7 @@ arrayOfMixed: array<mixed>',
 		try {
 			$vo = $this->processor->process([
 				'required' => 'required',
-			], SkippedPropertiesVO::class);
+			], SkippedFieldsVO::class);
 		} catch (InvalidData $exception) {
 			// Checked bellow
 		}
@@ -909,11 +909,11 @@ arrayOfMixed: array<mixed>',
 		$vo = $this->processor->process([
 			'required' => 'required',
 			'requiredSkipped' => null,
-		], SkippedPropertiesVO::class);
+		], SkippedFieldsVO::class);
 		$exception = null;
 
 		try {
-			$this->processor->processSkippedProperties([
+			$this->processor->processSkippedFields([
 				'requiredSkipped',
 			], $vo);
 		} catch (InvalidData $exception) {
@@ -932,36 +932,36 @@ arrayOfMixed: array<mixed>',
 		$vo = $this->processor->process([
 			'required' => 'required',
 			'requiredSkipped' => 'requiredSkipped',
-		], SkippedPropertiesVO::class);
+		], SkippedFieldsVO::class);
 
-		$this->processor->processSkippedProperties([
+		$this->processor->processSkippedFields([
 			'requiredSkipped',
 			'optionalSkipped',
 		], $vo);
 
 		$this->expectException(InvalidState::class);
 		$this->expectExceptionMessage(
-			'Cannot initialize properties "whatever" of "Tests\Orisai\ObjectMapper\Doubles\SkippedPropertiesVO" instance ' .
-			'because it has no skipped properties.',
+			'Cannot initialize fields "whatever" of "Tests\Orisai\ObjectMapper\Doubles\SkippedFieldsVO" instance ' .
+			'because it has no skipped fields.',
 		);
 
-		$this->processor->processSkippedProperties(['whatever'], $vo);
+		$this->processor->processSkippedFields(['whatever'], $vo);
 	}
 
-	public function testSkippedPropertyAlreadyInitialized(): void
+	public function testSkippedFieldAlreadyInitialized(): void
 	{
 		$vo = $this->processor->process([
 			'required' => 'required',
 			'requiredSkipped' => 'requiredSkipped',
-		], SkippedPropertiesVO::class);
+		], SkippedFieldsVO::class);
 
 		$this->expectException(InvalidState::class);
 		$this->expectExceptionMessage(
-			'Cannot initialize property "whatever" of "Tests\Orisai\ObjectMapper\Doubles\SkippedPropertiesVO" instance ' .
+			'Cannot initialize field "whatever" of "Tests\Orisai\ObjectMapper\Doubles\SkippedFieldsVO" instance ' .
 			'because it is already initialized or does not exist.',
 		);
 
-		$this->processor->processSkippedProperties(['whatever'], $vo);
+		$this->processor->processSkippedFields(['whatever'], $vo);
 	}
 
 	public function testNotAClass(): void

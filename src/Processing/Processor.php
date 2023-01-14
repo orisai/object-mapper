@@ -30,13 +30,13 @@ interface Processor
 	public function processWithoutMapping($data, string $class, ?Options $options = null): array;
 
 	/**
-	 * Validate and initialize MappedObject properties which were skipped due to Skipped modifier
+	 * Validate and initialize MappedObject fields which were skipped due to Skipped modifier
 	 *
-	 * @param array<string> $properties
+	 * @param list<string> $fields
 	 * @throws InvalidData
 	 */
-	public function processSkippedProperties(
-		array $properties,
+	public function processSkippedFields(
+		array $fields,
 		MappedObject $object,
 		?Options $options = null
 	): void;

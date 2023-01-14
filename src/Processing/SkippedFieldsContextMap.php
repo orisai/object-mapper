@@ -3,14 +3,14 @@
 namespace Orisai\ObjectMapper\Processing;
 
 use Orisai\Exceptions\Logic\InvalidState;
-use Orisai\ObjectMapper\Context\SkippedPropertiesContext;
+use Orisai\ObjectMapper\Context\SkippedFieldsContext;
 use Orisai\ObjectMapper\MappedObject;
 use WeakMap;
 
-final class SkippedPropertiesContextMap
+final class SkippedFieldsContextMap
 {
 
-	/** @var WeakMap<MappedObject, SkippedPropertiesContext|null> */
+	/** @var WeakMap<MappedObject, SkippedFieldsContext|null> */
 	private WeakMap $map;
 
 	public function __construct()
@@ -18,7 +18,7 @@ final class SkippedPropertiesContextMap
 		$this->map = new WeakMap();
 	}
 
-	public function setSkippedPropertiesContext(MappedObject $object, ?SkippedPropertiesContext $context): void
+	public function setSkippedFieldsContext(MappedObject $object, ?SkippedFieldsContext $context): void
 	{
 		if ($context === null) {
 			$this->map->offsetUnset($object);
@@ -27,12 +27,12 @@ final class SkippedPropertiesContextMap
 		}
 	}
 
-	public function hasSkippedPropertiesContext(MappedObject $object): bool
+	public function hasSkippedFieldsContext(MappedObject $object): bool
 	{
 		return $this->map->offsetExists($object);
 	}
 
-	public function getSkippedPropertiesContext(MappedObject $object): SkippedPropertiesContext
+	public function getSkippedFieldsContext(MappedObject $object): SkippedFieldsContext
 	{
 		$context = $this->map->offsetExists($object)
 			? $this->map->offsetGet($object)
@@ -40,7 +40,7 @@ final class SkippedPropertiesContextMap
 
 		if ($context === null) {
 			throw InvalidState::create()
-				->withMessage('Check partial object existence with hasSkippedPropertiesContext()');
+				->withMessage('Check partial object existence with hasSkippedFieldsContext()');
 		}
 
 		return $context;

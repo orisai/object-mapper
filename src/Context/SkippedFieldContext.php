@@ -2,11 +2,10 @@
 
 namespace Orisai\ObjectMapper\Context;
 
-final class SkippedPropertyContext
+final class SkippedFieldContext
 {
 
-	/** @var int|string */
-	private $fieldName;
+	private string $propertyName;
 
 	/** @var mixed */
 	private $value;
@@ -14,22 +13,18 @@ final class SkippedPropertyContext
 	private bool $isDefault;
 
 	/**
-	 * @param int|string $fieldName
 	 * @param mixed $value
 	 */
-	public function __construct($fieldName, $value, bool $isDefault)
+	public function __construct(string $propertyName, $value, bool $isDefault)
 	{
-		$this->fieldName = $fieldName;
+		$this->propertyName = $propertyName;
 		$this->value = $value;
 		$this->isDefault = $isDefault;
 	}
 
-	/**
-	 * @return int|string
-	 */
-	public function getFieldName()
+	public function getPropertyName(): string
 	{
-		return $this->fieldName;
+		return $this->propertyName;
 	}
 
 	/**

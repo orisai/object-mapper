@@ -20,8 +20,8 @@ final class ProcessorCallContext
 	/** @var class-string<T> */
 	private string $class;
 
-	/** @var array<string, SkippedPropertyContext> */
-	private array $skippedProperties = [];
+	/** @var array<int|string, SkippedFieldContext> */
+	private array $skippedFields = [];
 
 	/**
 	 * @param class-string<T> $class
@@ -55,20 +55,23 @@ final class ProcessorCallContext
 		return $this->meta;
 	}
 
-	public function addSkippedProperty(
-		string $propertyName,
-		SkippedPropertyContext $uninitializedPropertyContext
+	/**
+	 * @param int|string $fieldName
+	 */
+	public function addSkippedField(
+		$fieldName,
+		SkippedFieldContext $skippedFieldContext
 	): void
 	{
-		$this->skippedProperties[$propertyName] = $uninitializedPropertyContext;
+		$this->skippedFields[$fieldName] = $skippedFieldContext;
 	}
 
 	/**
-	 * @return array<string, SkippedPropertyContext>
+	 * @return array<int|string, SkippedFieldContext>
 	 */
-	public function getSkippedProperties(): array
+	public function getSkippedFields(): array
 	{
-		return $this->skippedProperties;
+		return $this->skippedFields;
 	}
 
 }
