@@ -17,6 +17,10 @@ parameters:
 		- message: '#^Variable method call on Orisai\\ObjectMapper\\MappedObject\.$#'
 		  path: ../src/Callbacks/BaseCallback.php
 		  count: 1
+
+		# Deprecations
+		- '#^Fetching deprecated class constant FILES of class Nette\\Caching\\Cache(.+)#'
+
 		# Generics
 		# Generics - class-string-map https://psalm.dev/r/155368cea8
 		- message: '#^Property (.+) with generic interface Orisai\\ObjectMapper\\Rules\\Rule does not specify its types\: T_ARGS$#'
