@@ -33,8 +33,6 @@ use ReflectionProperty;
 use function array_key_exists;
 use function class_exists;
 use function get_class;
-use function implode;
-use function in_array;
 use function sprintf;
 
 /**
@@ -61,7 +59,7 @@ final class MetaResolver
 	 */
 	public function resolve(ReflectionClass $class, CompileMeta $meta): RuntimeMeta
 	{
-		$this->checkFieldsPropertiesMap($meta, $class);
+		$this->checkFieldNames($meta);
 
 		return new RuntimeMeta(
 			$this->resolveClassMeta($meta, $class),
@@ -105,9 +103,9 @@ final class MetaResolver
 	private function resolveFieldsMeta(CompileMeta $meta): array
 	{
 		$fields = [];
-		foreach ($meta->getFields() as $propertyName => $fieldMeta) {
+		foreach ($meta->getFields() as $fieldMeta) {
 			$property = $fieldMeta->getProperty();
-			$fieldName = $this->propertyNameToFieldName($propertyName, $fieldMeta);
+			$fieldName = $this->propertyNameToFieldName($fieldMeta);
 			$fields[$fieldName] = $this->resolveFieldMeta(
 				$fieldMeta,
 				$property,
@@ -121,7 +119,7 @@ final class MetaResolver
 	/**
 	 * @return int|string
 	 */
-	private function propertyNameToFieldName(string $propertyName, FieldCompileMeta $fieldMeta)
+	private function propertyNameToFieldName(FieldCompileMeta $fieldMeta)
 	{
 		foreach ($fieldMeta->getModifiers() as $modifier) {
 			if ($modifier->getType() === FieldNameModifier::class) {
@@ -129,7 +127,7 @@ final class MetaResolver
 			}
 		}
 
-		return $propertyName;
+		return $fieldMeta->getProperty()->getName();
 	}
 
 	private function resolveFieldMeta(
@@ -300,70 +298,46 @@ final class MetaResolver
 			: DefaultValueMeta::fromValue($propertyValue);
 	}
 
-	/**
-	 * @param ReflectionClass<MappedObject> $class
-	 */
-	private function checkFieldsPropertiesMap(CompileMeta $meta, ReflectionClass $class): void
+	private function checkFieldNames(CompileMeta $meta): void
 	{
-		$fields = $meta->getFields();
-
 		$map = [];
-		foreach ($fields as $propertyName => $fieldMeta) {
-			$fieldNameMeta = null;
-			foreach ($fieldMeta->getModifiers() as $modifier) {
+		foreach ($meta->getFields() as $field) {
+			$property = $field->getProperty();
+
+			$fieldName = $property->getName();
+			$source = 'property name';
+
+			foreach ($field->getModifiers() as $modifier) {
 				if ($modifier->getType() === FieldNameModifier::class) {
-					$fieldNameMeta = $modifier;
+					$fieldName = $modifier->getArgs()[FieldNameModifier::Name];
+					$source = 'field name meta';
 
 					break;
 				}
 			}
 
-			if ($fieldNameMeta !== null) {
-				$fieldName = $fieldNameMeta->getArgs()[FieldNameModifier::Name];
+			$colliding = $map[$fieldName] ?? null;
+			if ($colliding !== null) {
+				$fullName = "{$property->getDeclaringClass()->getName()}::\${$property->getName()}";
 
-				if (isset($map[$fieldName])) {
-					$message = Message::create()
-						->withContext(sprintf(
-							'Trying to define field name for mapped property of `%s`.',
-							$class->getName(),
-						))
-						->withProblem(sprintf(
-							'Field name `%s` is identical for properties `%s`.',
-							$fieldName,
-							implode(', ', [$map[$fieldName], $propertyName]),
-						))
-						->withSolution('Define unique field name for each mapped property.');
+				$collidingProperty = $colliding['property'];
+				$collidingFullName = "{$collidingProperty->getDeclaringClass()->getName()}::\${$collidingProperty->getName()}";
+				$collidingSource = $colliding['source'];
 
-					throw InvalidState::create()
-						->withMessage($message);
-				}
-
-				$map[$fieldName] = $propertyName;
-			}
-		}
-
-		foreach ($map as $fieldName => $propertyName) {
-			if (array_key_exists($fieldName, $fields) && !in_array($fieldName, $map, true)) {
 				$message = Message::create()
-					->withContext(sprintf(
-						'Trying to define field name for mapped property of `%s`.',
-						$class->getName(),
-					))
-					->withProblem(sprintf(
-						'Field name `%s` defined by property `%s` collides with property `%s` which does not have a field name.',
-						$fieldName,
-						$propertyName,
-						$fieldName,
-					))
-					->withSolution(sprintf(
-						'Rename field of property `%s` or rename property `%s` or give it a unique field name.',
-						$propertyName,
-						$fieldName,
-					));
+					->withContext("Validating mapped property '$fullName'.")
+					->withProblem("Field name '$fieldName' defined in $source collides with " .
+						"field name of property '$collidingFullName' defined in $collidingSource.")
+					->withSolution('Define unique field name for each mapped property.');
 
 				throw InvalidState::create()
 					->withMessage($message);
 			}
+
+			$map[$fieldName] = [
+				'property' => $property,
+				'source' => $source,
+			];
 		}
 	}
 

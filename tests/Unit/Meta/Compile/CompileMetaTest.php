@@ -23,7 +23,7 @@ final class CompileMetaTest extends TestCase
 	{
 		$class = new ClassCompileMeta([], [], []);
 		$fields = [
-			'a' => new FieldCompileMeta(
+			new FieldCompileMeta(
 				[],
 				[],
 				[],
@@ -78,7 +78,7 @@ final class CompileMetaTest extends TestCase
 		$meta = new CompileMeta(
 			new ClassCompileMeta([], [], []),
 			[
-				'a' => new FieldCompileMeta(
+				new FieldCompileMeta(
 					[],
 					[],
 					[],

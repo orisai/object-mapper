@@ -14,9 +14,12 @@ final class MetaLoaderTest extends ProcessingTestCase
 	{
 		$this->expectException(InvalidState::class);
 		$this->expectExceptionMessage(<<<'TXT'
-Context: Trying to define field name for mapped property of
-         `Tests\Orisai\ObjectMapper\Doubles\MultipleIdenticalFieldNamesVO`.
-Problem: Field name `field` is identical for properties `property1, property2`.
+Context: Validating mapped property
+         'Tests\Orisai\ObjectMapper\Doubles\MultipleIdenticalFieldNamesVO::$property2'.
+Problem: Field name 'field' defined in field name meta collides with field name
+         of property
+         'Tests\Orisai\ObjectMapper\Doubles\MultipleIdenticalFieldNamesVO::$property1'
+         defined in field name meta.
 Solution: Define unique field name for each mapped property.
 TXT);
 
@@ -27,12 +30,13 @@ TXT);
 	{
 		$this->expectException(InvalidState::class);
 		$this->expectExceptionMessage(<<<'TXT'
-Context: Trying to define field name for mapped property of
-         `Tests\Orisai\ObjectMapper\Doubles\FieldNameIdenticalWithAnotherPropertyNameVO`.
-Problem: Field name `field` defined by property `property` collides with
-         property `field` which does not have a field name.
-Solution: Rename field of property `property` or rename property `field` or give
-          it a unique field name.
+Context: Validating mapped property
+         'Tests\Orisai\ObjectMapper\Doubles\FieldNameIdenticalWithAnotherPropertyNameVO::$property'.
+Problem: Field name 'field' defined in field name meta collides with field name
+         of property
+         'Tests\Orisai\ObjectMapper\Doubles\FieldNameIdenticalWithAnotherPropertyNameVO::$field'
+         defined in property name.
+Solution: Define unique field name for each mapped property.
 TXT);
 
 		$this->metaLoader->load(FieldNameIdenticalWithAnotherPropertyNameVO::class);

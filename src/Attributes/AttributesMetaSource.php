@@ -22,7 +22,6 @@ use Orisai\ObjectMapper\ReflectionMeta\Collector\Collector;
 use Orisai\ObjectMapper\ReflectionMeta\Meta\ClassMeta;
 use Orisai\ObjectMapper\ReflectionMeta\Meta\HierarchicClassMeta;
 use ReflectionClass;
-use ReflectionProperty;
 use function array_merge;
 use function get_class;
 use function sprintf;
@@ -48,7 +47,7 @@ final class AttributesMetaSource implements MetaSource
 
 		return new CompileMeta(
 			$this->loadClassMeta($metas),
-			$this->loadPropertiesMeta($class, $metas),
+			$this->loadPropertiesMeta($metas),
 			$sources,
 		);
 	}
@@ -106,33 +105,35 @@ final class AttributesMetaSource implements MetaSource
 		$docs = [];
 		$modifiers = [];
 
-		foreach ($this->getClassAttributes($metas) as $annotation) {
-			$annotation = $this->checkAnnotationType($annotation);
+		foreach ($metas as $meta) {
+			foreach ($meta->getAttributes() as $attribute) {
+				$attribute = $this->checkAnnotationType($attribute);
 
-			if ($annotation instanceof RuleAttribute) {
-				throw InvalidArgument::create()
-					->withMessage(sprintf(
-						'Rule annotation %s (subtype of %s) cannot be used on class, only properties are allowed',
-						get_class($annotation),
-						RuleAttribute::class,
-					));
-			}
+				if ($attribute instanceof RuleAttribute) {
+					throw InvalidArgument::create()
+						->withMessage(sprintf(
+							'Rule attribute %s (subtype of %s) cannot be used on class, only properties are allowed',
+							get_class($attribute),
+							RuleAttribute::class,
+						));
+				}
 
-			if ($annotation instanceof CallableAttribute) {
-				$callbacks[] = new CallbackCompileMeta(
-					$annotation->getType(),
-					$annotation->getArgs(),
-				);
-			} elseif ($annotation instanceof DocumentationAttribute) {
-				$docs[] = new DocMeta(
-					$annotation->getType(),
-					$annotation->getArgs(),
-				);
-			} else {
-				$modifiers[] = new ModifierCompileMeta(
-					$annotation->getType(),
-					$annotation->getArgs(),
-				);
+				if ($attribute instanceof CallableAttribute) {
+					$callbacks[] = new CallbackCompileMeta(
+						$attribute->getType(),
+						$attribute->getArgs(),
+					);
+				} elseif ($attribute instanceof DocumentationAttribute) {
+					$docs[] = new DocMeta(
+						$attribute->getType(),
+						$attribute->getArgs(),
+					);
+				} else {
+					$modifiers[] = new ModifierCompileMeta(
+						$attribute->getType(),
+						$attribute->getArgs(),
+					);
+				}
 			}
 		}
 
@@ -140,77 +141,81 @@ final class AttributesMetaSource implements MetaSource
 	}
 
 	/**
-	 * @param ReflectionClass<MappedObject>  $class
 	 * @param list<ClassMeta<BaseAttribute>> $metas
-	 * @return array<string, FieldCompileMeta>
+	 * @return list<FieldCompileMeta>
 	 */
-	private function loadPropertiesMeta(ReflectionClass $class, array $metas): array
+	private function loadPropertiesMeta(array $metas): array
 	{
 		$fields = [];
 
-		foreach ($class->getProperties() as $property) {
-			$callbacks = [];
-			$docs = [];
-			$modifiers = [];
-			$rule = null;
+		foreach ($metas as $meta) {
+			foreach ($meta->getProperties() as $propertyMeta) {
+				$property = $propertyMeta->getSource()->getTarget()->getReflector();
+				$class = $property->getDeclaringClass();
 
-			foreach ($this->getPropertyAttributes($property, $metas) as $annotation) {
-				$annotation = $this->checkAnnotationType($annotation);
+				$callbacks = [];
+				$docs = [];
+				$modifiers = [];
+				$rule = null;
 
-				if ($annotation instanceof RuleAttribute) {
-					if ($rule !== null) {
-						throw InvalidArgument::create()
-							->withMessage(sprintf(
-								'Mapped property %s::$%s has multiple expectation annotations, while only one is allowed. ' .
-								'Combine multiple with %s or %s',
-								$class->getName(),
-								$property->getName(),
-								AnyOf::class,
-								AllOf::class,
-							));
+				foreach ($propertyMeta->getAttributes() as $attribute) {
+					$attribute = $this->checkAnnotationType($attribute);
+
+					if ($attribute instanceof RuleAttribute) {
+						if ($rule !== null) {
+							throw InvalidArgument::create()
+								->withMessage(sprintf(
+									'Mapped property %s::$%s has multiple expectation annotations, while only one is allowed. ' .
+									'Combine multiple with %s or %s',
+									$class->getName(),
+									$property->getName(),
+									AnyOf::class,
+									AllOf::class,
+								));
+						}
+
+						$rule = new RuleCompileMeta(
+							$attribute->getType(),
+							$attribute->getArgs(),
+						);
+					} elseif ($attribute instanceof CallableAttribute) {
+						$callbacks[] = new CallbackCompileMeta(
+							$attribute->getType(),
+							$attribute->getArgs(),
+						);
+					} elseif ($attribute instanceof DocumentationAttribute) {
+						$docs[] = new DocMeta(
+							$attribute->getType(),
+							$attribute->getArgs(),
+						);
+					} else {
+						$modifiers[] = new ModifierCompileMeta(
+							$attribute->getType(),
+							$attribute->getArgs(),
+						);
 					}
-
-					$rule = new RuleCompileMeta(
-						$annotation->getType(),
-						$annotation->getArgs(),
-					);
-				} elseif ($annotation instanceof CallableAttribute) {
-					$callbacks[] = new CallbackCompileMeta(
-						$annotation->getType(),
-						$annotation->getArgs(),
-					);
-				} elseif ($annotation instanceof DocumentationAttribute) {
-					$docs[] = new DocMeta(
-						$annotation->getType(),
-						$annotation->getArgs(),
-					);
-				} else {
-					$modifiers[] = new ModifierCompileMeta(
-						$annotation->getType(),
-						$annotation->getArgs(),
-					);
 				}
-			}
 
-			if ($rule === null && $callbacks === [] && $docs === [] && $modifiers === []) {
-				continue;
-			}
+				if ($rule === null && $callbacks === [] && $docs === [] && $modifiers === []) {
+					continue;
+				}
 
-			if ($rule === null) {
-				throw InvalidArgument::create()
-					->withMessage(
-						"Property {$class->getName()}::\${$property->getName()} has mapped object annotation, " .
-						'but no rule annotation.',
-					);
-			}
+				if ($rule === null) {
+					throw InvalidArgument::create()
+						->withMessage(
+							"Property {$class->getName()}::\${$property->getName()} has mapped object annotation, " .
+							'but no rule annotation.',
+						);
+				}
 
-			$fields[$property->getName()] = new FieldCompileMeta(
-				$callbacks,
-				$docs,
-				$modifiers,
-				$rule,
-				$property,
-			);
+				$fields[] = new FieldCompileMeta(
+					$callbacks,
+					$docs,
+					$modifiers,
+					$rule,
+					$property,
+				);
+			}
 		}
 
 		return $fields;
@@ -240,46 +245,6 @@ final class AttributesMetaSource implements MetaSource
 		}
 
 		return $annotation;
-	}
-
-	/**
-	 * @param list<ClassMeta<BaseAttribute>> $metas
-	 * @return list<BaseAttribute>
-	 */
-	private function getClassAttributes(array $metas): array
-	{
-		$attributes = [];
-		foreach ($metas as $meta) {
-			foreach ($meta->getAttributes() as $attribute) {
-				$attributes[] = $attribute;
-			}
-		}
-
-		return $attributes;
-	}
-
-	/**
-	 * @param list<ClassMeta<BaseAttribute>> $metas
-	 * @return list<BaseAttribute>
-	 */
-	private function getPropertyAttributes(ReflectionProperty $reflector, array $metas): array
-	{
-		$attributes = [];
-		foreach ($metas as $meta) {
-			foreach ($meta->getProperties() as $property) {
-				$propertyReflector = $property->getSource()->getTarget()->getReflector();
-
-				if ($reflector->getName() !== $propertyReflector->getName()) {
-					continue;
-				}
-
-				foreach ($property->getAttributes() as $attribute) {
-					$attributes[] = $attribute;
-				}
-			}
-		}
-
-		return $attributes;
 	}
 
 }
