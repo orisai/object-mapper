@@ -46,7 +46,7 @@ final class AttributesMetaSource implements MetaSource
 		}
 
 		return new CompileMeta(
-			$this->loadClassMeta($metas),
+			$this->loadClassMeta($metas, $class),
 			$this->loadPropertiesMeta($metas),
 			$sources,
 		);
@@ -97,9 +97,10 @@ final class AttributesMetaSource implements MetaSource
 	}
 
 	/**
+	 * @param ReflectionClass<MappedObject> $class
 	 * @param list<ClassMeta<BaseAttribute>> $metas
 	 */
-	private function loadClassMeta(array $metas): ClassCompileMeta
+	private function loadClassMeta(array $metas, ReflectionClass $class): ClassCompileMeta
 	{
 		$callbacks = [];
 		$docs = [];
@@ -137,7 +138,7 @@ final class AttributesMetaSource implements MetaSource
 			}
 		}
 
-		return new ClassCompileMeta($callbacks, $docs, $modifiers);
+		return new ClassCompileMeta($callbacks, $docs, $modifiers, $class);
 	}
 
 	/**

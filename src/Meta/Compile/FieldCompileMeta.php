@@ -2,6 +2,7 @@
 
 namespace Orisai\ObjectMapper\Meta\Compile;
 
+use ReflectionClass;
 use ReflectionProperty;
 
 final class FieldCompileMeta extends NodeCompileMeta
@@ -27,6 +28,11 @@ final class FieldCompileMeta extends NodeCompileMeta
 	public function getRule(): RuleCompileMeta
 	{
 		return $this->rule;
+	}
+
+	public function getClass(): ReflectionClass
+	{
+		return $this->property->getDeclaringClass();
 	}
 
 	public function getProperty(): ReflectionProperty

@@ -2,7 +2,9 @@
 
 namespace Orisai\ObjectMapper\Meta\Compile;
 
+use Orisai\ObjectMapper\MappedObject;
 use Orisai\ObjectMapper\Meta\DocMeta;
+use ReflectionClass;
 
 /**
  * @internal
@@ -54,5 +56,10 @@ abstract class NodeCompileMeta
 	{
 		return $this->modifiers;
 	}
+
+	/**
+	 * @return ReflectionClass<MappedObject>
+	 */
+	abstract public function getClass(): ReflectionClass;
 
 }

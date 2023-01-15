@@ -21,14 +21,15 @@ final class CompileMetaTest extends TestCase
 
 	public function test(): void
 	{
-		$class = new ClassCompileMeta([], [], []);
+		$reflector = new ReflectionClass(NoDefaultsVO::class);
+		$class = new ClassCompileMeta([], [], [], $reflector);
 		$fields = [
 			new FieldCompileMeta(
 				[],
 				[],
 				[],
 				new RuleCompileMeta(MixedRule::class, []),
-				new ReflectionProperty(NoDefaultsVO::class, 'string'),
+				$reflector->getProperty('string'),
 			),
 		];
 		$sources = [
@@ -55,8 +56,10 @@ final class CompileMetaTest extends TestCase
 
 	public function testHasAnyAttributes(): void
 	{
+		$reflector = new ReflectionClass(NoDefaultsVO::class);
+
 		$meta = new CompileMeta(
-			new ClassCompileMeta([], [], []),
+			new ClassCompileMeta([], [], [], $reflector),
 			[],
 			[],
 		);
@@ -69,6 +72,7 @@ final class CompileMetaTest extends TestCase
 				],
 				[],
 				[],
+				$reflector,
 			),
 			[],
 			[],
@@ -76,7 +80,7 @@ final class CompileMetaTest extends TestCase
 		self::assertTrue($meta->hasAnyAttributes());
 
 		$meta = new CompileMeta(
-			new ClassCompileMeta([], [], []),
+			new ClassCompileMeta([], [], [], $reflector),
 			[
 				new FieldCompileMeta(
 					[],

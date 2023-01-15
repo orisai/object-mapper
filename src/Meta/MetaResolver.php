@@ -61,29 +61,26 @@ final class MetaResolver
 	{
 		$this->checkFieldNames($meta);
 
-		return new RuntimeMeta(
-			$this->resolveClassMeta($meta, $class),
+		$runtimeMeta = new RuntimeMeta(
+			$this->resolveClassMeta($meta),
 			$this->resolveFieldsMeta($meta),
 		);
+
+		$this->checkObjectCanBeInstantiated($class, $runtimeMeta->getClass());
+
+		return $runtimeMeta;
 	}
 
-	/**
-	 * @param ReflectionClass<MappedObject> $class
-	 */
-	private function resolveClassMeta(CompileMeta $meta, ReflectionClass $class): ClassRuntimeMeta
+	private function resolveClassMeta(CompileMeta $meta): ClassRuntimeMeta
 	{
-		$context = ResolverArgsContext::forClass($class, $this);
+		$context = ResolverArgsContext::forClass($meta->getClass()->getClass(), $this);
 		$classMeta = $meta->getClass();
 
-		$runtimeMeta = new ClassRuntimeMeta(
-			$this->resolveCallbacksMeta($classMeta, $context, $class),
+		return new ClassRuntimeMeta(
+			$this->resolveCallbacksMeta($classMeta, $context),
 			$this->resolveDocsMeta($classMeta, $context),
 			$this->resolveModifiersMeta($classMeta, $context),
 		);
-
-		$this->checkObjectCanBeInstantiated($class, $runtimeMeta);
-
-		return $runtimeMeta;
 	}
 
 	/**
@@ -104,12 +101,10 @@ final class MetaResolver
 	{
 		$fields = [];
 		foreach ($meta->getFields() as $fieldMeta) {
-			$property = $fieldMeta->getProperty();
 			$fieldName = $this->propertyNameToFieldName($fieldMeta);
 			$fields[$fieldName] = $this->resolveFieldMeta(
 				$fieldMeta,
-				$property,
-				$this->getDefaultValue($fieldMeta, $property),
+				$this->getDefaultValue($fieldMeta),
 			);
 		}
 
@@ -132,10 +127,11 @@ final class MetaResolver
 
 	private function resolveFieldMeta(
 		FieldCompileMeta $meta,
-		ReflectionProperty $property,
 		DefaultValueMeta $defaultValue
 	): FieldRuntimeMeta
 	{
+		$property = $meta->getProperty();
+
 		if ($property->isStatic()) {
 			throw InvalidArgument::create()
 				->withMessage(sprintf(
@@ -149,7 +145,7 @@ final class MetaResolver
 		$context = ResolverArgsContext::forProperty($property, $this);
 
 		return new FieldRuntimeMeta(
-			$this->resolveCallbacksMeta($meta, $context, $property->getDeclaringClass()),
+			$this->resolveCallbacksMeta($meta, $context),
 			$this->resolveDocsMeta($meta, $context),
 			$this->resolveModifiersMeta($meta, $context),
 			$this->resolveRuleMeta(
@@ -162,18 +158,13 @@ final class MetaResolver
 	}
 
 	/**
-	 * @param ReflectionClass<MappedObject> $declaringClass
 	 * @return array<int, CallbackRuntimeMeta<Args>>
 	 */
-	private function resolveCallbacksMeta(
-		NodeCompileMeta $meta,
-		ResolverArgsContext $context,
-		ReflectionClass $declaringClass
-	): array
+	private function resolveCallbacksMeta(NodeCompileMeta $meta, ResolverArgsContext $context): array
 	{
 		$array = [];
 		foreach ($meta->getCallbacks() as $key => $callback) {
-			$array[$key] = $this->resolveCallbackMeta($callback, $context, $declaringClass);
+			$array[$key] = $this->resolveCallbackMeta($callback, $context, $meta->getClass());
 		}
 
 		return $array;
@@ -275,8 +266,9 @@ final class MetaResolver
 		return new RuleRuntimeMeta($type, $args);
 	}
 
-	private function getDefaultValue(FieldCompileMeta $meta, ReflectionProperty $property): DefaultValueMeta
+	private function getDefaultValue(FieldCompileMeta $meta): DefaultValueMeta
 	{
+		$property = $meta->getProperty();
 		$propertyName = $property->getName();
 
 		$defaults = $property->getDeclaringClass()->getDefaultProperties();

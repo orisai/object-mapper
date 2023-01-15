@@ -119,7 +119,7 @@ final class MetaLoader
 
 		if ($meta === null) {
 			$meta = new CompileMeta(
-				new ClassCompileMeta([], [], []),
+				new ClassCompileMeta([], [], [], $class),
 				[],
 				[],
 			);

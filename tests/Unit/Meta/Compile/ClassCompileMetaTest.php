@@ -10,6 +10,8 @@ use Orisai\ObjectMapper\Meta\Compile\ModifierCompileMeta;
 use Orisai\ObjectMapper\Meta\DocMeta;
 use Orisai\ObjectMapper\Modifiers\FieldNameModifier;
 use PHPUnit\Framework\TestCase;
+use ReflectionClass;
+use Tests\Orisai\ObjectMapper\Doubles\NoDefaultsVO;
 
 final class ClassCompileMetaTest extends TestCase
 {
@@ -25,8 +27,9 @@ final class ClassCompileMetaTest extends TestCase
 		$modifiers = [
 			new ModifierCompileMeta(FieldNameModifier::class, []),
 		];
+		$reflector = new ReflectionClass(NoDefaultsVO::class);
 
-		$meta = new ClassCompileMeta($callbacks, $docs, $modifiers);
+		$meta = new ClassCompileMeta($callbacks, $docs, $modifiers, $reflector);
 
 		self::assertSame(
 			$callbacks,
@@ -40,18 +43,22 @@ final class ClassCompileMetaTest extends TestCase
 			$modifiers,
 			$meta->getModifiers(),
 		);
+		self::assertSame(
+			$reflector,
+			$meta->getClass(),
+		);
 		self::assertTrue($meta->hasAnyAttributes());
 
-		$meta = new ClassCompileMeta($callbacks, [], []);
+		$meta = new ClassCompileMeta($callbacks, [], [], $reflector);
 		self::assertTrue($meta->hasAnyAttributes());
 
-		$meta = new ClassCompileMeta([], $docs, []);
+		$meta = new ClassCompileMeta([], $docs, [], $reflector);
 		self::assertTrue($meta->hasAnyAttributes());
 
-		$meta = new ClassCompileMeta([], [], $modifiers);
+		$meta = new ClassCompileMeta([], [], $modifiers, $reflector);
 		self::assertTrue($meta->hasAnyAttributes());
 
-		$meta = new ClassCompileMeta([], [], []);
+		$meta = new ClassCompileMeta([], [], [], $reflector);
 		self::assertFalse($meta->hasAnyAttributes());
 	}
 
