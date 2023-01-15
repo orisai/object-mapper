@@ -31,6 +31,7 @@ use Orisai\ObjectMapper\Rules\RuleManager;
 use ReflectionClass;
 use ReflectionProperty;
 use function array_key_exists;
+use function array_merge;
 use function class_exists;
 use function get_class;
 use function sprintf;
@@ -73,13 +74,22 @@ final class MetaResolver
 
 	private function resolveClassMeta(CompileMeta $meta): ClassRuntimeMeta
 	{
-		$context = ResolverArgsContext::forClass($meta->getClass()->getClass(), $this);
-		$classMeta = $meta->getClass();
+		$callbacksByMeta = [];
+		$docsByMeta = [];
+		$modifiersByMeta = [];
+
+		foreach ($meta->getClasses() as $class) {
+			$context = ResolverArgsContext::forClass($class->getClass(), $this);
+
+			$callbacksByMeta[] = $this->resolveCallbacksMeta($class, $context);
+			$docsByMeta[] = $this->resolveDocsMeta($class, $context);
+			$modifiersByMeta[] = $this->resolveModifiersMeta($class, $context);
+		}
 
 		return new ClassRuntimeMeta(
-			$this->resolveCallbacksMeta($classMeta, $context),
-			$this->resolveDocsMeta($classMeta, $context),
-			$this->resolveModifiersMeta($classMeta, $context),
+			array_merge(...$callbacksByMeta),
+			array_merge(...$docsByMeta),
+			array_merge(...$modifiersByMeta),
 		);
 	}
 

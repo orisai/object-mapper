@@ -18,6 +18,10 @@ parameters:
 		  path: ../src/Callbacks/BaseCallback.php
 		  count: 1
 
+		# Proper object -> MappedObject type checks are currently missing
+		- message: '#(.+)expects ReflectionClass\<(.+)MappedObject\>, ReflectionClass\<object\> given\.$#'
+		  path: ../src/Meta/MetaResolver.php
+
 		# Deprecations
 		- '#^Fetching deprecated class constant FILES of class Nette\\Caching\\Cache(.+)#'
 

@@ -2,7 +2,6 @@
 
 namespace Orisai\ObjectMapper\Meta\Compile;
 
-use Orisai\ObjectMapper\MappedObject;
 use Orisai\ObjectMapper\Meta\DocMeta;
 use ReflectionClass;
 
@@ -58,7 +57,7 @@ abstract class NodeCompileMeta
 	}
 
 	/**
-	 * @return ReflectionClass<MappedObject>
+	 * @return ReflectionClass<object>
 	 */
 	abstract public function getClass(): ReflectionClass;
 

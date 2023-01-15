@@ -8,7 +8,8 @@ use Orisai\SourceMap\FileSource;
 final class CompileMeta
 {
 
-	private ClassCompileMeta $class;
+	/** @var list<ClassCompileMeta> */
+	private array $classes;
 
 	/** @var list<FieldCompileMeta> */
 	private array $fields;
@@ -17,19 +18,23 @@ final class CompileMeta
 	private array $sources;
 
 	/**
+	 * @param list<ClassCompileMeta>       $classes
 	 * @param list<FieldCompileMeta>       $fields
 	 * @param list<ClassSource|FileSource> $sources
 	 */
-	public function __construct(ClassCompileMeta $class, array $fields, array $sources)
+	public function __construct(array $classes, array $fields, array $sources)
 	{
-		$this->class = $class;
+		$this->classes = $classes;
 		$this->fields = $fields;
 		$this->sources = $sources;
 	}
 
-	public function getClass(): ClassCompileMeta
+	/**
+	 * @return list<ClassCompileMeta>
+	 */
+	public function getClasses(): array
 	{
-		return $this->class;
+		return $this->classes;
 	}
 
 	/**
@@ -50,8 +55,17 @@ final class CompileMeta
 
 	public function hasAnyAttributes(): bool
 	{
-		return $this->fields !== []
-			|| $this->class->hasAnyAttributes();
+		if ($this->fields !== []) {
+			return true;
+		}
+
+		foreach ($this->classes as $class) {
+			if ($class->hasAnyAttributes()) {
+				return true;
+			}
+		}
+
+		return false;
 	}
 
 }

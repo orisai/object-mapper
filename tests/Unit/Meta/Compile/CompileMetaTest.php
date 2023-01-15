@@ -22,7 +22,9 @@ final class CompileMetaTest extends TestCase
 	public function test(): void
 	{
 		$reflector = new ReflectionClass(NoDefaultsVO::class);
-		$class = new ClassCompileMeta([], [], [], $reflector);
+		$classes = [
+			new ClassCompileMeta([], [], [], $reflector),
+		];
 		$fields = [
 			new FieldCompileMeta(
 				[],
@@ -37,11 +39,11 @@ final class CompileMetaTest extends TestCase
 			new FileSource(__FILE__),
 		];
 
-		$meta = new CompileMeta($class, $fields, $sources);
+		$meta = new CompileMeta($classes, $fields, $sources);
 
 		self::assertSame(
-			$class,
-			$meta->getClass(),
+			$classes,
+			$meta->getClasses(),
 		);
 		self::assertSame(
 			$fields,
@@ -59,28 +61,34 @@ final class CompileMetaTest extends TestCase
 		$reflector = new ReflectionClass(NoDefaultsVO::class);
 
 		$meta = new CompileMeta(
-			new ClassCompileMeta([], [], [], $reflector),
+			[
+				new ClassCompileMeta([], [], [], $reflector),
+			],
 			[],
 			[],
 		);
 		self::assertFalse($meta->hasAnyAttributes());
 
 		$meta = new CompileMeta(
-			new ClassCompileMeta(
-				[
-					new CallbackCompileMeta(BeforeCallback::class, []),
-				],
-				[],
-				[],
-				$reflector,
-			),
+			[
+				new ClassCompileMeta(
+					[
+						new CallbackCompileMeta(BeforeCallback::class, []),
+					],
+					[],
+					[],
+					$reflector,
+				),
+			],
 			[],
 			[],
 		);
 		self::assertTrue($meta->hasAnyAttributes());
 
 		$meta = new CompileMeta(
-			new ClassCompileMeta([], [], [], $reflector),
+			[
+				new ClassCompileMeta([], [], [], $reflector),
+			],
 			[
 				new FieldCompileMeta(
 					[],
