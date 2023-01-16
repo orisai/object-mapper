@@ -8,8 +8,8 @@ use Orisai\ObjectMapper\Exception\ValueDoesNotMatch;
 use Orisai\ObjectMapper\Rules\BackedEnumArgs;
 use Orisai\ObjectMapper\Rules\BackedEnumRule;
 use Orisai\ObjectMapper\Types\EnumType;
-use Tests\Orisai\ObjectMapper\Doubles\ExampleIntEnum;
-use Tests\Orisai\ObjectMapper\Doubles\ExampleStringEnum;
+use Tests\Orisai\ObjectMapper\Doubles\Enums\ExampleIntEnum;
+use Tests\Orisai\ObjectMapper\Doubles\Enums\ExampleStringEnum;
 use Tests\Orisai\ObjectMapper\Toolkit\ProcessingTestCase;
 
 /**

@@ -1,6 +1,6 @@
 <?php declare(strict_types = 1);
 
-namespace Tests\Orisai\ObjectMapper\Doubles;
+namespace Tests\Orisai\ObjectMapper\Doubles\Callbacks;
 
 use Orisai\ObjectMapper\Attributes\Callbacks\After;
 use Orisai\ObjectMapper\Attributes\Expect\StringValue;
@@ -10,6 +10,7 @@ use Orisai\ObjectMapper\MappedObject;
 use Orisai\ObjectMapper\Types\MappedObjectType;
 use Orisai\ObjectMapper\Types\MessageType;
 use Orisai\ObjectMapper\Types\Value;
+use Tests\Orisai\ObjectMapper\Doubles\EmptyVO;
 
 /**
  * @After(method="after")

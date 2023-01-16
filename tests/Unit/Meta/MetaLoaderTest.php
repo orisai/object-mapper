@@ -3,8 +3,8 @@
 namespace Tests\Orisai\ObjectMapper\Unit\Meta;
 
 use Orisai\Exceptions\Logic\InvalidState;
-use Tests\Orisai\ObjectMapper\Doubles\FieldNameIdenticalWithAnotherPropertyNameVO;
-use Tests\Orisai\ObjectMapper\Doubles\MultipleIdenticalFieldNamesVO;
+use Tests\Orisai\ObjectMapper\Doubles\FieldNames\FieldNameIdenticalWithAnotherPropertyNameVO;
+use Tests\Orisai\ObjectMapper\Doubles\FieldNames\MultipleIdenticalFieldNamesVO;
 use Tests\Orisai\ObjectMapper\Toolkit\ProcessingTestCase;
 
 final class MetaLoaderTest extends ProcessingTestCase
@@ -15,10 +15,10 @@ final class MetaLoaderTest extends ProcessingTestCase
 		$this->expectException(InvalidState::class);
 		$this->expectExceptionMessage(<<<'TXT'
 Context: Validating mapped property
-         'Tests\Orisai\ObjectMapper\Doubles\MultipleIdenticalFieldNamesVO::$property2'.
+         'Tests\Orisai\ObjectMapper\Doubles\FieldNames\MultipleIdenticalFieldNamesVO::$property2'.
 Problem: Field name 'field' defined in field name meta collides with field name
          of property
-         'Tests\Orisai\ObjectMapper\Doubles\MultipleIdenticalFieldNamesVO::$property1'
+         'Tests\Orisai\ObjectMapper\Doubles\FieldNames\MultipleIdenticalFieldNamesVO::$property1'
          defined in field name meta.
 Solution: Define unique field name for each mapped property.
 TXT);
@@ -31,10 +31,10 @@ TXT);
 		$this->expectException(InvalidState::class);
 		$this->expectExceptionMessage(<<<'TXT'
 Context: Validating mapped property
-         'Tests\Orisai\ObjectMapper\Doubles\FieldNameIdenticalWithAnotherPropertyNameVO::$property'.
+         'Tests\Orisai\ObjectMapper\Doubles\FieldNames\FieldNameIdenticalWithAnotherPropertyNameVO::$property'.
 Problem: Field name 'field' defined in field name meta collides with field name
          of property
-         'Tests\Orisai\ObjectMapper\Doubles\FieldNameIdenticalWithAnotherPropertyNameVO::$field'
+         'Tests\Orisai\ObjectMapper\Doubles\FieldNames\FieldNameIdenticalWithAnotherPropertyNameVO::$field'
          defined in property name.
 Solution: Define unique field name for each mapped property.
 TXT);

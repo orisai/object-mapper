@@ -8,8 +8,8 @@ use Orisai\ObjectMapper\MappedObject;
 use Orisai\ObjectMapper\Processing\DefaultObjectCreator;
 use PHPUnit\Framework\TestCase;
 use ReflectionProperty;
-use Tests\Orisai\ObjectMapper\Doubles\ConstructorUsingVO;
-use Tests\Orisai\ObjectMapper\Doubles\DependentVO;
+use Tests\Orisai\ObjectMapper\Doubles\Constructing\ConstructorUsingVO;
+use Tests\Orisai\ObjectMapper\Doubles\Constructing\DependentVO;
 use Tests\Orisai\ObjectMapper\Doubles\EmptyVO;
 
 final class DefaultObjectCreatorTest extends TestCase
@@ -32,7 +32,7 @@ final class DefaultObjectCreatorTest extends TestCase
 		$this->expectExceptionMessage(
 			<<<'MSG'
 Context: Creating instance of class
-         'Tests\Orisai\ObjectMapper\Doubles\DependentVO' via
+         'Tests\Orisai\ObjectMapper\Doubles\Constructing\DependentVO' via
          Orisai\ObjectMapper\Processing\DefaultObjectCreator.
 Problem: Class has required constructor arguments and could not be created.
 Solution: Use another 'Orisai\ObjectMapper\Processing\ObjectCreator'

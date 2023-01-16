@@ -1,6 +1,6 @@
 <?php declare(strict_types = 1);
 
-namespace Tests\Orisai\ObjectMapper\Doubles;
+namespace Tests\Orisai\ObjectMapper\Doubles\Circular;
 
 use Orisai\ObjectMapper\Attributes\Expect\ListOf;
 use Orisai\ObjectMapper\Attributes\Expect\MappedObjectValue;

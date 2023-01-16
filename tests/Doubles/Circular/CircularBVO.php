@@ -1,25 +1,21 @@
 <?php declare(strict_types = 1);
 
-namespace Tests\Orisai\ObjectMapper\Doubles;
+namespace Tests\Orisai\ObjectMapper\Doubles\Circular;
 
 use Orisai\ObjectMapper\Attributes\Expect\AnyOf;
 use Orisai\ObjectMapper\Attributes\Expect\MappedObjectValue;
 use Orisai\ObjectMapper\Attributes\Expect\NullValue;
-use Orisai\ObjectMapper\Attributes\Expect\StringValue;
 use Orisai\ObjectMapper\MappedObject;
 
-final class SelfReferenceVO implements MappedObject
+final class CircularBVO implements MappedObject
 {
 
 	/**
 	 * @AnyOf({
-	 *     @MappedObjectValue(SelfReferenceVO::class),
+	 *     @MappedObjectValue(CircularCVO::class),
 	 *     @NullValue(),
 	 * })
 	 */
-	public ?SelfReferenceVO $selfOrNull;
-
-	/** @StringValue() */
-	public string $another;
+	public ?CircularCVO $c;
 
 }

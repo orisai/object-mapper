@@ -1,6 +1,6 @@
 <?php declare(strict_types = 1);
 
-namespace Tests\Orisai\ObjectMapper\Doubles;
+namespace Tests\Orisai\ObjectMapper\Doubles\Callbacks;
 
 use Orisai\Exceptions\Logic\InvalidState;
 use Orisai\ObjectMapper\Attributes\Callbacks\After;

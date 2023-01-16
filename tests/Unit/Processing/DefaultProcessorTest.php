@@ -15,29 +15,29 @@ use Orisai\ObjectMapper\Processing\Options;
 use Orisai\ObjectMapper\Processing\RequiredFields;
 use ReflectionProperty;
 use stdClass;
-use Tests\Orisai\ObjectMapper\Doubles\AfterClassCallbackCurrentTypeInvalidDataVO;
-use Tests\Orisai\ObjectMapper\Doubles\AfterClassCallbackNewTypeInvalidDataVO;
-use Tests\Orisai\ObjectMapper\Doubles\AfterClassCallbackValueDoesNotMatchVO;
 use Tests\Orisai\ObjectMapper\Doubles\AttributesVO;
-use Tests\Orisai\ObjectMapper\Doubles\BeforeClassCallbackMixedValueVO;
-use Tests\Orisai\ObjectMapper\Doubles\BeforeClassCallbackValueDoesNotMatchVO;
-use Tests\Orisai\ObjectMapper\Doubles\CallbacksVisibilityVO;
-use Tests\Orisai\ObjectMapper\Doubles\CallbacksVO;
-use Tests\Orisai\ObjectMapper\Doubles\CallbacksVoContext;
-use Tests\Orisai\ObjectMapper\Doubles\CircularAVO;
-use Tests\Orisai\ObjectMapper\Doubles\CircularBVO;
-use Tests\Orisai\ObjectMapper\Doubles\CircularCVO;
-use Tests\Orisai\ObjectMapper\Doubles\ConstructorUsingVO;
+use Tests\Orisai\ObjectMapper\Doubles\Callbacks\AfterClassCallbackCurrentTypeInvalidDataVO;
+use Tests\Orisai\ObjectMapper\Doubles\Callbacks\AfterClassCallbackNewTypeInvalidDataVO;
+use Tests\Orisai\ObjectMapper\Doubles\Callbacks\AfterClassCallbackValueDoesNotMatchVO;
+use Tests\Orisai\ObjectMapper\Doubles\Callbacks\BeforeClassCallbackMixedValueVO;
+use Tests\Orisai\ObjectMapper\Doubles\Callbacks\BeforeClassCallbackValueDoesNotMatchVO;
+use Tests\Orisai\ObjectMapper\Doubles\Callbacks\CallbacksVO;
+use Tests\Orisai\ObjectMapper\Doubles\Callbacks\CallbacksVoContext;
+use Tests\Orisai\ObjectMapper\Doubles\Callbacks\PropertyCallbacksFailureVO;
+use Tests\Orisai\ObjectMapper\Doubles\Circular\CircularAVO;
+use Tests\Orisai\ObjectMapper\Doubles\Circular\CircularBVO;
+use Tests\Orisai\ObjectMapper\Doubles\Circular\CircularCVO;
+use Tests\Orisai\ObjectMapper\Doubles\Circular\SelfReferenceVO;
+use Tests\Orisai\ObjectMapper\Doubles\Constructing\ConstructorUsingVO;
 use Tests\Orisai\ObjectMapper\Doubles\DefaultsVO;
 use Tests\Orisai\ObjectMapper\Doubles\EmptyVO;
-use Tests\Orisai\ObjectMapper\Doubles\FieldNamesVO;
+use Tests\Orisai\ObjectMapper\Doubles\FieldNames\FieldNamesVO;
+use Tests\Orisai\ObjectMapper\Doubles\Inheritance\CallbacksVisibilityVO;
+use Tests\Orisai\ObjectMapper\Doubles\Inheritance\PropertiesVisibilityVO;
 use Tests\Orisai\ObjectMapper\Doubles\InitializingVO;
 use Tests\Orisai\ObjectMapper\Doubles\NoDefaultsVO;
 use Tests\Orisai\ObjectMapper\Doubles\PropertiesInitVO;
-use Tests\Orisai\ObjectMapper\Doubles\PropertiesVisibilityVO;
-use Tests\Orisai\ObjectMapper\Doubles\PropertyCallbacksFailureVO;
-use Tests\Orisai\ObjectMapper\Doubles\SelfReferenceVO;
-use Tests\Orisai\ObjectMapper\Doubles\SkippedFieldsVO;
+use Tests\Orisai\ObjectMapper\Doubles\Skipped\SkippedFieldsVO;
 use Tests\Orisai\ObjectMapper\Doubles\StructuresVO;
 use Tests\Orisai\ObjectMapper\Doubles\TransformingVO;
 use Tests\Orisai\ObjectMapper\Toolkit\ProcessingTestCase;
@@ -941,8 +941,8 @@ arrayOfMixed: array<mixed>',
 
 		$this->expectException(InvalidState::class);
 		$this->expectExceptionMessage(
-			'Cannot initialize fields "whatever" of "Tests\Orisai\ObjectMapper\Doubles\SkippedFieldsVO" instance ' .
-			'because it has no skipped fields.',
+			'Cannot initialize fields "whatever" of "Tests\Orisai\ObjectMapper\Doubles\Skipped\SkippedFieldsVO"'
+			. ' instance because it has no skipped fields.',
 		);
 
 		$this->processor->processSkippedFields(['whatever'], $vo);
@@ -957,8 +957,8 @@ arrayOfMixed: array<mixed>',
 
 		$this->expectException(InvalidState::class);
 		$this->expectExceptionMessage(
-			'Cannot initialize field "whatever" of "Tests\Orisai\ObjectMapper\Doubles\SkippedFieldsVO" instance ' .
-			'because it is already initialized or does not exist.',
+			'Cannot initialize field "whatever" of "Tests\Orisai\ObjectMapper\Doubles\Skipped\SkippedFieldsVO"'
+			. ' instance because it is already initialized or does not exist.',
 		);
 
 		$this->processor->processSkippedFields(['whatever'], $vo);

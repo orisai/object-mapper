@@ -9,7 +9,7 @@ use Orisai\ObjectMapper\Modifiers\CreateWithoutConstructorModifier;
 use Orisai\ObjectMapper\Processing\DefaultObjectCreator;
 use Orisai\ObjectMapper\Processing\ObjectHolder;
 use PHPUnit\Framework\TestCase;
-use Tests\Orisai\ObjectMapper\Doubles\ConstructorUsingVO;
+use Tests\Orisai\ObjectMapper\Doubles\Constructing\ConstructorUsingVO;
 use Tests\Orisai\ObjectMapper\Doubles\DefaultsVO;
 
 final class ObjectHolderTest extends TestCase
