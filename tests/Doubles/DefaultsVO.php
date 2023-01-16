@@ -31,12 +31,11 @@ final class DefaultsVO implements MappedObject
 	public ?string $nullableString = null;
 
 	/**
-	 * Is optional because without type there's no difference between uninitialized and null value ($foo; and $foo = null; are the same)
-	 *
 	 * @var string|null
 	 *
 	 * @phpcsSuppress SlevomatCodingStandard.TypeHints.PropertyTypeHint.MissingNativeTypeHint
 	 *
+	 * @DefaultValue(value=null)
 	 * @AnyOf({
 	 *     @StringValue(),
 	 *     @NullValue(),
@@ -45,12 +44,11 @@ final class DefaultsVO implements MappedObject
 	public $untypedNullableString;
 
 	/**
-	 * Is optional because without type there's no difference between uninitialized and null value ($foo; and $foo = null; are the same)
-	 *
 	 * @var null
 	 *
 	 * @phpcsSuppress SlevomatCodingStandard.TypeHints.PropertyTypeHint.MissingAnyTypeHint
 	 *
+	 * @DefaultValue(value=null)
 	 * @NullValue()
 	 */
 	public $untypedNull;

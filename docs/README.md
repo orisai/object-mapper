@@ -1067,82 +1067,68 @@ final class AnotherOptionalInput implements MappedObject
 }
 ```
 
-Properties without type and with no explicit default value always have `null` value by default in PHP. Due to this
-object mapper cannot distinguish whether untyped property was meant to have default value of `null` or not just from the
-property. Whether field should be required or not is therefore detected from used rules:
+Properties without type are null by default in PHP and object mapper can't make difference between implicit and explicit
+null on untyped property. To assign null default value to untyped property, use `@DefaultValue()` annotation.
 
 ```php
-use Orisai\ObjectMapper\Attributes\Expect\AllOf;
 use Orisai\ObjectMapper\Attributes\Expect\AnyOf;
 use Orisai\ObjectMapper\Attributes\Expect\MixedValue;
 use Orisai\ObjectMapper\Attributes\Expect\NullValue;
 use Orisai\ObjectMapper\Attributes\Expect\StringValue;
+use Orisai\ObjectMapper\Attributes\Modifiers\DefaultValue;
 use Orisai\ObjectMapper\MappedObject;
 
 final class NullableVariantsInput implements MappedObject
 {
 
     /**
-     * OPTIONAL - Field allows null
+     * OPTIONAL - has DefaultValue annotation
      *
-     * @var null
-     * @NullValue()
+     * @var mixed
+     * @DefaultValue(value=null)
+     * @MixedValue()
      */
-    public $implicitNull;
+    public $optionalWithNullDefault;
 
     /**
-     * OPTIONAL - Field allows null
-     *          - Identical with $implicitNull - untyped properties are null by default
-     *
-     * @var null
-     * @NullValue()
-     */
-    public $explicitNull = null;
-
-    /**
-     * OPTIONAL - Field allows mixed which includes null
+     * OPTIONAL - has not null default value
      *
      * @var mixed
      * @MixedValue()
      */
-    public $mixed;
+    public $optionalWithNotNullDefault = 'default';
 
     /**
-     * OPTIONAL - Field allows null
-     *          - MixedValue and multiple levels of AnyOf and AllOf work as well
+     * OPTIONAL - typed with null default value
      *
-     * @var string|null
      * @AnyOf({
-     *     @StringValue(),
-     *     @NullValue(),
+     *      @StringValue(),
+     *      @NullValue(),
      * })
      */
-    public $anyOf;
+    public ?string $optionalTypedWithNullDefault = null;
 
     /**
-     * OPTIONAL - Field allows null
-     *          - MixedValue and multiple levels of AnyOf and AllOf work as well
+     * REQUIRED - untyped with null default value
      *
-     * @var string|null
-     * @AllOf({
-     *     @StringValue(),
-     *     @NullValue(castEmptyString=true),
-     * })
+     * @var mixed
+     * @MixedValue()
      */
-    public $allOf;
+    public $requiredWithImplicitNullDefault;
 
     /**
-     * REQUIRED - Field does not allow null
+     * REQUIRED - untyped with null default value
+     *          - Identical with $requiredWithImplicitNullDefault - we can't check difference
      *
-     * @var string
-     * @StringValue()
+     * @var mixed
+     * @MixedValue()
      */
-    public $string;
+    public $requiredWithExplicitNullDefault = null;
 
 }
 ```
 
-Read-only properties may use `DefaultValue` modifier to make field optional (PHP does not allow default value for
+Read-only properties may use `#[DefaultValue]` modifier to make field optional (PHP does not allow default value for
 read-only properties)
 
 ```php

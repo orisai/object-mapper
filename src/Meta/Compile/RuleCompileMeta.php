@@ -3,9 +3,7 @@
 namespace Orisai\ObjectMapper\Meta\Compile;
 
 use Orisai\ObjectMapper\Args\Args;
-use Orisai\ObjectMapper\Rules\CompoundRule;
 use Orisai\ObjectMapper\Rules\Rule;
-use function is_a;
 
 final class RuleCompileMeta
 {
@@ -40,40 +38,6 @@ final class RuleCompileMeta
 	public function getArgs(): array
 	{
 		return $this->args;
-	}
-
-	/**
-	 * @param array<class-string<Rule<Args>>> $type
-	 */
-	public function containsAnyOfRules(array $type): bool
-	{
-		return $this->containsAnyOfRulesInternal($type, $this);
-	}
-
-	/**
-	 * @param array<class-string<Rule<Args>>> $types
-	 */
-	private function containsAnyOfRulesInternal(array $types, RuleCompileMeta $ruleNode): bool
-	{
-		$nodeType = $ruleNode->getType();
-
-		foreach ($types as $possibleType) {
-			if (is_a($nodeType, $possibleType, true)) {
-				return true;
-			}
-		}
-
-		if (is_a($nodeType, CompoundRule::class, true)) {
-			$nodeArgs = $ruleNode->getArgs();
-
-			foreach ($nodeArgs[CompoundRule::Rules] as $nestedRuleMeta) {
-				if ($this->containsAnyOfRulesInternal($types, $nestedRuleMeta)) {
-					return true;
-				}
-			}
-		}
-
-		return false;
 	}
 
 }

@@ -26,8 +26,6 @@ use Orisai\ObjectMapper\Modifiers\DefaultValueModifier;
 use Orisai\ObjectMapper\Modifiers\FieldNameModifier;
 use Orisai\ObjectMapper\Modifiers\Modifier;
 use Orisai\ObjectMapper\Processing\ObjectCreator;
-use Orisai\ObjectMapper\Rules\MixedRule;
-use Orisai\ObjectMapper\Rules\NullRule;
 use Orisai\ObjectMapper\Rules\RuleManager;
 use ReflectionClass;
 use ReflectionProperty;
@@ -295,16 +293,13 @@ final class MetaResolver
 
 		$propertyValue = $defaults[$propertyName];
 
-		$isPropertyTyped = $property->hasType();
-		$containsNullable = $meta->getRule()->containsAnyOfRules(
-			[NullRule::class, MixedRule::class],
-		);
-
 		// It's not possible to distinguish between null and uninitialized for properties without type,
-		// default null is used only if validation allows null
-		return $propertyValue === null && !$isPropertyTyped && !$containsNullable
-			? DefaultValueMeta::fromNothing()
-			: DefaultValueMeta::fromValue($propertyValue);
+		// and so we treat it as uninitialized. Use DefaultValue annotation for untyped null default.
+		if ($propertyValue === null && !$property->hasType()) {
+			return DefaultValueMeta::fromNothing();
+		}
+
+		return DefaultValueMeta::fromValue($propertyValue);
 	}
 
 	private function checkFieldNames(CompileMeta $meta): void
