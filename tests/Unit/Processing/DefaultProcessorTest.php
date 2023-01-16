@@ -38,6 +38,7 @@ use Tests\Orisai\ObjectMapper\Doubles\Inheritance\PropertiesVisibilityVO;
 use Tests\Orisai\ObjectMapper\Doubles\InitializingVO;
 use Tests\Orisai\ObjectMapper\Doubles\NoDefaultsVO;
 use Tests\Orisai\ObjectMapper\Doubles\PhpVersionSpecific\AttributesVO;
+use Tests\Orisai\ObjectMapper\Doubles\PhpVersionSpecific\ReadonlyPropertiesVO;
 use Tests\Orisai\ObjectMapper\Doubles\PropertiesInitVO;
 use Tests\Orisai\ObjectMapper\Doubles\Skipped\SkippedFieldsVO;
 use Tests\Orisai\ObjectMapper\Doubles\StructuresVO;
@@ -1022,6 +1023,22 @@ arrayOfMixed: array<mixed>',
 
 		self::assertInstanceOf(AttributesVO::class, $vo);
 		self::assertSame('foo', $vo->string);
+	}
+
+	public function testReadonlyProperties(): void
+	{
+		if (PHP_VERSION_ID < 8_01_00) {
+			self::markTestSkipped('Read-only properties are supported on PHP 8.1+');
+		}
+
+		$data = [
+			'readonly' => 'value',
+		];
+
+		$vo = $this->processor->process($data, ReadonlyPropertiesVO::class);
+
+		self::assertInstanceOf(ReadonlyPropertiesVO::class, $vo);
+		self::assertSame('value', $vo->readonly);
 	}
 
 	private function isInitialized(MappedObject $object, string $property): bool

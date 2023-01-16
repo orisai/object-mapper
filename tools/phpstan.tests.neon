@@ -16,3 +16,6 @@ parameters:
 		# Temporary workaround
 		- message: '#^Property (.+)\:\:\$processor \((.+)DefaultProcessor\) does not accept (.+)\\Processor\.$#'
 		  path: ../tests/Toolkit/ProcessingTestCase.php
+
+		# Dark mapping magic
+		- '#^Class Tests\\Orisai\\ObjectMapper\\Doubles(.+) has an uninitialized readonly property (.+)\. Assign it in the constructor\.$#'
