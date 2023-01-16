@@ -40,6 +40,7 @@ use Tests\Orisai\ObjectMapper\Doubles\NoDefaultsVO;
 use Tests\Orisai\ObjectMapper\Doubles\PhpVersionSpecific\AttributesVO;
 use Tests\Orisai\ObjectMapper\Doubles\PhpVersionSpecific\ReadonlyClassVO;
 use Tests\Orisai\ObjectMapper\Doubles\PhpVersionSpecific\ReadonlyPropertiesVO;
+use Tests\Orisai\ObjectMapper\Doubles\PhpVersionSpecific\UntypedVO;
 use Tests\Orisai\ObjectMapper\Doubles\PropertiesInitVO;
 use Tests\Orisai\ObjectMapper\Doubles\Skipped\SkippedFieldsVO;
 use Tests\Orisai\ObjectMapper\Doubles\StructuresVO;
@@ -78,13 +79,10 @@ final class DefaultProcessorTest extends ProcessingTestCase
 		self::assertSame(
 			'string: string
 nullableString: string||null
-untypedString: string
 arrayOfMixed: array<mixed>
 manyStructures: array<int(unsigned), shape{
 	string: string
 	nullableString: string||null
-	untypedNullableString: string||null
-	untypedNull: null
 	arrayOfMixed: array<mixed>
 }>',
 			$this->printer->printError($exception),
@@ -109,22 +107,17 @@ manyStructures: array<int(unsigned), shape{
 		self::assertSame(
 			'string: string
 nullableString: string||null
-untypedString: string
 arrayOfMixed: array<mixed>
 structure: shape{
 	string: string
 	defaultByAttributeString: string
 	nullableString: string||null
-	untypedNullableString: string||null
-	untypedNull: null
 	arrayOfMixed: array<mixed>
 }
 manyStructures: array<int, shape{
 	string: string
 	defaultByAttributeString: string
 	nullableString: string||null
-	untypedNullableString: string||null
-	untypedNull: null
 	arrayOfMixed: array<mixed>
 }>',
 			$this->printer->printError($exception),
@@ -138,7 +131,6 @@ manyStructures: array<int, shape{
 		$data = [
 			'string' => 'foo',
 			'nullableString' => null,
-			'untypedString' => 'foo',
 			'arrayOfMixed' => [],
 			'manyStructures' => [
 				['test' => 'foo'],
@@ -178,7 +170,6 @@ manyStructures: array<int, shape{
 		$data = [
 			'string' => 'foo',
 			'nullableString' => null,
-			'untypedString' => 'untyped',
 			'arrayOfMixed' => [],
 			'manyStructures' => [
 				[],
@@ -191,7 +182,6 @@ manyStructures: array<int, shape{
 		self::assertInstanceOf(NoDefaultsVO::class, $vo);
 		self::assertSame('foo', $vo->string);
 		self::assertNull($vo->nullableString);
-		self::assertSame('untyped', $vo->untypedString);
 		self::assertSame([], $vo->arrayOfMixed);
 		self::assertCount(3, $vo->manyStructures);
 
@@ -208,13 +198,11 @@ manyStructures: array<int, shape{
 			'manyStructures' => [
 				[ // Not all properties are defined by NoDefaultsVO, should match DefaultsVO
 					'string' => 'example',
-					'untypedNull' => null,
 				],
 				[], // Empty should match DefaultsVO
 				[ // Not all properties are defined by DefaultsVO, should match NoDefaultsVO
 					'string' => 'example',
 					'nullableString' => 'example',
-					'untypedString' => 'example',
 					'arrayOfMixed' => [],
 					'manyStructures' => [],
 				],
@@ -285,8 +273,6 @@ stringg: Field is unknown, did you mean `string`?',
 		self::assertSame('foo', $vo->string);
 		self::assertSame('attribute default', $vo->defaultByAttributeString);
 		self::assertNull($vo->nullableString);
-		self::assertNull($vo->untypedNullableString);
-		self::assertNull($vo->untypedNull);
 		self::assertSame(
 			[
 				0 => 'foo',
@@ -308,8 +294,6 @@ stringg: Field is unknown, did you mean `string`?',
 				'string' => 'foo',
 				'defaultByAttributeString' => 'attribute default',
 				'nullableString' => null,
-				'untypedNullableString' => null,
-				'untypedNull' => null,
 				'arrayOfMixed' => [
 					0 => 'foo',
 					'bar' => 'baz',
@@ -328,6 +312,61 @@ stringg: Field is unknown, did you mean `string`?',
 
 		self::assertInstanceOf(DefaultsVO::class, $vo);
 		self::assertSame('custom', $vo->string);
+	}
+
+	public function testUntyped(): void
+	{
+		$data = [
+			'nullableString' => null,
+			'null' => null,
+		];
+		$vo = $this->processor->process($data, UntypedVO::class);
+
+		self::assertInstanceOf(UntypedVO::class, $vo);
+		self::assertNull($vo->nullableStringWithDefault);
+		self::assertNull($vo->nullWithDefault);
+		self::assertNull($vo->nullableString);
+		self::assertNull($vo->null);
+		self::assertSame(
+			$data,
+			$this->processor->processWithoutMapping($data, UntypedVO::class),
+		);
+
+		$data = [
+			'nullableStringWithDefault' => 'a',
+			'nullWithDefault' => null,
+			'nullableString' => 'c',
+			'null' => null,
+		];
+		$vo = $this->processor->process($data, UntypedVO::class);
+
+		self::assertInstanceOf(UntypedVO::class, $vo);
+		self::assertSame('a', $vo->nullableStringWithDefault);
+		self::assertNull($vo->nullWithDefault);
+		self::assertSame('c', $vo->nullableString);
+		self::assertNull($vo->null);
+		self::assertSame(
+			$data,
+			$this->processor->processWithoutMapping($data, UntypedVO::class),
+		);
+
+		$exception = null;
+		try {
+			$this->processor->process(null, UntypedVO::class);
+		} catch (InvalidData $exception) {
+			// Handled bellow
+		}
+
+		self::assertNotNull($exception);
+		self::assertSame(
+			<<<'MSG'
+nullableStringWithDefault: string||null
+nullWithDefault: null
+nullableString: string||null
+null: null
+MSG,
+			$this->printer->printError($exception),
+		);
 	}
 
 	public function testPropertiesVisibility(): void
@@ -370,8 +409,6 @@ stringg: Field is unknown, did you mean `string`?',
 					'string' => 'foo',
 					'defaultByAttributeString' => 'attribute default',
 					'nullableString' => null,
-					'untypedNullableString' => null,
-					'untypedNull' => null,
 					'arrayOfMixed' => [
 						0 => 'foo',
 						'bar' => 'baz',
@@ -570,8 +607,6 @@ MSG,
 					'string' => 'foo',
 					'defaultByAttributeString' => 'attribute default',
 					'nullableString' => null,
-					'untypedNullableString' => null,
-					'untypedNull' => null,
 					'arrayOfMixed' => [
 						0 => 'foo',
 						'bar' => 'baz',
@@ -821,8 +856,6 @@ validationFailed: string',
 		self::assertSame(
 			'string: string
 nullableString: string||null
-untypedNullableString: string||null
-untypedNull: null
 arrayOfMixed: array<mixed>',
 			$this->printer->printError($exception),
 		);

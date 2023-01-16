@@ -68,8 +68,6 @@ final class DefaultValuesArrayPrinterTest extends TestCase
 				'string' => 'foo',
 				'defaultByAttributeString' => 'attribute default',
 				'nullableString' => null,
-				'untypedNullableString' => null,
-				'untypedNull' => null,
 				'arrayOfMixed' => [
 					0 => 'foo',
 					'bar' => 'baz',
@@ -89,8 +87,6 @@ final class DefaultValuesArrayPrinterTest extends TestCase
 					'string' => 'foo',
 					'defaultByAttributeString' => 'attribute default',
 					'nullableString' => null,
-					'untypedNullableString' => null,
-					'untypedNull' => null,
 					'arrayOfMixed' => [
 						0 => 'foo',
 						'bar' => 'baz',
@@ -106,14 +102,11 @@ final class DefaultValuesArrayPrinterTest extends TestCase
 			[
 				'string' => '__REQUIRED__',
 				'nullableString' => '__REQUIRED__',
-				'untypedString' => '__REQUIRED__',
 				'arrayOfMixed' => '__REQUIRED__',
 				'structure' => [
 					'string' => 'foo',
 					'defaultByAttributeString' => 'attribute default',
 					'nullableString' => null,
-					'untypedNullableString' => null,
-					'untypedNull' => null,
 					'arrayOfMixed' => [
 						0 => 'foo',
 						'bar' => 'baz',
@@ -135,8 +128,6 @@ final class DefaultValuesArrayPrinterTest extends TestCase
 					'string' => 'foo',
 					'defaultByAttributeString' => 'attribute default',
 					'nullableString' => null,
-					'untypedNullableString' => null,
-					'untypedNull' => null,
 					'arrayOfMixed' => [
 						0 => 'foo',
 						'bar' => 'baz',
@@ -154,8 +145,6 @@ final class DefaultValuesArrayPrinterTest extends TestCase
 					'string' => 'foo',
 					'defaultByAttributeString' => 'attribute default',
 					'nullableString' => null,
-					'untypedNullableString' => null,
-					'untypedNull' => null,
 					'arrayOfMixed' => [
 						0 => 'foo',
 						'bar' => 'baz',

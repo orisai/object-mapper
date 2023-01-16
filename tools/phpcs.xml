@@ -26,4 +26,9 @@
 		<exclude-pattern>tests/Doubles/PhpVersionSpecific/ReadonlyClassVO.php</exclude-pattern>
 	</rule>
 
+	<!-- Missing type is required for test -->
+	<rule ref="SlevomatCodingStandard.TypeHints.PropertyTypeHint.MissingNativeTypeHint">
+		<exclude-pattern>tests/Doubles/PhpVersionSpecific/UntypedVO.php</exclude-pattern>
+	</rule>
+
 </ruleset>

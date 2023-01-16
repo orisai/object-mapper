@@ -31,29 +31,6 @@ final class DefaultsVO implements MappedObject
 	public ?string $nullableString = null;
 
 	/**
-	 * @var string|null
-	 *
-	 * @phpcsSuppress SlevomatCodingStandard.TypeHints.PropertyTypeHint.MissingNativeTypeHint
-	 *
-	 * @DefaultValue(value=null)
-	 * @AnyOf({
-	 *     @StringValue(),
-	 *     @NullValue(),
-	 * })
-	 */
-	public $untypedNullableString;
-
-	/**
-	 * @var null
-	 *
-	 * @phpcsSuppress SlevomatCodingStandard.TypeHints.PropertyTypeHint.MissingAnyTypeHint
-	 *
-	 * @DefaultValue(value=null)
-	 * @NullValue()
-	 */
-	public $untypedNull;
-
-	/**
 	 * @var array<string>
 	 *
 	 * @ArrayOf(
