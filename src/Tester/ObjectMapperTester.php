@@ -2,6 +2,7 @@
 
 namespace Orisai\ObjectMapper\Tester;
 
+use Orisai\ObjectMapper\Attributes\AnnotationsMetaSource;
 use Orisai\ObjectMapper\Attributes\AttributesMetaSource;
 use Orisai\ObjectMapper\Meta\ArrayMetaCache;
 use Orisai\ObjectMapper\Meta\DefaultMetaResolverFactory;
@@ -23,11 +24,11 @@ final class ObjectMapperTester
 		$sourceManager = new DefaultMetaSourceManager();
 
 		if (AnnotationsCollector::canBeConstructed()) {
-			$sourceManager->addSource(new AttributesMetaSource(new AnnotationsCollector()));
+			$sourceManager->addSource(new AnnotationsMetaSource());
 		}
 
 		if (AttributesCollector::canBeConstructed()) {
-			$sourceManager->addSource(new AttributesMetaSource(new AttributesCollector()));
+			$sourceManager->addSource(new AttributesMetaSource());
 		}
 
 		$objectCreator = new DefaultObjectCreator();

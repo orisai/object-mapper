@@ -11,6 +11,7 @@ use Nette\PhpGenerator\Literal;
 use Nette\Schema\Expect;
 use Nette\Schema\Schema;
 use OriNette\DI\Definitions\DefinitionsLoader;
+use Orisai\ObjectMapper\Attributes\AnnotationsMetaSource;
 use Orisai\ObjectMapper\Attributes\AttributesMetaSource;
 use Orisai\ObjectMapper\Bridge\NetteCache\NetteMetaCache;
 use Orisai\ObjectMapper\Meta\DefaultMetaSourceManager;
@@ -101,7 +102,7 @@ final class ObjectMapperExtension extends CompilerExtension
 
 		$sourceManagerDefinition->addSetup('addSource', [
 			$builder->addDefinition($this->prefix('metaSource.annotations'))
-				->setFactory(AttributesMetaSource::class, [
+				->setFactory(AnnotationsMetaSource::class, [
 					$builder->addDefinition($this->prefix('metaCollector.annotations'))
 						->setFactory(AnnotationsCollector::class)
 						->setAutowired(false),

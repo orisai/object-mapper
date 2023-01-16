@@ -62,6 +62,7 @@ composer require orisai/object-mapper
 Configure processor:
 
 ```php
+use Orisai\ObjectMapper\Attributes\AnnotationsMetaSource;
 use Orisai\ObjectMapper\Attributes\AttributesMetaSource;
 use Orisai\ObjectMapper\Meta\ArrayMetaCache;
 use Orisai\ObjectMapper\Meta\DefaultMetaResolverFactory;
@@ -74,8 +75,8 @@ use Orisai\ObjectMapper\ReflectionMeta\Collector\AttributesCollector;
 use Orisai\ObjectMapper\Rules\DefaultRuleManager;
 
 $sourceManager = new DefaultMetaSourceManager();
-$sourceManager->addSource(new AttributesMetaSource(new AnnotationsCollector())); // For doctrine/annotations
-$sourceManager->addSource(new AttributesMetaSource(new AttributesCollector())); // For PHP 8 attributes
+$sourceManager->addSource(new AnnotationsMetaSource()); // For doctrine/annotations
+$sourceManager->addSource(new AttributesMetaSource()); // For PHP 8 attributes
 $ruleManager = new DefaultRuleManager();
 $objectCreator = new DefaultObjectCreator();
 $cache = new ArrayMetaCache();
