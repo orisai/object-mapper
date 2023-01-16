@@ -920,10 +920,12 @@ arrayOfMixed: array<mixed>',
 		$vo = $this->processor->process([
 			'parent' => 'a',
 			'child' => 'b',
+			'childTrait' => 'c',
 		], ChildVO::class);
 
 		self::assertSame('a-parent-parentStatic', $vo->getParentProperty());
 		self::assertSame('b-child-childStatic', $vo->getChildProperty());
+		self::assertSame('c-childTrait-childTraitStatic', $vo->getChildTraitProperty());
 	}
 
 	public function testSkipped(): void

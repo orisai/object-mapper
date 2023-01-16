@@ -77,12 +77,18 @@ final class MetaResolver
 		$docsByMeta = [];
 		$modifiersByMeta = [];
 
-		foreach ($meta->getClasses() as $class) {
-			$context = ResolverArgsContext::forClass($class->getClass(), $this);
+		foreach ($meta->getClasses() as $classMeta) {
+			$class = $classMeta->getClass();
 
-			$callbacksByMeta[] = $this->resolveCallbacksMeta($class, $context);
-			$docsByMeta[] = $this->resolveDocsMeta($class, $context);
-			$modifiersByMeta[] = $this->resolveModifiersMeta($class, $context);
+			if ($class->isTrait()) {
+				continue;
+			}
+
+			$context = ResolverArgsContext::forClass($class, $this);
+
+			$callbacksByMeta[] = $this->resolveCallbacksMeta($classMeta, $context);
+			$docsByMeta[] = $this->resolveDocsMeta($classMeta, $context);
+			$modifiersByMeta[] = $this->resolveModifiersMeta($classMeta, $context);
 		}
 
 		return new ClassRuntimeMeta(
@@ -110,6 +116,10 @@ final class MetaResolver
 	{
 		$fields = [];
 		foreach ($meta->getFields() as $fieldMeta) {
+			if ($fieldMeta->getClass()->isTrait()) {
+				continue;
+			}
+
 			$fieldName = $this->propertyNameToFieldName($fieldMeta);
 			$fields[$fieldName] = $this->resolveFieldMeta(
 				$fieldMeta,
@@ -305,13 +315,17 @@ final class MetaResolver
 	private function checkFieldNames(CompileMeta $meta): void
 	{
 		$map = [];
-		foreach ($meta->getFields() as $field) {
-			$property = $field->getProperty();
+		foreach ($meta->getFields() as $fieldMeta) {
+			if ($fieldMeta->getClass()->isTrait()) {
+				continue;
+			}
+
+			$property = $fieldMeta->getProperty();
 
 			$fieldName = $property->getName();
 			$source = 'property name';
 
-			foreach ($field->getModifiers() as $modifier) {
+			foreach ($fieldMeta->getModifiers() as $modifier) {
 				if ($modifier->getType() === FieldNameModifier::class) {
 					$fieldName = $modifier->getArgs()[FieldNameModifier::Name];
 					$source = 'field name meta';

@@ -8,6 +8,8 @@ use Orisai\ObjectMapper\Attributes\Expect\StringValue;
 final class ChildVO extends ParentVO
 {
 
+	use ChildTraitVO;
+
 	/**
 	 * @StringValue()
 	 * @After("afterProperty")
