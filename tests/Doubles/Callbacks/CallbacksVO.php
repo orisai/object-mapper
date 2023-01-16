@@ -85,7 +85,6 @@ final class CallbacksVO implements MappedObject
 		$data['array']['beforeClassCallback'][] = $context->shouldMapDataToObjects();
 
 		// Set default value, processor don't know it's going to be structure and thinks value is required
-		//TODO - pravidlo na inicializaci z contextu? při inicializaci chceme vědět, že půjde o strukturu a ideálně i co nejpřesněji o jakou
 		if (!array_key_exists('structure', $data)) {
 			$data['structure'] = [];
 		}
