@@ -26,7 +26,9 @@ final class DefaultsVO implements MappedObject
 	/**
 	 * Is optional because without type there's no difference between uninitialized and null value ($foo; and $foo = null; are the same)
 	 *
-	 * @phpcsSuppress SlevomatCodingStandard.TypeHints.PropertyTypeHint.MissingAnyTypeHint
+	 * @var string|null
+	 *
+	 * @phpcsSuppress SlevomatCodingStandard.TypeHints.PropertyTypeHint.MissingNativeTypeHint
 	 *
 	 * @AnyOf({
 	 *     @StringValue(),

@@ -26,7 +26,9 @@ final class NoDefaultsVO implements MappedObject
 	public ?string $nullableString;
 
 	/**
-	 * @phpcsSuppress SlevomatCodingStandard.TypeHints.PropertyTypeHint.MissingAnyTypeHint
+	 * @var string
+	 *
+	 * @phpcsSuppress SlevomatCodingStandard.TypeHints.PropertyTypeHint.MissingNativeTypeHint
 	 *
 	 * @StringValue()
 	 */
