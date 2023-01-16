@@ -1142,6 +1142,24 @@ final class NullableVariantsInput implements MappedObject
 }
 ```
 
+Read-only properties may use `DefaultValue` modifier to make field optional (PHP does not allow default value for
+read-only properties)
+
+```php
+use Orisai\ObjectMapper\Attributes\Expect\StringValue;
+use Orisai\ObjectMapper\Attributes\Modifiers\DefaultValue;
+use Orisai\ObjectMapper\MappedObject;
+
+final class ReadonlyOptionalInput implements MappedObject
+{
+
+	#[DefaultValue('default value')]
+	#[StringValue]
+	public readonly string $field;
+
+}
+```
+
 ## Allow unknown fields
 
 Make unknown fields allowed instead of throwing exception.

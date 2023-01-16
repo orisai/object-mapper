@@ -113,6 +113,7 @@ untypedString: string
 arrayOfMixed: array<mixed>
 structure: shape{
 	string: string
+	defaultByAttributeString: string
 	nullableString: string||null
 	untypedNullableString: string||null
 	untypedNull: null
@@ -120,6 +121,7 @@ structure: shape{
 }
 manyStructures: array<int, shape{
 	string: string
+	defaultByAttributeString: string
 	nullableString: string||null
 	untypedNullableString: string||null
 	untypedNull: null
@@ -281,6 +283,7 @@ stringg: Field is unknown, did you mean `string`?',
 
 		self::assertInstanceOf(DefaultsVO::class, $vo);
 		self::assertSame('foo', $vo->string);
+		self::assertSame('attribute default', $vo->defaultByAttributeString);
 		self::assertNull($vo->nullableString);
 		self::assertNull($vo->untypedNullableString);
 		self::assertNull($vo->untypedNull);
@@ -303,6 +306,7 @@ stringg: Field is unknown, did you mean `string`?',
 		self::assertSame(
 			[
 				'string' => 'foo',
+				'defaultByAttributeString' => 'attribute default',
 				'nullableString' => null,
 				'untypedNullableString' => null,
 				'untypedNull' => null,
@@ -364,6 +368,7 @@ stringg: Field is unknown, did you mean `string`?',
 				'instance' => $instance,
 				'structure' => [
 					'string' => 'foo',
+					'defaultByAttributeString' => 'attribute default',
 					'nullableString' => null,
 					'untypedNullableString' => null,
 					'untypedNull' => null,
@@ -563,6 +568,7 @@ MSG,
 				'callbackSetValue' => 'givenByConstructor',
 				'structure' => [
 					'string' => 'foo',
+					'defaultByAttributeString' => 'attribute default',
 					'nullableString' => null,
 					'untypedNullableString' => null,
 					'untypedNull' => null,
@@ -1034,12 +1040,15 @@ arrayOfMixed: array<mixed>',
 
 		$data = [
 			'readonly' => 'value',
+			'default2' => 'overridden',
 		];
 
 		$vo = $this->processor->process($data, ReadonlyClassVO::class);
 
 		self::assertInstanceOf(ReadonlyClassVO::class, $vo);
 		self::assertSame('value', $vo->readonly);
+		self::assertSame('default', $vo->default1);
+		self::assertSame('overridden', $vo->default2);
 	}
 
 	public function testReadonlyProperties(): void
@@ -1050,12 +1059,15 @@ arrayOfMixed: array<mixed>',
 
 		$data = [
 			'readonly' => 'value',
+			'default2' => 'overridden',
 		];
 
 		$vo = $this->processor->process($data, ReadonlyPropertiesVO::class);
 
 		self::assertInstanceOf(ReadonlyPropertiesVO::class, $vo);
 		self::assertSame('value', $vo->readonly);
+		self::assertSame('default', $vo->default1);
+		self::assertSame('overridden', $vo->default2);
 	}
 
 	private function isInitialized(MappedObject $object, string $property): bool

@@ -22,6 +22,7 @@ use Orisai\ObjectMapper\Meta\Runtime\ModifierRuntimeMeta;
 use Orisai\ObjectMapper\Meta\Runtime\RuleRuntimeMeta;
 use Orisai\ObjectMapper\Meta\Runtime\RuntimeMeta;
 use Orisai\ObjectMapper\Modifiers\CreateWithoutConstructorModifier;
+use Orisai\ObjectMapper\Modifiers\DefaultValueModifier;
 use Orisai\ObjectMapper\Modifiers\FieldNameModifier;
 use Orisai\ObjectMapper\Modifiers\Modifier;
 use Orisai\ObjectMapper\Processing\ObjectCreator;
@@ -278,6 +279,12 @@ final class MetaResolver
 
 	private function getDefaultValue(FieldCompileMeta $meta): DefaultValueMeta
 	{
+		foreach ($meta->getModifiers() as $modifier) {
+			if ($modifier->getType() === DefaultValueModifier::class) {
+				return DefaultValueMeta::fromValue($modifier->getArgs()[DefaultValueModifier::Value]);
+			}
+		}
+
 		$property = $meta->getProperty();
 		$propertyName = $property->getName();
 

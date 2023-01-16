@@ -7,6 +7,7 @@ use Orisai\ObjectMapper\Attributes\Expect\ArrayOf;
 use Orisai\ObjectMapper\Attributes\Expect\MixedValue;
 use Orisai\ObjectMapper\Attributes\Expect\NullValue;
 use Orisai\ObjectMapper\Attributes\Expect\StringValue;
+use Orisai\ObjectMapper\Attributes\Modifiers\DefaultValue;
 use Orisai\ObjectMapper\MappedObject;
 
 final class DefaultsVO implements MappedObject
@@ -14,6 +15,12 @@ final class DefaultsVO implements MappedObject
 
 	/** @StringValue() */
 	public string $string = 'foo';
+
+	/**
+	 * @DefaultValue("attribute default")
+	 * @StringValue()
+	 */
+	public string $defaultByAttributeString = 'property default';
 
 	/**
 	 * @AnyOf({
