@@ -107,25 +107,7 @@ abstract class BaseCallback implements Callback
 				));
 		}
 
-		$method = $class->getMethod($methodName);
-
-		if ($method->isPrivate() && !$class->isFinal()) {
-			// If you are reading this and want full support of private methods:
-			//		- method must be called in context of class which defines it
-			//		- private methods with same name in parent and child class must be unambiguous
-			//		- both static and non-static methods must work
-			throw InvalidArgument::create()
-				->withMessage(sprintf(
-					'Argument "%s" given to "%s" is expected to be public or protected method of "%s", ' .
-					'private method %s" given. To use private method, change class to final.',
-					self::Method,
-					static::class,
-					$class->getName(),
-					$methodName,
-				));
-		}
-
-		return $method;
+		return $class->getMethod($methodName);
 	}
 
 	/**

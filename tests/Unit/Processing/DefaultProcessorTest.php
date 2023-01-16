@@ -31,8 +31,10 @@ use Tests\Orisai\ObjectMapper\Doubles\Circular\SelfReferenceVO;
 use Tests\Orisai\ObjectMapper\Doubles\Constructing\ConstructorUsingVO;
 use Tests\Orisai\ObjectMapper\Doubles\DefaultsVO;
 use Tests\Orisai\ObjectMapper\Doubles\EmptyVO;
+use Tests\Orisai\ObjectMapper\Doubles\FieldNames\ChildFieldVO;
 use Tests\Orisai\ObjectMapper\Doubles\FieldNames\FieldNamesVO;
 use Tests\Orisai\ObjectMapper\Doubles\Inheritance\CallbacksVisibilityVO;
+use Tests\Orisai\ObjectMapper\Doubles\Inheritance\ChildVO;
 use Tests\Orisai\ObjectMapper\Doubles\Inheritance\PropertiesVisibilityVO;
 use Tests\Orisai\ObjectMapper\Doubles\InitializingVO;
 use Tests\Orisai\ObjectMapper\Doubles\NoDefaultsVO;
@@ -859,6 +861,28 @@ arrayOfMixed: array<mixed>',
 		self::assertSame('integer', $vo->integer);
 		self::assertSame('swap1', $vo->swap1);
 		self::assertSame('swap2', $vo->swap2);
+	}
+
+	public function testMappedFieldNamesWithInheritance(): void
+	{
+		$vo = $this->processor->process([
+			'property' => 'parent',
+			'renamedProperty' => 'child',
+		], ChildFieldVO::class);
+
+		self::assertSame('parent', $vo->getParentProperty());
+		self::assertSame('child', $vo->getChildProperty());
+	}
+
+	public function testSimpleInheritance(): void
+	{
+		$vo = $this->processor->process([
+			'parent' => 'a',
+			'child' => 'b',
+		], ChildVO::class);
+
+		self::assertSame('a-parent-parentStatic', $vo->getParentProperty());
+		self::assertSame('b-child-childStatic', $vo->getChildProperty());
 	}
 
 	public function testSkipped(): void

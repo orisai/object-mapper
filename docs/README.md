@@ -1229,8 +1229,8 @@ A property, to be handled by processor during mapping from data fields to proper
 
 - Define a single [rule](#rules)
 - Be non-static
-- Has public or protected visibility
-	- Or has final visibility and be defined in a final class
+
+Any visibility (public/protected/private) is allowed
 
 ### Mapping field names to properties
 
@@ -1411,8 +1411,7 @@ In [field callbacks](#field-callbacks), current field name can be accessed via [
 
 Callbacks can be both static and non-static, object mapper initializes object to call non-static callbacks when needed.
 
-Callbacks can have any visibility - public, protected or private. However, private callbacks are allowed only on final
-classes.
+Callbacks can have any visibility - public, protected or private.
 
 ### Mapped object callbacks
 
