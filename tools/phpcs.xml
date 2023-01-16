@@ -21,4 +21,9 @@
 		</properties>
 	</rule>
 
+	<!-- Codesniffer does not like PHP 8.2 yet -->
+	<rule ref="PSR1.Files.SideEffects.FoundWithSymbols">
+		<exclude-pattern>tests/Doubles/PhpVersionSpecific/ReadonlyClassVO.php</exclude-pattern>
+	</rule>
+
 </ruleset>

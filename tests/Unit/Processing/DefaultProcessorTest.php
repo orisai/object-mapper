@@ -38,6 +38,7 @@ use Tests\Orisai\ObjectMapper\Doubles\Inheritance\PropertiesVisibilityVO;
 use Tests\Orisai\ObjectMapper\Doubles\InitializingVO;
 use Tests\Orisai\ObjectMapper\Doubles\NoDefaultsVO;
 use Tests\Orisai\ObjectMapper\Doubles\PhpVersionSpecific\AttributesVO;
+use Tests\Orisai\ObjectMapper\Doubles\PhpVersionSpecific\ReadonlyClassVO;
 use Tests\Orisai\ObjectMapper\Doubles\PhpVersionSpecific\ReadonlyPropertiesVO;
 use Tests\Orisai\ObjectMapper\Doubles\PropertiesInitVO;
 use Tests\Orisai\ObjectMapper\Doubles\Skipped\SkippedFieldsVO;
@@ -1023,6 +1024,22 @@ arrayOfMixed: array<mixed>',
 
 		self::assertInstanceOf(AttributesVO::class, $vo);
 		self::assertSame('foo', $vo->string);
+	}
+
+	public function testReadonlyClass(): void
+	{
+		if (PHP_VERSION_ID < 8_02_00) {
+			self::markTestSkipped('Read-only classes are supported on PHP 8.2+');
+		}
+
+		$data = [
+			'readonly' => 'value',
+		];
+
+		$vo = $this->processor->process($data, ReadonlyClassVO::class);
+
+		self::assertInstanceOf(ReadonlyClassVO::class, $vo);
+		self::assertSame('value', $vo->readonly);
 	}
 
 	public function testReadonlyProperties(): void
