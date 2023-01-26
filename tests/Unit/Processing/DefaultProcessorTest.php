@@ -39,7 +39,7 @@ use Tests\Orisai\ObjectMapper\Doubles\Inheritance\TraitAlias1\TraitAlias1VO;
 use Tests\Orisai\ObjectMapper\Doubles\Inheritance\TraitAlias2\TraitAlias2VO;
 use Tests\Orisai\ObjectMapper\Doubles\Inheritance\TraitAlias3\TraitAlias3VO;
 use Tests\Orisai\ObjectMapper\Doubles\Inheritance\TraitAlias4\TraitAlias4VO;
-use Tests\Orisai\ObjectMapper\Doubles\Inheritance\TraitInsteadOf\TraitInsteadOfVO;
+use Tests\Orisai\ObjectMapper\Doubles\Inheritance\TraitInsteadOf1\TraitInstead1OfVO;
 use Tests\Orisai\ObjectMapper\Doubles\InitializingVO;
 use Tests\Orisai\ObjectMapper\Doubles\NoDefaultsVO;
 use Tests\Orisai\ObjectMapper\Doubles\PhpVersionSpecific\AttributesVO;
@@ -945,13 +945,24 @@ arrayOfMixed: array<mixed>',
 		self::assertSame('c3-childTrait-childTraitStatic', $vo->childTraitPublic);
 	}
 
-	public function testTraitInsteadof(): void
+	public function testTraitInsteadof1(): void
 	{
-		require_once __DIR__ . '/../../Doubles/Inheritance/trait-instead-of.php';
+		require_once __DIR__ . '/../../Doubles/Inheritance/trait-instead-of-1.php';
 
 		$vo = $this->processor->process([
 			'string' => 'value',
-		], TraitInsteadOfVO::class);
+		], TraitInstead1OfVO::class);
+
+		self::assertSame('value-b', $vo->string);
+	}
+
+	public function testTraitInsteadof2(): void
+	{
+		require_once __DIR__ . '/../../Doubles/Inheritance/trait-instead-of-2.php';
+
+		$vo = $this->processor->process([
+			'string' => 'value',
+		], TraitInstead1OfVO::class);
 
 		self::assertSame('value-b', $vo->string);
 	}

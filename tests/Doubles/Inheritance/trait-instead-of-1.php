@@ -1,6 +1,6 @@
 <?php declare(strict_types = 1);
 
-namespace Tests\Orisai\ObjectMapper\Doubles\Inheritance\TraitInsteadOf;
+namespace Tests\Orisai\ObjectMapper\Doubles\Inheritance\TraitInsteadOf1;
 
 use Orisai\ObjectMapper\Attributes\Callbacks\After;
 use Orisai\ObjectMapper\Attributes\Expect\StringValue;
@@ -26,7 +26,7 @@ trait B
 
 }
 
-final class TraitInsteadOfVO implements MappedObject
+final class TraitInstead1OfVO implements MappedObject
 {
 
 	use A;
