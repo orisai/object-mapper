@@ -35,6 +35,10 @@ use Tests\Orisai\ObjectMapper\Doubles\FieldNames\FieldNamesVO;
 use Tests\Orisai\ObjectMapper\Doubles\Inheritance\CallbacksVisibilityVO;
 use Tests\Orisai\ObjectMapper\Doubles\Inheritance\ChildVO;
 use Tests\Orisai\ObjectMapper\Doubles\Inheritance\PropertiesVisibilityVO;
+use Tests\Orisai\ObjectMapper\Doubles\Inheritance\TraitAlias1\TraitAlias1VO;
+use Tests\Orisai\ObjectMapper\Doubles\Inheritance\TraitAlias2\TraitAlias2VO;
+use Tests\Orisai\ObjectMapper\Doubles\Inheritance\TraitAlias3\TraitAlias3VO;
+use Tests\Orisai\ObjectMapper\Doubles\Inheritance\TraitAlias4\TraitAlias4VO;
 use Tests\Orisai\ObjectMapper\Doubles\Inheritance\TraitInsteadOf\TraitInsteadOfVO;
 use Tests\Orisai\ObjectMapper\Doubles\InitializingVO;
 use Tests\Orisai\ObjectMapper\Doubles\NoDefaultsVO;
@@ -950,6 +954,50 @@ arrayOfMixed: array<mixed>',
 		], TraitInsteadOfVO::class);
 
 		self::assertSame('value-b', $vo->string);
+	}
+
+	public function testTraitAlias1(): void
+	{
+		require_once __DIR__ . '/../../Doubles/Inheritance/trait-alias-1.php';
+
+		$vo = $this->processor->process([
+			'string' => 'value',
+		], TraitAlias1VO::class);
+
+		self::assertSame('value-a', $vo->string);
+	}
+
+	public function testTraitAlias2(): void
+	{
+		require_once __DIR__ . '/../../Doubles/Inheritance/trait-alias-2.php';
+
+		$vo = $this->processor->process([
+			'string' => 'value',
+		], TraitAlias2VO::class);
+
+		self::assertSame('value-a', $vo->string);
+	}
+
+	public function testTraitAlias3(): void
+	{
+		require_once __DIR__ . '/../../Doubles/Inheritance/trait-alias-3.php';
+
+		$vo = $this->processor->process([
+			'string' => 'value',
+		], TraitAlias3VO::class);
+
+		self::assertSame('value-a', $vo->string);
+	}
+
+	public function testTraitAlias4(): void
+	{
+		require_once __DIR__ . '/../../Doubles/Inheritance/trait-alias-4.php';
+
+		$vo = $this->processor->process([
+			'string' => 'value',
+		], TraitAlias4VO::class);
+
+		self::assertSame('value-a', $vo->string);
 	}
 
 	public function testSkipped(): void
