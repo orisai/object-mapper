@@ -918,14 +918,26 @@ arrayOfMixed: array<mixed>',
 	public function testSimpleInheritance(): void
 	{
 		$vo = $this->processor->process([
-			'parent' => 'a',
-			'child' => 'b',
-			'childTrait' => 'c',
+			'parentPrivate' => 'a1',
+			'parentProtected' => 'a2',
+			'parentPublic' => 'a3',
+			'childPrivate' => 'b1',
+			'childProtected' => 'b2',
+			'childPublic' => 'b3',
+			'childTraitPrivate' => 'c1',
+			'childTraitProtected' => 'c2',
+			'childTraitPublic' => 'c3',
 		], ChildVO::class);
 
-		self::assertSame('a-parent-parentStatic', $vo->getParentProperty());
-		self::assertSame('b-child-childStatic', $vo->getChildProperty());
-		self::assertSame('c-childTrait-childTraitStatic', $vo->getChildTraitProperty());
+		self::assertSame('a1-parent-parentStatic', $vo->getParentPrivate());
+		self::assertSame('a2-parent-parentStatic', $vo->getParentProtected());
+		self::assertSame('a3-parent-parentStatic', $vo->parentPublic);
+		self::assertSame('b1-child-childStatic', $vo->getChildPrivate());
+		self::assertSame('b2-child-childStatic', $vo->getChildProtected());
+		self::assertSame('b3-child-childStatic', $vo->childPublic);
+		self::assertSame('c1-childTrait-childTraitStatic', $vo->getChildTraitPrivate());
+		self::assertSame('c2-childTrait-childTraitStatic', $vo->getChildTraitProtected());
+		self::assertSame('c3-childTrait-childTraitStatic', $vo->childTraitPublic);
 	}
 
 	public function testSkipped(): void

@@ -13,7 +13,21 @@ trait ChildTraitVO
 	 * @After("afterTraitProperty")
 	 * @After("afterTraitPropertyStatic")
 	 */
-	private string $childTrait;
+	private string $childTraitPrivate;
+
+	/**
+	 * @StringValue()
+	 * @After("afterTraitProperty")
+	 * @After("afterTraitPropertyStatic")
+	 */
+	protected string $childTraitProtected;
+
+	/**
+	 * @StringValue()
+	 * @After("afterTraitProperty")
+	 * @After("afterTraitPropertyStatic")
+	 */
+	public string $childTraitPublic;
 
 	private function afterTraitProperty(string $value): string
 	{
@@ -25,9 +39,14 @@ trait ChildTraitVO
 		return "$value-childTraitStatic";
 	}
 
-	public function getChildTraitProperty(): string
+	public function getChildTraitPrivate(): string
 	{
-		return $this->childTrait;
+		return $this->childTraitPrivate;
+	}
+
+	public function getChildTraitProtected(): string
+	{
+		return $this->childTraitProtected;
 	}
 
 }

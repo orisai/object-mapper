@@ -140,6 +140,12 @@ abstract class BaseCollector implements Collector
 	{
 		$properties = [];
 		foreach ($class->getProperties() as $property) {
+			if ($property->getDeclaringClass()->getName() !== $class->getName()) {
+				// We don't want parent public and protected properties, they are collected individually
+				// Stop acting weird, PHP
+				continue;
+			}
+
 			$properties[] = new PropertyMeta(
 				$this->createAboveReflectorSource(new PropertySource($property)),
 				$this->getPropertyReflectorAttributes($property, $attributeClass),

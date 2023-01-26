@@ -14,7 +14,21 @@ abstract class ParentVO implements MappedObject
 	 * @After("afterProperty")
 	 * @After("afterPropertyStatic")
 	 */
-	private string $parent;
+	private string $parentPrivate;
+
+	/**
+	 * @StringValue()
+	 * @After("afterProperty")
+	 * @After("afterPropertyStatic")
+	 */
+	protected string $parentProtected;
+
+	/**
+	 * @StringValue()
+	 * @After("afterProperty")
+	 * @After("afterPropertyStatic")
+	 */
+	public string $parentPublic;
 
 	private function afterProperty(string $value): string
 	{
@@ -26,9 +40,14 @@ abstract class ParentVO implements MappedObject
 		return "$value-parentStatic";
 	}
 
-	public function getParentProperty(): string
+	public function getParentPrivate(): string
 	{
-		return $this->parent;
+		return $this->parentPrivate;
+	}
+
+	public function getParentProtected(): string
+	{
+		return $this->parentProtected;
 	}
 
 }

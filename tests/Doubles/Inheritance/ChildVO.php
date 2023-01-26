@@ -15,7 +15,21 @@ final class ChildVO extends ParentVO
 	 * @After("afterProperty")
 	 * @After("afterPropertyStatic")
 	 */
-	private string $child;
+	private string $childPrivate;
+
+	/**
+	 * @StringValue()
+	 * @After("afterProperty")
+	 * @After("afterPropertyStatic")
+	 */
+	protected string $childProtected;
+
+	/**
+	 * @StringValue()
+	 * @After("afterProperty")
+	 * @After("afterPropertyStatic")
+	 */
+	public string $childPublic;
 
 	private function afterProperty(string $value): string
 	{
@@ -27,9 +41,14 @@ final class ChildVO extends ParentVO
 		return "$value-childStatic";
 	}
 
-	public function getChildProperty(): string
+	public function getChildPrivate(): string
 	{
-		return $this->child;
+		return $this->childPrivate;
+	}
+
+	public function getChildProtected(): string
+	{
+		return $this->childProtected;
 	}
 
 }
