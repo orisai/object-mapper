@@ -26,9 +26,15 @@
 		<exclude-pattern>tests/Doubles/PhpVersionSpecific/ReadonlyClassVO.php</exclude-pattern>
 	</rule>
 
-	<!-- Missing type is required for test -->
+	<!-- Test-specific config -->
 	<rule ref="SlevomatCodingStandard.TypeHints.PropertyTypeHint.MissingNativeTypeHint">
 		<exclude-pattern>tests/Doubles/PhpVersionSpecific/UntypedVO.php</exclude-pattern>
+	</rule>
+	<rule ref="SlevomatCodingStandard.Files.TypeNameMatchesFileName.NoMatchBetweenTypeNameAndFileName">
+		<exclude-pattern>tests/Doubles/Inheritance/trait-instead-of.php</exclude-pattern>
+	</rule>
+	<rule ref="PSR1.Classes.ClassDeclaration.MultipleClasses">
+		<exclude-pattern>tests/Doubles/Inheritance/trait-instead-of.php</exclude-pattern>
 	</rule>
 
 </ruleset>

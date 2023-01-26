@@ -35,6 +35,7 @@ use Tests\Orisai\ObjectMapper\Doubles\FieldNames\FieldNamesVO;
 use Tests\Orisai\ObjectMapper\Doubles\Inheritance\CallbacksVisibilityVO;
 use Tests\Orisai\ObjectMapper\Doubles\Inheritance\ChildVO;
 use Tests\Orisai\ObjectMapper\Doubles\Inheritance\PropertiesVisibilityVO;
+use Tests\Orisai\ObjectMapper\Doubles\Inheritance\TraitInsteadOf\TraitInsteadOfVO;
 use Tests\Orisai\ObjectMapper\Doubles\InitializingVO;
 use Tests\Orisai\ObjectMapper\Doubles\NoDefaultsVO;
 use Tests\Orisai\ObjectMapper\Doubles\PhpVersionSpecific\AttributesVO;
@@ -938,6 +939,17 @@ arrayOfMixed: array<mixed>',
 		self::assertSame('c1-childTrait-childTraitStatic', $vo->getChildTraitPrivate());
 		self::assertSame('c2-childTrait-childTraitStatic', $vo->getChildTraitProtected());
 		self::assertSame('c3-childTrait-childTraitStatic', $vo->childTraitPublic);
+	}
+
+	public function testTraitInsteadof(): void
+	{
+		require_once __DIR__ . '/../../Doubles/Inheritance/trait-instead-of.php';
+
+		$vo = $this->processor->process([
+			'string' => 'value',
+		], TraitInsteadOfVO::class);
+
+		self::assertSame('value-b', $vo->string);
 	}
 
 	public function testSkipped(): void
