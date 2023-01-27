@@ -155,7 +155,7 @@ abstract class BaseMetaSource implements MetaSource
 
 		foreach ($metas as $meta) {
 			foreach ($meta->getProperties() as $propertyMeta) {
-				$property = $propertyMeta->getSource()->getTarget()->getReflector();
+				$property = $propertyMeta->getCallableReflector();
 				$class = $property->getDeclaringClass();
 
 				$callbacks = [];

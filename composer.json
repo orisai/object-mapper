@@ -32,6 +32,7 @@
 		"nette/robot-loader": "^3.4.0",
 		"nette/utils": "^3.1.0",
 		"orisai/exceptions": "^1.0.0",
+		"orisai/reflection-meta": "^1.0.0",
 		"orisai/source-map": "^1.0.0",
 		"orisai/utils": "^1.0.0"
 	},

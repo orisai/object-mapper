@@ -80,10 +80,6 @@ final class MetaResolver
 		foreach ($meta->getClasses() as $classMeta) {
 			$class = $classMeta->getClass();
 
-			if ($class->isTrait()) {
-				continue;
-			}
-
 			$context = ResolverArgsContext::forClass($class, $this);
 
 			$callbacksByMeta[] = $this->resolveCallbacksMeta($classMeta, $context);
@@ -116,10 +112,6 @@ final class MetaResolver
 	{
 		$fields = [];
 		foreach ($meta->getFields() as $fieldMeta) {
-			if ($fieldMeta->getClass()->isTrait()) {
-				continue;
-			}
-
 			$fieldName = $this->propertyNameToFieldName($fieldMeta);
 			$fields[$fieldName] = $this->resolveFieldMeta(
 				$fieldMeta,
@@ -316,10 +308,6 @@ final class MetaResolver
 	{
 		$map = [];
 		foreach ($meta->getFields() as $fieldMeta) {
-			if ($fieldMeta->getClass()->isTrait()) {
-				continue;
-			}
-
 			$property = $fieldMeta->getProperty();
 
 			$fieldName = $property->getName();

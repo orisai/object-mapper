@@ -4,6 +4,7 @@ namespace Orisai\ObjectMapper\ReflectionMeta\Meta;
 
 use Orisai\SourceMap\AboveReflectorSource;
 use Orisai\SourceMap\PropertySource;
+use ReflectionProperty;
 
 /**
  * @template T of object
@@ -11,6 +12,8 @@ use Orisai\SourceMap\PropertySource;
  */
 final class PropertyMeta implements Meta
 {
+
+	private ReflectionProperty $callableReflector;
 
 	/** @var AboveReflectorSource<PropertySource> */
 	private AboveReflectorSource $source;
@@ -22,10 +25,16 @@ final class PropertyMeta implements Meta
 	 * @param AboveReflectorSource<PropertySource> $source
 	 * @param list<T>                 $attributes
 	 */
-	public function __construct(AboveReflectorSource $source, array $attributes)
+	public function __construct(ReflectionProperty $callableReflector, AboveReflectorSource $source, array $attributes)
 	{
 		$this->source = $source;
 		$this->attributes = $attributes;
+		$this->callableReflector = $callableReflector;
+	}
+
+	public function getCallableReflector(): ReflectionProperty
+	{
+		return $this->callableReflector;
 	}
 
 	/**

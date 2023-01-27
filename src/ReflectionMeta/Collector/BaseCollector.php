@@ -7,6 +7,7 @@ use Orisai\ObjectMapper\ReflectionMeta\Meta\HierarchicClassMeta;
 use Orisai\ObjectMapper\ReflectionMeta\Meta\MethodMeta;
 use Orisai\ObjectMapper\ReflectionMeta\Meta\ParameterMeta;
 use Orisai\ObjectMapper\ReflectionMeta\Meta\PropertyMeta;
+use Orisai\ReflectionMeta\Finder\PropertyDeclaratorFinder;
 use Orisai\SourceMap\AboveReflectorSource;
 use Orisai\SourceMap\ClassConstantSource;
 use Orisai\SourceMap\ClassSource;
@@ -25,15 +26,31 @@ abstract class BaseCollector implements Collector
 
 	public function collect(ReflectionClass $from, string $collected): HierarchicClassMeta
 	{
+		return $this->collectInternal($from, $from, $collected);
+	}
+
+	/**
+	 * @template T of object
+	 * @param ReflectionClass<object> $declaringClass
+	 * @param ReflectionClass<object> $callableClass
+	 * @param class-string<T>         $attributeClass
+	 * @return HierarchicClassMeta<T>
+	 */
+	public function collectInternal(
+		ReflectionClass $declaringClass,
+		ReflectionClass $callableClass,
+		string $attributeClass
+	): HierarchicClassMeta
+	{
 		return new HierarchicClassMeta(
-			$this->createAboveReflectorSource(new ClassSource($from)),
-			$this->createParentMeta($from, $collected),
-			$this->createInterfacesMeta($from, $collected),
-			$this->createTraitsMeta($from, $collected),
-			$this->getClassReflectorAttributes($from, $collected),
-			$this->createClassConstantsMeta($from, $collected),
-			$this->createPropertiesMeta($from, $collected),
-			$this->createMethodsMeta($from, $collected),
+			$this->createAboveReflectorSource(new ClassSource($declaringClass)),
+			$this->createParentMeta($declaringClass, $attributeClass),
+			$this->createInterfacesMeta($declaringClass, $callableClass, $attributeClass),
+			$this->createTraitsMeta($declaringClass, $callableClass, $attributeClass),
+			$this->getClassReflectorAttributes($declaringClass, $attributeClass),
+			$this->createClassConstantsMeta($declaringClass, $attributeClass),
+			$this->createPropertiesMeta($declaringClass, $callableClass, $attributeClass),
+			$this->createMethodsMeta($declaringClass, $attributeClass),
 		);
 	}
 
@@ -66,20 +83,30 @@ abstract class BaseCollector implements Collector
 			return null;
 		}
 
-		return $this->collect($parentClass, $attributeClass);
+		return $this->collectInternal($parentClass, $parentClass, $attributeClass);
 	}
 
 	/**
 	 * @template T of object
-	 * @param ReflectionClass<object> $class
+	 * @param ReflectionClass<object> $declaringClass
+	 * @param ReflectionClass<object> $callableClass
 	 * @param class-string<T>         $attributeClass
 	 * @return list<HierarchicClassMeta<T>>
 	 */
-	private function createInterfacesMeta(ReflectionClass $class, string $attributeClass): array
+	private function createInterfacesMeta(
+		ReflectionClass $declaringClass,
+		ReflectionClass $callableClass,
+		string $attributeClass
+	): array
 	{
+		// Keep correct callable class for interfaces inside interfaces
+		if (!$declaringClass->isTrait() && !$declaringClass->isInterface()) {
+			$callableClass = $declaringClass;
+		}
+
 		$interfaces = [];
-		foreach ($class->getInterfaces() as $interface) {
-			$interfaces[] = $this->collect($interface, $attributeClass);
+		foreach ($declaringClass->getInterfaces() as $interface) {
+			$interfaces[] = $this->collectInternal($interface, $callableClass, $attributeClass);
 		}
 
 		return $interfaces;
@@ -87,15 +114,25 @@ abstract class BaseCollector implements Collector
 
 	/**
 	 * @template T of object
-	 * @param ReflectionClass<object> $class
+	 * @param ReflectionClass<object> $declaringClass
+	 * @param ReflectionClass<object> $callableClass
 	 * @param class-string<T>         $attributeClass
 	 * @return list<HierarchicClassMeta<T>>
 	 */
-	private function createTraitsMeta(ReflectionClass $class, string $attributeClass): array
+	private function createTraitsMeta(
+		ReflectionClass $declaringClass,
+		ReflectionClass $callableClass,
+		string $attributeClass
+	): array
 	{
+		// Keep correct callable class for traits inside traits
+		if (!$declaringClass->isTrait() && !$declaringClass->isInterface()) {
+			$callableClass = $declaringClass;
+		}
+
 		$traits = [];
-		foreach ($class->getTraits() as $trait) {
-			$traits[] = $this->collect($trait, $attributeClass);
+		foreach ($declaringClass->getTraits() as $trait) {
+			$traits[] = $this->collectInternal($trait, $callableClass, $attributeClass);
 		}
 
 		return $traits;
@@ -132,21 +169,35 @@ abstract class BaseCollector implements Collector
 
 	/**
 	 * @template T of object
-	 * @param ReflectionClass<object> $class
+	 * @param ReflectionClass<object> $declaringClass
+	 * @param ReflectionClass<object> $callableClass
 	 * @param class-string<T>         $attributeClass
 	 * @return list<PropertyMeta<T>>
 	 */
-	private function createPropertiesMeta(ReflectionClass $class, string $attributeClass): array
+	private function createPropertiesMeta(
+		ReflectionClass $declaringClass,
+		ReflectionClass $callableClass,
+		string $attributeClass
+	): array
 	{
 		$properties = [];
-		foreach ($class->getProperties() as $property) {
-			if ($property->getDeclaringClass()->getName() !== $class->getName()) {
+		foreach ($declaringClass->getProperties() as $property) {
+			if ($property->getDeclaringClass()->getName() !== $declaringClass->getName()) {
 				// We don't want parent public and protected properties, they are collected individually
 				// Stop acting weird, PHP
 				continue;
 			}
 
+			// Check declaring traits compatibility and get them
+			$declaringTraits = PropertyDeclaratorFinder::getDeclaringTraits($property);
+
+			// Property is declared by used trait
+			if ($declaringTraits !== []) {
+				continue;
+			}
+
 			$properties[] = new PropertyMeta(
+				$callableClass->getProperty($property->getName()),
 				$this->createAboveReflectorSource(new PropertySource($property)),
 				$this->getPropertyReflectorAttributes($property, $attributeClass),
 			);
