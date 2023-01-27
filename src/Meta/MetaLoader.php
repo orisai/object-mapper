@@ -167,7 +167,7 @@ final class MetaLoader
 
 			assert(is_subclass_of($class, MappedObject::class));
 
-			if ($classRef->isAbstract() || $classRef->isInterface() || $classRef->isTrait()) {
+			if ($classRef->isAbstract() || $classRef->isInterface()) {
 				continue;
 			}
 
