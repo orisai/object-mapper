@@ -32,10 +32,12 @@
 	</rule>
 	<rule ref="SlevomatCodingStandard.Files.TypeNameMatchesFileName.NoMatchBetweenTypeNameAndFileName">
 		<exclude-pattern>tests/Doubles/Inheritance/trait-alias-(1|2|3|4).php</exclude-pattern>
+		<exclude-pattern>tests/Doubles/Inheritance/trait-inside-trait</exclude-pattern>
 		<exclude-pattern>tests/Doubles/Inheritance/trait-instead-of-(1|2).php</exclude-pattern>
 	</rule>
 	<rule ref="PSR1.Classes.ClassDeclaration.MultipleClasses">
 		<exclude-pattern>tests/Doubles/Inheritance/trait-alias-(1|2|3|4).php</exclude-pattern>
+		<exclude-pattern>tests/Doubles/Inheritance/trait-inside-trait</exclude-pattern>
 		<exclude-pattern>tests/Doubles/Inheritance/trait-instead-of-(1|2).php</exclude-pattern>
 	</rule>
 

@@ -39,6 +39,7 @@ use Tests\Orisai\ObjectMapper\Doubles\Inheritance\TraitAlias1\TraitAlias1VO;
 use Tests\Orisai\ObjectMapper\Doubles\Inheritance\TraitAlias2\TraitAlias2VO;
 use Tests\Orisai\ObjectMapper\Doubles\Inheritance\TraitAlias3\TraitAlias3VO;
 use Tests\Orisai\ObjectMapper\Doubles\Inheritance\TraitAlias4\TraitAlias4VO;
+use Tests\Orisai\ObjectMapper\Doubles\Inheritance\TraitInsideTrait\TraitInsideTraitVO;
 use Tests\Orisai\ObjectMapper\Doubles\Inheritance\TraitInsteadOf1\TraitInstead1OfVO;
 use Tests\Orisai\ObjectMapper\Doubles\InitializingVO;
 use Tests\Orisai\ObjectMapper\Doubles\NoDefaultsVO;
@@ -1009,6 +1010,17 @@ arrayOfMixed: array<mixed>',
 		], TraitAlias4VO::class);
 
 		self::assertSame('value-a', $vo->string);
+	}
+
+	public function testTraitInsideTrait(): void
+	{
+		require_once __DIR__ . '/../../Doubles/Inheritance/trait-inside-trait.php';
+
+		$vo = $this->processor->process([
+			'string' => 'value',
+		], TraitInsideTraitVO::class);
+
+		self::assertSame('value-private-protected-public', $vo->string);
 	}
 
 	public function testSkipped(): void
