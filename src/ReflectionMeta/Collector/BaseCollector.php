@@ -7,6 +7,7 @@ use Orisai\ObjectMapper\ReflectionMeta\Meta\HierarchicClassMeta;
 use Orisai\ObjectMapper\ReflectionMeta\Meta\MethodMeta;
 use Orisai\ObjectMapper\ReflectionMeta\Meta\ParameterMeta;
 use Orisai\ObjectMapper\ReflectionMeta\Meta\PropertyMeta;
+use Orisai\ReflectionMeta\Finder\MethodDeclaratorFinder;
 use Orisai\ReflectionMeta\Finder\PropertyDeclaratorFinder;
 use Orisai\SourceMap\AboveReflectorSource;
 use Orisai\SourceMap\ClassConstantSource;
@@ -226,6 +227,20 @@ abstract class BaseCollector implements Collector
 	{
 		$methods = [];
 		foreach ($class->getMethods() as $method) {
+			if ($method->getDeclaringClass()->getName() !== $class->getName()) {
+				// We don't want parent public and protected methods, they are collected individually
+				// Stop acting weird, PHP
+				continue;
+			}
+
+			// Get declaring trait
+			$declaringTrait = MethodDeclaratorFinder::getDeclaringTrait($method);
+
+			// Property is declared by used trait
+			if ($declaringTrait !== null) {
+				continue;
+			}
+
 			$methods[] = new MethodMeta(
 				$this->createAboveReflectorSource(new MethodSource($method)),
 				$this->getMethodReflectorAttributes($method, $attributeClass),
