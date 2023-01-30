@@ -68,14 +68,15 @@ abstract class BaseMetaSource implements MetaSource
 	 */
 	private function loadClassMeta(StructuresList $structures): array
 	{
-		$callbacks = [];
-		$docs = [];
-		$modifiers = [];
-
 		$resolved = [];
 		foreach ($structures->getClasses() as $class) {
 			$reflector = $class->getSource()->getReflector();
 			$attributes = $this->reader->readClass($reflector, BaseAttribute::class);
+
+			$callbacks = [];
+			$docs = [];
+			$modifiers = [];
+
 			foreach ($attributes as $attribute) {
 				$attribute = $this->checkAnnotationType($attribute);
 
@@ -106,7 +107,7 @@ abstract class BaseMetaSource implements MetaSource
 				}
 			}
 
-			$resolved[] = new ClassCompileMeta($callbacks, $docs, $modifiers, $reflector);
+			$resolved[] = new ClassCompileMeta($callbacks, $docs, $modifiers, $class->getContextClass());
 		}
 
 		return $resolved;
