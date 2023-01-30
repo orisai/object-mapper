@@ -40,6 +40,7 @@ use Tests\Orisai\ObjectMapper\Doubles\Inheritance\TraitAlias1\TraitAlias1VO;
 use Tests\Orisai\ObjectMapper\Doubles\Inheritance\TraitAlias2\TraitAlias2VO;
 use Tests\Orisai\ObjectMapper\Doubles\Inheritance\TraitAlias3\TraitAlias3VO;
 use Tests\Orisai\ObjectMapper\Doubles\Inheritance\TraitAlias4\TraitAlias4VO;
+use Tests\Orisai\ObjectMapper\Doubles\Inheritance\TraitCallback\TraitCallbackVO;
 use Tests\Orisai\ObjectMapper\Doubles\Inheritance\TraitInsideTrait\TraitInsideTraitVO;
 use Tests\Orisai\ObjectMapper\Doubles\Inheritance\TraitInsteadOf1\TraitInstead1OfVO;
 use Tests\Orisai\ObjectMapper\Doubles\InitializingVO;
@@ -1033,6 +1034,17 @@ arrayOfMixed: array<mixed>',
 
 		self::assertSame('input', $vo->a);
 		self::assertSame('callback', $vo->b);
+	}
+
+	public function testTraitCallback(): void
+	{
+		require_once __DIR__ . '/../../Doubles/Inheritance/trait-callback.php';
+
+		$vo = $this->processor->process([
+			'string' => 'value',
+		], TraitCallbackVO::class);
+
+		self::assertSame('A::before-value-A::after', $vo->string);
 	}
 
 	public function testSkipped(): void
