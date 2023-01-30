@@ -3,7 +3,10 @@
 namespace Orisai\ObjectMapper\Meta;
 
 use Orisai\Exceptions\Logic\InvalidState;
+use function is_object;
+use function serialize;
 use function sprintf;
+use function unserialize;
 
 final class DefaultValueMeta
 {
@@ -12,6 +15,8 @@ final class DefaultValueMeta
 	private $value;
 
 	private bool $hasValue;
+
+	private bool $isSerialized;
 
 	private function __construct()
 	{
@@ -25,7 +30,14 @@ final class DefaultValueMeta
 	{
 		$self = new self();
 		$self->hasValue = true;
-		$self->value = $default;
+
+		if (is_object($default)) {
+			$self->value = serialize($default);
+			$self->isSerialized = true;
+		} else {
+			$self->value = $default;
+			$self->isSerialized = false;
+		}
 
 		return $self;
 	}
@@ -55,6 +67,10 @@ final class DefaultValueMeta
 					self::class,
 					'hasValue()',
 				));
+		}
+
+		if ($this->isSerialized) {
+			return unserialize($this->value);
 		}
 
 		return $this->value;

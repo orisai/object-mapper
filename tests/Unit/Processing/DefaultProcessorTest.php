@@ -46,6 +46,7 @@ use Tests\Orisai\ObjectMapper\Doubles\Inheritance\TraitInsteadOf1\TraitInstead1O
 use Tests\Orisai\ObjectMapper\Doubles\InitializingVO;
 use Tests\Orisai\ObjectMapper\Doubles\NoDefaultsVO;
 use Tests\Orisai\ObjectMapper\Doubles\PhpVersionSpecific\AttributesVO;
+use Tests\Orisai\ObjectMapper\Doubles\PhpVersionSpecific\ObjectDefaultVO;
 use Tests\Orisai\ObjectMapper\Doubles\PhpVersionSpecific\ReadonlyClassVO;
 use Tests\Orisai\ObjectMapper\Doubles\PhpVersionSpecific\ReadonlyPropertiesVO;
 use Tests\Orisai\ObjectMapper\Doubles\PhpVersionSpecific\UntypedVO;
@@ -1184,6 +1185,23 @@ arrayOfMixed: array<mixed>',
 
 		self::assertInstanceOf(AttributesVO::class, $vo);
 		self::assertSame('foo', $vo->string);
+	}
+
+	public function testObjectDefault(): void
+	{
+		if (PHP_VERSION_ID < 8_01_00) {
+			self::markTestSkipped('Object default values are supported on PHP 8.1+');
+		}
+
+		$data = [];
+
+		$vo = $this->processor->process($data, ObjectDefaultVO::class);
+		self::assertEquals(new stdClass(), $vo->class);
+
+		$vo2 = $this->processor->process($data, ObjectDefaultVO::class);
+		self::assertEquals(new stdClass(), $vo2->class);
+
+		self::assertNotSame($vo->class, $vo2->class);
 	}
 
 	public function testReadonlyClass(): void
