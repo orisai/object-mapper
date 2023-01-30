@@ -2,14 +2,14 @@
 
 namespace Orisai\ObjectMapper\Attributes;
 
-use Orisai\ObjectMapper\ReflectionMeta\Collector\AttributesCollector;
+use Orisai\ReflectionMeta\Reader\AttributesMetaReader;
 
 final class AttributesMetaSource extends BaseMetaSource
 {
 
-	public function __construct(?AttributesCollector $collector = null)
+	public function __construct(?AttributesMetaReader $reader = null)
 	{
-		parent::__construct($collector ?? new AttributesCollector());
+		parent::__construct($reader ?? new AttributesMetaReader());
 	}
 
 }

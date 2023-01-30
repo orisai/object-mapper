@@ -2,14 +2,14 @@
 
 namespace Orisai\ObjectMapper\Attributes;
 
-use Orisai\ObjectMapper\ReflectionMeta\Collector\AnnotationsCollector;
+use Orisai\ReflectionMeta\Reader\AnnotationsMetaReader;
 
 final class AnnotationsMetaSource extends BaseMetaSource
 {
 
-	public function __construct(?AnnotationsCollector $collector = null)
+	public function __construct(?AnnotationsMetaReader $reader = null)
 	{
-		parent::__construct($collector ?? new AnnotationsCollector());
+		parent::__construct($reader ?? new AnnotationsMetaReader());
 	}
 
 }

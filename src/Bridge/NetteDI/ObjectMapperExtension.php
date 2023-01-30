@@ -22,9 +22,9 @@ use Orisai\ObjectMapper\Meta\MetaSourceManager;
 use Orisai\ObjectMapper\Processing\DefaultProcessor;
 use Orisai\ObjectMapper\Processing\ObjectCreator;
 use Orisai\ObjectMapper\Processing\Processor;
-use Orisai\ObjectMapper\ReflectionMeta\Collector\AnnotationsCollector;
-use Orisai\ObjectMapper\ReflectionMeta\Collector\AttributesCollector;
 use Orisai\ObjectMapper\Rules\RuleManager;
+use Orisai\ReflectionMeta\Reader\AnnotationsMetaReader;
+use Orisai\ReflectionMeta\Reader\AttributesMetaReader;
 use stdClass;
 use function assert;
 use function is_string;
@@ -96,15 +96,15 @@ final class ObjectMapperExtension extends CompilerExtension
 		ContainerBuilder $builder
 	): void
 	{
-		if (!AnnotationsCollector::canBeConstructed()) {
+		if (!AnnotationsMetaReader::canBeConstructed()) {
 			return;
 		}
 
 		$sourceManagerDefinition->addSetup('addSource', [
 			$builder->addDefinition($this->prefix('metaSource.annotations'))
 				->setFactory(AnnotationsMetaSource::class, [
-					$builder->addDefinition($this->prefix('metaCollector.annotations'))
-						->setFactory(AnnotationsCollector::class)
+					$builder->addDefinition($this->prefix('metaReader.annotations'))
+						->setFactory(AnnotationsMetaReader::class)
 						->setAutowired(false),
 				])
 				->setAutowired(false),
@@ -116,15 +116,15 @@ final class ObjectMapperExtension extends CompilerExtension
 		ContainerBuilder $builder
 	): void
 	{
-		if (!AttributesCollector::canBeConstructed()) {
+		if (!AttributesMetaReader::canBeConstructed()) {
 			return;
 		}
 
 		$sourceManagerDefinition->addSetup('addSource', [
 			$builder->addDefinition($this->prefix('metaSource.attributes'))
 				->setFactory(AttributesMetaSource::class, [
-					$builder->addDefinition($this->prefix('metaCollector.attributes'))
-						->setFactory(AttributesCollector::class)
+					$builder->addDefinition($this->prefix('metaReader.attributes'))
+						->setFactory(AttributesMetaReader::class)
 						->setAutowired(false),
 				])
 				->setAutowired(false),
