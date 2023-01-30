@@ -34,6 +34,7 @@ use Tests\Orisai\ObjectMapper\Doubles\FieldNames\ChildFieldVO;
 use Tests\Orisai\ObjectMapper\Doubles\FieldNames\FieldNamesVO;
 use Tests\Orisai\ObjectMapper\Doubles\Inheritance\CallbacksVisibilityVO;
 use Tests\Orisai\ObjectMapper\Doubles\Inheritance\ChildVO;
+use Tests\Orisai\ObjectMapper\Doubles\Inheritance\InterfaceUsingVO;
 use Tests\Orisai\ObjectMapper\Doubles\Inheritance\PropertiesVisibilityVO;
 use Tests\Orisai\ObjectMapper\Doubles\Inheritance\TraitAlias1\TraitAlias1VO;
 use Tests\Orisai\ObjectMapper\Doubles\Inheritance\TraitAlias2\TraitAlias2VO;
@@ -1021,6 +1022,17 @@ arrayOfMixed: array<mixed>',
 		], TraitInsideTraitVO::class);
 
 		self::assertSame('value-private-protected-public', $vo->string);
+	}
+
+	public function testInterfaceCallback(): void
+	{
+		$vo = $this->processor->process([
+			'a' => 'input',
+			'b' => 'input',
+		], InterfaceUsingVO::class);
+
+		self::assertSame('input', $vo->a);
+		self::assertSame('callback', $vo->b);
 	}
 
 	public function testSkipped(): void
