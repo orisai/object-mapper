@@ -14,6 +14,7 @@ use Orisai\ObjectMapper\Types\ArrayType;
 use Orisai\ObjectMapper\Types\SimpleValueType;
 use Orisai\ObjectMapper\Types\Value;
 use Orisai\Utils\Arrays\ArrayMerger;
+use function array_values;
 use function count;
 use function is_array;
 use function is_int;
@@ -98,29 +99,72 @@ final class ListOfRule extends MultiValueRule
 		$itemArgs = $itemMeta->getArgs();
 
 		$lastIntKey = -1; // List starts from 0
-		foreach ($value as $key => $item) {
-			if (!is_int($key) || $key !== ++$lastIntKey) {
-				$keyType = $this->createKeyType();
-				$keyType->markParameterInvalid(self::Continuous);
+		if ($itemRule instanceof MultiValueEfficientRule) {
+			foreach ($value as $key => $item) {
+				if (!is_int($key) || $key !== ++$lastIntKey) {
+					$keyType = $this->createKeyType();
+					$keyType->markParameterInvalid(self::Continuous);
 
-				$type->addInvalidKey(
-					$key,
-					ValueDoesNotMatch::create($keyType, Value::of($key)),
-				);
+					$type->addInvalidKey(
+						$key,
+						ValueDoesNotMatch::create($keyType, Value::of($key)),
+					);
+				}
+
+				if (is_int($key)) {
+					$lastIntKey = $key;
+				}
+
+				try {
+					$value[$key] = $itemRule->processValuePhase1(
+						$item,
+						$itemArgs,
+						$context->createClone(),
+					);
+				} catch (ValueDoesNotMatch | InvalidData $exception) {
+					unset($value[$key]);
+					$type->addInvalidValue($key, $exception);
+				}
 			}
 
-			if (is_int($key)) {
-				$lastIntKey = $key;
-			}
+			$itemRule->processValuePhase2(array_values($value), $args, $context->createClone());
 
-			try {
-				$value[$key] = $itemRule->processValue(
-					$item,
-					$itemArgs,
-					$context->createClone(),
-				);
-			} catch (ValueDoesNotMatch | InvalidData $exception) {
-				$type->addInvalidValue($key, $exception);
+			foreach ($value as $key => $item) {
+				try {
+					$value[$key] = $itemRule->processValuePhase3(
+						$item,
+						$itemArgs,
+						$context->createClone(),
+					);
+				} catch (ValueDoesNotMatch | InvalidData $exception) {
+					$type->addInvalidPair($key, null, $exception);
+				}
+			}
+		} else {
+			foreach ($value as $key => $item) {
+				if (!is_int($key) || $key !== ++$lastIntKey) {
+					$keyType = $this->createKeyType();
+					$keyType->markParameterInvalid(self::Continuous);
+
+					$type->addInvalidKey(
+						$key,
+						ValueDoesNotMatch::create($keyType, Value::of($key)),
+					);
+				}
+
+				if (is_int($key)) {
+					$lastIntKey = $key;
+				}
+
+				try {
+					$value[$key] = $itemRule->processValue(
+						$item,
+						$itemArgs,
+						$context->createClone(),
+					);
+				} catch (ValueDoesNotMatch | InvalidData $exception) {
+					$type->addInvalidValue($key, $exception);
+				}
 			}
 		}
 

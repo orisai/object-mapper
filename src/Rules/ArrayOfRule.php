@@ -13,6 +13,7 @@ use Orisai\ObjectMapper\Meta\Compile\RuleCompileMeta;
 use Orisai\ObjectMapper\Types\ArrayType;
 use Orisai\ObjectMapper\Types\Value;
 use Orisai\Utils\Arrays\ArrayMerger;
+use function array_values;
 use function count;
 use function is_array;
 
@@ -77,7 +78,7 @@ final class ArrayOfRule extends MultiValueRule
 	}
 
 	/**
-	 * @param mixed $value
+	 * @param mixed       $value
 	 * @param ArrayOfArgs $args
 	 * @return array<mixed>
 	 * @throws ValueDoesNotMatch
@@ -116,30 +117,74 @@ final class ArrayOfRule extends MultiValueRule
 			$keyArgs = null;
 		}
 
-		foreach ($value as $key => $item) {
-			$keyException = null;
-			$itemException = null;
+		if ($itemRule instanceof MultiValueEfficientRule) {
+			foreach ($value as $key => $item) {
+				$keyException = null;
+				$itemException = null;
 
-			if ($keyRule !== null && $keyArgs !== null) {
+				if ($keyRule !== null && $keyArgs !== null) {
+					try {
+						$key = $keyRule->processValue($key, $keyArgs, $context->createClone());
+					} catch (ValueDoesNotMatch | InvalidData $exception) {
+						$keyException = $exception;
+					}
+				}
+
 				try {
-					$key = $keyRule->processValue($key, $keyArgs, $context->createClone());
+					$value[$key] = $itemRule->processValuePhase1(
+						$item,
+						$itemArgs,
+						$context->createClone(),
+					);
 				} catch (ValueDoesNotMatch | InvalidData $exception) {
-					$keyException = $exception;
+					$itemException = $exception;
+				}
+
+				if ($itemException !== null || $keyException !== null) {
+					unset($value[$key]);
+					$type->addInvalidPair($key, $keyException, $itemException);
 				}
 			}
 
-			try {
-				$value[$key] = $itemRule->processValue(
-					$item,
-					$itemArgs,
-					$context->createClone(),
-				);
-			} catch (ValueDoesNotMatch | InvalidData $exception) {
-				$itemException = $exception;
-			}
+			$itemRule->processValuePhase2(array_values($value), $args, $context->createClone());
 
-			if ($itemException !== null || $keyException !== null) {
-				$type->addInvalidPair($key, $keyException, $itemException);
+			foreach ($value as $key => $item) {
+				try {
+					$value[$key] = $itemRule->processValuePhase3(
+						$item,
+						$itemArgs,
+						$context->createClone(),
+					);
+				} catch (ValueDoesNotMatch | InvalidData $exception) {
+					$type->addInvalidPair($key, null, $exception);
+				}
+			}
+		} else {
+			foreach ($value as $key => $item) {
+				$keyException = null;
+				$itemException = null;
+
+				if ($keyRule !== null && $keyArgs !== null) {
+					try {
+						$key = $keyRule->processValue($key, $keyArgs, $context->createClone());
+					} catch (ValueDoesNotMatch | InvalidData $exception) {
+						$keyException = $exception;
+					}
+				}
+
+				try {
+					$value[$key] = $itemRule->processValue(
+						$item,
+						$itemArgs,
+						$context->createClone(),
+					);
+				} catch (ValueDoesNotMatch | InvalidData $exception) {
+					$itemException = $exception;
+				}
+
+				if ($itemException !== null || $keyException !== null) {
+					$type->addInvalidPair($key, $keyException, $itemException);
+				}
 			}
 		}
 

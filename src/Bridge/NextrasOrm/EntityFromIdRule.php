@@ -4,16 +4,16 @@ namespace Orisai\ObjectMapper\Bridge\NextrasOrm;
 
 use Nextras\Orm\Entity\IEntity;
 use Nextras\Orm\Model\IModel;
+use Nextras\Orm\Repository\IRepository;
 use Orisai\Exceptions\Logic\InvalidArgument;
 use Orisai\ObjectMapper\Args\Args;
 use Orisai\ObjectMapper\Args\ArgsChecker;
 use Orisai\ObjectMapper\Context\FieldContext;
 use Orisai\ObjectMapper\Context\RuleArgsContext;
 use Orisai\ObjectMapper\Context\TypeContext;
-use Orisai\ObjectMapper\Exception\InvalidData;
 use Orisai\ObjectMapper\Exception\ValueDoesNotMatch;
 use Orisai\ObjectMapper\Meta\Compile\RuleCompileMeta;
-use Orisai\ObjectMapper\Rules\Rule;
+use Orisai\ObjectMapper\Rules\MultiValueEfficientRule;
 use Orisai\ObjectMapper\Types\SimpleValueType;
 use Orisai\ObjectMapper\Types\Value;
 use ReflectionClass;
@@ -22,9 +22,9 @@ use function is_string;
 use function is_subclass_of;
 
 /**
- * @implements Rule<EntityFromIdArgs>
+ * @implements MultiValueEfficientRule<EntityFromIdArgs>
  */
-final class EntityFromIdRule implements Rule
+final class EntityFromIdRule implements MultiValueEfficientRule
 {
 
 	private const Name = 'name',
@@ -92,27 +92,15 @@ final class EntityFromIdRule implements Rule
 	 */
 	public function processValue($value, Args $args, FieldContext $context)
 	{
-		$id = $this->getId($value, $args, $context);
+		$id = $this->processValuePhase1($value, $args, $context);
 
-		$repository = $this->model->getRepositoryForEntity($args->entity);
-		$entity = $repository->getById($id);
-
-		if ($entity === null) {
-			throw ValueDoesNotMatch::create($this->createType($args, $context), Value::of($value));
-		}
-
-		return $context->shouldMapDataToObjects()
-			? $entity
-			: $value;
+		return $this->processValuePhase3($id, $args, $context);
 	}
 
 	/**
-	 * @param mixed $value
-	 * @return mixed
-	 * @throws ValueDoesNotMatch
-	 * @throws InvalidData
+	 * @param EntityFromIdArgs $args
 	 */
-	private function getId($value, EntityFromIdArgs $args, FieldContext $context)
+	public function processValuePhase1($value, Args $args, FieldContext $context)
 	{
 		$itemMeta = $args->idRule;
 		$itemRule = $context->getRule($itemMeta->getType());
@@ -124,9 +112,40 @@ final class EntityFromIdRule implements Rule
 	/**
 	 * @param EntityFromIdArgs $args
 	 */
+	public function processValuePhase2(array $values, Args $args, FieldContext $context): void
+	{
+		$repository = $this->getRepository($args);
+		$repository->findByIds([$values]);
+	}
+
+	/**
+	 * @param EntityFromIdArgs $args
+	 */
+	public function processValuePhase3($value, Args $args, FieldContext $context)
+	{
+		$repository = $this->getRepository($args);
+		$entity = $repository->getById($value);
+
+		if ($entity === null) {
+			throw ValueDoesNotMatch::create($this->createType($args, $context), Value::of($value));
+		}
+
+		return $context->shouldMapDataToObjects()
+			? $entity
+			: $value;
+	}
+
+	/**
+	 * @param EntityFromIdArgs $args
+	 */
 	public function createType(Args $args, TypeContext $context): SimpleValueType
 	{
 		return new SimpleValueType($args->name);
+	}
+
+	private function getRepository(EntityFromIdArgs $args): IRepository
+	{
+		return $this->model->getRepositoryForEntity($args->entity);
 	}
 
 }
