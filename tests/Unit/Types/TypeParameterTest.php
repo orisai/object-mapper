@@ -41,7 +41,7 @@ final class TypeParameterTest extends TestCase
 	public function testNoValueFailure(): void
 	{
 		$this->expectException(InvalidState::class);
-		$this->expectDeprecationMessage(
+		$this->expectExceptionMessage(
 			'Cannot access value of parameter which does not have one. Check with `Orisai\ObjectMapper\Types\TypeParameter->hasValue()`.',
 		);
 
