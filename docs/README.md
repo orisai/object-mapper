@@ -90,15 +90,7 @@ $processor = new DefaultProcessor(
 );
 ```
 
-Or, if you use Nette, just register extension:
-
-```neon
-extensions:
-	orisai.objectMapper: Orisai\ObjectMapper\Bridge\NetteDI\ObjectMapperExtension
-
-orisai.objectMapper:
-	debug: %debugMode%
-```
+Or, if you use Nette, check [orisai/nette-object-mapper](https://github.com/orisai/nette-object-mapper) for installation.
 
 ## Quick start
 
