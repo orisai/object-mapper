@@ -2,6 +2,7 @@
 
 namespace Orisai\ObjectMapper\Printers;
 
+use Orisai\ObjectMapper\Types\CompoundTypeOperator;
 use Orisai\ObjectMapper\Types\TypeParameter;
 use function array_key_last;
 use function explode;
@@ -114,13 +115,13 @@ final class TypeToStringConverter implements TypeToPrimitiveConverter
 		return Dumper::dumpValue($value, $options);
 	}
 
-	public function printCompound(string $operator, array $subtypes): string
+	public function printCompound(CompoundTypeOperator $operator, array $subtypes): string
 	{
 		$lastKey = array_key_last($subtypes);
 		$formatted = '';
 
 		foreach ($subtypes as $key => $subtype) {
-			$separator = $key === $lastKey ? '' : $operator;
+			$separator = $key === $lastKey ? '' : $operator->value;
 			$formatted .= $subtype . $separator;
 		}
 

@@ -7,6 +7,7 @@ use Orisai\ObjectMapper\Context\FieldContext;
 use Orisai\ObjectMapper\Exception\InvalidData;
 use Orisai\ObjectMapper\Exception\ValueDoesNotMatch;
 use Orisai\ObjectMapper\Types\CompoundType;
+use Orisai\ObjectMapper\Types\CompoundTypeOperator;
 use Orisai\ObjectMapper\Types\Value;
 
 final class AnyOfRule extends CompoundRule
@@ -55,7 +56,7 @@ final class AnyOfRule extends CompoundRule
 
 	protected function createCompoundType(): CompoundType
 	{
-		return CompoundType::createOrType();
+		return new CompoundType(CompoundTypeOperator::or());
 	}
 
 }

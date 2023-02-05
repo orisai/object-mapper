@@ -6,6 +6,7 @@ use Generator;
 use Orisai\ObjectMapper\Exception\ValueDoesNotMatch;
 use Orisai\ObjectMapper\MappedObject;
 use Orisai\ObjectMapper\Types\CompoundType;
+use Orisai\ObjectMapper\Types\CompoundTypeOperator;
 use Orisai\ObjectMapper\Types\EnumType;
 use Orisai\ObjectMapper\Types\GenericArrayType;
 use Orisai\ObjectMapper\Types\MappedObjectType;
@@ -112,7 +113,7 @@ final class TypesTestProvider
 
 	public static function provideArrayTypeCompoundInvalid(): Generator
 	{
-		$typeKey = CompoundType::createOrType();
+		$typeKey = new CompoundType(CompoundTypeOperator::or());
 		$typeKey->addSubtype(0, new SimpleValueType('string'));
 		$typeKey->addSubtype(1, new SimpleValueType('int'));
 		$typeValue = GenericArrayType::forArray(new SimpleValueType('string'), new SimpleValueType('test'));
@@ -216,7 +217,7 @@ final class TypesTestProvider
 
 	public static function provideCompoundTypeOverwriteSubtype(): Generator
 	{
-		$type = CompoundType::createOrType();
+		$type = new CompoundType(CompoundTypeOperator::or());
 		$type->addSubtype(0, new SimpleValueType('foo'));
 		$type->addSubtype(1, new SimpleValueType('bar'));
 
@@ -234,7 +235,7 @@ final class TypesTestProvider
 
 	public static function provideCompoundTypeOverwriteSubtypeComplex(): Generator
 	{
-		$subtype1 = CompoundType::createAndType();
+		$subtype1 = new CompoundType(CompoundTypeOperator::and());
 		$subtype1->addSubtype(0, new SimpleValueType('int'));
 		$subtype1->overwriteInvalidSubtype(
 			0,
@@ -246,7 +247,7 @@ final class TypesTestProvider
 			ValueDoesNotMatch::create(new SimpleValueType('float'), Value::none()),
 		);
 
-		$subtype2 = CompoundType::createAndType();
+		$subtype2 = new CompoundType(CompoundTypeOperator::and());
 		$subtype2->addSubtype(0, new SimpleValueType('foo'));
 		$subtype2->overwriteInvalidSubtype(
 			0,
@@ -258,7 +259,7 @@ final class TypesTestProvider
 			ValueDoesNotMatch::create(new SimpleValueType('bar'), Value::none()),
 		);
 
-		$type = CompoundType::createOrType();
+		$type = new CompoundType(CompoundTypeOperator::or());
 		$type->addSubtype(0, $subtype1);
 		$type->overwriteInvalidSubtype(
 			0,

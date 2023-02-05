@@ -13,6 +13,7 @@ use Orisai\ObjectMapper\Rules\MappedObjectArgs;
 use Orisai\ObjectMapper\Rules\MappedObjectRule;
 use Orisai\ObjectMapper\Rules\MixedRule;
 use Orisai\ObjectMapper\Types\CompoundType;
+use Orisai\ObjectMapper\Types\CompoundTypeOperator;
 use Orisai\ObjectMapper\Types\MessageType;
 use Orisai\ObjectMapper\Types\SimpleValueType;
 use Tests\Orisai\ObjectMapper\Doubles\AlwaysInvalidRule;
@@ -64,7 +65,7 @@ final class AllOfRuleTest extends ProcessingTestCase
 			$type = $exception->getType();
 			self::assertInstanceOf(CompoundType::class, $type);
 
-			self::assertSame(CompoundType::OperatorAnd, $type->getOperator());
+			self::assertSame(CompoundTypeOperator::and(), $type->getOperator());
 
 			$subtypes = $type->getSubtypes();
 			self::assertCount(3, $subtypes);
@@ -104,7 +105,7 @@ final class AllOfRuleTest extends ProcessingTestCase
 			$type = $exception->getType();
 			self::assertInstanceOf(CompoundType::class, $type);
 
-			self::assertSame(CompoundType::OperatorAnd, $type->getOperator());
+			self::assertSame(CompoundTypeOperator::and(), $type->getOperator());
 
 			$subtypes = $type->getSubtypes();
 			self::assertCount(2, $subtypes);
@@ -137,7 +138,7 @@ final class AllOfRuleTest extends ProcessingTestCase
 			$type,
 		);
 
-		self::assertSame($type::OperatorAnd, $type->getOperator());
+		self::assertSame(CompoundTypeOperator::and(), $type->getOperator());
 
 		$subtypes = $type->getSubtypes();
 		self::assertCount(3, $subtypes);

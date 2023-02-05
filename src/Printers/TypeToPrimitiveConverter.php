@@ -2,6 +2,7 @@
 
 namespace Orisai\ObjectMapper\Printers;
 
+use Orisai\ObjectMapper\Types\CompoundTypeOperator;
 use Orisai\ObjectMapper\Types\TypeParameter;
 
 /**
@@ -31,7 +32,7 @@ interface TypeToPrimitiveConverter
 	 * @param array<int|string, T> $subtypes
 	 * @return T
 	 */
-	public function printCompound(string $operator, array $subtypes);
+	public function printCompound(CompoundTypeOperator $operator, array $subtypes);
 
 	/**
 	 * @param T|null                                   $keyType

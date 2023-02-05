@@ -11,11 +11,6 @@ use function sprintf;
 final class CompoundType implements Type
 {
 
-	/** @internal */
-	public const
-		OperatorAnd = '&&',
-		OperatorOr = '||';
-
 	/** @var array<Type> */
 	private array $subtypes = [];
 
@@ -25,25 +20,11 @@ final class CompoundType implements Type
 	/** @var array<WithTypeAndValue> */
 	private array $invalidSubtypes = [];
 
-	/** @var self::Operator* */
-	private string $operator;
+	private CompoundTypeOperator $operator;
 
-	/**
-	 * @param self::Operator* $operator
-	 */
-	private function __construct(string $operator)
+	public function __construct(CompoundTypeOperator $operator)
 	{
 		$this->operator = $operator;
-	}
-
-	public static function createAndType(): self
-	{
-		return new self(self::OperatorAnd);
-	}
-
-	public static function createOrType(): self
-	{
-		return new self(self::OperatorOr);
 	}
 
 	/**
@@ -139,10 +120,7 @@ final class CompoundType implements Type
 		return isset($this->invalidSubtypes[$key]);
 	}
 
-	/**
-	 * @return self::Operator*
-	 */
-	public function getOperator(): string
+	public function getOperator(): CompoundTypeOperator
 	{
 		return $this->operator;
 	}

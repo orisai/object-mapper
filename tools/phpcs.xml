@@ -26,6 +26,14 @@
 		<exclude-pattern>tests/Doubles/PhpVersionSpecific/ReadonlyClassVO.php</exclude-pattern>
 	</rule>
 
+	<!-- It is a constant name, not an operator -->
+	<rule ref="Squiz.Operators.ValidLogicalOperators.NotAllowed">
+		<exclude-pattern>src/Types/CompoundTypeOperator.php</exclude-pattern>
+	</rule>
+	<rule ref="Generic.PHP.LowerCaseKeyword.Found">
+		<exclude-pattern>src/Types/CompoundTypeOperator.php</exclude-pattern>
+	</rule>
+
 	<!-- Test-specific config -->
 	<rule ref="SlevomatCodingStandard.TypeHints.PropertyTypeHint.MissingNativeTypeHint">
 		<exclude-pattern>tests/Doubles/PhpVersionSpecific/UntypedVO.php</exclude-pattern>

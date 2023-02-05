@@ -8,6 +8,7 @@ use Orisai\ObjectMapper\Context\FieldContext;
 use Orisai\ObjectMapper\Context\TypeContext;
 use Orisai\ObjectMapper\Exception\ValueDoesNotMatch;
 use Orisai\ObjectMapper\Types\CompoundType;
+use Orisai\ObjectMapper\Types\CompoundTypeOperator;
 use Orisai\ObjectMapper\Types\SimpleValueType;
 use Orisai\ObjectMapper\Types\Value;
 use function is_scalar;
@@ -48,7 +49,7 @@ final class ScalarRule implements Rule
 	 */
 	public function createType(Args $args, TypeContext $context): CompoundType
 	{
-		$type = CompoundType::createOrType();
+		$type = new CompoundType(CompoundTypeOperator::or());
 
 		foreach ($this->getSubtypes() as $key => $subtype) {
 			$type->addSubtype($key, $subtype);

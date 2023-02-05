@@ -6,6 +6,7 @@ use Orisai\ObjectMapper\MappedObject;
 use Orisai\ObjectMapper\Printers\TypeToStringConverter;
 use Orisai\ObjectMapper\Printers\TypeVisualPrinter;
 use Orisai\ObjectMapper\Types\CompoundType;
+use Orisai\ObjectMapper\Types\CompoundTypeOperator;
 use Orisai\ObjectMapper\Types\EnumType;
 use Orisai\ObjectMapper\Types\GenericArrayType;
 use Orisai\ObjectMapper\Types\MappedObjectType;
@@ -100,7 +101,7 @@ final class TypeVisualPrinterTest extends TestCase
 			$this->printer->printType($type3),
 		);
 
-		$type4Key = CompoundType::createOrType();
+		$type4Key = new CompoundType(CompoundTypeOperator::or());
 		$type4Key->addSubtype(0, new SimpleValueType('string'));
 		$type4Key->addSubtype(1, new SimpleValueType('int'));
 		$type4 = GenericArrayType::forArray(
@@ -139,15 +140,15 @@ final class TypeVisualPrinterTest extends TestCase
 	public function testCompound(): void
 	{
 		//TODO - brackets
-		$subtype1 = CompoundType::createAndType();
+		$subtype1 = new CompoundType(CompoundTypeOperator::and());
 		$subtype1->addSubtype(0, new SimpleValueType('int'));
 		$subtype1->addSubtype(1, new SimpleValueType('float'));
 
-		$subtype2 = CompoundType::createAndType();
+		$subtype2 = new CompoundType(CompoundTypeOperator::and());
 		$subtype2->addSubtype(0, new SimpleValueType('foo'));
 		$subtype2->addSubtype(1, new SimpleValueType('bar'));
 
-		$type1 = CompoundType::createOrType();
+		$type1 = new CompoundType(CompoundTypeOperator::or());
 		$type1->addSubtype(0, $subtype1);
 		$type1->addSubtype(1, $subtype2);
 
