@@ -19,7 +19,7 @@ use function is_scalar;
 use function sprintf;
 
 /**
- * @phpstan-implements Rule<ArrayEnumArgs>
+ * @implements Rule<ArrayEnumArgs>
  */
 final class ArrayEnumRule implements Rule
 {

@@ -20,7 +20,7 @@ use function is_array;
 use function is_int;
 
 /**
- * @phpstan-extends MultiValueRule<MultiValueArgs>
+ * @extends MultiValueRule<MultiValueArgs>
  */
 final class ListOfRule extends MultiValueRule
 {

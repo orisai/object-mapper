@@ -13,7 +13,7 @@ use function count;
 use function sprintf;
 
 /**
- * @phpstan-implements Rule<CompoundArgs>
+ * @implements Rule<CompoundArgs>
  */
 abstract class CompoundRule implements Rule
 {

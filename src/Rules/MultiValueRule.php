@@ -3,8 +3,8 @@
 namespace Orisai\ObjectMapper\Rules;
 
 /**
- * @phpstan-template T of MultiValueArgs
- * @phpstan-implements Rule<T>
+ * @template T of MultiValueArgs
+ * @implements Rule<T>
  */
 abstract class MultiValueRule implements Rule
 {

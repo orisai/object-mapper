@@ -14,7 +14,7 @@ use function is_string;
 use function preg_match;
 
 /**
- * @phpstan-implements Rule<NullArgs>
+ * @implements Rule<NullArgs>
  */
 final class NullRule implements Rule
 {

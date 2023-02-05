@@ -25,11 +25,11 @@ final class CompoundType implements Type
 	/** @var array<WithTypeAndValue> */
 	private array $invalidSubtypes = [];
 
-	/** @phpstan-var self::Operator* */
+	/** @var self::Operator* */
 	private string $operator;
 
 	/**
-	 * @phpstan-param self::Operator* $operator
+	 * @param self::Operator* $operator
 	 */
 	private function __construct(string $operator)
 	{
@@ -140,7 +140,7 @@ final class CompoundType implements Type
 	}
 
 	/**
-	 * @phpstan-return self::Operator*
+	 * @return self::Operator*
 	 */
 	public function getOperator(): string
 	{

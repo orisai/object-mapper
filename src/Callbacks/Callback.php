@@ -14,7 +14,7 @@ use Orisai\ObjectMapper\Processing\ObjectHolder;
 use ReflectionClass;
 
 /**
- * @phpstan-template T_ARGS of Args
+ * @template T_ARGS of Args
  */
 interface Callback
 {
@@ -26,16 +26,16 @@ interface Callback
 	public static function resolveArgs(array $args, ResolverArgsContext $context): Args;
 
 	/**
-	 * @phpstan-return class-string<T_ARGS>
+	 * @return class-string<T_ARGS>
 	 */
 	public static function getArgsType(): string;
 
 	/**
 	 * @param mixed                            $data
+	 * @param T_ARGS                   $args
 	 * @param FieldContext|MappedObjectContext $context
 	 * @param ObjectHolder<MappedObject>       $holder
 	 * @param ReflectionClass<MappedObject>    $declaringClass
-	 * @phpstan-param T_ARGS                   $args
 	 * @return mixed
 	 * @throws ValueDoesNotMatch
 	 * @throws InvalidData

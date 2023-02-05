@@ -11,7 +11,7 @@ use Orisai\ObjectMapper\Exception\ValueDoesNotMatch;
 use Orisai\ObjectMapper\Types\Type;
 
 /**
- * @phpstan-template T_ARGS of Args
+ * @template T_ARGS of Args
  */
 interface Rule
 {
@@ -23,13 +23,13 @@ interface Rule
 	public function resolveArgs(array $args, RuleArgsContext $context): Args;
 
 	/**
-	 * @phpstan-return class-string<T_ARGS>
+	 * @return class-string<T_ARGS>
 	 */
 	public function getArgsType(): string;
 
 	/**
 	 * @param mixed $value
-	 * @phpstan-param T_ARGS $args
+	 * @param T_ARGS $args
 	 * @return mixed
 	 * @throws ValueDoesNotMatch Value does not match rule or rule args
 	 * @throws InvalidData Error bubbled from inner processor call
@@ -37,7 +37,7 @@ interface Rule
 	public function processValue($value, Args $args, FieldContext $context);
 
 	/**
-	 * @phpstan-param T_ARGS $args
+	 * @param T_ARGS $args
 	 */
 	public function createType(Args $args, TypeContext $context): Type;
 

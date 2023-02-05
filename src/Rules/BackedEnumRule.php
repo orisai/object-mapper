@@ -19,7 +19,7 @@ use function is_subclass_of;
 use const PHP_VERSION_ID;
 
 /**
- * @phpstan-implements Rule<BackedEnumArgs>
+ * @implements Rule<BackedEnumArgs>
  */
 final class BackedEnumRule implements Rule
 {

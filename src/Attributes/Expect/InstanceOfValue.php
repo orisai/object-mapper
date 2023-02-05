@@ -20,7 +20,7 @@ final class InstanceOfValue implements RuleAttribute
 	private string $type;
 
 	/**
-	 * @phpstan-param class-string $type
+	 * @param class-string $type
 	 */
 	public function __construct(string $type)
 	{

@@ -12,7 +12,7 @@ use Orisai\ObjectMapper\Types\Value;
 use function is_object;
 
 /**
- * @phpstan-implements Rule<EmptyArgs>
+ * @implements Rule<EmptyArgs>
  */
 final class ObjectRule implements Rule
 {

@@ -28,7 +28,7 @@ use function substr;
 use const PHP_VERSION_ID;
 
 /**
- * @phpstan-implements Rule<DateTimeArgs>
+ * @implements Rule<DateTimeArgs>
  */
 final class DateTimeRule implements Rule
 {

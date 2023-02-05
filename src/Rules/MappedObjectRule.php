@@ -20,7 +20,7 @@ use function in_array;
 use function is_a;
 
 /**
- * @phpstan-implements Rule<MappedObjectArgs>
+ * @implements Rule<MappedObjectArgs>
  */
 final class MappedObjectRule implements Rule
 {

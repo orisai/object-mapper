@@ -13,7 +13,7 @@ use function is_string;
 use function parse_url;
 
 /**
- * @phpstan-implements Rule<EmptyArgs>
+ * @implements Rule<EmptyArgs>
  */
 final class UrlRule implements Rule
 {

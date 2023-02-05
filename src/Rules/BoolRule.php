@@ -16,7 +16,7 @@ use function is_string;
 use function strtolower;
 
 /**
- * @phpstan-implements Rule<BoolArgs>
+ * @implements Rule<BoolArgs>
  */
 final class BoolRule implements Rule
 {

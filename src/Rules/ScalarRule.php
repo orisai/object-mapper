@@ -13,7 +13,7 @@ use Orisai\ObjectMapper\Types\Value;
 use function is_scalar;
 
 /**
- * @phpstan-implements Rule<EmptyArgs>
+ * @implements Rule<EmptyArgs>
  */
 final class ScalarRule implements Rule
 {

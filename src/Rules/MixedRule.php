@@ -9,7 +9,7 @@ use Orisai\ObjectMapper\Context\TypeContext;
 use Orisai\ObjectMapper\Types\SimpleValueType;
 
 /**
- * @phpstan-implements Rule<EmptyArgs>
+ * @implements Rule<EmptyArgs>
  */
 final class MixedRule implements Rule
 {

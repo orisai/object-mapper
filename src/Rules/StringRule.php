@@ -15,7 +15,7 @@ use function mb_strlen;
 use function preg_match;
 
 /**
- * @phpstan-implements Rule<StringArgs>
+ * @implements Rule<StringArgs>
  */
 final class StringRule implements Rule
 {

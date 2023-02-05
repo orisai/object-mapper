@@ -19,7 +19,7 @@ use function sprintf;
 use function str_replace;
 
 /**
- * @phpstan-implements Rule<FloatArgs>
+ * @implements Rule<FloatArgs>
  */
 final class FloatRule implements Rule
 {
