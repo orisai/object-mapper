@@ -5,9 +5,9 @@ namespace Tests\Orisai\ObjectMapper\Unit\Printers;
 use Orisai\ObjectMapper\Exception\InvalidData;
 use Orisai\ObjectMapper\Printers\ErrorVisualPrinter;
 use Orisai\ObjectMapper\Printers\TypeToStringConverter;
-use Orisai\ObjectMapper\Types\ArrayType;
 use Orisai\ObjectMapper\Types\CompoundType;
 use Orisai\ObjectMapper\Types\EnumType;
+use Orisai\ObjectMapper\Types\GenericArrayType;
 use Orisai\ObjectMapper\Types\MappedObjectType;
 use Orisai\ObjectMapper\Types\MessageType;
 use Orisai\ObjectMapper\Types\SimpleValueType;
@@ -83,7 +83,7 @@ final class ErrorVisualPrinterToStringTest extends ErrorVisualPrinterBaseTestCas
 	/**
 	 * @dataProvider \Orisai\ObjectMapper\Tester\TypesTestProvider::provideArrayType
 	 */
-	public function testArray(ArrayType $type1): void
+	public function testArray(GenericArrayType $type1): void
 	{
 		self::assertSame(
 			'array',
@@ -94,7 +94,7 @@ final class ErrorVisualPrinterToStringTest extends ErrorVisualPrinterBaseTestCas
 	/**
 	 * @dataProvider \Orisai\ObjectMapper\Tester\TypesTestProvider::provideArrayTypeInvalid
 	 */
-	public function testArrayInvalid(ArrayType $type2): void
+	public function testArrayInvalid(GenericArrayType $type2): void
 	{
 		self::assertSame(
 			'array<test(parameter)>',
@@ -105,7 +105,7 @@ final class ErrorVisualPrinterToStringTest extends ErrorVisualPrinterBaseTestCas
 	/**
 	 * @dataProvider \Orisai\ObjectMapper\Tester\TypesTestProvider::provideArrayTypeSimpleInvalid
 	 */
-	public function testArraySimpleInvalid(ArrayType $type3): void
+	public function testArraySimpleInvalid(GenericArrayType $type3): void
 	{
 		self::assertSame(
 			'array<string, test>',
@@ -116,7 +116,7 @@ final class ErrorVisualPrinterToStringTest extends ErrorVisualPrinterBaseTestCas
 	/**
 	 * @dataProvider \Orisai\ObjectMapper\Tester\TypesTestProvider::provideArrayTypeSimpleInvalidWithParameters
 	 */
-	public function testArraySimpleInvalidWithParameters(ArrayType $type4): void
+	public function testArraySimpleInvalidWithParameters(GenericArrayType $type4): void
 	{
 		self::assertSame(
 			"array(foo: 'bar', baz: 123)<string, test>",
@@ -127,7 +127,7 @@ final class ErrorVisualPrinterToStringTest extends ErrorVisualPrinterBaseTestCas
 	/**
 	 * @dataProvider \Orisai\ObjectMapper\Tester\TypesTestProvider::provideArrayTypeCompoundInvalid
 	 */
-	public function testArrayTypeCompoundInvalid(ArrayType $type5): void
+	public function testArrayTypeCompoundInvalid(GenericArrayType $type5): void
 	{
 		self::assertSame(
 			'array<string||int, array<string, test>>',
@@ -138,7 +138,7 @@ final class ErrorVisualPrinterToStringTest extends ErrorVisualPrinterBaseTestCas
 	/**
 	 * @dataProvider \Orisai\ObjectMapper\Tester\TypesTestProvider::provideArrayTypeSimpleInvalidWithInvalidParameters
 	 */
-	public function testArrayTypeSimpleInvalidWithInvalidParameters(ArrayType $type): void
+	public function testArrayTypeSimpleInvalidWithInvalidParameters(GenericArrayType $type): void
 	{
 		self::assertSame(
 			"array(first: 'value', second)",
@@ -149,7 +149,7 @@ final class ErrorVisualPrinterToStringTest extends ErrorVisualPrinterBaseTestCas
 	/**
 	 * @dataProvider \Orisai\ObjectMapper\Tester\TypesTestProvider::provideArrayTypeInvalidPairs
 	 */
-	public function testArrayTypeInvalidPairs(ArrayType $type): void
+	public function testArrayTypeInvalidPairs(GenericArrayType $type): void
 	{
 		self::assertSame(
 			"array[
@@ -164,7 +164,7 @@ final class ErrorVisualPrinterToStringTest extends ErrorVisualPrinterBaseTestCas
 	/**
 	 * @dataProvider \Orisai\ObjectMapper\Tester\TypesTestProvider::provideListType
 	 */
-	public function testListType(ArrayType $type): void
+	public function testListType(GenericArrayType $type): void
 	{
 		self::assertSame(
 			'list',
@@ -175,7 +175,7 @@ final class ErrorVisualPrinterToStringTest extends ErrorVisualPrinterBaseTestCas
 	/**
 	 * @dataProvider \Orisai\ObjectMapper\Tester\TypesTestProvider::provideListTypeInvalid
 	 */
-	public function testListTypeInvalid(ArrayType $type): void
+	public function testListTypeInvalid(GenericArrayType $type): void
 	{
 		self::assertSame(
 			'list<string>',
@@ -186,7 +186,7 @@ final class ErrorVisualPrinterToStringTest extends ErrorVisualPrinterBaseTestCas
 	/**
 	 * @dataProvider \Orisai\ObjectMapper\Tester\TypesTestProvider::provideListTypeInvalidWithParameter
 	 */
-	public function testListTypeInvalidWithParameter(ArrayType $type): void
+	public function testListTypeInvalidWithParameter(GenericArrayType $type): void
 	{
 		self::assertSame(
 			"list(foo: 'bar')<string>",
@@ -197,7 +197,7 @@ final class ErrorVisualPrinterToStringTest extends ErrorVisualPrinterBaseTestCas
 	/**
 	 * @dataProvider \Orisai\ObjectMapper\Tester\TypesTestProvider::provideListTypeInvalidWithInvalidParameter
 	 */
-	public function testListTypeInvalidWithInvalidParameter(ArrayType $type): void
+	public function testListTypeInvalidWithInvalidParameter(GenericArrayType $type): void
 	{
 		self::assertSame(
 			"list(foo: 'bar')",
@@ -208,7 +208,7 @@ final class ErrorVisualPrinterToStringTest extends ErrorVisualPrinterBaseTestCas
 	/**
 	 * @dataProvider \Orisai\ObjectMapper\Tester\TypesTestProvider::provideListTypeWithInvalidValues
 	 */
-	public function testListTypeWithInvalidValues(ArrayType $type): void
+	public function testListTypeWithInvalidValues(GenericArrayType $type): void
 	{
 		self::assertSame(
 			'list[

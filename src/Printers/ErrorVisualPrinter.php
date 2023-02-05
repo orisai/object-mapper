@@ -5,9 +5,9 @@ namespace Orisai\ObjectMapper\Printers;
 use Orisai\Exceptions\Logic\InvalidArgument;
 use Orisai\ObjectMapper\Exception\InvalidData;
 use Orisai\ObjectMapper\Types\ArrayShapeType;
-use Orisai\ObjectMapper\Types\ArrayType;
 use Orisai\ObjectMapper\Types\CompoundType;
 use Orisai\ObjectMapper\Types\EnumType;
+use Orisai\ObjectMapper\Types\GenericArrayType;
 use Orisai\ObjectMapper\Types\MessageType;
 use Orisai\ObjectMapper\Types\ParametrizedType;
 use Orisai\ObjectMapper\Types\SimpleValueType;
@@ -81,7 +81,7 @@ final class ErrorVisualPrinter implements ErrorPrinter, TypePrinter
 			return $this->printCompoundType($type, $scope);
 		}
 
-		if ($type instanceof ArrayType) {
+		if ($type instanceof GenericArrayType) {
 			return $this->printArrayType($type, $scope);
 		}
 
@@ -186,7 +186,7 @@ final class ErrorVisualPrinter implements ErrorPrinter, TypePrinter
 	/**
 	 * @return T
 	 */
-	private function printArrayType(ArrayType $type, PrinterScope $scope)
+	private function printArrayType(GenericArrayType $type, PrinterScope $scope)
 	{
 		$keyType = $type->getKeyType();
 		$itemType = $type->getItemType();
@@ -232,7 +232,7 @@ final class ErrorVisualPrinter implements ErrorPrinter, TypePrinter
 	/**
 	 * @return array<int|string, TypeParameter>
 	 */
-	private function getArrayTypeParameters(ArrayType $type, PrinterScope $scope): array
+	private function getArrayTypeParameters(GenericArrayType $type, PrinterScope $scope): array
 	{
 		$parametersScope = $type->isInvalid() || $scope->shouldRenderValid()
 			? $scope->withValidNodes()

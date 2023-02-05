@@ -4,9 +4,9 @@ namespace Orisai\ObjectMapper\Printers;
 
 use Orisai\Exceptions\Logic\InvalidArgument;
 use Orisai\ObjectMapper\Types\ArrayShapeType;
-use Orisai\ObjectMapper\Types\ArrayType;
 use Orisai\ObjectMapper\Types\CompoundType;
 use Orisai\ObjectMapper\Types\EnumType;
+use Orisai\ObjectMapper\Types\GenericArrayType;
 use Orisai\ObjectMapper\Types\MessageType;
 use Orisai\ObjectMapper\Types\ParametrizedType;
 use Orisai\ObjectMapper\Types\SimpleValueType;
@@ -50,7 +50,7 @@ final class TypeVisualPrinter implements TypePrinter
 			return $this->printCompoundType($type);
 		}
 
-		if ($type instanceof ArrayType) {
+		if ($type instanceof GenericArrayType) {
 			return $this->printArrayType($type);
 		}
 
@@ -107,7 +107,7 @@ final class TypeVisualPrinter implements TypePrinter
 	/**
 	 * @return T
 	 */
-	private function printArrayType(ArrayType $type)
+	private function printArrayType(GenericArrayType $type)
 	{
 		$keyType = $type->getKeyType();
 		$printedKeyType = $keyType !== null ? $this->print($keyType) : null;

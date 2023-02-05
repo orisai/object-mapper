@@ -12,7 +12,7 @@ use Orisai\ObjectMapper\Rules\ArrayOfRule;
 use Orisai\ObjectMapper\Rules\MixedRule;
 use Orisai\ObjectMapper\Rules\StringArgs;
 use Orisai\ObjectMapper\Rules\StringRule;
-use Orisai\ObjectMapper\Types\ArrayType;
+use Orisai\ObjectMapper\Types\GenericArrayType;
 use Orisai\ObjectMapper\Types\SimpleValueType;
 use Tests\Orisai\ObjectMapper\Doubles\AlwaysInvalidRule;
 use Tests\Orisai\ObjectMapper\Toolkit\ProcessingTestCase;
@@ -99,7 +99,7 @@ final class ArrayOfRuleTest extends ProcessingTestCase
 			);
 		} catch (ValueDoesNotMatch $exception) {
 			$type = $exception->getType();
-			self::assertInstanceOf(ArrayType::class, $type);
+			self::assertInstanceOf(GenericArrayType::class, $type);
 
 			self::assertTrue($type->isInvalid());
 			self::assertSame($value, $exception->getValue()->get());
@@ -125,7 +125,7 @@ final class ArrayOfRuleTest extends ProcessingTestCase
 			);
 		} catch (ValueDoesNotMatch $exception) {
 			$type = $exception->getType();
-			self::assertInstanceOf(ArrayType::class, $type);
+			self::assertInstanceOf(GenericArrayType::class, $type);
 
 			self::assertFalse($type->isInvalid());
 			self::assertSame($value, $exception->getValue()->get());
@@ -169,7 +169,7 @@ final class ArrayOfRuleTest extends ProcessingTestCase
 			);
 		} catch (ValueDoesNotMatch $exception) {
 			$type = $exception->getType();
-			self::assertInstanceOf(ArrayType::class, $type);
+			self::assertInstanceOf(GenericArrayType::class, $type);
 
 			self::assertFalse($type->isInvalid());
 			self::assertFalse($type->hasParameter(ArrayOfRule::MinItems));
@@ -196,7 +196,7 @@ final class ArrayOfRuleTest extends ProcessingTestCase
 			);
 		} catch (ValueDoesNotMatch $exception) {
 			$type = $exception->getType();
-			self::assertInstanceOf(ArrayType::class, $type);
+			self::assertInstanceOf(GenericArrayType::class, $type);
 
 			self::assertFalse($type->isInvalid());
 			self::assertFalse($type->hasInvalidParameters());

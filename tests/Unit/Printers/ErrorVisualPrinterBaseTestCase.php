@@ -4,9 +4,9 @@ namespace Tests\Orisai\ObjectMapper\Unit\Printers;
 
 use Orisai\ObjectMapper\Printers\ErrorVisualPrinter;
 use Orisai\ObjectMapper\Printers\TypeToPrimitiveConverter;
-use Orisai\ObjectMapper\Types\ArrayType;
 use Orisai\ObjectMapper\Types\CompoundType;
 use Orisai\ObjectMapper\Types\EnumType;
+use Orisai\ObjectMapper\Types\GenericArrayType;
 use Orisai\ObjectMapper\Types\MappedObjectType;
 use Orisai\ObjectMapper\Types\MessageType;
 use Orisai\ObjectMapper\Types\SimpleValueType;
@@ -33,29 +33,29 @@ abstract class ErrorVisualPrinterBaseTestCase extends TestCase
 
 	abstract public function testEnum(EnumType $type): void;
 
-	abstract public function testArray(ArrayType $type): void;
+	abstract public function testArray(GenericArrayType $type): void;
 
-	abstract public function testArrayInvalid(ArrayType $type): void;
+	abstract public function testArrayInvalid(GenericArrayType $type): void;
 
-	abstract public function testArraySimpleInvalid(ArrayType $type): void;
+	abstract public function testArraySimpleInvalid(GenericArrayType $type): void;
 
-	abstract public function testArraySimpleInvalidWithParameters(ArrayType $type): void;
+	abstract public function testArraySimpleInvalidWithParameters(GenericArrayType $type): void;
 
-	abstract public function testArrayTypeCompoundInvalid(ArrayType $type): void;
+	abstract public function testArrayTypeCompoundInvalid(GenericArrayType $type): void;
 
-	abstract public function testArrayTypeSimpleInvalidWithInvalidParameters(ArrayType $type): void;
+	abstract public function testArrayTypeSimpleInvalidWithInvalidParameters(GenericArrayType $type): void;
 
-	abstract public function testArrayTypeInvalidPairs(ArrayType $type): void;
+	abstract public function testArrayTypeInvalidPairs(GenericArrayType $type): void;
 
-	abstract public function testListType(ArrayType $type): void;
+	abstract public function testListType(GenericArrayType $type): void;
 
-	abstract public function testListTypeInvalid(ArrayType $type): void;
+	abstract public function testListTypeInvalid(GenericArrayType $type): void;
 
-	abstract public function testListTypeInvalidWithParameter(ArrayType $type): void;
+	abstract public function testListTypeInvalidWithParameter(GenericArrayType $type): void;
 
-	abstract public function testListTypeInvalidWithInvalidParameter(ArrayType $type): void;
+	abstract public function testListTypeInvalidWithInvalidParameter(GenericArrayType $type): void;
 
-	abstract public function testListTypeWithInvalidValues(ArrayType $type): void;
+	abstract public function testListTypeWithInvalidValues(GenericArrayType $type): void;
 
 	abstract public function testCompoundTypeOverwriteSubtype(CompoundType $type): void;
 

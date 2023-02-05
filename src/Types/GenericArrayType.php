@@ -5,7 +5,7 @@ namespace Orisai\ObjectMapper\Types;
 use Orisai\Exceptions\Logic\InvalidArgument;
 use Orisai\ObjectMapper\Exception\WithTypeAndValue;
 
-final class ArrayType extends ParametrizedType
+final class GenericArrayType extends ParametrizedType
 {
 
 	private string $name;

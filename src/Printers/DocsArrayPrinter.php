@@ -5,8 +5,8 @@ namespace Orisai\ObjectMapper\Printers;
 use Orisai\ObjectMapper\Meta\MetaLoader;
 use Orisai\ObjectMapper\Meta\Runtime\NodeRuntimeMeta;
 use Orisai\ObjectMapper\Types\ArrayShapeType;
-use Orisai\ObjectMapper\Types\ArrayType;
 use Orisai\ObjectMapper\Types\CompoundType;
+use Orisai\ObjectMapper\Types\GenericArrayType;
 use Orisai\ObjectMapper\Types\MappedObjectType;
 use Orisai\ObjectMapper\Types\Type;
 use function array_key_exists;
@@ -52,7 +52,7 @@ final class DocsArrayPrinter implements MappedObjectPrinter
 			return $this->printArrayShapeType($type);
 		}
 
-		if ($type instanceof ArrayType) {
+		if ($type instanceof GenericArrayType) {
 			return $this->printArrayType($type);
 		}
 
@@ -153,7 +153,7 @@ final class DocsArrayPrinter implements MappedObjectPrinter
 	/**
 	 * @return array<mixed>
 	 */
-	private function printArrayType(ArrayType $type): array
+	private function printArrayType(GenericArrayType $type): array
 	{
 		$keyType = $type->getKeyType();
 
@@ -182,7 +182,7 @@ final class DocsArrayPrinter implements MappedObjectPrinter
 				return true;
 			}
 
-			if ($subtype instanceof ArrayType && $this->isMultiValueContainingMappedObject($subtype)) {
+			if ($subtype instanceof GenericArrayType && $this->isMultiValueContainingMappedObject($subtype)) {
 				return true;
 			}
 		}
@@ -190,7 +190,7 @@ final class DocsArrayPrinter implements MappedObjectPrinter
 		return false;
 	}
 
-	private function isMultiValueContainingMappedObject(ArrayType $type): bool
+	private function isMultiValueContainingMappedObject(GenericArrayType $type): bool
 	{
 		$item = $type->getItemType();
 

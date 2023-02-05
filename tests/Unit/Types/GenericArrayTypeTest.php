@@ -4,20 +4,20 @@ namespace Tests\Orisai\ObjectMapper\Unit\Types;
 
 use Orisai\Exceptions\Logic\InvalidArgument;
 use Orisai\ObjectMapper\Exception\ValueDoesNotMatch;
-use Orisai\ObjectMapper\Types\ArrayType;
+use Orisai\ObjectMapper\Types\GenericArrayType;
 use Orisai\ObjectMapper\Types\MessageType;
 use Orisai\ObjectMapper\Types\Value;
 use PHPUnit\Framework\TestCase;
 
-final class ArrayTypeTest extends TestCase
+final class GenericArrayTypeTest extends TestCase
 {
 
 	public function testName(): void
 	{
-		$type = ArrayType::forArray(null, new MessageType('test'));
+		$type = GenericArrayType::forArray(null, new MessageType('test'));
 		self::assertSame('array', $type->getName());
 
-		$type = ArrayType::forList(null, new MessageType('test'));
+		$type = GenericArrayType::forList(null, new MessageType('test'));
 		self::assertSame('list', $type->getName());
 	}
 
@@ -25,7 +25,7 @@ final class ArrayTypeTest extends TestCase
 	{
 		$keyType = new MessageType('test');
 		$itemType = new MessageType('test');
-		$type = ArrayType::forArray($keyType, $itemType);
+		$type = GenericArrayType::forArray($keyType, $itemType);
 
 		self::assertSame($itemType, $type->getItemType());
 		self::assertSame($keyType, $type->getKeyType());
@@ -34,7 +34,7 @@ final class ArrayTypeTest extends TestCase
 	public function testInvalidPairs(): void
 	{
 		$itemType = new MessageType('test');
-		$type = ArrayType::forArray(null, $itemType);
+		$type = GenericArrayType::forArray(null, $itemType);
 
 		self::assertSame($itemType, $type->getItemType());
 		self::assertNull($type->getKeyType());
@@ -77,7 +77,7 @@ final class ArrayTypeTest extends TestCase
 	public function testInvalidKeyThenValue(): void
 	{
 		$itemType = new MessageType('test');
-		$type = ArrayType::forArray(null, $itemType);
+		$type = GenericArrayType::forArray(null, $itemType);
 
 		$invalidKey = ValueDoesNotMatch::create(new MessageType('test'), Value::none());
 		$type->addInvalidKey(1, $invalidKey);
@@ -97,7 +97,7 @@ final class ArrayTypeTest extends TestCase
 	public function testInvalidValueThenKey(): void
 	{
 		$itemType = new MessageType('test');
-		$type = ArrayType::forArray(null, $itemType);
+		$type = GenericArrayType::forArray(null, $itemType);
 
 		$invalidValue = ValueDoesNotMatch::create(new MessageType('test'), Value::none());
 		$type->addInvalidValue(1, $invalidValue);
@@ -119,7 +119,7 @@ final class ArrayTypeTest extends TestCase
 		$this->expectException(InvalidArgument::class);
 		$this->expectExceptionMessage('At least one of key type and item type of invalid pair should not be null');
 
-		$type = ArrayType::forArray(null, new MessageType('test'));
+		$type = GenericArrayType::forArray(null, new MessageType('test'));
 		$type->addInvalidPair(123, null, null);
 	}
 

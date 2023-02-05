@@ -5,9 +5,9 @@ namespace Orisai\ObjectMapper\Tester;
 use Generator;
 use Orisai\ObjectMapper\Exception\ValueDoesNotMatch;
 use Orisai\ObjectMapper\MappedObject;
-use Orisai\ObjectMapper\Types\ArrayType;
 use Orisai\ObjectMapper\Types\CompoundType;
 use Orisai\ObjectMapper\Types\EnumType;
+use Orisai\ObjectMapper\Types\GenericArrayType;
 use Orisai\ObjectMapper\Types\MappedObjectType;
 use Orisai\ObjectMapper\Types\MessageType;
 use Orisai\ObjectMapper\Types\SimpleValueType;
@@ -65,7 +65,7 @@ final class TypesTestProvider
 
 	public static function provideArrayType(): Generator
 	{
-		$type = ArrayType::forArray(new SimpleValueType('string'), new SimpleValueType('test'));
+		$type = GenericArrayType::forArray(new SimpleValueType('string'), new SimpleValueType('test'));
 
 		yield [$type];
 	}
@@ -74,7 +74,7 @@ final class TypesTestProvider
 	{
 		$typeValue = new SimpleValueType('test');
 		$typeValue->addKeyParameter('parameter');
-		$type = ArrayType::forArray(null, $typeValue);
+		$type = GenericArrayType::forArray(null, $typeValue);
 		$type->markInvalid();
 
 		yield [$type];
@@ -82,7 +82,7 @@ final class TypesTestProvider
 
 	public static function provideArrayTypeSimpleInvalid(): Generator
 	{
-		$type = ArrayType::forArray(new SimpleValueType('string'), new SimpleValueType('test'));
+		$type = GenericArrayType::forArray(new SimpleValueType('string'), new SimpleValueType('test'));
 		$type->markInvalid();
 
 		yield [$type];
@@ -90,7 +90,7 @@ final class TypesTestProvider
 
 	public static function provideArrayTypeSimpleInvalidWithParameters(): Generator
 	{
-		$type = ArrayType::forArray(new SimpleValueType('string'), new SimpleValueType('test'));
+		$type = GenericArrayType::forArray(new SimpleValueType('string'), new SimpleValueType('test'));
 		$type->addKeyValueParameter('foo', 'bar');
 		$type->addKeyValueParameter('baz', 123);
 		$type->markInvalid();
@@ -100,7 +100,7 @@ final class TypesTestProvider
 
 	public static function provideArrayTypeSimpleInvalidWithInvalidParameters(): Generator
 	{
-		$type = ArrayType::forArray(new SimpleValueType('string'), new SimpleValueType('int'));
+		$type = GenericArrayType::forArray(new SimpleValueType('string'), new SimpleValueType('int'));
 		$type->addKeyValueParameter('first', 'value');
 		$type->addKeyParameter('second');
 		$type->addKeyParameter('third');
@@ -115,10 +115,10 @@ final class TypesTestProvider
 		$typeKey = CompoundType::createOrType();
 		$typeKey->addSubtype(0, new SimpleValueType('string'));
 		$typeKey->addSubtype(1, new SimpleValueType('int'));
-		$typeValue = ArrayType::forArray(new SimpleValueType('string'), new SimpleValueType('test'));
+		$typeValue = GenericArrayType::forArray(new SimpleValueType('string'), new SimpleValueType('test'));
 		$typeValue->markInvalid();
 
-		$type = ArrayType::forArray($typeKey, $typeValue);
+		$type = GenericArrayType::forArray($typeKey, $typeValue);
 		$type->markInvalid();
 
 		yield [$type];
@@ -126,7 +126,7 @@ final class TypesTestProvider
 
 	public static function provideArrayTypeInvalidPairs(): Generator
 	{
-		$type = ArrayType::forArray(new SimpleValueType('string'), new SimpleValueType('int'));
+		$type = GenericArrayType::forArray(new SimpleValueType('string'), new SimpleValueType('int'));
 		$type->addKeyValueParameter('first', 'value');
 		$type->addKeyParameter('second');
 		$type->addKeyParameter('third');
@@ -164,14 +164,14 @@ final class TypesTestProvider
 
 	public static function provideListType(): Generator
 	{
-		$type = ArrayType::forList(null, new SimpleValueType('string'));
+		$type = GenericArrayType::forList(null, new SimpleValueType('string'));
 
 		yield [$type];
 	}
 
 	public static function provideListTypeInvalid(): Generator
 	{
-		$type = ArrayType::forList(null, new SimpleValueType('string'));
+		$type = GenericArrayType::forList(null, new SimpleValueType('string'));
 		$type->markInvalid();
 
 		yield [$type];
@@ -179,7 +179,7 @@ final class TypesTestProvider
 
 	public static function provideListTypeInvalidWithParameter(): Generator
 	{
-		$type = ArrayType::forList(null, new SimpleValueType('string'));
+		$type = GenericArrayType::forList(null, new SimpleValueType('string'));
 		$type->addKeyValueParameter('foo', 'bar');
 		$type->markInvalid();
 
@@ -188,7 +188,7 @@ final class TypesTestProvider
 
 	public static function provideListTypeInvalidWithInvalidParameter(): Generator
 	{
-		$type = ArrayType::forList(null, new SimpleValueType('string'));
+		$type = GenericArrayType::forList(null, new SimpleValueType('string'));
 		$type->addKeyValueParameter('foo', 'bar');
 		$type->markParameterInvalid('foo');
 
@@ -197,7 +197,7 @@ final class TypesTestProvider
 
 	public static function provideListTypeWithInvalidValues(): Generator
 	{
-		$type = ArrayType::forList(null, new SimpleValueType('string'));
+		$type = GenericArrayType::forList(null, new SimpleValueType('string'));
 		$type->addInvalidValue(
 			0,
 			ValueDoesNotMatch::create(new SimpleValueType('string'), Value::none()),

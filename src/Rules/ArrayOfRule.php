@@ -10,7 +10,7 @@ use Orisai\ObjectMapper\Context\TypeContext;
 use Orisai\ObjectMapper\Exception\InvalidData;
 use Orisai\ObjectMapper\Exception\ValueDoesNotMatch;
 use Orisai\ObjectMapper\Meta\Compile\RuleCompileMeta;
-use Orisai\ObjectMapper\Types\ArrayType;
+use Orisai\ObjectMapper\Types\GenericArrayType;
 use Orisai\ObjectMapper\Types\Value;
 use Orisai\Utils\Arrays\ArrayMerger;
 use function array_values;
@@ -206,7 +206,7 @@ final class ArrayOfRule extends MultiValueRule
 	/**
 	 * @param ArrayOfArgs $args
 	 */
-	public function createType(Args $args, TypeContext $context): ArrayType
+	public function createType(Args $args, TypeContext $context): GenericArrayType
 	{
 		$itemMeta = $args->itemRuleMeta;
 		$itemRule = $context->getRule($itemMeta->getType());
@@ -219,7 +219,7 @@ final class ArrayOfRule extends MultiValueRule
 			$keyType = $keyRule->createType($keyArgs, $context->createClone());
 		}
 
-		$type = ArrayType::forArray(
+		$type = GenericArrayType::forArray(
 			$keyType ?? null,
 			$itemRule->createType($itemArgs, $context->createClone()),
 		);

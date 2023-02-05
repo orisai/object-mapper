@@ -5,9 +5,9 @@ namespace Tests\Orisai\ObjectMapper\Unit\Printers;
 use Orisai\ObjectMapper\MappedObject;
 use Orisai\ObjectMapper\Printers\TypeToStringConverter;
 use Orisai\ObjectMapper\Printers\TypeVisualPrinter;
-use Orisai\ObjectMapper\Types\ArrayType;
 use Orisai\ObjectMapper\Types\CompoundType;
 use Orisai\ObjectMapper\Types\EnumType;
+use Orisai\ObjectMapper\Types\GenericArrayType;
 use Orisai\ObjectMapper\Types\MappedObjectType;
 use Orisai\ObjectMapper\Types\MessageType;
 use Orisai\ObjectMapper\Types\SimpleValueType;
@@ -77,21 +77,21 @@ final class TypeVisualPrinterTest extends TestCase
 	{
 		$type1Value = new SimpleValueType('test');
 		$type1Value->addKeyParameter('parameter');
-		$type1 = ArrayType::forArray(null, $type1Value);
+		$type1 = GenericArrayType::forArray(null, $type1Value);
 
 		self::assertSame(
 			'array<test(parameter)>',
 			$this->printer->printType($type1),
 		);
 
-		$type2 = ArrayType::forArray(new SimpleValueType('string'), new SimpleValueType('test'));
+		$type2 = GenericArrayType::forArray(new SimpleValueType('string'), new SimpleValueType('test'));
 
 		self::assertSame(
 			'array<string, test>',
 			$this->printer->printType($type2),
 		);
 
-		$type3 = ArrayType::forArray(new SimpleValueType('string'), new SimpleValueType('test'));
+		$type3 = GenericArrayType::forArray(new SimpleValueType('string'), new SimpleValueType('test'));
 		$type3->addKeyValueParameter('foo', 'bar');
 		$type3->addKeyValueParameter('baz', 123);
 
@@ -103,9 +103,9 @@ final class TypeVisualPrinterTest extends TestCase
 		$type4Key = CompoundType::createOrType();
 		$type4Key->addSubtype(0, new SimpleValueType('string'));
 		$type4Key->addSubtype(1, new SimpleValueType('int'));
-		$type4 = ArrayType::forArray(
+		$type4 = GenericArrayType::forArray(
 			$type4Key,
-			ArrayType::forArray(new SimpleValueType('string'), new SimpleValueType('test')),
+			GenericArrayType::forArray(new SimpleValueType('string'), new SimpleValueType('test')),
 		);
 
 		self::assertSame(
@@ -120,14 +120,14 @@ final class TypeVisualPrinterTest extends TestCase
 
 	public function testList(): void
 	{
-		$type1 = ArrayType::forList(null, new SimpleValueType('string'));
+		$type1 = GenericArrayType::forList(null, new SimpleValueType('string'));
 
 		self::assertSame(
 			'list<string>',
 			$this->printer->printType($type1),
 		);
 
-		$type2 = ArrayType::forList(null, new SimpleValueType('string'));
+		$type2 = GenericArrayType::forList(null, new SimpleValueType('string'));
 		$type2->addKeyValueParameter('foo', 'bar');
 
 		self::assertSame(

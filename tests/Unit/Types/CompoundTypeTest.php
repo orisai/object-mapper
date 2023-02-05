@@ -4,8 +4,8 @@ namespace Tests\Orisai\ObjectMapper\Unit\Types;
 
 use Orisai\Exceptions\Logic\InvalidState;
 use Orisai\ObjectMapper\Exception\ValueDoesNotMatch;
-use Orisai\ObjectMapper\Types\ArrayType;
 use Orisai\ObjectMapper\Types\CompoundType;
+use Orisai\ObjectMapper\Types\GenericArrayType;
 use Orisai\ObjectMapper\Types\MessageType;
 use Orisai\ObjectMapper\Types\SimpleValueType;
 use Orisai\ObjectMapper\Types\Value;
@@ -38,7 +38,7 @@ final class CompoundTypeTest extends TestCase
 		$type->addSubtype(2, $subtype2);
 
 		$key3 = 3;
-		$subtype3 = ArrayType::forArray(null, new SimpleValueType('string'));
+		$subtype3 = GenericArrayType::forArray(null, new SimpleValueType('string'));
 		$type->addSubtype(3, $subtype3);
 
 		self::assertSame(
