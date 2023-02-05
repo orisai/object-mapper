@@ -131,6 +131,7 @@ try {
 	$user = $processor->process($data, UserInput::class);
 } catch (InvalidData $exception) {
 	$error = $errorPrinter->printError($exception);
+
 	throw new Exception("Validation failed due to following error:\n$error");
 }
 
@@ -151,6 +152,7 @@ try {
 	$object = $processor->process($data, $objectClass); // instance of $objectClass
 } catch (InvalidData $exception) {
 	$error = $errorPrinter->printError($exception);
+
 	throw new Exception("Validation failed due to following error:\n$error");
 }
 ```

@@ -89,6 +89,7 @@ try {
 	$user = $processor->process($data, UserInput::class);
 } catch (InvalidData $exception) {
 	$error = $errorPrinter->printError($exception);
+
 	throw new Exception("Validation failed due to following error:\n$error");
 }
 
