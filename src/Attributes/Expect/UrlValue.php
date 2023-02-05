@@ -13,7 +13,7 @@ use Orisai\ObjectMapper\Rules\UrlRule;
  * @Target({"PROPERTY", "ANNOTATION"})
  */
 #[Attribute(Attribute::TARGET_PROPERTY)]
-final class Url implements RuleAttribute
+final class UrlValue implements RuleAttribute
 {
 
 	public function getType(): string

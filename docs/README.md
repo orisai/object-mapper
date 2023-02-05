@@ -614,7 +614,7 @@ Expects all rules to match
 ```php
 use Orisai\ObjectMapper\Attributes\Expect\AllOf;
 use Orisai\ObjectMapper\Attributes\Expect\StringValue;
-use Orisai\ObjectMapper\Attributes\Expect\Url;
+use Orisai\ObjectMapper\Attributes\Expect\UrlValue;
 use Orisai\ObjectMapper\MappedObject;
 
 final class AllOfInput implements MappedObject
@@ -1003,13 +1003,13 @@ Parameters:
 Expects valid url address
 
 ```php
-use Orisai\ObjectMapper\Attributes\Expect\Url;
+use Orisai\ObjectMapper\Attributes\Expect\UrlValue;
 use Orisai\ObjectMapper\MappedObject;
 
 final class UrlInput implements MappedObject
 {
 
-    /** @Url() */
+    /** @UrlValue() */
     public string $field;
 
 }
