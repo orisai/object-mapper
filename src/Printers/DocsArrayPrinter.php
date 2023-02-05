@@ -4,6 +4,7 @@ namespace Orisai\ObjectMapper\Printers;
 
 use Orisai\ObjectMapper\Meta\MetaLoader;
 use Orisai\ObjectMapper\Meta\Runtime\NodeRuntimeMeta;
+use Orisai\ObjectMapper\Types\ArrayShapeType;
 use Orisai\ObjectMapper\Types\ArrayType;
 use Orisai\ObjectMapper\Types\CompoundType;
 use Orisai\ObjectMapper\Types\MappedObjectType;
@@ -47,8 +48,12 @@ final class DocsArrayPrinter implements MappedObjectPrinter
 			return $this->printMappedObjectType($type);
 		}
 
+		if ($type instanceof ArrayShapeType) {
+			return $this->printArrayShapeType($type);
+		}
+
 		if ($type instanceof ArrayType) {
-			return $this->printMultiType($type);
+			return $this->printArrayType($type);
 		}
 
 		if ($type instanceof CompoundType) {
@@ -95,10 +100,25 @@ final class DocsArrayPrinter implements MappedObjectPrinter
 	/**
 	 * @return array<mixed>
 	 */
+	private function printArrayShapeType(ArrayShapeType $type): array
+	{
+		$fields = [];
+		foreach ($type->getFields() as $fieldName => $fieldType) {
+			$fields[$fieldName] = $this->print($fieldType);
+		}
+
+		return [
+			'type' => 'array shape',
+			'fields' => $fields,
+		];
+	}
+
+	/**
+	 * @return array<mixed>
+	 */
 	private function printDocs(NodeRuntimeMeta $meta): array
 	{
 		$docs = [];
-
 		foreach ($meta->getDocs() as $docsMeta) {
 			$name = $docsMeta->getName();
 			$args = $docsMeta->getArgs();
@@ -133,7 +153,7 @@ final class DocsArrayPrinter implements MappedObjectPrinter
 	/**
 	 * @return array<mixed>
 	 */
-	private function printMultiType(ArrayType $type): array
+	private function printArrayType(ArrayType $type): array
 	{
 		$keyType = $type->getKeyType();
 

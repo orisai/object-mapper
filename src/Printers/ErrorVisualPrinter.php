@@ -4,10 +4,10 @@ namespace Orisai\ObjectMapper\Printers;
 
 use Orisai\Exceptions\Logic\InvalidArgument;
 use Orisai\ObjectMapper\Exception\InvalidData;
+use Orisai\ObjectMapper\Types\ArrayShapeType;
 use Orisai\ObjectMapper\Types\ArrayType;
 use Orisai\ObjectMapper\Types\CompoundType;
 use Orisai\ObjectMapper\Types\EnumType;
-use Orisai\ObjectMapper\Types\MappedObjectType;
 use Orisai\ObjectMapper\Types\MessageType;
 use Orisai\ObjectMapper\Types\ParametrizedType;
 use Orisai\ObjectMapper\Types\SimpleValueType;
@@ -73,8 +73,8 @@ final class ErrorVisualPrinter implements ErrorPrinter, TypePrinter
 	 */
 	private function print(Type $type, PrinterScope $scope)
 	{
-		if ($type instanceof MappedObjectType) {
-			return $this->printMappedObjectType($type, $scope);
+		if ($type instanceof ArrayShapeType) {
+			return $this->printArrayShapeType($type, $scope);
 		}
 
 		if ($type instanceof CompoundType) {
@@ -104,7 +104,7 @@ final class ErrorVisualPrinter implements ErrorPrinter, TypePrinter
 	/**
 	 * @return T
 	 */
-	private function printMappedObjectType(MappedObjectType $type, PrinterScope $scope)
+	private function printArrayShapeType(ArrayShapeType $type, PrinterScope $scope)
 	{
 		$printedFields = [];
 		foreach ($this->filterFields($type, $scope) as $fieldName => $fieldType) {
@@ -126,7 +126,7 @@ final class ErrorVisualPrinter implements ErrorPrinter, TypePrinter
 	/**
 	 * @return array<Type>
 	 */
-	private function filterFields(MappedObjectType $type, PrinterScope $scope): array
+	private function filterFields(ArrayShapeType $type, PrinterScope $scope): array
 	{
 		if ($scope->shouldRenderValid() || $type->isInvalid()) {
 			return $type->getFields();

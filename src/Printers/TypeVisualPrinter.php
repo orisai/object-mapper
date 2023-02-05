@@ -3,10 +3,10 @@
 namespace Orisai\ObjectMapper\Printers;
 
 use Orisai\Exceptions\Logic\InvalidArgument;
+use Orisai\ObjectMapper\Types\ArrayShapeType;
 use Orisai\ObjectMapper\Types\ArrayType;
 use Orisai\ObjectMapper\Types\CompoundType;
 use Orisai\ObjectMapper\Types\EnumType;
-use Orisai\ObjectMapper\Types\MappedObjectType;
 use Orisai\ObjectMapper\Types\MessageType;
 use Orisai\ObjectMapper\Types\ParametrizedType;
 use Orisai\ObjectMapper\Types\SimpleValueType;
@@ -42,8 +42,8 @@ final class TypeVisualPrinter implements TypePrinter
 	 */
 	private function print(Type $type)
 	{
-		if ($type instanceof MappedObjectType) {
-			return $this->printMappedObjectType($type);
+		if ($type instanceof ArrayShapeType) {
+			return $this->printArrayShapeType($type);
 		}
 
 		if ($type instanceof CompoundType) {
@@ -73,7 +73,7 @@ final class TypeVisualPrinter implements TypePrinter
 	/**
 	 * @return T
 	 */
-	private function printMappedObjectType(MappedObjectType $type)
+	private function printArrayShapeType(ArrayShapeType $type)
 	{
 		$printedFields = [];
 		foreach ($this->filterFields($type) as $fieldName => $fieldType) {
@@ -86,7 +86,7 @@ final class TypeVisualPrinter implements TypePrinter
 	/**
 	 * @return array<Type>
 	 */
-	private function filterFields(MappedObjectType $type): array
+	private function filterFields(ArrayShapeType $type): array
 	{
 		return $type->getFields();
 	}
