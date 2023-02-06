@@ -320,7 +320,7 @@ abstract class BaseCallback implements Callback
 	)
 	{
 		// Callback is skipped for unsupported runtime
-		$runtimes = $context->shouldMapDataToObjects() ? self::InitializationRuntimes : self::ProcessingRuntimes;
+		$runtimes = $context->shouldInitializeObjects() ? self::InitializationRuntimes : self::ProcessingRuntimes;
 		if (!in_array($args->runtime->value, $runtimes, true)) {
 			return $data;
 		}

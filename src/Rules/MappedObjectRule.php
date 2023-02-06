@@ -76,7 +76,7 @@ final class MappedObjectRule implements Rule
 			$options = $options->withProcessedClass($class);
 		}
 
-		return $context->shouldMapDataToObjects()
+		return $context->shouldInitializeObjects()
 			? $processor->process($value, $args->type, $options)
 			: $processor->processWithoutMapping($value, $args->type, $options);
 	}

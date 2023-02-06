@@ -82,7 +82,7 @@ final class CallbacksVO implements MappedObject
 			return $data;
 		}
 
-		$data['array']['beforeClassCallback'][] = $context->shouldMapDataToObjects();
+		$data['array']['beforeClassCallback'][] = $context->shouldInitializeObjects();
 
 		// Set default value, processor don't know it's going to be structure and thinks value is required
 		if (!array_key_exists('structure', $data)) {
@@ -104,14 +104,14 @@ final class CallbacksVO implements MappedObject
 	 */
 	public static function afterClass(array $data, MappedObjectContext $context): array
 	{
-		$data['array']['afterClassCallback'][] = $context->shouldMapDataToObjects();
+		$data['array']['afterClassCallback'][] = $context->shouldInitializeObjects();
 
-		if ($context->shouldMapDataToObjects() && !$data['structure'] instanceof MappedObject) {
+		if ($context->shouldInitializeObjects() && !$data['structure'] instanceof MappedObject) {
 			throw InvalidState::create()
 				->withMessage('Instance should be initialized by that moment');
 		}
 
-		if (!$context->shouldMapDataToObjects() && $data['structure'] instanceof MappedObject) {
+		if (!$context->shouldInitializeObjects() && $data['structure'] instanceof MappedObject) {
 			throw InvalidState::create()
 				->withMessage('Instance should not be initialized, context is not set to initialize object');
 		}
@@ -125,7 +125,7 @@ final class CallbacksVO implements MappedObject
 	 */
 	public static function afterArrayProcessing(array $array, FieldContext $context): array
 	{
-		$array['afterArrayProcessingCallback'][] = $context->shouldMapDataToObjects();
+		$array['afterArrayProcessingCallback'][] = $context->shouldInitializeObjects();
 
 		return $array;
 	}
@@ -136,7 +136,7 @@ final class CallbacksVO implements MappedObject
 	 */
 	public static function afterArrayInitialization(array $array, FieldContext $context): array
 	{
-		$array['afterArrayInitializationCallback'][] = $context->shouldMapDataToObjects();
+		$array['afterArrayInitializationCallback'][] = $context->shouldInitializeObjects();
 
 		return $array;
 	}
@@ -152,7 +152,7 @@ final class CallbacksVO implements MappedObject
 		$options = $context->getOptions();
 		$class = $options->getDynamicContext(CallbacksVoContext::class)->getObjectType();
 
-		return $context->shouldMapDataToObjects()
+		return $context->shouldInitializeObjects()
 			? $processor->process($structure, $class, $options)
 			: $processor->processWithoutMapping($structure, $class, $options);
 	}

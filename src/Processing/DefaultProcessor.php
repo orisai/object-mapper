@@ -311,7 +311,7 @@ final class DefaultProcessor implements Processor
 
 			// Skip skipped property
 			if (
-				$mappedObjectContext->shouldMapDataToObjects()
+				$mappedObjectContext->shouldInitializeObjects()
 				&& $fieldMeta->getModifier(SkippedModifier::class) !== null
 			) {
 				$callContext->addSkippedField(
@@ -376,7 +376,7 @@ final class DefaultProcessor implements Processor
 	{
 		$type = $mappedObjectContext->getType();
 		$options = $mappedObjectContext->getOptions();
-		$initializeObjects = $mappedObjectContext->shouldMapDataToObjects();
+		$initializeObjects = $mappedObjectContext->shouldInitializeObjects();
 
 		$meta = $callContext->getMeta();
 		$fieldsMeta = $meta->getFields();
@@ -440,7 +440,7 @@ final class DefaultProcessor implements Processor
 			// Return skipped property separately
 			if (
 				array_key_exists($missingField, $data)
-				&& $mappedObjectContext->shouldMapDataToObjects()
+				&& $mappedObjectContext->shouldInitializeObjects()
 				&& $fieldMeta->getModifier(SkippedModifier::class) !== null
 			) {
 				$callContext->addSkippedField(
@@ -483,7 +483,7 @@ final class DefaultProcessor implements Processor
 			$mappedObjectContext->getOptions()->createClone(),
 			$parentType->getFields()[$fieldName],
 			$meta->getDefault(),
-			$mappedObjectContext->shouldMapDataToObjects(),
+			$mappedObjectContext->shouldInitializeObjects(),
 			$fieldName,
 			$property,
 		);

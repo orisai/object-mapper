@@ -130,7 +130,7 @@ final class EntityFromIdRule implements MultiValueEfficientRule
 			throw ValueDoesNotMatch::create($this->createType($args, $context), Value::of($value));
 		}
 
-		return $context->shouldMapDataToObjects()
+		return $context->shouldInitializeObjects()
 			? $entity
 			: $value;
 	}
