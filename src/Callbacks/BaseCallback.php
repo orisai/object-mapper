@@ -19,7 +19,6 @@ use ReflectionParameter;
 use ReflectionProperty;
 use ReflectionType;
 use function array_map;
-use function count;
 use function in_array;
 use function is_a;
 use function sprintf;
@@ -144,18 +143,18 @@ abstract class BaseCallback implements Callback
 	 */
 	private static function validateParametersCount(ReflectionClass $class, ReflectionMethod $method): array
 	{
-		$parameters = $method->getParameters();
-
-		$count = count($parameters);
-		if ($count > 2) {
+		$requiredCount = $method->getNumberOfRequiredParameters();
+		if ($requiredCount > 2) {
 			throw InvalidArgument::create()
 				->withMessage(sprintf(
-					'Callback method %s::%s should have only 2 parameters, %s given',
+					'Callback method %s::%s should have only 2 required parameters, %s required parameters given',
 					$class->getName(),
 					$method->getName(),
-					$count,
+					$requiredCount,
 				));
 		}
+
+		$parameters = $method->getParameters();
 
 		return [
 			$parameters[0] ?? null,
