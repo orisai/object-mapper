@@ -15,6 +15,7 @@ use Orisai\ObjectMapper\Processing\ObjectHolder;
 use ReflectionClass;
 use ReflectionMethod;
 use ReflectionNamedType;
+use ReflectionParameter;
 use ReflectionProperty;
 use ReflectionType;
 use function array_map;
@@ -25,6 +26,8 @@ use function sprintf;
 
 /**
  * @implements Callback<BaseCallbackArgs>
+ *
+ * @internal
  */
 abstract class BaseCallback implements Callback
 {
@@ -54,23 +57,7 @@ abstract class BaseCallback implements Callback
 		$checker->checkAllowedArgs([self::Method, self::Runtime]);
 
 		$checker->checkRequiredArg(self::Method);
-		$checker->checkString(self::Method);
-
-		$class = $context->getClass();
-		$property = $context->getProperty();
-		$methodName = $args[self::Method];
-		$method = self::validateMethod($class, $methodName);
-		self::validateMethodSignature($method, $class, $property);
-
-		// Should be method called statically?
-		$isStatic = $method->isStatic();
-
-		// Method is expected to return data unless void return type is defined
-		$returnType = $method->getReturnType();
-		$returnsValue = !(
-			$returnType instanceof ReflectionNamedType
-			&& in_array($returnType->getName(), ['void', 'never'], true)
-		);
+		$methodName = $checker->checkString(self::Method);
 
 		$runtime = CallbackRuntime::Process;
 		if ($checker->hasArg(self::Runtime)) {
@@ -81,10 +68,14 @@ abstract class BaseCallback implements Callback
 			]);
 		}
 
+		$class = $context->getClass();
+		$property = $context->getProperty();
+		$method = self::validateMethod($class, $property, $methodName);
+
 		return new BaseCallbackArgs(
 			$methodName,
-			$isStatic,
-			$returnsValue,
+			$method->isStatic(),
+			self::getMethodReturnsValue($method),
 			CallbackRuntime::from($runtime),
 		);
 	}
@@ -92,7 +83,23 @@ abstract class BaseCallback implements Callback
 	/**
 	 * @param ReflectionClass<MappedObject> $class
 	 */
-	private static function validateMethod(ReflectionClass $class, string $methodName): ReflectionMethod
+	private static function validateMethod(
+		ReflectionClass $class,
+		?ReflectionProperty $property,
+		string $methodName
+	): ReflectionMethod
+	{
+		$method = self::validateMethodExistence($class, $methodName);
+
+		self::validateMethodSignature($method, $class, $property);
+
+		return $method;
+	}
+
+	/**
+	 * @param ReflectionClass<MappedObject> $class
+	 */
+	private static function validateMethodExistence(ReflectionClass $class, string $methodName): ReflectionMethod
 	{
 		if (!$class->hasMethod($methodName)) {
 			$methods = array_map(
@@ -124,119 +131,174 @@ abstract class BaseCallback implements Callback
 		?ReflectionProperty $property
 	): void
 	{
-		$params = $method->getParameters();
-		$paramsCount = count($params);
+		[$paramData, $paramContext] = self::validateParametersCount($class, $method);
 
-		if ($paramsCount > 2) {
+		$property === null
+			? self::validateClassMethodSignature($class, $method, $paramData, $paramContext)
+			: self::validatePropertyMethodSignature($class, $method, $paramData, $paramContext);
+	}
+
+	/**
+	 * @param ReflectionClass<MappedObject> $class
+	 * @return array{ReflectionParameter|null, ReflectionParameter|null}
+	 */
+	private static function validateParametersCount(ReflectionClass $class, ReflectionMethod $method): array
+	{
+		$parameters = $method->getParameters();
+
+		$count = count($parameters);
+		if ($count > 2) {
 			throw InvalidArgument::create()
 				->withMessage(sprintf(
 					'Callback method %s::%s should have only 2 parameters, %s given',
 					$class->getName(),
 					$method->getName(),
-					$paramsCount,
+					$count,
 				));
 		}
 
-		$paramData = $params[0] ?? null;
-		$paramContext = $params[1] ?? null;
-		$returnType = $method->getReturnType();
+		return [
+			$parameters[0] ?? null,
+			$parameters[1] ?? null,
+		];
+	}
 
-		if ($property === null) { // Class method
-			// beforeClass(<nothing>|mixed $data, MappedObjectContext $context): <anything>
-			// afterClass(array $data, MappedObjectContext $context): array|void|never
+	/**
+	 * beforeClass(<nothing>|mixed $data, MappedObjectContext $context): <anything>
+	 * afterClass(array $data, MappedObjectContext $context): array|void|never
+	 *
+	 * @param ReflectionClass<MappedObject> $class
+	 */
+	private static function validateClassMethodSignature(
+		ReflectionClass $class,
+		ReflectionMethod $method,
+		?ReflectionParameter $paramData,
+		?ReflectionParameter $paramContext
+	): void
+	{
+		if ($paramData !== null) {
+			static::validateClassMethodDataParam($class, $method, $paramData);
+		}
 
-			if ($paramData !== null) {
-				$type = self::getTypeName($paramData->getType());
-				if (static::class === BeforeCallback::class && !in_array($type, ['mixed', null], true)) {
-					throw InvalidArgument::create()
-						->withMessage(sprintf(
-							'First parameter of class callback method %s::%s should have "mixed" or none type instead of %s',
-							$class->getName(),
-							$method->getName(),
-							$type,
-						));
-				}
+		if ($paramContext !== null) {
+			self::validateClassMethodContextParam($class, $method, $paramContext);
+		}
 
-				if (static::class === AfterCallback::class && $type !== 'array') {
-					throw InvalidArgument::create()
-						->withMessage(sprintf(
-							'First parameter of class callback method %s::%s should have "array" type instead of %s',
-							$class->getName(),
-							$method->getName(),
-							$type ?? 'none',
-						));
-				}
-			}
+		static::validateClassMethodReturn($class, $method);
+	}
 
-			if ($paramContext !== null && (
-					($type = self::getTypeName($paramContext->getType())) === null
-					|| !is_a($type, MappedObjectContext::class, true)
-				)
-			) {
-				throw InvalidArgument::create()
-					->withMessage(sprintf(
-						'Second parameter of class callback method %s::%s should have "%s" (or child class) type instead of %s',
-						$class->getName(),
-						$method->getName(),
-						MappedObjectContext::class,
-						$type ?? 'none',
-					));
-			}
+	/**
+	 * @param ReflectionClass<MappedObject> $class
+	 */
+	abstract protected static function validateClassMethodDataParam(
+		ReflectionClass $class,
+		ReflectionMethod $method,
+		ReflectionParameter $paramData
+	): void;
 
-			if (
-				static::class === AfterCallback::class
-				&& !in_array(($type = self::getTypeName($returnType)), ['array', 'void', 'never'], true)
-			) {
-				throw InvalidArgument::create()
-					->withMessage(sprintf(
-						'Return type of class callback method %s::%s should be "array", "void" or "never" instead of %s',
-						$class->getName(),
-						$method->getName(),
-						$type ?? 'none',
-					));
-			}
-		} else {
-			// Property method
-			// beforeField(<nothing>|mixed $data, FieldContext $context): <anything>
-			// afterField(<anything> $data, FieldContext $context): <anything>
-			if (
-				static::class === BeforeCallback::class
-				&& $paramData !== null
-				&& !in_array(($type = self::getTypeName($paramData->getType())), [null, 'mixed'], true)
-			) {
-				throw InvalidArgument::create()
-					->withMessage(sprintf(
-						'First parameter of before field callback method %s::%s should have none or "mixed" type instead of %s',
-						$class->getName(),
-						$method->getName(),
-						$type,
-					));
-			}
+	/**
+	 * @param ReflectionClass<MappedObject> $class
+	 */
+	abstract protected static function validateClassMethodReturn(
+		ReflectionClass $class,
+		ReflectionMethod $method
+	): void;
 
-			if ($paramContext !== null && (
-					($type = self::getTypeName($paramContext->getType())) === null
-					|| !is_a($type, FieldContext::class, true)
-				)
-			) {
-				throw InvalidArgument::create()
-					->withMessage(sprintf(
-						'Second parameter of field callback method %s::%s should have "%s" (or child class) type instead of %s',
-						$class->getName(),
-						$method->getName(),
-						FieldContext::class,
-						$type ?? 'none',
-					));
-			}
+	/**
+	 * @param ReflectionClass<MappedObject> $class
+	 */
+	private static function validateClassMethodContextParam(
+		ReflectionClass $class,
+		ReflectionMethod $method,
+		ReflectionParameter $paramContext
+	): void
+	{
+		if (
+			($type = self::getTypeName($paramContext->getType())) === null
+			|| !is_a($type, MappedObjectContext::class, true)
+		) {
+			throw InvalidArgument::create()
+				->withMessage(sprintf(
+					'Second parameter of class callback method %s::%s should have "%s" type instead of %s',
+					$class->getName(),
+					$method->getName(),
+					MappedObjectContext::class,
+					$type ?? 'none',
+				));
 		}
 	}
 
-	private static function getTypeName(?ReflectionType $type): ?string
+	/**
+	 * beforeField(<nothing>|mixed $data, FieldContext $context): <anything>
+	 * afterField(<anything> $data, FieldContext $context): <anything>
+	 *
+	 * @param ReflectionClass<MappedObject> $class
+	 */
+	private static function validatePropertyMethodSignature(
+		ReflectionClass $class,
+		ReflectionMethod $method,
+		?ReflectionParameter $paramData,
+		?ReflectionParameter $paramContext
+	): void
+	{
+		if ($paramData !== null) {
+			static::validatePropertyMethodDataParam($class, $method, $paramData);
+		}
+
+		if ($paramContext !== null) {
+			self::validatePropertyMethodContextParam($class, $method, $paramContext);
+		}
+	}
+
+	/**
+	 * @param ReflectionClass<MappedObject> $class
+	 */
+	abstract protected static function validatePropertyMethodDataParam(
+		ReflectionClass $class,
+		ReflectionMethod $method,
+		ReflectionParameter $paramData
+	): void;
+
+	/**
+	 * @param ReflectionClass<MappedObject> $class
+	 */
+	private static function validatePropertyMethodContextParam(
+		ReflectionClass $class,
+		ReflectionMethod $method,
+		ReflectionParameter $paramContext
+	): void
+	{
+		$type = self::getTypeName($paramContext->getType());
+
+		if ($type !== null && is_a($type, FieldContext::class, true)) {
+			return;
+		}
+
+		throw InvalidArgument::create()
+			->withMessage(sprintf(
+				'Second parameter of field callback method %s::%s should have "%s" type instead of %s',
+				$class->getName(),
+				$method->getName(),
+				FieldContext::class,
+				$type ?? 'none',
+			));
+	}
+
+	protected static function getTypeName(?ReflectionType $type): ?string
 	{
 		if (!$type instanceof ReflectionNamedType) {
 			return null;
 		}
 
 		return $type->getName();
+	}
+
+	/**
+	 * Method is expected to return data unless void or never return type is defined
+	 */
+	private static function getMethodReturnsValue(ReflectionMethod $method): bool
+	{
+		return !in_array(self::getTypeName($method->getReturnType()), ['void', 'never'], true);
 	}
 
 	public static function getArgsType(): string
