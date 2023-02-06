@@ -4,7 +4,6 @@ namespace Orisai\ObjectMapper\Attributes\Expect;
 
 use Orisai\Exceptions\Logic\InvalidArgument;
 use Orisai\ObjectMapper\Meta\Compile\RuleCompileMeta;
-use function count;
 use function sprintf;
 
 abstract class CompoundRulesAttribute implements RuleAttribute
@@ -27,15 +26,6 @@ abstract class CompoundRulesAttribute implements RuleAttribute
 	 */
 	private function resolveRules(array $rules): array
 	{
-		if (count($rules) < 2) {
-			throw InvalidArgument::create()
-				->withMessage(sprintf(
-					'%s() should contain array of at least two validation rules (%s)',
-					static::class,
-					RuleAttribute::class,
-				));
-		}
-
 		foreach ($rules as $key => $rule) {
 			if (!$rule instanceof RuleAttribute) {
 				throw InvalidArgument::create()
