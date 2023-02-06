@@ -19,11 +19,11 @@ final class After implements CallableAttribute
 
 	private string $method;
 
-	/** @phpstan-var CallbackRuntime::* */
+	/** @var CallbackRuntime::Process|CallbackRuntime::ProcessWithoutMapping|CallbackRuntime::Always */
 	private string $runtime;
 
 	/**
-	 * @phpstan-param CallbackRuntime::* $runtime
+	 * @param CallbackRuntime::Process|CallbackRuntime::ProcessWithoutMapping|CallbackRuntime::Always $runtime
 	 */
 	public function __construct(string $method, string $runtime = CallbackRuntime::Process)
 	{

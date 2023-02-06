@@ -81,7 +81,12 @@ abstract class BaseCallback implements Callback
 			]);
 		}
 
-		return new BaseCallbackArgs($methodName, $isStatic, $returnsValue, $runtime);
+		return new BaseCallbackArgs(
+			$methodName,
+			$isStatic,
+			$returnsValue,
+			CallbackRuntime::from($runtime),
+		);
 	}
 
 	/**
@@ -255,7 +260,7 @@ abstract class BaseCallback implements Callback
 	{
 		// Callback is skipped for unsupported runtime
 		$runtimes = $context->shouldMapDataToObjects() ? self::InitializationRuntimes : self::ProcessingRuntimes;
-		if (!in_array($args->runtime, $runtimes, true)) {
+		if (!in_array($args->runtime->value, $runtimes, true)) {
 			return $data;
 		}
 
