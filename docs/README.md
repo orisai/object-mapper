@@ -226,6 +226,11 @@ final class ArrayEnumInput implements MappedObject
      */
     public string $anotherField;
 
+    /**
+     * @ArrayEnumValue(cases={1, 2, 3})
+     */
+    public string $inlineValueField;
+
 }
 ```
 
