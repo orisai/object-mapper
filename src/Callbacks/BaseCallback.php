@@ -97,7 +97,7 @@ abstract class BaseCallback implements Callback
 		if (!$class->hasMethod($methodName)) {
 			$methods = array_map(
 				static fn (ReflectionMethod $method): string => $method->getName(),
-				$class->getMethods(ReflectionMethod::IS_PUBLIC),
+				$class->getMethods(),
 			);
 			$hint = Helpers::getSuggestion($methods, $methodName);
 
