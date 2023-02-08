@@ -18,6 +18,8 @@ use Orisai\ObjectMapper\Rules\MixedRule;
 use PHPUnit\Framework\TestCase;
 use ReflectionProperty;
 use Tests\Orisai\ObjectMapper\Doubles\NoDefaultsVO;
+use function serialize;
+use function unserialize;
 
 final class FieldRuntimeMetaTest extends TestCase
 {
@@ -64,6 +66,7 @@ final class FieldRuntimeMetaTest extends TestCase
 			$property,
 			$meta->getProperty(),
 		);
+		self::assertEquals($meta, unserialize(serialize($meta)));
 	}
 
 }

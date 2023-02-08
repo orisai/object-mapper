@@ -13,6 +13,8 @@ use Orisai\ObjectMapper\Modifiers\FieldNameArgs;
 use Orisai\ObjectMapper\Modifiers\FieldNameModifier;
 use PHPUnit\Framework\TestCase;
 use ReflectionClass;
+use function serialize;
+use function unserialize;
 
 final class ClassRuntimeMetaTest extends TestCase
 {
@@ -47,6 +49,7 @@ final class ClassRuntimeMetaTest extends TestCase
 			$modifiers,
 			$meta->getModifiers(),
 		);
+		self::assertEquals($meta, unserialize(serialize($meta)));
 	}
 
 }

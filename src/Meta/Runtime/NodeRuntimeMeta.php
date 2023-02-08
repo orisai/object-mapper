@@ -67,4 +67,26 @@ abstract class NodeRuntimeMeta
 		return $this->getModifiers()[$type] ?? null;
 	}
 
+	/**
+	 * @return array<mixed>
+	 */
+	public function __serialize(): array
+	{
+		return [
+			'callbacks' => $this->callbacks,
+			'docs' => $this->docs,
+			'modifiers' => $this->modifiers,
+		];
+	}
+
+	/**
+	 * @param array<mixed> $data
+	 */
+	public function __unserialize(array $data): void
+	{
+		$this->callbacks = $data['callbacks'];
+		$this->docs = $data['docs'];
+		$this->modifiers = $data['modifiers'];
+	}
+
 }

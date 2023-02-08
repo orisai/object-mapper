@@ -9,10 +9,10 @@ use ReflectionProperty;
 final class FieldRuntimeMeta extends NodeRuntimeMeta
 {
 
-	private DefaultValueMeta $default;
-
 	/** @var RuleRuntimeMeta<Args> */
 	private RuleRuntimeMeta $rule;
+
+	private DefaultValueMeta $default;
 
 	private ReflectionProperty $property;
 
@@ -34,11 +34,6 @@ final class FieldRuntimeMeta extends NodeRuntimeMeta
 		$this->property = $property;
 	}
 
-	public function getDefault(): DefaultValueMeta
-	{
-		return $this->default;
-	}
-
 	/**
 	 * @return RuleRuntimeMeta<Args>
 	 */
@@ -47,9 +42,39 @@ final class FieldRuntimeMeta extends NodeRuntimeMeta
 		return $this->rule;
 	}
 
+	public function getDefault(): DefaultValueMeta
+	{
+		return $this->default;
+	}
+
 	public function getProperty(): ReflectionProperty
 	{
 		return $this->property;
+	}
+
+	/**
+	 * @return array<mixed>
+	 */
+	public function __serialize(): array
+	{
+		return [
+			'parent' => parent::__serialize(),
+			'rule' => $this->rule,
+			'default' => $this->default,
+			'class' => $this->property->getDeclaringClass()->getName(),
+			'property' => $this->property->getName(),
+		];
+	}
+
+	/**
+	 * @param array<mixed> $data
+	 */
+	public function __unserialize(array $data): void
+	{
+		parent::__unserialize($data['parent']);
+		$this->rule = $data['rule'];
+		$this->default = $data['default'];
+		$this->property = new ReflectionProperty($data['class'], $data['property']);
 	}
 
 }

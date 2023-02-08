@@ -6,6 +6,8 @@ use Orisai\ObjectMapper\Args\EmptyArgs;
 use Orisai\ObjectMapper\Meta\Runtime\RuleRuntimeMeta;
 use Orisai\ObjectMapper\Rules\MixedRule;
 use PHPUnit\Framework\TestCase;
+use function serialize;
+use function unserialize;
 
 final class RuleRuntimeMetaTest extends TestCase
 {
@@ -18,6 +20,7 @@ final class RuleRuntimeMetaTest extends TestCase
 
 		self::assertSame($type, $meta->getType());
 		self::assertSame($args, $meta->getArgs());
+		self::assertEquals($meta, unserialize(serialize($meta)));
 	}
 
 }

@@ -22,6 +22,10 @@ parameters:
 		- message: '#(.+)expects ReflectionClass\<(.+)MappedObject\>, ReflectionClass\<object\> given\.$#'
 		  path: ../src/Meta/MetaResolver.php
 
+		# Serialization, who cares
+		- message: '#^Property (.+)CallbackRuntimeMeta(.+)\$declaringClass \(ReflectionClass\<(.+)MappedObject\>\) does not accept ReflectionClass\<object\>\.$#'
+		  path: ../src/Meta/Runtime/CallbackRuntimeMeta.php
+
 		# Generics
 		# Generics - class-string-map https://psalm.dev/r/155368cea8
 		- message: '#^Property (.+) with generic interface Orisai\\ObjectMapper\\Rules\\Rule does not specify its types\: T_ARGS$#'

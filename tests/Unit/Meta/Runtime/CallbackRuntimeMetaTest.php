@@ -7,6 +7,8 @@ use Orisai\ObjectMapper\Callbacks\BeforeCallback;
 use Orisai\ObjectMapper\Meta\Runtime\CallbackRuntimeMeta;
 use PHPUnit\Framework\TestCase;
 use ReflectionClass;
+use function serialize;
+use function unserialize;
 
 final class CallbackRuntimeMetaTest extends TestCase
 {
@@ -21,6 +23,7 @@ final class CallbackRuntimeMetaTest extends TestCase
 		self::assertSame($type, $meta->getType());
 		self::assertSame($args, $meta->getArgs());
 		self::assertSame($declaringClass, $meta->getDeclaringClass());
+		self::assertEquals($meta, unserialize(serialize($meta)));
 	}
 
 }

@@ -58,4 +58,26 @@ final class CallbackRuntimeMeta
 		return $this->declaringClass;
 	}
 
+	/**
+	 * @return array<mixed>
+	 */
+	public function __serialize(): array
+	{
+		return [
+			'type' => $this->type,
+			'args' => $this->args,
+			'declaringClass' => $this->declaringClass->getName(),
+		];
+	}
+
+	/**
+	 * @param array<mixed> $data
+	 */
+	public function __unserialize(array $data): void
+	{
+		$this->type = $data['type'];
+		$this->args = $data['args'];
+		$this->declaringClass = new ReflectionClass($data['declaringClass']);
+	}
+
 }
