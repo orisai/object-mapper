@@ -1,0 +1,456 @@
+parameters:
+	ignoreErrors:
+		-
+			message: "#^Property Tests\\\\Orisai\\\\ObjectMapper\\\\Doubles\\\\Circular\\\\CircularCVO\\:\\:\\$as type has no value type specified in iterable type array\\.$#"
+			count: 1
+			path: ../tests/Doubles/Circular/CircularCVO.php
+
+		-
+			message: "#^Property Tests\\\\Orisai\\\\ObjectMapper\\\\Doubles\\\\FieldNames\\\\ChildCollidingFieldVO\\:\\:\\$property is unused\\.$#"
+			count: 1
+			path: ../tests/Doubles/FieldNames/ChildCollidingFieldVO.php
+
+		-
+			message: "#^Property Tests\\\\Orisai\\\\ObjectMapper\\\\Doubles\\\\FieldNames\\\\ChildFieldVO\\:\\:\\$property is never written, only read\\.$#"
+			count: 1
+			path: ../tests/Doubles/FieldNames/ChildFieldVO.php
+
+		-
+			message: "#^Property Tests\\\\Orisai\\\\ObjectMapper\\\\Doubles\\\\FieldNames\\\\ParentFieldVO\\:\\:\\$property is never written, only read\\.$#"
+			count: 1
+			path: ../tests/Doubles/FieldNames/ParentFieldVO.php
+
+		-
+			message: "#^Method Tests\\\\Orisai\\\\ObjectMapper\\\\Doubles\\\\Inheritance\\\\CallbacksVisibilityVO\\:\\:afterPrivate\\(\\) is unused\\.$#"
+			count: 1
+			path: ../tests/Doubles/Inheritance/CallbacksVisibilityVO.php
+
+		-
+			message: "#^Static method Tests\\\\Orisai\\\\ObjectMapper\\\\Doubles\\\\Inheritance\\\\CallbacksVisibilityVO\\:\\:afterPrivateStatic\\(\\) is unused\\.$#"
+			count: 1
+			path: ../tests/Doubles/Inheritance/CallbacksVisibilityVO.php
+
+		-
+			message: "#^Method Tests\\\\Orisai\\\\ObjectMapper\\\\Doubles\\\\Inheritance\\\\ChildVO\\:\\:afterProperty\\(\\) is unused\\.$#"
+			count: 1
+			path: ../tests/Doubles/Inheritance/ChildVO.php
+
+		-
+			message: "#^Method Tests\\\\Orisai\\\\ObjectMapper\\\\Doubles\\\\Inheritance\\\\ChildVO\\:\\:afterPropertyStatic\\(\\) is unused\\.$#"
+			count: 1
+			path: ../tests/Doubles/Inheritance/ChildVO.php
+
+		-
+			message: "#^Property Tests\\\\Orisai\\\\ObjectMapper\\\\Doubles\\\\Inheritance\\\\ChildVO\\:\\:\\$childPrivate is never written, only read\\.$#"
+			count: 1
+			path: ../tests/Doubles/Inheritance/ChildVO.php
+
+		-
+			message: "#^Method Tests\\\\Orisai\\\\ObjectMapper\\\\Doubles\\\\Inheritance\\\\ParentVO\\:\\:afterProperty\\(\\) is unused\\.$#"
+			count: 1
+			path: ../tests/Doubles/Inheritance/ParentVO.php
+
+		-
+			message: "#^Method Tests\\\\Orisai\\\\ObjectMapper\\\\Doubles\\\\Inheritance\\\\ParentVO\\:\\:afterPropertyStatic\\(\\) is unused\\.$#"
+			count: 1
+			path: ../tests/Doubles/Inheritance/ParentVO.php
+
+		-
+			message: "#^Property Tests\\\\Orisai\\\\ObjectMapper\\\\Doubles\\\\Inheritance\\\\ParentVO\\:\\:\\$parentPrivate is never written, only read\\.$#"
+			count: 1
+			path: ../tests/Doubles/Inheritance/ParentVO.php
+
+		-
+			message: "#^Property Tests\\\\Orisai\\\\ObjectMapper\\\\Doubles\\\\Inheritance\\\\PropertiesVisibilityVO\\:\\:\\$private is never written, only read\\.$#"
+			count: 1
+			path: ../tests/Doubles/Inheritance/PropertiesVisibilityVO.php
+
+		-
+			message: "#^Method Tests\\\\Orisai\\\\ObjectMapper\\\\Doubles\\\\Inheritance\\\\TraitCallback\\\\TraitCallbackVO\\:\\:after\\(\\) has parameter \\$data with no value type specified in iterable type array\\.$#"
+			count: 1
+			path: ../tests/Doubles/Inheritance/trait-callback.php
+
+		-
+			message: "#^Method Tests\\\\Orisai\\\\ObjectMapper\\\\Doubles\\\\Inheritance\\\\TraitCallback\\\\TraitCallbackVO\\:\\:after\\(\\) return type has no value type specified in iterable type array\\.$#"
+			count: 1
+			path: ../tests/Doubles/Inheritance/trait-callback.php
+
+		-
+			message: "#^Call to static method PHPUnit\\\\Framework\\\\Assert\\:\\:assertSame\\(\\) with 'Orisai\\\\\\\\ObjectMapper\\\\\\\\Callbacks\\\\\\\\BeforeCallback' and class\\-string\\<Orisai\\\\ObjectMapper\\\\Callbacks\\\\Callback\\<Orisai\\\\ObjectMapper\\\\Args\\\\Args\\>\\> will always evaluate to false\\.$#"
+			count: 1
+			path: ../tests/Unit/Meta/Compile/CallbackCompileMetaTest.php
+
+		-
+			message: "#^Parameter \\#1 \\$type of class Orisai\\\\ObjectMapper\\\\Meta\\\\Compile\\\\CallbackCompileMeta constructor expects class\\-string\\<Orisai\\\\ObjectMapper\\\\Callbacks\\\\Callback\\<Orisai\\\\ObjectMapper\\\\Args\\\\Args\\>\\>, 'Orisai\\\\\\\\ObjectMapper\\\\\\\\Callbacks\\\\\\\\BeforeCallback' given\\.$#"
+			count: 1
+			path: ../tests/Unit/Meta/Compile/CallbackCompileMetaTest.php
+
+		-
+			message: "#^Parameter \\#1 \\$type of class Orisai\\\\ObjectMapper\\\\Meta\\\\Compile\\\\CallbackCompileMeta constructor expects class\\-string\\<Orisai\\\\ObjectMapper\\\\Callbacks\\\\Callback\\<Orisai\\\\ObjectMapper\\\\Args\\\\Args\\>\\>, 'Orisai\\\\\\\\ObjectMapper\\\\\\\\Callbacks\\\\\\\\BeforeCallback' given\\.$#"
+			count: 1
+			path: ../tests/Unit/Meta/Compile/ClassCompileMetaTest.php
+
+		-
+			message: "#^Parameter \\#1 \\$type of class Orisai\\\\ObjectMapper\\\\Meta\\\\Compile\\\\ModifierCompileMeta constructor expects class\\-string\\<Orisai\\\\ObjectMapper\\\\Modifiers\\\\Modifier\\<Orisai\\\\ObjectMapper\\\\Args\\\\Args\\>\\>, 'Orisai\\\\\\\\ObjectMapper\\\\\\\\Modifiers\\\\\\\\FieldNameModifier' given\\.$#"
+			count: 1
+			path: ../tests/Unit/Meta/Compile/ClassCompileMetaTest.php
+
+		-
+			message: "#^Parameter \\#1 \\$type of class Orisai\\\\ObjectMapper\\\\Meta\\\\Compile\\\\CallbackCompileMeta constructor expects class\\-string\\<Orisai\\\\ObjectMapper\\\\Callbacks\\\\Callback\\<Orisai\\\\ObjectMapper\\\\Args\\\\Args\\>\\>, 'Orisai\\\\\\\\ObjectMapper\\\\\\\\Callbacks\\\\\\\\BeforeCallback' given\\.$#"
+			count: 1
+			path: ../tests/Unit/Meta/Compile/CompileMetaTest.php
+
+		-
+			message: "#^Parameter \\#1 \\$type of class Orisai\\\\ObjectMapper\\\\Meta\\\\Compile\\\\RuleCompileMeta constructor expects class\\-string\\<Orisai\\\\ObjectMapper\\\\Rules\\\\Rule\\<Orisai\\\\ObjectMapper\\\\Args\\\\Args\\>\\>, 'Orisai\\\\\\\\ObjectMapper\\\\\\\\Rules\\\\\\\\MixedRule' given\\.$#"
+			count: 2
+			path: ../tests/Unit/Meta/Compile/CompileMetaTest.php
+
+		-
+			message: "#^Parameter \\#1 \\$type of class Orisai\\\\ObjectMapper\\\\Meta\\\\Compile\\\\CallbackCompileMeta constructor expects class\\-string\\<Orisai\\\\ObjectMapper\\\\Callbacks\\\\Callback\\<Orisai\\\\ObjectMapper\\\\Args\\\\Args\\>\\>, 'Orisai\\\\\\\\ObjectMapper\\\\\\\\Callbacks\\\\\\\\BeforeCallback' given\\.$#"
+			count: 1
+			path: ../tests/Unit/Meta/Compile/FieldCompileMetaTest.php
+
+		-
+			message: "#^Parameter \\#1 \\$type of class Orisai\\\\ObjectMapper\\\\Meta\\\\Compile\\\\ModifierCompileMeta constructor expects class\\-string\\<Orisai\\\\ObjectMapper\\\\Modifiers\\\\Modifier\\<Orisai\\\\ObjectMapper\\\\Args\\\\Args\\>\\>, 'Orisai\\\\\\\\ObjectMapper\\\\\\\\Modifiers\\\\\\\\FieldNameModifier' given\\.$#"
+			count: 1
+			path: ../tests/Unit/Meta/Compile/FieldCompileMetaTest.php
+
+		-
+			message: "#^Parameter \\#1 \\$type of class Orisai\\\\ObjectMapper\\\\Meta\\\\Compile\\\\RuleCompileMeta constructor expects class\\-string\\<Orisai\\\\ObjectMapper\\\\Rules\\\\Rule\\<Orisai\\\\ObjectMapper\\\\Args\\\\Args\\>\\>, 'Orisai\\\\\\\\ObjectMapper\\\\\\\\Rules\\\\\\\\MixedRule' given\\.$#"
+			count: 1
+			path: ../tests/Unit/Meta/Compile/FieldCompileMetaTest.php
+
+		-
+			message: "#^Parameter \\#1 \\$type of class Orisai\\\\ObjectMapper\\\\Meta\\\\Compile\\\\ModifierCompileMeta constructor expects class\\-string\\<Orisai\\\\ObjectMapper\\\\Modifiers\\\\Modifier\\<Orisai\\\\ObjectMapper\\\\Args\\\\Args\\>\\>, 'Orisai\\\\\\\\ObjectMapper\\\\\\\\Modifiers\\\\\\\\FieldNameModifier' given\\.$#"
+			count: 1
+			path: ../tests/Unit/Meta/Compile/ModifierCompileMetaTest.php
+
+		-
+			message: "#^Call to static method PHPUnit\\\\Framework\\\\Assert\\:\\:assertSame\\(\\) with 'Orisai\\\\\\\\ObjectMapper\\\\\\\\Rules\\\\\\\\MixedRule' and class\\-string\\<Orisai\\\\ObjectMapper\\\\Rules\\\\Rule\\<Orisai\\\\ObjectMapper\\\\Args\\\\Args\\>\\> will always evaluate to false\\.$#"
+			count: 1
+			path: ../tests/Unit/Meta/Compile/RuleCompileMetaTest.php
+
+		-
+			message: "#^Parameter \\#1 \\$type of class Orisai\\\\ObjectMapper\\\\Meta\\\\Compile\\\\RuleCompileMeta constructor expects class\\-string\\<Orisai\\\\ObjectMapper\\\\Rules\\\\Rule\\<Orisai\\\\ObjectMapper\\\\Args\\\\Args\\>\\>, 'Orisai\\\\\\\\ObjectMapper\\\\\\\\Rules\\\\\\\\MixedRule' given\\.$#"
+			count: 1
+			path: ../tests/Unit/Meta/Compile/RuleCompileMetaTest.php
+
+		-
+			message: "#^Call to static method PHPUnit\\\\Framework\\\\Assert\\:\\:assertSame\\(\\) with ReflectionClass\\<Tests\\\\Orisai\\\\ObjectMapper\\\\Unit\\\\Meta\\\\Runtime\\\\CallbackRuntimeMetaTest\\> and ReflectionClass\\<Orisai\\\\ObjectMapper\\\\MappedObject\\> will always evaluate to false\\.$#"
+			count: 1
+			path: ../tests/Unit/Meta/Runtime/CallbackRuntimeMetaTest.php
+
+		-
+			message: "#^Parameter \\#3 \\$declaringClass of class Orisai\\\\ObjectMapper\\\\Meta\\\\Runtime\\\\CallbackRuntimeMeta constructor expects ReflectionClass\\<Orisai\\\\ObjectMapper\\\\MappedObject\\>, ReflectionClass\\<Tests\\\\Orisai\\\\ObjectMapper\\\\Unit\\\\Meta\\\\Runtime\\\\CallbackRuntimeMetaTest\\> given\\.$#"
+			count: 1
+			path: ../tests/Unit/Meta/Runtime/CallbackRuntimeMetaTest.php
+
+		-
+			message: "#^Call to static method PHPUnit\\\\Framework\\\\Assert\\:\\:assertSame\\(\\) with array\\{Orisai\\\\ObjectMapper\\\\Meta\\\\DocMeta\\} and array\\<string, Orisai\\\\ObjectMapper\\\\Meta\\\\DocMeta\\> will always evaluate to false\\.$#"
+			count: 1
+			path: ../tests/Unit/Meta/Runtime/ClassRuntimeMetaTest.php
+
+		-
+			message: "#^Call to static method PHPUnit\\\\Framework\\\\Assert\\:\\:assertSame\\(\\) with array\\{Orisai\\\\ObjectMapper\\\\Meta\\\\Runtime\\\\CallbackRuntimeMeta\\<Orisai\\\\ObjectMapper\\\\Callbacks\\\\BaseCallbackArgs\\>\\} and array\\<int, Orisai\\\\ObjectMapper\\\\Meta\\\\Runtime\\\\CallbackRuntimeMeta\\<Orisai\\\\ObjectMapper\\\\Args\\\\Args\\>\\> will always evaluate to false\\.$#"
+			count: 1
+			path: ../tests/Unit/Meta/Runtime/ClassRuntimeMetaTest.php
+
+		-
+			message: "#^Call to static method PHPUnit\\\\Framework\\\\Assert\\:\\:assertSame\\(\\) with array\\{Orisai\\\\ObjectMapper\\\\Meta\\\\Runtime\\\\ModifierRuntimeMeta\\<Orisai\\\\ObjectMapper\\\\Modifiers\\\\FieldNameArgs\\>\\} and array\\<class\\-string\\<Orisai\\\\ObjectMapper\\\\Modifiers\\\\Modifier\\<Orisai\\\\ObjectMapper\\\\Args\\\\Args\\>\\>, Orisai\\\\ObjectMapper\\\\Meta\\\\Runtime\\\\ModifierRuntimeMeta\\<Orisai\\\\ObjectMapper\\\\Args\\\\Args\\>\\> will always evaluate to false\\.$#"
+			count: 1
+			path: ../tests/Unit/Meta/Runtime/ClassRuntimeMetaTest.php
+
+		-
+			message: "#^Parameter \\#1 \\$callbacks of class Orisai\\\\ObjectMapper\\\\Meta\\\\Runtime\\\\ClassRuntimeMeta constructor expects array\\<int, Orisai\\\\ObjectMapper\\\\Meta\\\\Runtime\\\\CallbackRuntimeMeta\\<Orisai\\\\ObjectMapper\\\\Args\\\\Args\\>\\>, array\\{Orisai\\\\ObjectMapper\\\\Meta\\\\Runtime\\\\CallbackRuntimeMeta\\<Orisai\\\\ObjectMapper\\\\Callbacks\\\\BaseCallbackArgs\\>\\} given\\.$#"
+			count: 1
+			path: ../tests/Unit/Meta/Runtime/ClassRuntimeMetaTest.php
+
+		-
+			message: "#^Parameter \\#2 \\$docs of class Orisai\\\\ObjectMapper\\\\Meta\\\\Runtime\\\\ClassRuntimeMeta constructor expects array\\<string, Orisai\\\\ObjectMapper\\\\Meta\\\\DocMeta\\>, array\\<int, Orisai\\\\ObjectMapper\\\\Meta\\\\DocMeta\\> given\\.$#"
+			count: 1
+			path: ../tests/Unit/Meta/Runtime/ClassRuntimeMetaTest.php
+
+		-
+			message: "#^Parameter \\#3 \\$declaringClass of class Orisai\\\\ObjectMapper\\\\Meta\\\\Runtime\\\\CallbackRuntimeMeta constructor expects ReflectionClass\\<Orisai\\\\ObjectMapper\\\\MappedObject\\>, ReflectionClass\\<Tests\\\\Orisai\\\\ObjectMapper\\\\Unit\\\\Meta\\\\Runtime\\\\ClassRuntimeMetaTest\\> given\\.$#"
+			count: 1
+			path: ../tests/Unit/Meta/Runtime/ClassRuntimeMetaTest.php
+
+		-
+			message: "#^Parameter \\#3 \\$modifiers of class Orisai\\\\ObjectMapper\\\\Meta\\\\Runtime\\\\ClassRuntimeMeta constructor expects array\\<class\\-string\\<Orisai\\\\ObjectMapper\\\\Modifiers\\\\Modifier\\<Orisai\\\\ObjectMapper\\\\Args\\\\Args\\>\\>, Orisai\\\\ObjectMapper\\\\Meta\\\\Runtime\\\\ModifierRuntimeMeta\\<Orisai\\\\ObjectMapper\\\\Args\\\\Args\\>\\>, array\\{Orisai\\\\ObjectMapper\\\\Meta\\\\Runtime\\\\ModifierRuntimeMeta\\<Orisai\\\\ObjectMapper\\\\Modifiers\\\\FieldNameArgs\\>\\} given\\.$#"
+			count: 1
+			path: ../tests/Unit/Meta/Runtime/ClassRuntimeMetaTest.php
+
+		-
+			message: "#^Call to static method PHPUnit\\\\Framework\\\\Assert\\:\\:assertSame\\(\\) with Orisai\\\\ObjectMapper\\\\Meta\\\\Runtime\\\\RuleRuntimeMeta\\<Orisai\\\\ObjectMapper\\\\Args\\\\EmptyArgs\\> and Orisai\\\\ObjectMapper\\\\Meta\\\\Runtime\\\\RuleRuntimeMeta\\<Orisai\\\\ObjectMapper\\\\Args\\\\Args\\> will always evaluate to false\\.$#"
+			count: 1
+			path: ../tests/Unit/Meta/Runtime/FieldRuntimeMetaTest.php
+
+		-
+			message: "#^Call to static method PHPUnit\\\\Framework\\\\Assert\\:\\:assertSame\\(\\) with array\\{Orisai\\\\ObjectMapper\\\\Meta\\\\DocMeta\\} and array\\<string, Orisai\\\\ObjectMapper\\\\Meta\\\\DocMeta\\> will always evaluate to false\\.$#"
+			count: 1
+			path: ../tests/Unit/Meta/Runtime/FieldRuntimeMetaTest.php
+
+		-
+			message: "#^Call to static method PHPUnit\\\\Framework\\\\Assert\\:\\:assertSame\\(\\) with array\\{Orisai\\\\ObjectMapper\\\\Meta\\\\Runtime\\\\CallbackRuntimeMeta\\<Orisai\\\\ObjectMapper\\\\Callbacks\\\\BaseCallbackArgs\\>\\} and array\\<int, Orisai\\\\ObjectMapper\\\\Meta\\\\Runtime\\\\CallbackRuntimeMeta\\<Orisai\\\\ObjectMapper\\\\Args\\\\Args\\>\\> will always evaluate to false\\.$#"
+			count: 1
+			path: ../tests/Unit/Meta/Runtime/FieldRuntimeMetaTest.php
+
+		-
+			message: "#^Call to static method PHPUnit\\\\Framework\\\\Assert\\:\\:assertSame\\(\\) with array\\{Orisai\\\\ObjectMapper\\\\Meta\\\\Runtime\\\\ModifierRuntimeMeta\\<Orisai\\\\ObjectMapper\\\\Modifiers\\\\FieldNameArgs\\>\\} and array\\<class\\-string\\<Orisai\\\\ObjectMapper\\\\Modifiers\\\\Modifier\\<Orisai\\\\ObjectMapper\\\\Args\\\\Args\\>\\>, Orisai\\\\ObjectMapper\\\\Meta\\\\Runtime\\\\ModifierRuntimeMeta\\<Orisai\\\\ObjectMapper\\\\Args\\\\Args\\>\\> will always evaluate to false\\.$#"
+			count: 1
+			path: ../tests/Unit/Meta/Runtime/FieldRuntimeMetaTest.php
+
+		-
+			message: "#^Parameter \\#1 \\$callbacks of class Orisai\\\\ObjectMapper\\\\Meta\\\\Runtime\\\\FieldRuntimeMeta constructor expects array\\<int, Orisai\\\\ObjectMapper\\\\Meta\\\\Runtime\\\\CallbackRuntimeMeta\\<Orisai\\\\ObjectMapper\\\\Args\\\\Args\\>\\>, array\\{Orisai\\\\ObjectMapper\\\\Meta\\\\Runtime\\\\CallbackRuntimeMeta\\<Orisai\\\\ObjectMapper\\\\Callbacks\\\\BaseCallbackArgs\\>\\} given\\.$#"
+			count: 1
+			path: ../tests/Unit/Meta/Runtime/FieldRuntimeMetaTest.php
+
+		-
+			message: "#^Parameter \\#2 \\$docs of class Orisai\\\\ObjectMapper\\\\Meta\\\\Runtime\\\\FieldRuntimeMeta constructor expects array\\<string, Orisai\\\\ObjectMapper\\\\Meta\\\\DocMeta\\>, array\\<int, Orisai\\\\ObjectMapper\\\\Meta\\\\DocMeta\\> given\\.$#"
+			count: 1
+			path: ../tests/Unit/Meta/Runtime/FieldRuntimeMetaTest.php
+
+		-
+			message: "#^Parameter \\#3 \\$modifiers of class Orisai\\\\ObjectMapper\\\\Meta\\\\Runtime\\\\FieldRuntimeMeta constructor expects array\\<class\\-string\\<Orisai\\\\ObjectMapper\\\\Modifiers\\\\Modifier\\<Orisai\\\\ObjectMapper\\\\Args\\\\Args\\>\\>, Orisai\\\\ObjectMapper\\\\Meta\\\\Runtime\\\\ModifierRuntimeMeta\\<Orisai\\\\ObjectMapper\\\\Args\\\\Args\\>\\>, array\\{Orisai\\\\ObjectMapper\\\\Meta\\\\Runtime\\\\ModifierRuntimeMeta\\<Orisai\\\\ObjectMapper\\\\Modifiers\\\\FieldNameArgs\\>\\} given\\.$#"
+			count: 1
+			path: ../tests/Unit/Meta/Runtime/FieldRuntimeMetaTest.php
+
+		-
+			message: "#^Parameter \\#4 \\$rule of class Orisai\\\\ObjectMapper\\\\Meta\\\\Runtime\\\\FieldRuntimeMeta constructor expects Orisai\\\\ObjectMapper\\\\Meta\\\\Runtime\\\\RuleRuntimeMeta\\<Orisai\\\\ObjectMapper\\\\Args\\\\Args\\>, Orisai\\\\ObjectMapper\\\\Meta\\\\Runtime\\\\RuleRuntimeMeta\\<Orisai\\\\ObjectMapper\\\\Args\\\\EmptyArgs\\> given\\.$#"
+			count: 1
+			path: ../tests/Unit/Meta/Runtime/FieldRuntimeMetaTest.php
+
+		-
+			message: "#^Parameter \\#4 \\$rule of class Orisai\\\\ObjectMapper\\\\Meta\\\\Runtime\\\\FieldRuntimeMeta constructor expects Orisai\\\\ObjectMapper\\\\Meta\\\\Runtime\\\\RuleRuntimeMeta\\<Orisai\\\\ObjectMapper\\\\Args\\\\Args\\>, Orisai\\\\ObjectMapper\\\\Meta\\\\Runtime\\\\RuleRuntimeMeta\\<Orisai\\\\ObjectMapper\\\\Args\\\\EmptyArgs\\> given\\.$#"
+			count: 1
+			path: ../tests/Unit/Meta/Runtime/RuntimeMetaTest.php
+
+		-
+			message: "#^Call to static method PHPUnit\\\\Framework\\\\Assert\\:\\:assertInstanceOf\\(\\) with 'Orisai\\\\\\\\ObjectMapper\\\\\\\\Types\\\\\\\\MappedObjectType' and Orisai\\\\ObjectMapper\\\\Types\\\\MappedObjectType will always evaluate to true\\.$#"
+			count: 1
+			path: ../tests/Unit/Printers/DefaultValuesArrayPrinterTest.php
+
+		-
+			message: "#^Property Tests\\\\Orisai\\\\ObjectMapper\\\\Unit\\\\Printers\\\\ErrorVisualPrinterBaseTestCase\\:\\:\\$printer with generic class Orisai\\\\ObjectMapper\\\\Printers\\\\ErrorVisualPrinter does not specify its types\\: T$#"
+			count: 1
+			path: ../tests/Unit/Printers/ErrorVisualPrinterBaseTestCase.php
+
+		-
+			message: "#^Property Tests\\\\Orisai\\\\ObjectMapper\\\\Unit\\\\Printers\\\\TypeVisualPrinterTest\\:\\:\\$printer with generic class Orisai\\\\ObjectMapper\\\\Printers\\\\TypeVisualPrinter does not specify its types\\: T$#"
+			count: 1
+			path: ../tests/Unit/Printers/TypeVisualPrinterTest.php
+
+		-
+			message: "#^Call to static method PHPUnit\\\\Framework\\\\Assert\\:\\:assertInstanceOf\\(\\) with 'Tests\\\\\\\\Orisai\\\\\\\\ObjectMapper\\\\\\\\Doubles\\\\\\\\EmptyVO' and Tests\\\\Orisai\\\\ObjectMapper\\\\Doubles\\\\EmptyVO will always evaluate to true\\.$#"
+			count: 1
+			path: ../tests/Unit/Processing/DefaultObjectCreatorTest.php
+
+		-
+			message: "#^Call to static method PHPUnit\\\\Framework\\\\Assert\\:\\:assertInstanceOf\\(\\) with 'DateTimeImmutable' and DateTimeImmutable will always evaluate to true\\.$#"
+			count: 1
+			path: ../tests/Unit/Processing/DefaultProcessorTest.php
+
+		-
+			message: "#^Call to static method PHPUnit\\\\Framework\\\\Assert\\:\\:assertInstanceOf\\(\\) with 'Tests\\\\\\\\Orisai\\\\\\\\ObjectMapper\\\\\\\\Doubles\\\\\\\\Circular\\\\\\\\CircularBVO' and Tests\\\\Orisai\\\\ObjectMapper\\\\Doubles\\\\Circular\\\\CircularBVO will always evaluate to true\\.$#"
+			count: 1
+			path: ../tests/Unit/Processing/DefaultProcessorTest.php
+
+		-
+			message: "#^Call to static method PHPUnit\\\\Framework\\\\Assert\\:\\:assertInstanceOf\\(\\) with 'Tests\\\\\\\\Orisai\\\\\\\\ObjectMapper\\\\\\\\Doubles\\\\\\\\DefaultsVO' and Tests\\\\Orisai\\\\ObjectMapper\\\\Doubles\\\\DefaultsVO will always evaluate to true\\.$#"
+			count: 4
+			path: ../tests/Unit/Processing/DefaultProcessorTest.php
+
+		-
+			message: "#^Call to static method PHPUnit\\\\Framework\\\\Assert\\:\\:assertInstanceOf\\(\\) with 'Tests\\\\\\\\Orisai\\\\\\\\ObjectMapper\\\\\\\\Doubles\\\\\\\\EmptyVO' and Tests\\\\Orisai\\\\ObjectMapper\\\\Doubles\\\\EmptyVO will always evaluate to true\\.$#"
+			count: 3
+			path: ../tests/Unit/Processing/DefaultProcessorTest.php
+
+		-
+			message: "#^Call to static method PHPUnit\\\\Framework\\\\Assert\\:\\:assertInstanceOf\\(\\) with 'Tests\\\\\\\\Orisai\\\\\\\\ObjectMapper\\\\\\\\Doubles\\\\\\\\Inheritance\\\\\\\\CallbacksVisibilityVO' and Tests\\\\Orisai\\\\ObjectMapper\\\\Doubles\\\\Inheritance\\\\CallbacksVisibilityVO will always evaluate to true\\.$#"
+			count: 1
+			path: ../tests/Unit/Processing/DefaultProcessorTest.php
+
+		-
+			message: "#^Call to static method PHPUnit\\\\Framework\\\\Assert\\:\\:assertInstanceOf\\(\\) with 'Tests\\\\\\\\Orisai\\\\\\\\ObjectMapper\\\\\\\\Doubles\\\\\\\\Inheritance\\\\\\\\PropertiesVisibilityVO' and Tests\\\\Orisai\\\\ObjectMapper\\\\Doubles\\\\Inheritance\\\\PropertiesVisibilityVO will always evaluate to true\\.$#"
+			count: 1
+			path: ../tests/Unit/Processing/DefaultProcessorTest.php
+
+		-
+			message: "#^Call to static method PHPUnit\\\\Framework\\\\Assert\\:\\:assertInstanceOf\\(\\) with 'Tests\\\\\\\\Orisai\\\\\\\\ObjectMapper\\\\\\\\Doubles\\\\\\\\InitializingVO' and Tests\\\\Orisai\\\\ObjectMapper\\\\Doubles\\\\InitializingVO will always evaluate to true\\.$#"
+			count: 1
+			path: ../tests/Unit/Processing/DefaultProcessorTest.php
+
+		-
+			message: "#^Call to static method PHPUnit\\\\Framework\\\\Assert\\:\\:assertInstanceOf\\(\\) with 'Tests\\\\\\\\Orisai\\\\\\\\ObjectMapper\\\\\\\\Doubles\\\\\\\\NoDefaultsVO' and Tests\\\\Orisai\\\\ObjectMapper\\\\Doubles\\\\NoDefaultsVO will always evaluate to true\\.$#"
+			count: 1
+			path: ../tests/Unit/Processing/DefaultProcessorTest.php
+
+		-
+			message: "#^Call to static method PHPUnit\\\\Framework\\\\Assert\\:\\:assertInstanceOf\\(\\) with 'Tests\\\\\\\\Orisai\\\\\\\\ObjectMapper\\\\\\\\Doubles\\\\\\\\PhpVersionSpecific\\\\\\\\AttributesVO' and Tests\\\\Orisai\\\\ObjectMapper\\\\Doubles\\\\PhpVersionSpecific\\\\AttributesVO will always evaluate to true\\.$#"
+			count: 1
+			path: ../tests/Unit/Processing/DefaultProcessorTest.php
+
+		-
+			message: "#^Call to static method PHPUnit\\\\Framework\\\\Assert\\:\\:assertInstanceOf\\(\\) with 'Tests\\\\\\\\Orisai\\\\\\\\ObjectMapper\\\\\\\\Doubles\\\\\\\\PhpVersionSpecific\\\\\\\\ReadonlyClassVO' and Tests\\\\Orisai\\\\ObjectMapper\\\\Doubles\\\\PhpVersionSpecific\\\\ReadonlyClassVO will always evaluate to true\\.$#"
+			count: 1
+			path: ../tests/Unit/Processing/DefaultProcessorTest.php
+
+		-
+			message: "#^Call to static method PHPUnit\\\\Framework\\\\Assert\\:\\:assertInstanceOf\\(\\) with 'Tests\\\\\\\\Orisai\\\\\\\\ObjectMapper\\\\\\\\Doubles\\\\\\\\PhpVersionSpecific\\\\\\\\ReadonlyPropertiesVO' and Tests\\\\Orisai\\\\ObjectMapper\\\\Doubles\\\\PhpVersionSpecific\\\\ReadonlyPropertiesVO will always evaluate to true\\.$#"
+			count: 1
+			path: ../tests/Unit/Processing/DefaultProcessorTest.php
+
+		-
+			message: "#^Call to static method PHPUnit\\\\Framework\\\\Assert\\:\\:assertInstanceOf\\(\\) with 'Tests\\\\\\\\Orisai\\\\\\\\ObjectMapper\\\\\\\\Doubles\\\\\\\\PhpVersionSpecific\\\\\\\\UntypedVO' and Tests\\\\Orisai\\\\ObjectMapper\\\\Doubles\\\\PhpVersionSpecific\\\\UntypedVO will always evaluate to true\\.$#"
+			count: 2
+			path: ../tests/Unit/Processing/DefaultProcessorTest.php
+
+		-
+			message: "#^Call to static method PHPUnit\\\\Framework\\\\Assert\\:\\:assertInstanceOf\\(\\) with 'Tests\\\\\\\\Orisai\\\\\\\\ObjectMapper\\\\\\\\Doubles\\\\\\\\StructuresVO' and Tests\\\\Orisai\\\\ObjectMapper\\\\Doubles\\\\StructuresVO will always evaluate to true\\.$#"
+			count: 1
+			path: ../tests/Unit/Processing/DefaultProcessorTest.php
+
+		-
+			message: "#^Call to static method PHPUnit\\\\Framework\\\\Assert\\:\\:assertInstanceOf\\(\\) with 'Tests\\\\\\\\Orisai\\\\\\\\ObjectMapper\\\\\\\\Doubles\\\\\\\\TransformingVO' and Tests\\\\Orisai\\\\ObjectMapper\\\\Doubles\\\\TransformingVO will always evaluate to true\\.$#"
+			count: 1
+			path: ../tests/Unit/Processing/DefaultProcessorTest.php
+
+		-
+			message: "#^Call to static method PHPUnit\\\\Framework\\\\Assert\\:\\:assertInstanceOf\\(\\) with 'stdClass' and stdClass will always evaluate to true\\.$#"
+			count: 1
+			path: ../tests/Unit/Processing/DefaultProcessorTest.php
+
+		-
+			message: "#^Parameter \\#2 \\$class of method Orisai\\\\ObjectMapper\\\\Processing\\\\DefaultProcessor\\:\\:process\\(\\) expects class\\-string\\<T of Orisai\\\\ObjectMapper\\\\MappedObject\\>, string given\\.$#"
+			count: 2
+			path: ../tests/Unit/Processing/DefaultProcessorTest.php
+
+		-
+			message: "#^Unreachable statement \\- code above always terminates\\.$#"
+			count: 3
+			path: ../tests/Unit/Processing/DefaultProcessorTest.php
+
+		-
+			message: "#^Call to static method PHPUnit\\\\Framework\\\\Assert\\:\\:assertInstanceOf\\(\\) with 'Tests\\\\\\\\Orisai\\\\\\\\ObjectMapper\\\\\\\\Doubles\\\\\\\\Constructing\\\\\\\\ConstructorUsingVO' and Tests\\\\Orisai\\\\ObjectMapper\\\\Doubles\\\\Constructing\\\\ConstructorUsingVO will always evaluate to true\\.$#"
+			count: 1
+			path: ../tests/Unit/Processing/ObjectHolderTest.php
+
+		-
+			message: "#^Call to static method PHPUnit\\\\Framework\\\\Assert\\:\\:assertInstanceOf\\(\\) with 'Tests\\\\\\\\Orisai\\\\\\\\ObjectMapper\\\\\\\\Doubles\\\\\\\\DefaultsVO' and Tests\\\\Orisai\\\\ObjectMapper\\\\Doubles\\\\DefaultsVO will always evaluate to true\\.$#"
+			count: 1
+			path: ../tests/Unit/Processing/ObjectHolderTest.php
+
+		-
+			message: "#^Parameter \\#3 \\$modifiers of class Orisai\\\\ObjectMapper\\\\Meta\\\\Runtime\\\\ClassRuntimeMeta constructor expects array\\<class\\-string\\<Orisai\\\\ObjectMapper\\\\Modifiers\\\\Modifier\\<Orisai\\\\ObjectMapper\\\\Args\\\\Args\\>\\>, Orisai\\\\ObjectMapper\\\\Meta\\\\Runtime\\\\ModifierRuntimeMeta\\<Orisai\\\\ObjectMapper\\\\Args\\\\Args\\>\\>, array\\{Orisai\\\\ObjectMapper\\\\Modifiers\\\\CreateWithoutConstructorModifier\\: Orisai\\\\ObjectMapper\\\\Meta\\\\Runtime\\\\ModifierRuntimeMeta\\<Orisai\\\\ObjectMapper\\\\Args\\\\EmptyArgs\\>\\} given\\.$#"
+			count: 1
+			path: ../tests/Unit/Processing/ObjectHolderTest.php
+
+		-
+			message: "#^Parameter \\#1 \\$rule of method Orisai\\\\ObjectMapper\\\\Rules\\\\DefaultRuleManager\\:\\:addRule\\(\\) expects Orisai\\\\ObjectMapper\\\\Rules\\\\Rule\\<Orisai\\\\ObjectMapper\\\\Args\\\\Args\\>, Tests\\\\Orisai\\\\ObjectMapper\\\\Doubles\\\\AlwaysInvalidRule given\\.$#"
+			count: 1
+			path: ../tests/Unit/Rules/AllOfRuleTest.php
+
+		-
+			message: "#^Parameter \\#1 \\$rules of class Orisai\\\\ObjectMapper\\\\Rules\\\\CompoundArgs constructor expects array\\<Orisai\\\\ObjectMapper\\\\Meta\\\\Runtime\\\\RuleRuntimeMeta\\<Orisai\\\\ObjectMapper\\\\Args\\\\Args\\>\\>, array\\{Orisai\\\\ObjectMapper\\\\Meta\\\\Runtime\\\\RuleRuntimeMeta\\<Orisai\\\\ObjectMapper\\\\Args\\\\EmptyArgs\\>, Orisai\\\\ObjectMapper\\\\Meta\\\\Runtime\\\\RuleRuntimeMeta\\<Orisai\\\\ObjectMapper\\\\Args\\\\EmptyArgs\\>, Orisai\\\\ObjectMapper\\\\Meta\\\\Runtime\\\\RuleRuntimeMeta\\<Orisai\\\\ObjectMapper\\\\Args\\\\EmptyArgs\\>\\} given\\.$#"
+			count: 2
+			path: ../tests/Unit/Rules/AllOfRuleTest.php
+
+		-
+			message: "#^Parameter \\#1 \\$rules of class Orisai\\\\ObjectMapper\\\\Rules\\\\CompoundArgs constructor expects array\\<Orisai\\\\ObjectMapper\\\\Meta\\\\Runtime\\\\RuleRuntimeMeta\\<Orisai\\\\ObjectMapper\\\\Args\\\\Args\\>\\>, array\\{Orisai\\\\ObjectMapper\\\\Meta\\\\Runtime\\\\RuleRuntimeMeta\\<Orisai\\\\ObjectMapper\\\\Args\\\\EmptyArgs\\>, Orisai\\\\ObjectMapper\\\\Meta\\\\Runtime\\\\RuleRuntimeMeta\\<Orisai\\\\ObjectMapper\\\\Args\\\\EmptyArgs\\>\\} given\\.$#"
+			count: 1
+			path: ../tests/Unit/Rules/AllOfRuleTest.php
+
+		-
+			message: "#^Parameter \\#1 \\$rules of class Orisai\\\\ObjectMapper\\\\Rules\\\\CompoundArgs constructor expects array\\<Orisai\\\\ObjectMapper\\\\Meta\\\\Runtime\\\\RuleRuntimeMeta\\<Orisai\\\\ObjectMapper\\\\Args\\\\Args\\>\\>, array\\{Orisai\\\\ObjectMapper\\\\Meta\\\\Runtime\\\\RuleRuntimeMeta\\<Orisai\\\\ObjectMapper\\\\Rules\\\\MappedObjectArgs\\>, Orisai\\\\ObjectMapper\\\\Meta\\\\Runtime\\\\RuleRuntimeMeta\\<Orisai\\\\ObjectMapper\\\\Args\\\\EmptyArgs\\>\\} given\\.$#"
+			count: 1
+			path: ../tests/Unit/Rules/AllOfRuleTest.php
+
+		-
+			message: "#^Parameter \\#1 \\$type of class Orisai\\\\ObjectMapper\\\\Meta\\\\Compile\\\\RuleCompileMeta constructor expects class\\-string\\<Orisai\\\\ObjectMapper\\\\Rules\\\\Rule\\<Orisai\\\\ObjectMapper\\\\Args\\\\Args\\>\\>, 'Orisai\\\\\\\\ObjectMapper\\\\\\\\Rules\\\\\\\\MixedRule' given\\.$#"
+			count: 2
+			path: ../tests/Unit/Rules/AllOfRuleTest.php
+
+		-
+			message: "#^Parameter \\#1 \\$rule of method Orisai\\\\ObjectMapper\\\\Rules\\\\DefaultRuleManager\\:\\:addRule\\(\\) expects Orisai\\\\ObjectMapper\\\\Rules\\\\Rule\\<Orisai\\\\ObjectMapper\\\\Args\\\\Args\\>, Tests\\\\Orisai\\\\ObjectMapper\\\\Doubles\\\\AlwaysInvalidRule given\\.$#"
+			count: 1
+			path: ../tests/Unit/Rules/AnyOfRuleTest.php
+
+		-
+			message: "#^Parameter \\#1 \\$rules of class Orisai\\\\ObjectMapper\\\\Rules\\\\CompoundArgs constructor expects array\\<Orisai\\\\ObjectMapper\\\\Meta\\\\Runtime\\\\RuleRuntimeMeta\\<Orisai\\\\ObjectMapper\\\\Args\\\\Args\\>\\>, array\\{Orisai\\\\ObjectMapper\\\\Meta\\\\Runtime\\\\RuleRuntimeMeta\\<Orisai\\\\ObjectMapper\\\\Args\\\\EmptyArgs\\>, Orisai\\\\ObjectMapper\\\\Meta\\\\Runtime\\\\RuleRuntimeMeta\\<Orisai\\\\ObjectMapper\\\\Args\\\\EmptyArgs\\>, Orisai\\\\ObjectMapper\\\\Meta\\\\Runtime\\\\RuleRuntimeMeta\\<Orisai\\\\ObjectMapper\\\\Args\\\\EmptyArgs\\>\\} given\\.$#"
+			count: 2
+			path: ../tests/Unit/Rules/AnyOfRuleTest.php
+
+		-
+			message: "#^Parameter \\#1 \\$rules of class Orisai\\\\ObjectMapper\\\\Rules\\\\CompoundArgs constructor expects array\\<Orisai\\\\ObjectMapper\\\\Meta\\\\Runtime\\\\RuleRuntimeMeta\\<Orisai\\\\ObjectMapper\\\\Args\\\\Args\\>\\>, array\\{Orisai\\\\ObjectMapper\\\\Meta\\\\Runtime\\\\RuleRuntimeMeta\\<Orisai\\\\ObjectMapper\\\\Args\\\\EmptyArgs\\>, Orisai\\\\ObjectMapper\\\\Meta\\\\Runtime\\\\RuleRuntimeMeta\\<Orisai\\\\ObjectMapper\\\\Args\\\\EmptyArgs\\>\\} given\\.$#"
+			count: 1
+			path: ../tests/Unit/Rules/AnyOfRuleTest.php
+
+		-
+			message: "#^Parameter \\#1 \\$rules of class Orisai\\\\ObjectMapper\\\\Rules\\\\CompoundArgs constructor expects array\\<Orisai\\\\ObjectMapper\\\\Meta\\\\Runtime\\\\RuleRuntimeMeta\\<Orisai\\\\ObjectMapper\\\\Args\\\\Args\\>\\>, array\\{Orisai\\\\ObjectMapper\\\\Meta\\\\Runtime\\\\RuleRuntimeMeta\\<Orisai\\\\ObjectMapper\\\\Args\\\\EmptyArgs\\>, Orisai\\\\ObjectMapper\\\\Meta\\\\Runtime\\\\RuleRuntimeMeta\\<Orisai\\\\ObjectMapper\\\\Rules\\\\MappedObjectArgs\\>\\} given\\.$#"
+			count: 1
+			path: ../tests/Unit/Rules/AnyOfRuleTest.php
+
+		-
+			message: "#^Parameter \\#1 \\$type of class Orisai\\\\ObjectMapper\\\\Meta\\\\Compile\\\\RuleCompileMeta constructor expects class\\-string\\<Orisai\\\\ObjectMapper\\\\Rules\\\\Rule\\<Orisai\\\\ObjectMapper\\\\Args\\\\Args\\>\\>, 'Orisai\\\\\\\\ObjectMapper\\\\\\\\Rules\\\\\\\\MixedRule' given\\.$#"
+			count: 2
+			path: ../tests/Unit/Rules/AnyOfRuleTest.php
+
+		-
+			message: "#^Parameter \\#1 \\$itemRuleMeta of class Orisai\\\\ObjectMapper\\\\Rules\\\\ArrayOfArgs constructor expects Orisai\\\\ObjectMapper\\\\Meta\\\\Runtime\\\\RuleRuntimeMeta\\<Orisai\\\\ObjectMapper\\\\Args\\\\Args\\>, Orisai\\\\ObjectMapper\\\\Meta\\\\Runtime\\\\RuleRuntimeMeta\\<Orisai\\\\ObjectMapper\\\\Args\\\\EmptyArgs\\> given\\.$#"
+			count: 6
+			path: ../tests/Unit/Rules/ArrayOfRuleTest.php
+
+		-
+			message: "#^Parameter \\#1 \\$itemRuleMeta of class Orisai\\\\ObjectMapper\\\\Rules\\\\ArrayOfArgs constructor expects Orisai\\\\ObjectMapper\\\\Meta\\\\Runtime\\\\RuleRuntimeMeta\\<Orisai\\\\ObjectMapper\\\\Args\\\\Args\\>, Orisai\\\\ObjectMapper\\\\Meta\\\\Runtime\\\\RuleRuntimeMeta\\<Orisai\\\\ObjectMapper\\\\Rules\\\\StringArgs\\> given\\.$#"
+			count: 3
+			path: ../tests/Unit/Rules/ArrayOfRuleTest.php
+
+		-
+			message: "#^Parameter \\#1 \\$rule of method Orisai\\\\ObjectMapper\\\\Rules\\\\DefaultRuleManager\\:\\:addRule\\(\\) expects Orisai\\\\ObjectMapper\\\\Rules\\\\Rule\\<Orisai\\\\ObjectMapper\\\\Args\\\\Args\\>, Tests\\\\Orisai\\\\ObjectMapper\\\\Doubles\\\\AlwaysInvalidRule given\\.$#"
+			count: 1
+			path: ../tests/Unit/Rules/ArrayOfRuleTest.php
+
+		-
+			message: "#^Parameter \\#2 \\$keyRuleMeta of class Orisai\\\\ObjectMapper\\\\Rules\\\\ArrayOfArgs constructor expects Orisai\\\\ObjectMapper\\\\Meta\\\\Runtime\\\\RuleRuntimeMeta\\<Orisai\\\\ObjectMapper\\\\Args\\\\Args\\>\\|null, Orisai\\\\ObjectMapper\\\\Meta\\\\Runtime\\\\RuleRuntimeMeta\\<Orisai\\\\ObjectMapper\\\\Rules\\\\StringArgs\\> given\\.$#"
+			count: 3
+			path: ../tests/Unit/Rules/ArrayOfRuleTest.php
+
+		-
+			message: "#^Call to static method PHPUnit\\\\Framework\\\\Assert\\:\\:assertInstanceOf\\(\\) with 'Tests\\\\\\\\Orisai\\\\\\\\ObjectMapper\\\\\\\\Doubles\\\\\\\\AlwaysInvalidRule' and Tests\\\\Orisai\\\\ObjectMapper\\\\Doubles\\\\AlwaysInvalidRule will always evaluate to true\\.$#"
+			count: 1
+			path: ../tests/Unit/Rules/DefaultRuleManagerTest.php
+
+		-
+			message: "#^Parameter \\#1 \\$rule of method Orisai\\\\ObjectMapper\\\\Rules\\\\DefaultRuleManager\\:\\:addRule\\(\\) expects Orisai\\\\ObjectMapper\\\\Rules\\\\Rule\\<Orisai\\\\ObjectMapper\\\\Args\\\\Args\\>, Tests\\\\Orisai\\\\ObjectMapper\\\\Doubles\\\\AlwaysInvalidRule given\\.$#"
+			count: 1
+			path: ../tests/Unit/Rules/DefaultRuleManagerTest.php
+
+		-
+			message: "#^Call to static method PHPUnit\\\\Framework\\\\Assert\\:\\:assertInstanceOf\\(\\) with 'Orisai\\\\\\\\ObjectMapper\\\\\\\\Types\\\\\\\\KeyValueErrorPair' and Orisai\\\\ObjectMapper\\\\Types\\\\KeyValueErrorPair will always evaluate to true\\.$#"
+			count: 3
+			path: ../tests/Unit/Rules/ListOfRuleTest.php
+
+		-
+			message: "#^Cannot call method getType\\(\\) on Orisai\\\\ObjectMapper\\\\Exception\\\\WithTypeAndValue\\|null\\.$#"
+			count: 4
+			path: ../tests/Unit/Rules/ListOfRuleTest.php
+
+		-
+			message: "#^Parameter \\#1 \\$itemRuleMeta of class Orisai\\\\ObjectMapper\\\\Rules\\\\MultiValueArgs constructor expects Orisai\\\\ObjectMapper\\\\Meta\\\\Runtime\\\\RuleRuntimeMeta\\<Orisai\\\\ObjectMapper\\\\Args\\\\Args\\>, Orisai\\\\ObjectMapper\\\\Meta\\\\Runtime\\\\RuleRuntimeMeta\\<Orisai\\\\ObjectMapper\\\\Args\\\\EmptyArgs\\> given\\.$#"
+			count: 5
+			path: ../tests/Unit/Rules/ListOfRuleTest.php
+
+		-
+			message: "#^Parameter \\#1 \\$itemRuleMeta of class Orisai\\\\ObjectMapper\\\\Rules\\\\MultiValueArgs constructor expects Orisai\\\\ObjectMapper\\\\Meta\\\\Runtime\\\\RuleRuntimeMeta\\<Orisai\\\\ObjectMapper\\\\Args\\\\Args\\>, Orisai\\\\ObjectMapper\\\\Meta\\\\Runtime\\\\RuleRuntimeMeta\\<Orisai\\\\ObjectMapper\\\\Rules\\\\StringArgs\\> given\\.$#"
+			count: 3
+			path: ../tests/Unit/Rules/ListOfRuleTest.php
+
+		-
+			message: "#^Parameter \\#1 \\$rule of method Orisai\\\\ObjectMapper\\\\Rules\\\\DefaultRuleManager\\:\\:addRule\\(\\) expects Orisai\\\\ObjectMapper\\\\Rules\\\\Rule\\<Orisai\\\\ObjectMapper\\\\Args\\\\Args\\>, Tests\\\\Orisai\\\\ObjectMapper\\\\Doubles\\\\AlwaysInvalidRule given\\.$#"
+			count: 1
+			path: ../tests/Unit/Rules/ListOfRuleTest.php
+
+		-
+			message: "#^Call to static method PHPUnit\\\\Framework\\\\Assert\\:\\:assertNull\\(\\) with null will always evaluate to true\\.$#"
+			count: 2
+			path: ../tests/Unit/Rules/NullRuleTest.php
