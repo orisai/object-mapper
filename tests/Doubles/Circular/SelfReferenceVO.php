@@ -17,7 +17,7 @@ final class SelfReferenceVO implements MappedObject
 	 *     @NullValue(),
 	 * })
 	 */
-	public ?SelfReferenceVO $selfOrNull;
+	public ?self $selfOrNull;
 
 	/** @StringValue() */
 	public string $another;
