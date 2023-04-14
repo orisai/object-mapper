@@ -57,10 +57,9 @@ abstract class BaseMetaSource implements MetaSource
 	 */
 	private function getStructuresList(ReflectionClass $class): StructuresList
 	{
-		$builder = new StructureBuilder();
-		$flattener = new StructureFlattener();
-
-		return $flattener->flatten($builder->build($class));
+		return StructureFlattener::flatten(
+			StructureBuilder::build($class),
+		);
 	}
 
 	/**
