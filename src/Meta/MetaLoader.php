@@ -10,6 +10,7 @@ use Orisai\ObjectMapper\Meta\Compile\CompileMeta;
 use Orisai\ObjectMapper\Meta\Runtime\RuntimeMeta;
 use Orisai\SourceMap\ClassSource;
 use ReflectionClass;
+use ReflectionEnum;
 use function array_merge;
 use function array_unique;
 use function array_values;
@@ -87,9 +88,15 @@ final class MetaLoader
 
 		assert(is_subclass_of($class, MappedObject::class));
 
+		// Intentionally not calling isInstantiable() - we are able to skip (private) ctor
 		if ($classRef->isAbstract() || $classRef->isInterface() || $classRef->isTrait()) {
 			throw InvalidArgument::create()
 				->withMessage("Class '$class' must be instantiable.");
+		}
+
+		if ($classRef instanceof ReflectionEnum) {
+			throw InvalidArgument::create()
+				->withMessage("Class '$class' can't be an enum.");
 		}
 
 		return $classRef;
