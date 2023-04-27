@@ -21,7 +21,7 @@ use Orisai\ObjectMapper\Meta\MetaSource;
 use Orisai\ReflectionMeta\Reader\MetaReader;
 use Orisai\ReflectionMeta\Structure\StructureBuilder;
 use Orisai\ReflectionMeta\Structure\StructureFlattener;
-use Orisai\ReflectionMeta\Structure\StructuresList;
+use Orisai\ReflectionMeta\Structure\StructureList;
 use ReflectionClass;
 use function get_class;
 use function sprintf;
@@ -38,7 +38,7 @@ abstract class BaseMetaSource implements MetaSource
 
 	public function load(ReflectionClass $class): CompileMeta
 	{
-		$structures = $this->getStructuresList($class);
+		$structures = $this->getStructureList($class);
 
 		$sources = [];
 		foreach ($structures->getClasses() as $structure) {
@@ -55,7 +55,7 @@ abstract class BaseMetaSource implements MetaSource
 	/**
 	 * @param ReflectionClass<MappedObject> $class
 	 */
-	private function getStructuresList(ReflectionClass $class): StructuresList
+	private function getStructureList(ReflectionClass $class): StructureList
 	{
 		return StructureFlattener::flatten(
 			StructureBuilder::build($class),
@@ -65,7 +65,7 @@ abstract class BaseMetaSource implements MetaSource
 	/**
 	 * @return list<ClassCompileMeta>
 	 */
-	private function loadClassMeta(StructuresList $structures): array
+	private function loadClassMeta(StructureList $structures): array
 	{
 		$resolved = [];
 		foreach ($structures->getClasses() as $class) {
@@ -115,7 +115,7 @@ abstract class BaseMetaSource implements MetaSource
 	/**
 	 * @return list<FieldCompileMeta>
 	 */
-	private function loadPropertiesMeta(StructuresList $structures): array
+	private function loadPropertiesMeta(StructureList $structures): array
 	{
 		$fields = [];
 
