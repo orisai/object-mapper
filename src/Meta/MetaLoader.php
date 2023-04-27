@@ -86,8 +86,6 @@ final class MetaLoader
 				->withMessage("Class '$class' should be subclass of '$mappedObjectClass'.");
 		}
 
-		assert(is_subclass_of($class, MappedObject::class));
-
 		// Intentionally not calling isInstantiable() - we are able to skip (private) ctor
 		if ($classRef->isAbstract() || $classRef->isInterface() || $classRef->isTrait()) {
 			throw InvalidArgument::create()
