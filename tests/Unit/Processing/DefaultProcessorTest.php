@@ -454,7 +454,7 @@ MSG,
 		$data = [
 			'bool' => 'true',
 			'int' => '123',
-			'float' => '123,456',
+			'float' => '123.456',
 			'stdClassOrNull' => '',
 		];
 		$vo = $this->processor->process($data, TransformingVO::class, $options);

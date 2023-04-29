@@ -99,12 +99,7 @@ final class FloatRuleTest extends ProcessingTestCase
 		yield ['+10.12', 10.12];
 		yield ['100', 100.0];
 		yield ['100.12', 100.12];
-		yield ['100,12', 100.12];
-		yield ['100 000', 100_000.0];
-		yield ['100 000.12', 100_000.12];
 		yield ['-100', -100.0];
-		yield ['-100 000', -100_000.0];
-		yield ['-100 000.12', -100_000.12];
 	}
 
 	/**
@@ -112,14 +107,14 @@ final class FloatRuleTest extends ProcessingTestCase
 	 *
 	 * @dataProvider provideInvalidValues
 	 */
-	public function testProcessInvalid($value): void
+	public function testProcessInvalid($value, ?FloatArgs $args = null): void
 	{
 		$exception = null;
 
 		try {
 			$this->rule->processValue(
 				$value,
-				new FloatArgs(),
+				$args ?? new FloatArgs(),
 				$this->fieldContext(),
 			);
 		} catch (ValueDoesNotMatch $exception) {
@@ -145,6 +140,12 @@ final class FloatRuleTest extends ProcessingTestCase
 		yield ['100'];
 		yield ['100.12'];
 		yield [null];
+
+		yield ['100,12', new FloatArgs(null, null, false, true)];
+		yield ['100 000', new FloatArgs(null, null, false, true)];
+		yield ['100 000.12', new FloatArgs(null, null, false, true)];
+		yield ['-100 000', new FloatArgs(null, null, false, true)];
+		yield ['-100 000.12', new FloatArgs(null, null, false, true)];
 	}
 
 	public function testProcessInvalidParameterMax(): void

@@ -301,6 +301,7 @@ Parameters:
 	- accepts also numeric strings (float and int)
 	- value is cast to respective float value
 	- default `false` - numeric strings are not cast
+	- e.g. `'10.0'`, `'10'`, `'+10.0'`, `'-10.0'` (commas, spaces etc. are not supported)
 
 ### instanceof rule
 
