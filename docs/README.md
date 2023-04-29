@@ -1116,42 +1116,6 @@ final class ReadonlyOptionalInput implements MappedObject
 }
 ```
 
-If field uses [MappedObject rule](#mappedobject-rule) and all fields of that object are optional, object is initialized
-even when no value is sent.
-
-- If MappedObject rule is used inside any other rule (like all of, any of, array of, ...), object is not initialized
-- Logically this is equivalent of sending empty array (`['field' => []]`)
-- This logic is used only for [default processing mode](#processing-modes). All required and none required modes don't
-  initialize objects automatically.
-
-```php
-use Orisai\ObjectMapper\Attributes\Expect\MappedObjectValue;
-use Orisai\ObjectMapper\Attributes\Expect\StringValue;
-use Orisai\ObjectMapper\MappedObject;
-
-final class AllOptionalInput implements MappedObject
-{
-
-	/** @MappedObjectValue(AllOptionalInnerInput::class) */
-	public AllOptionalInnerInput $field;
-
-}
-
-final class AllOptionalInnerInput implements MappedObject
-{
-
-	/** @StringValue() */
-	public string $optional = 'default value';
-
-}
-```
-
-```php
-$data = [];
-$input = $processor->process($data, AllOptionalInput::class);
-// $input == AllOptionalInput(field: AllOptionalInnerInput(optional: 'default value'))
-```
-
 ## Allow unknown fields
 
 Make unknown fields allowed instead of throwing exception.

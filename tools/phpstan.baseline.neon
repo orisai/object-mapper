@@ -1,6 +1,11 @@
 parameters:
 	ignoreErrors:
 		-
+			message: "#^Method Tests\\\\Orisai\\\\ObjectMapper\\\\Doubles\\\\Callbacks\\\\ObjectInitializingVO\\:\\:before\\(\\) is unused\\.$#"
+			count: 1
+			path: ../tests/Doubles/Callbacks/ObjectInitializingVO.php
+
+		-
 			message: "#^Property Tests\\\\Orisai\\\\ObjectMapper\\\\Doubles\\\\Circular\\\\CircularCVO\\:\\:\\$as type has no value type specified in iterable type array\\.$#"
 			count: 1
 			path: ../tests/Doubles/Circular/CircularCVO.php
@@ -257,7 +262,7 @@ parameters:
 
 		-
 			message: "#^Call to static method PHPUnit\\\\Framework\\\\Assert\\:\\:assertInstanceOf\\(\\) with 'Tests\\\\\\\\Orisai\\\\\\\\ObjectMapper\\\\\\\\Doubles\\\\\\\\DefaultsVO' and Tests\\\\Orisai\\\\ObjectMapper\\\\Doubles\\\\DefaultsVO will always evaluate to true\\.$#"
-			count: 4
+			count: 6
 			path: ../tests/Unit/Processing/DefaultProcessorTest.php
 
 		-

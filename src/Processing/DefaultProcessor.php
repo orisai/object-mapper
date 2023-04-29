@@ -40,7 +40,6 @@ use function assert;
 use function get_class;
 use function implode;
 use function in_array;
-use function is_a;
 use function is_array;
 use function sprintf;
 
@@ -401,25 +400,6 @@ final class DefaultProcessor implements Processor
 				//   and they are defined by VO anyway
 				if ($fillDefaultValues) {
 					$data[$missingField] = $defaultMeta->getValue();
-				}
-			} elseif (
-				$requiredFields === RequiredFields::nonDefault()
-				&& is_a($fieldMeta->getRule()->getType(), MappedObjectRule::class, true)
-			) {
-				// Try to initialize object from empty array when no data given
-				// Mapped object in compound type is not supported (allOf, anyOf)
-				// Used only in default mode - if all or none values are required then we need differentiate whether user sent value or not
-				$mappedObjectArgs = $fieldMeta->getRule()->getArgs();
-				assert($mappedObjectArgs instanceof MappedObjectArgs);
-				try {
-					$data[$missingField] = $initializeObjects
-						? $this->process([], $mappedObjectArgs->type, $options->createClone())
-						: $this->processWithoutMapping([], $mappedObjectArgs->type, $options->createClone());
-				} catch (InvalidData $exception) {
-					$type->overwriteInvalidField(
-						$missingField,
-						InvalidData::create($exception->getType(), Value::none()),
-					);
 				}
 			} elseif ($requiredFields !== RequiredFields::none() && !$type->isFieldInvalid($missingField)) {
 				// Field is missing and have no default value, mark as invalid

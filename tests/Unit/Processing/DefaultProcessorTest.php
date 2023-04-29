@@ -22,6 +22,8 @@ use Tests\Orisai\ObjectMapper\Doubles\Callbacks\BeforeClassCallbackMixedValueVO;
 use Tests\Orisai\ObjectMapper\Doubles\Callbacks\BeforeClassCallbackValueDoesNotMatchVO;
 use Tests\Orisai\ObjectMapper\Doubles\Callbacks\CallbacksVO;
 use Tests\Orisai\ObjectMapper\Doubles\Callbacks\CallbacksVoContext;
+use Tests\Orisai\ObjectMapper\Doubles\Callbacks\ObjectInitializingVO;
+use Tests\Orisai\ObjectMapper\Doubles\Callbacks\ObjectInitializingVoPhp81;
 use Tests\Orisai\ObjectMapper\Doubles\Callbacks\PropertyCallbacksFailureVO;
 use Tests\Orisai\ObjectMapper\Doubles\Circular\CircularAVO;
 use Tests\Orisai\ObjectMapper\Doubles\Circular\CircularBVO;
@@ -180,6 +182,7 @@ manyStructures: array<int, shape{
 			'string' => 'foo',
 			'nullableString' => null,
 			'arrayOfMixed' => [],
+			'structure' => [],
 			'manyStructures' => [
 				[],
 				[],
@@ -202,6 +205,7 @@ manyStructures: array<int, shape{
 	public function testStructures(): void
 	{
 		$data = [
+			'structure' => [],
 			'structureOrArray' => ['valueWhichIsNotInDefaultsVO' => null],
 			'anotherStructureOrArray' => ['string' => 'value of property which is in DefaultsVO'],
 			'manyStructures' => [
@@ -213,6 +217,7 @@ manyStructures: array<int, shape{
 					'string' => 'example',
 					'nullableString' => 'example',
 					'arrayOfMixed' => [],
+					'structure' => [],
 					'manyStructures' => [],
 				],
 			],
@@ -812,6 +817,7 @@ validationFailed: string',
 
 		$vo = $this->processor->process([
 			'required' => null,
+			'structure' => [],
 		], PropertiesInitVO::class, $options);
 
 		self::assertTrue($this->isInitialized($vo, 'required'));
@@ -821,6 +827,24 @@ validationFailed: string',
 		self::assertNull($vo->required);
 		self::assertNull($vo->optional);
 		self::assertInstanceOf(EmptyVO::class, $vo->structure);
+	}
+
+	public function testObjectInitialization(): void
+	{
+		$vo = $this->processor->process([], ObjectInitializingVO::class);
+
+		self::assertInstanceOf(DefaultsVO::class, $vo->inner);
+	}
+
+	public function testObjectInitializationPhp81(): void
+	{
+		if (PHP_VERSION_ID < 8_01_00) {
+			self::markTestSkipped('New in initializers is supported since PHP 8.1');
+		}
+
+		$vo = $this->processor->process([], ObjectInitializingVoPhp81::class);
+
+		self::assertInstanceOf(DefaultsVO::class, $vo->inner);
 	}
 
 	public function testRequireAllFields(): void
