@@ -34,6 +34,7 @@ use function array_merge;
 use function class_exists;
 use function get_class;
 use function sprintf;
+use const PHP_VERSION_ID;
 
 /**
  * Validate meta and resolve context-specific arguments
@@ -287,8 +288,22 @@ final class MetaResolver
 
 		$property = $meta->getProperty();
 		$propertyName = $property->getName();
+		$declaringClass = $property->getDeclaringClass();
 
-		$defaults = $property->getDeclaringClass()->getDefaultProperties();
+		// Promoted property default value is accessible only via ctor parameter
+		if (PHP_VERSION_ID >= 8_01_00 && $property->isPromoted()) {
+			$ctor = $declaringClass->getMethod('__construct');
+			foreach ($ctor->getParameters() as $parameter) {
+				if ($parameter->getName() === $propertyName) {
+					return $parameter->isOptional()
+						? DefaultValueMeta::fromValue($parameter->getDefaultValue())
+						: DefaultValueMeta::fromNothing();
+				}
+			}
+		}
+
+		// ReflectionProperty->getDefaultValue() is available since PHP 8.0, we support 7.4
+		$defaults = $declaringClass->getDefaultProperties();
 		if (!array_key_exists($propertyName, $defaults)) {
 			return DefaultValueMeta::fromNothing();
 		}

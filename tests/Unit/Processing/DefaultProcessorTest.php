@@ -48,6 +48,7 @@ use Tests\Orisai\ObjectMapper\Doubles\Inheritance\TraitInsteadOf1\TraitInstead1O
 use Tests\Orisai\ObjectMapper\Doubles\InitializingVO;
 use Tests\Orisai\ObjectMapper\Doubles\NoDefaultsVO;
 use Tests\Orisai\ObjectMapper\Doubles\PhpVersionSpecific\AttributesVO;
+use Tests\Orisai\ObjectMapper\Doubles\PhpVersionSpecific\ConstructorPromotedVO;
 use Tests\Orisai\ObjectMapper\Doubles\PhpVersionSpecific\ObjectDefaultVO;
 use Tests\Orisai\ObjectMapper\Doubles\PhpVersionSpecific\ReadonlyClassVO;
 use Tests\Orisai\ObjectMapper\Doubles\PhpVersionSpecific\ReadonlyPropertiesVO;
@@ -1264,6 +1265,29 @@ arrayOfMixed: array<mixed>',
 		self::assertSame('value', $vo->readonly);
 		self::assertSame('default', $vo->default1);
 		self::assertSame('overridden', $vo->default2);
+	}
+
+	public function testConstructorPromotion(): void
+	{
+		if (PHP_VERSION_ID < 8_01_00) {
+			self::markTestSkipped('Ctor promotion requires PHP 8.0, new in initializer requires PHP 8.1');
+		}
+
+		$data = [
+			'requiredString' => 'given',
+			'requiredObject' => [],
+			'requiredUntyped' => null,
+		];
+
+		$vo = $this->processor->process($data, ConstructorPromotedVO::class);
+
+		self::assertInstanceOf(ConstructorPromotedVO::class, $vo);
+		self::assertSame('given', $vo->requiredString);
+		self::assertNull($vo->requiredUntyped);
+		self::assertInstanceOf(DefaultsVO::class, $vo->requiredObject);
+		self::assertSame('default', $vo->optionalString);
+		self::assertInstanceOf(DefaultsVO::class, $vo->optionalObject);
+		self::assertNull($vo->optionalUntyped);
 	}
 
 	private function isInitialized(MappedObject $object, string $property): bool
