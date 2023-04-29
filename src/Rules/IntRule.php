@@ -15,7 +15,6 @@ use function is_int;
 use function is_string;
 use function preg_match;
 use function sprintf;
-use function str_replace;
 
 /**
  * @implements Rule<IntArgs>
@@ -171,9 +170,6 @@ final class IntRule implements Rule
 	 */
 	private function tryConvert(string $value)
 	{
-		// Remove regular spaces
-		$value = str_replace(' ', '', $value);
-
 		if (preg_match('#^[+-]?[0-9]+\z#', $value) === 1) {
 			return (int) $value;
 		}

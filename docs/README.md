@@ -388,6 +388,7 @@ Parameters:
 	- accepts also numeric strings (int)
 	- value is cast to respective int value
 	- default `false` - numeric strings are not cast
+	- e.g. `'10'`, `'+10'`, `'-10'` (commas, spaces etc. are not supported)
 
 ### mixed rule
 

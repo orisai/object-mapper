@@ -79,9 +79,7 @@ final class IntRuleTest extends ProcessingTestCase
 		yield [10, 10];
 		yield ['+10', 10];
 		yield ['100', 100];
-		yield ['100 000', 100_000];
 		yield ['-100', -100];
-		yield ['-100 000', -100_000];
 	}
 
 	/**
@@ -89,14 +87,14 @@ final class IntRuleTest extends ProcessingTestCase
 	 *
 	 * @dataProvider provideInvalidValues
 	 */
-	public function testProcessInvalid($value): void
+	public function testProcessInvalid($value, ?IntArgs $args = null): void
 	{
 		$exception = null;
 
 		try {
 			$this->rule->processValue(
 				$value,
-				new IntArgs(),
+				$args ?? new IntArgs(),
 				$this->fieldContext(),
 			);
 		} catch (ValueDoesNotMatch $exception) {
@@ -123,6 +121,14 @@ final class IntRuleTest extends ProcessingTestCase
 		yield ['0 foo'];
 		yield ['100'];
 		yield [null];
+
+		yield ['100 000', new IntArgs(null, null, false, true)];
+		yield ['-100 000', new IntArgs(null, null, false, true)];
+		yield ['100,12', new IntArgs(null, null, false, true)];
+		yield ['100 000', new IntArgs(null, null, false, true)];
+		yield ['100 000.12', new IntArgs(null, null, false, true)];
+		yield ['-100 000', new IntArgs(null, null, false, true)];
+		yield ['-100 000.12', new IntArgs(null, null, false, true)];
 	}
 
 	public function testProcessInvalidParameterMax(): void
