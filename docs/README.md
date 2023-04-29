@@ -31,7 +31,6 @@ of them to type-safe objects.
 		- [BackedEnum](#backedenum-rule)
 		- [DateTime](#datetime-rule)
 		- [MappedObject](#mappedobject-rule)
-		- [URL](#url-rule)
 - [Optional fields and default values](#optional-fields-and-default-values)
 - [Allow unknown fields](#allow-unknown-fields)
 	- [Ambiguous definitions with unknown fields allowed](#ambiguous-definitions-with-unknown-fields-allowed)
@@ -1002,35 +1001,6 @@ Parameters:
 - `type`
 	- subclass of `MappedObject` which should be created
 	- required
-
-### URL rule
-
-Expects valid url address
-
-```php
-use Orisai\ObjectMapper\Attributes\Expect\UrlValue;
-use Orisai\ObjectMapper\MappedObject;
-
-final class UrlInput implements MappedObject
-{
-
-    /** @UrlValue() */
-    public string $field;
-
-}
-```
-
-```php
-$data = [
-	'field' => 'https://example.com',
-];
-$input = $processor->process($data, UrlInput::class);
-// $input == UrlInput(field: 'https://example.com')
-```
-
-Parameters:
-
-- no parameters
 
 ## Optional fields and default values
 

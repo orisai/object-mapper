@@ -23,7 +23,6 @@ interface RuleManager
 		ObjectRule::class,
 		ScalarRule::class,
 		StringRule::class,
-		UrlRule::class,
 	];
 
 	/**
