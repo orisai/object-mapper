@@ -31,6 +31,7 @@ of them to type-safe objects.
 		- [BackedEnum](#backedenum-rule)
 		- [DateTime](#datetime-rule)
 		- [MappedObject](#mappedobject-rule)
+	- [Registering custom rules](#registering-custom-rules)
 - [Optional fields and default values](#optional-fields-and-default-values)
 - [Allow unknown fields](#allow-unknown-fields)
 	- [Ambiguous definitions with unknown fields allowed](#ambiguous-definitions-with-unknown-fields-allowed)
@@ -1003,6 +1004,18 @@ Parameters:
 - `type`
 	- subclass of `MappedObject` which should be created
 	- required
+
+## Registering custom rules
+
+To make custom rules available, register them in rule manager
+
+```php
+use Orisai\ObjectMapper\Rules\DefaultRuleManager;
+use Example\CustomRule;
+
+$ruleManager = new DefaultRuleManager();
+$ruleManager->addRule(new CustomRule());
+```
 
 ## Optional fields and default values
 
