@@ -4,7 +4,7 @@ namespace Tests\Orisai\ObjectMapper\Unit\Printers;
 
 use Orisai\ObjectMapper\Context\TypeContext;
 use Orisai\ObjectMapper\MappedObject;
-use Orisai\ObjectMapper\Meta\ArrayMetaCache;
+use Orisai\ObjectMapper\Meta\Cache\ArrayMetaCache;
 use Orisai\ObjectMapper\Meta\DefaultMetaResolverFactory;
 use Orisai\ObjectMapper\Meta\MetaLoader;
 use Orisai\ObjectMapper\Meta\Source\AnnotationsMetaSource;

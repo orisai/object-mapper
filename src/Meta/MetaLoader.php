@@ -5,6 +5,7 @@ namespace Orisai\ObjectMapper\Meta;
 use Nette\Loaders\RobotLoader;
 use Orisai\Exceptions\Logic\InvalidArgument;
 use Orisai\ObjectMapper\MappedObject;
+use Orisai\ObjectMapper\Meta\Cache\MetaCache;
 use Orisai\ObjectMapper\Meta\Compile\ClassCompileMeta;
 use Orisai\ObjectMapper\Meta\Compile\CompileMeta;
 use Orisai\ObjectMapper\Meta\Runtime\RuntimeMeta;

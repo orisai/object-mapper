@@ -2,7 +2,7 @@
 
 namespace Orisai\ObjectMapper\Tester;
 
-use Orisai\ObjectMapper\Meta\ArrayMetaCache;
+use Orisai\ObjectMapper\Meta\Cache\ArrayMetaCache;
 use Orisai\ObjectMapper\Meta\DefaultMetaResolverFactory;
 use Orisai\ObjectMapper\Meta\MetaLoader;
 use Orisai\ObjectMapper\Meta\Source\AnnotationsMetaSource;
