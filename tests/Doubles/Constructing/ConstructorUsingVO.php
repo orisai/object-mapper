@@ -2,8 +2,8 @@
 
 namespace Tests\Orisai\ObjectMapper\Doubles\Constructing;
 
-use Orisai\ObjectMapper\Attributes\Modifiers\CreateWithoutConstructor;
 use Orisai\ObjectMapper\MappedObject;
+use Orisai\ObjectMapper\Modifiers\CreateWithoutConstructor;
 use Orisai\ObjectMapper\Rules\StringValue;
 
 /**

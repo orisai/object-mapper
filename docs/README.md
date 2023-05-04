@@ -1058,7 +1058,7 @@ use Orisai\ObjectMapper\Rules\AnyOf;
 use Orisai\ObjectMapper\Rules\MixedValue;
 use Orisai\ObjectMapper\Rules\NullValue;
 use Orisai\ObjectMapper\Rules\StringValue;
-use Orisai\ObjectMapper\Attributes\Modifiers\DefaultValue;
+use Orisai\ObjectMapper\Modifiers\DefaultValue;
 use Orisai\ObjectMapper\MappedObject;
 
 final class NullableVariantsInput implements MappedObject
@@ -1116,7 +1116,7 @@ read-only properties)
 
 ```php
 use Orisai\ObjectMapper\Rules\StringValue;
-use Orisai\ObjectMapper\Attributes\Modifiers\DefaultValue;
+use Orisai\ObjectMapper\Modifiers\DefaultValue;
 use Orisai\ObjectMapper\MappedObject;
 
 final class ReadonlyOptionalInput implements MappedObject
@@ -1251,7 +1251,7 @@ We may change that by defining field name for property:
 
 ```php
 use Orisai\ObjectMapper\Rules\MixedValue;
-use Orisai\ObjectMapper\Attributes\Modifiers\FieldName;
+use Orisai\ObjectMapper\Modifiers\FieldName;
 use Orisai\ObjectMapper\MappedObject;
 
 final class CustomMappingInput implements MappedObject
@@ -1709,7 +1709,7 @@ without object mapper, use `CreateWithoutConstructor` modifier.
 
 ```php
 use Orisai\ObjectMapper\Rules\StringValue;
-use Orisai\ObjectMapper\Attributes\Modifiers\CreateWithoutConstructor;
+use Orisai\ObjectMapper\Modifiers\CreateWithoutConstructor;
 use Orisai\ObjectMapper\MappedObject;
 
 /**

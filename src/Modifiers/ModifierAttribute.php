@@ -1,10 +1,9 @@
 <?php declare(strict_types = 1);
 
-namespace Orisai\ObjectMapper\Attributes\Modifiers;
+namespace Orisai\ObjectMapper\Modifiers;
 
 use Orisai\ObjectMapper\Args\Args;
 use Orisai\ObjectMapper\Attributes\BaseAttribute;
-use Orisai\ObjectMapper\Modifiers\Modifier;
 
 interface ModifierAttribute extends BaseAttribute
 {

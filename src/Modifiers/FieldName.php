@@ -1,10 +1,9 @@
 <?php declare(strict_types = 1);
 
-namespace Orisai\ObjectMapper\Attributes\Modifiers;
+namespace Orisai\ObjectMapper\Modifiers;
 
 use Attribute;
 use Doctrine\Common\Annotations\Annotation\NamedArgumentConstructor;
-use Orisai\ObjectMapper\Modifiers\FieldNameModifier;
 
 /**
  * @Annotation

@@ -2,7 +2,7 @@
 
 namespace Tests\Orisai\ObjectMapper\Doubles\FieldNames;
 
-use Orisai\ObjectMapper\Attributes\Modifiers\FieldName;
+use Orisai\ObjectMapper\Modifiers\FieldName;
 use Orisai\ObjectMapper\Rules\StringValue;
 
 final class ChildFieldVO extends ParentFieldVO

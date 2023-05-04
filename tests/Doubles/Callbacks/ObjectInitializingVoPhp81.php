@@ -2,8 +2,8 @@
 
 namespace Tests\Orisai\ObjectMapper\Doubles\Callbacks;
 
-use Orisai\ObjectMapper\Attributes\Modifiers\DefaultValue;
 use Orisai\ObjectMapper\MappedObject;
+use Orisai\ObjectMapper\Modifiers\DefaultValue;
 use Orisai\ObjectMapper\Rules\MappedObjectValue;
 use Tests\Orisai\ObjectMapper\Doubles\DefaultsVO;
 

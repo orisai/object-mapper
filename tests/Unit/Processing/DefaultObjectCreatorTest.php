@@ -37,7 +37,7 @@ Context: Creating instance of class
 Problem: Class has required constructor arguments and could not be created.
 Solution: Use another 'Orisai\ObjectMapper\Processing\ObjectCreator'
           implementation or skip constructor with
-          'Orisai\ObjectMapper\Attributes\Modifiers\CreateWithoutConstructor'.
+          'Orisai\ObjectMapper\Modifiers\CreateWithoutConstructor'.
 MSG,
 		);
 

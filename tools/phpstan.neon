@@ -70,7 +70,7 @@ parameters:
 			path: ../src/Rules
 		-
 			message: '#^Method (.+)\:\:getType\(\) should return class-string\<(.+)Modifier\<(.+)Args\>\> but returns ''(.+)Modifier''\.$#'
-			path: ../src/Attributes/Modifiers
+			path: ../src/Modifiers
 		-
 			message: '#^Parameter \#5 \$callbackType of method (.+)\:\:(handleClass|apply)(Callbacks)\(\) expects class-string\<(.+)Callback\<(.+)Args\>\>, ''(.+)Callback'' given\.$#'
 			path: ../src/Processing/DefaultProcessor.php

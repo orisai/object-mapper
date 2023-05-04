@@ -1,10 +1,9 @@
 <?php declare(strict_types = 1);
 
-namespace Orisai\ObjectMapper\Attributes\Modifiers;
+namespace Orisai\ObjectMapper\Modifiers;
 
 use Attribute;
 use Doctrine\Common\Annotations\Annotation\NamedArgumentConstructor;
-use Orisai\ObjectMapper\Modifiers\SkippedModifier;
 
 /**
  * @Annotation
@@ -12,17 +11,30 @@ use Orisai\ObjectMapper\Modifiers\SkippedModifier;
  * @Target({"PROPERTY"})
  */
 #[Attribute(Attribute::TARGET_PROPERTY)]
-final class Skipped implements ModifierAttribute
+final class DefaultValue implements ModifierAttribute
 {
+
+	/** @var mixed */
+	private $value;
+
+	/**
+	 * @param mixed $value
+	 */
+	public function __construct($value)
+	{
+		$this->value = $value;
+	}
 
 	public function getType(): string
 	{
-		return SkippedModifier::class;
+		return DefaultValueModifier::class;
 	}
 
 	public function getArgs(): array
 	{
-		return [];
+		return [
+			'value' => $this->value,
+		];
 	}
 
 }
