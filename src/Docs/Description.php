@@ -5,7 +5,7 @@ namespace Orisai\ObjectMapper\Docs;
 use Attribute;
 use Doctrine\Common\Annotations\Annotation\NamedArgumentConstructor;
 use Doctrine\Common\Annotations\Annotation\Target;
-use Orisai\ObjectMapper\Attributes\AnnotationFilter;
+use Orisai\ObjectMapper\Meta\AnnotationFilter;
 
 /**
  * @Annotation

@@ -1,6 +1,6 @@
 <?php declare(strict_types = 1);
 
-namespace Orisai\ObjectMapper\Attributes;
+namespace Orisai\ObjectMapper\Meta;
 
 use Nette\Utils\Strings;
 
