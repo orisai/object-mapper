@@ -3,8 +3,8 @@
 namespace Tests\Orisai\ObjectMapper\Doubles\Callbacks;
 
 use Orisai\ObjectMapper\Attributes\Callbacks\Before;
-use Orisai\ObjectMapper\Attributes\Expect\MappedObjectValue;
 use Orisai\ObjectMapper\MappedObject;
+use Orisai\ObjectMapper\Rules\MappedObjectValue;
 use Tests\Orisai\ObjectMapper\Doubles\DefaultsVO;
 use function assert;
 

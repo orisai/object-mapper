@@ -1,12 +1,10 @@
 <?php declare(strict_types = 1);
 
-namespace Orisai\ObjectMapper\Attributes\Expect;
+namespace Orisai\ObjectMapper\Rules;
 
 use Attribute;
 use Doctrine\Common\Annotations\Annotation\NamedArgumentConstructor;
 use Doctrine\Common\Annotations\Annotation\Target;
-use Orisai\ObjectMapper\MappedObject;
-use Orisai\ObjectMapper\Rules\MappedObjectRule;
 
 /**
  * @Annotation
@@ -14,14 +12,14 @@ use Orisai\ObjectMapper\Rules\MappedObjectRule;
  * @Target({"PROPERTY", "ANNOTATION"})
  */
 #[Attribute(Attribute::TARGET_PROPERTY)]
-final class MappedObjectValue implements RuleAttribute
+final class InstanceOfValue implements RuleAttribute
 {
 
-	/** @var class-string<MappedObject> */
+	/** @var class-string */
 	private string $type;
 
 	/**
-	 * @param class-string<MappedObject> $type
+	 * @param class-string $type
 	 */
 	public function __construct(string $type)
 	{
@@ -30,7 +28,7 @@ final class MappedObjectValue implements RuleAttribute
 
 	public function getType(): string
 	{
-		return MappedObjectRule::class;
+		return InstanceRule::class;
 	}
 
 	public function getArgs(): array

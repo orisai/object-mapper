@@ -1,11 +1,10 @@
 <?php declare(strict_types = 1);
 
-namespace Orisai\ObjectMapper\Attributes\Expect;
+namespace Orisai\ObjectMapper\Rules;
 
 use Attribute;
 use Doctrine\Common\Annotations\Annotation\NamedArgumentConstructor;
 use Doctrine\Common\Annotations\Annotation\Target;
-use Orisai\ObjectMapper\Rules\IntRule;
 
 /**
  * @Annotation
@@ -13,20 +12,20 @@ use Orisai\ObjectMapper\Rules\IntRule;
  * @Target({"PROPERTY", "ANNOTATION"})
  */
 #[Attribute(Attribute::TARGET_PROPERTY)]
-final class IntValue implements RuleAttribute
+final class FloatValue implements RuleAttribute
 {
 
-	private ?int $min;
+	private ?float $min;
 
-	private ?int $max;
+	private ?float $max;
 
 	private bool $unsigned;
 
 	private bool $castNumericString;
 
 	public function __construct(
-		?int $min = null,
-		?int $max = null,
+		?float $min = null,
+		?float $max = null,
 		bool $unsigned = false,
 		bool $castNumericString = false
 	)
@@ -39,7 +38,7 @@ final class IntValue implements RuleAttribute
 
 	public function getType(): string
 	{
-		return IntRule::class;
+		return FloatRule::class;
 	}
 
 	public function getArgs(): array

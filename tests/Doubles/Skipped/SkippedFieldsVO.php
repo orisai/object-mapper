@@ -2,9 +2,9 @@
 
 namespace Tests\Orisai\ObjectMapper\Doubles\Skipped;
 
-use Orisai\ObjectMapper\Attributes\Expect\StringValue;
 use Orisai\ObjectMapper\Attributes\Modifiers\Skipped;
 use Orisai\ObjectMapper\MappedObject;
+use Orisai\ObjectMapper\Rules\StringValue;
 
 final class SkippedFieldsVO implements MappedObject
 {

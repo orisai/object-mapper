@@ -2,9 +2,9 @@
 
 namespace Tests\Orisai\ObjectMapper\Doubles;
 
-use Orisai\ObjectMapper\Attributes\Expect\ArrayOf;
-use Orisai\ObjectMapper\Attributes\Expect\IntValue;
 use Orisai\ObjectMapper\MappedObject;
+use Orisai\ObjectMapper\Rules\ArrayOf;
+use Orisai\ObjectMapper\Rules\IntValue;
 
 final class ArrayOfIntVO implements MappedObject
 {

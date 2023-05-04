@@ -5,14 +5,14 @@ namespace Tests\Orisai\ObjectMapper\Doubles\Callbacks;
 use Orisai\Exceptions\Logic\InvalidState;
 use Orisai\ObjectMapper\Attributes\Callbacks\After;
 use Orisai\ObjectMapper\Attributes\Callbacks\Before;
-use Orisai\ObjectMapper\Attributes\Expect\ArrayOf;
-use Orisai\ObjectMapper\Attributes\Expect\MixedValue;
-use Orisai\ObjectMapper\Attributes\Expect\StringValue;
 use Orisai\ObjectMapper\Callbacks\CallbackRuntime;
 use Orisai\ObjectMapper\Context\FieldContext;
 use Orisai\ObjectMapper\Context\MappedObjectContext;
 use Orisai\ObjectMapper\Exception\InvalidData;
 use Orisai\ObjectMapper\MappedObject;
+use Orisai\ObjectMapper\Rules\ArrayOf;
+use Orisai\ObjectMapper\Rules\MixedValue;
+use Orisai\ObjectMapper\Rules\StringValue;
 use function array_key_exists;
 use function is_array;
 

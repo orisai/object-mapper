@@ -1,11 +1,10 @@
 <?php declare(strict_types = 1);
 
-namespace Orisai\ObjectMapper\Attributes\Expect;
+namespace Orisai\ObjectMapper\Rules;
 
 use Attribute;
 use Doctrine\Common\Annotations\Annotation\NamedArgumentConstructor;
 use Doctrine\Common\Annotations\Annotation\Target;
-use Orisai\ObjectMapper\Rules\NullRule;
 
 /**
  * @Annotation
@@ -13,25 +12,33 @@ use Orisai\ObjectMapper\Rules\NullRule;
  * @Target({"PROPERTY", "ANNOTATION"})
  */
 #[Attribute(Attribute::TARGET_PROPERTY)]
-final class NullValue implements RuleAttribute
+final class ArrayEnumValue implements RuleAttribute
 {
 
-	private bool $castEmptyString;
+	/** @var array<mixed> */
+	private array $cases;
 
-	public function __construct(bool $castEmptyString = false)
+	private bool $useKeys;
+
+	/**
+	 * @param array<mixed> $cases
+	 */
+	public function __construct(array $cases, bool $useKeys = false)
 	{
-		$this->castEmptyString = $castEmptyString;
+		$this->cases = $cases;
+		$this->useKeys = $useKeys;
 	}
 
 	public function getType(): string
 	{
-		return NullRule::class;
+		return ArrayEnumRule::class;
 	}
 
 	public function getArgs(): array
 	{
 		return [
-			'castEmptyString' => $this->castEmptyString,
+			'cases' => $this->cases,
+			'useKeys' => $this->useKeys,
 		];
 	}
 

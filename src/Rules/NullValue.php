@@ -1,11 +1,10 @@
 <?php declare(strict_types = 1);
 
-namespace Orisai\ObjectMapper\Attributes\Expect;
+namespace Orisai\ObjectMapper\Rules;
 
 use Attribute;
 use Doctrine\Common\Annotations\Annotation\NamedArgumentConstructor;
 use Doctrine\Common\Annotations\Annotation\Target;
-use Orisai\ObjectMapper\Rules\BoolRule;
 
 /**
  * @Annotation
@@ -13,25 +12,25 @@ use Orisai\ObjectMapper\Rules\BoolRule;
  * @Target({"PROPERTY", "ANNOTATION"})
  */
 #[Attribute(Attribute::TARGET_PROPERTY)]
-final class BoolValue implements RuleAttribute
+final class NullValue implements RuleAttribute
 {
 
-	private bool $castBoolLike;
+	private bool $castEmptyString;
 
-	public function __construct(bool $castBoolLike = false)
+	public function __construct(bool $castEmptyString = false)
 	{
-		$this->castBoolLike = $castBoolLike;
+		$this->castEmptyString = $castEmptyString;
 	}
 
 	public function getType(): string
 	{
-		return BoolRule::class;
+		return NullRule::class;
 	}
 
 	public function getArgs(): array
 	{
 		return [
-			'castBoolLike' => $this->castBoolLike,
+			'castEmptyString' => $this->castEmptyString,
 		];
 	}
 

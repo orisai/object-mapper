@@ -2,8 +2,8 @@
 
 namespace Tests\Orisai\ObjectMapper\Doubles\FieldNames;
 
-use Orisai\ObjectMapper\Attributes\Expect\StringValue;
 use Orisai\ObjectMapper\Attributes\Modifiers\FieldName;
+use Orisai\ObjectMapper\Rules\StringValue;
 
 final class ChildFieldVO extends ParentFieldVO
 {

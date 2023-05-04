@@ -2,13 +2,13 @@
 
 namespace Tests\Orisai\ObjectMapper\Doubles;
 
-use Orisai\ObjectMapper\Attributes\Expect\AnyOf;
-use Orisai\ObjectMapper\Attributes\Expect\ArrayOf;
-use Orisai\ObjectMapper\Attributes\Expect\MixedValue;
-use Orisai\ObjectMapper\Attributes\Expect\NullValue;
-use Orisai\ObjectMapper\Attributes\Expect\StringValue;
 use Orisai\ObjectMapper\Attributes\Modifiers\DefaultValue;
 use Orisai\ObjectMapper\MappedObject;
+use Orisai\ObjectMapper\Rules\AnyOf;
+use Orisai\ObjectMapper\Rules\ArrayOf;
+use Orisai\ObjectMapper\Rules\MixedValue;
+use Orisai\ObjectMapper\Rules\NullValue;
+use Orisai\ObjectMapper\Rules\StringValue;
 
 final class DefaultsVO implements MappedObject
 {

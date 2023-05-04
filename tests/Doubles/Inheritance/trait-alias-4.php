@@ -3,8 +3,8 @@
 namespace Tests\Orisai\ObjectMapper\Doubles\Inheritance\TraitAlias4;
 
 use Orisai\ObjectMapper\Attributes\Callbacks\After;
-use Orisai\ObjectMapper\Attributes\Expect\StringValue;
 use Orisai\ObjectMapper\MappedObject;
+use Orisai\ObjectMapper\Rules\StringValue;
 
 trait A
 {

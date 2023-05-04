@@ -1,11 +1,10 @@
 <?php declare(strict_types = 1);
 
-namespace Orisai\ObjectMapper\Attributes\Expect;
+namespace Orisai\ObjectMapper\Rules;
 
 use Attribute;
 use Doctrine\Common\Annotations\Annotation\NamedArgumentConstructor;
 use Doctrine\Common\Annotations\Annotation\Target;
-use Orisai\ObjectMapper\Rules\ListOfRule;
 
 /**
  * @Annotation
@@ -13,12 +12,26 @@ use Orisai\ObjectMapper\Rules\ListOfRule;
  * @Target({"PROPERTY", "ANNOTATION"})
  */
 #[Attribute(Attribute::TARGET_PROPERTY)]
-final class ListOf extends MultiValueRuleAttribute
+final class BoolValue implements RuleAttribute
 {
+
+	private bool $castBoolLike;
+
+	public function __construct(bool $castBoolLike = false)
+	{
+		$this->castBoolLike = $castBoolLike;
+	}
 
 	public function getType(): string
 	{
-		return ListOfRule::class;
+		return BoolRule::class;
+	}
+
+	public function getArgs(): array
+	{
+		return [
+			'castBoolLike' => $this->castBoolLike,
+		];
 	}
 
 }

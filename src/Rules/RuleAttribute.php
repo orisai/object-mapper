@@ -1,10 +1,9 @@
 <?php declare(strict_types = 1);
 
-namespace Orisai\ObjectMapper\Attributes\Expect;
+namespace Orisai\ObjectMapper\Rules;
 
 use Orisai\ObjectMapper\Args\Args;
 use Orisai\ObjectMapper\Attributes\BaseAttribute;
-use Orisai\ObjectMapper\Rules\Rule;
 
 /**
  * Base interface for rule annotations

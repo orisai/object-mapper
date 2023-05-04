@@ -2,9 +2,9 @@
 
 namespace Tests\Orisai\ObjectMapper\Doubles\Circular;
 
-use Orisai\ObjectMapper\Attributes\Expect\ListOf;
-use Orisai\ObjectMapper\Attributes\Expect\MappedObjectValue;
 use Orisai\ObjectMapper\MappedObject;
+use Orisai\ObjectMapper\Rules\ListOf;
+use Orisai\ObjectMapper\Rules\MappedObjectValue;
 
 final class CircularCVO implements MappedObject
 {

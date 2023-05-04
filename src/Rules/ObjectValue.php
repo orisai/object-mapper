@@ -1,11 +1,10 @@
 <?php declare(strict_types = 1);
 
-namespace Orisai\ObjectMapper\Attributes\Expect;
+namespace Orisai\ObjectMapper\Rules;
 
 use Attribute;
 use Doctrine\Common\Annotations\Annotation\NamedArgumentConstructor;
 use Doctrine\Common\Annotations\Annotation\Target;
-use Orisai\ObjectMapper\Rules\AnyOfRule;
 
 /**
  * @Annotation
@@ -13,12 +12,17 @@ use Orisai\ObjectMapper\Rules\AnyOfRule;
  * @Target({"PROPERTY", "ANNOTATION"})
  */
 #[Attribute(Attribute::TARGET_PROPERTY)]
-final class AnyOf extends CompoundRulesAttribute
+final class ObjectValue implements RuleAttribute
 {
 
 	public function getType(): string
 	{
-		return AnyOfRule::class;
+		return ObjectRule::class;
+	}
+
+	public function getArgs(): array
+	{
+		return [];
 	}
 
 }

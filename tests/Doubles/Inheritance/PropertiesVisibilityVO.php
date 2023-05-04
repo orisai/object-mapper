@@ -2,8 +2,8 @@
 
 namespace Tests\Orisai\ObjectMapper\Doubles\Inheritance;
 
-use Orisai\ObjectMapper\Attributes\Expect\StringValue;
 use Orisai\ObjectMapper\MappedObject;
+use Orisai\ObjectMapper\Rules\StringValue;
 
 final class PropertiesVisibilityVO implements MappedObject
 {

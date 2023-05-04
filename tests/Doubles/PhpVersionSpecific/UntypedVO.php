@@ -2,11 +2,11 @@
 
 namespace Tests\Orisai\ObjectMapper\Doubles\PhpVersionSpecific;
 
-use Orisai\ObjectMapper\Attributes\Expect\AnyOf;
-use Orisai\ObjectMapper\Attributes\Expect\NullValue;
-use Orisai\ObjectMapper\Attributes\Expect\StringValue;
 use Orisai\ObjectMapper\Attributes\Modifiers\DefaultValue;
 use Orisai\ObjectMapper\MappedObject;
+use Orisai\ObjectMapper\Rules\AnyOf;
+use Orisai\ObjectMapper\Rules\NullValue;
+use Orisai\ObjectMapper\Rules\StringValue;
 
 final class UntypedVO implements MappedObject
 {

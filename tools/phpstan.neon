@@ -67,7 +67,7 @@ parameters:
 			path: ../src/Attributes/Callbacks
 		-
 			message: '#^Method (.+)\:\:getType\(\) should return class-string\<(.+)Rule\<(.+)Args\>\> but returns ''(.+)Rule''\.$#'
-			path: ../src/Attributes/Expect
+			path: ../src/Rules
 		-
 			message: '#^Method (.+)\:\:getType\(\) should return class-string\<(.+)Modifier\<(.+)Args\>\> but returns ''(.+)Modifier''\.$#'
 			path: ../src/Attributes/Modifiers

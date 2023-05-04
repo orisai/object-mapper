@@ -1,10 +1,9 @@
 <?php declare(strict_types = 1);
 
-namespace Orisai\ObjectMapper\Attributes\Expect;
+namespace Orisai\ObjectMapper\Rules;
 
 use Attribute;
 use BackedEnum;
-use Orisai\ObjectMapper\Rules\BackedEnumRule;
 
 #[Attribute(Attribute::TARGET_PROPERTY)]
 final class BackedEnumValue implements RuleAttribute

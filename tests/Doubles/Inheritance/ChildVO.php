@@ -3,7 +3,7 @@
 namespace Tests\Orisai\ObjectMapper\Doubles\Inheritance;
 
 use Orisai\ObjectMapper\Attributes\Callbacks\After;
-use Orisai\ObjectMapper\Attributes\Expect\StringValue;
+use Orisai\ObjectMapper\Rules\StringValue;
 
 final class ChildVO extends ParentVO
 {

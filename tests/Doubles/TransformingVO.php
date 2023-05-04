@@ -2,13 +2,13 @@
 
 namespace Tests\Orisai\ObjectMapper\Doubles;
 
-use Orisai\ObjectMapper\Attributes\Expect\AnyOf;
-use Orisai\ObjectMapper\Attributes\Expect\BoolValue;
-use Orisai\ObjectMapper\Attributes\Expect\FloatValue;
-use Orisai\ObjectMapper\Attributes\Expect\InstanceOfValue;
-use Orisai\ObjectMapper\Attributes\Expect\IntValue;
-use Orisai\ObjectMapper\Attributes\Expect\NullValue;
 use Orisai\ObjectMapper\MappedObject;
+use Orisai\ObjectMapper\Rules\AnyOf;
+use Orisai\ObjectMapper\Rules\BoolValue;
+use Orisai\ObjectMapper\Rules\FloatValue;
+use Orisai\ObjectMapper\Rules\InstanceOfValue;
+use Orisai\ObjectMapper\Rules\IntValue;
+use Orisai\ObjectMapper\Rules\NullValue;
 use stdClass;
 
 final class TransformingVO implements MappedObject

@@ -3,10 +3,10 @@
 namespace Tests\Orisai\ObjectMapper\Doubles;
 
 use DateTimeImmutable;
-use Orisai\ObjectMapper\Attributes\Expect\DateTimeValue;
-use Orisai\ObjectMapper\Attributes\Expect\InstanceOfValue;
-use Orisai\ObjectMapper\Attributes\Expect\MappedObjectValue;
 use Orisai\ObjectMapper\MappedObject;
+use Orisai\ObjectMapper\Rules\DateTimeValue;
+use Orisai\ObjectMapper\Rules\InstanceOfValue;
+use Orisai\ObjectMapper\Rules\MappedObjectValue;
 use stdClass;
 
 final class InitializingVO implements MappedObject

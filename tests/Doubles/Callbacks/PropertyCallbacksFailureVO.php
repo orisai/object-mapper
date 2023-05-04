@@ -5,9 +5,9 @@ namespace Tests\Orisai\ObjectMapper\Doubles\Callbacks;
 use Orisai\Exceptions\Logic\InvalidState;
 use Orisai\ObjectMapper\Attributes\Callbacks\After;
 use Orisai\ObjectMapper\Attributes\Callbacks\Before;
-use Orisai\ObjectMapper\Attributes\Expect\StringValue;
 use Orisai\ObjectMapper\Exception\ValueDoesNotMatch;
 use Orisai\ObjectMapper\MappedObject;
+use Orisai\ObjectMapper\Rules\StringValue;
 use Orisai\ObjectMapper\Types\Value;
 use function is_array;
 

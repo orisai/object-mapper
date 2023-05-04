@@ -2,7 +2,7 @@
 
 namespace Tests\Orisai\ObjectMapper\Doubles\Inheritance;
 
-use Orisai\ObjectMapper\Attributes\Expect\StringValue;
+use Orisai\ObjectMapper\Rules\StringValue;
 
 final class InterfaceUsingVO implements InterfaceForVO
 {

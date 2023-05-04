@@ -2,11 +2,11 @@
 
 namespace Tests\Orisai\ObjectMapper\Doubles\PhpVersionSpecific;
 
-use Orisai\ObjectMapper\Attributes\Expect\MappedObjectValue;
-use Orisai\ObjectMapper\Attributes\Expect\NullValue;
-use Orisai\ObjectMapper\Attributes\Expect\StringValue;
 use Orisai\ObjectMapper\Attributes\Modifiers\CreateWithoutConstructor;
 use Orisai\ObjectMapper\MappedObject;
+use Orisai\ObjectMapper\Rules\MappedObjectValue;
+use Orisai\ObjectMapper\Rules\NullValue;
+use Orisai\ObjectMapper\Rules\StringValue;
 use Tests\Orisai\ObjectMapper\Doubles\DefaultsVO;
 
 #[CreateWithoutConstructor]

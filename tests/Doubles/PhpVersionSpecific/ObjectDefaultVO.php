@@ -2,9 +2,9 @@
 
 namespace Tests\Orisai\ObjectMapper\Doubles\PhpVersionSpecific;
 
-use Orisai\ObjectMapper\Attributes\Expect\InstanceOfValue;
 use Orisai\ObjectMapper\Attributes\Modifiers\DefaultValue;
 use Orisai\ObjectMapper\MappedObject;
+use Orisai\ObjectMapper\Rules\InstanceOfValue;
 use stdClass;
 
 final class ObjectDefaultVO implements MappedObject
