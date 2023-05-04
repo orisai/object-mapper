@@ -1,8 +1,9 @@
 <?php declare(strict_types = 1);
 
-namespace Orisai\ObjectMapper\Attributes;
+namespace Orisai\ObjectMapper\Meta\Source;
 
 use Orisai\Exceptions\Logic\InvalidArgument;
+use Orisai\ObjectMapper\Attributes\BaseAttribute;
 use Orisai\ObjectMapper\Callbacks\CallableAttribute;
 use Orisai\ObjectMapper\Docs\DocumentationAttribute;
 use Orisai\ObjectMapper\MappedObject;
@@ -13,7 +14,6 @@ use Orisai\ObjectMapper\Meta\Compile\FieldCompileMeta;
 use Orisai\ObjectMapper\Meta\Compile\ModifierCompileMeta;
 use Orisai\ObjectMapper\Meta\Compile\RuleCompileMeta;
 use Orisai\ObjectMapper\Meta\DocMeta;
-use Orisai\ObjectMapper\Meta\MetaSource;
 use Orisai\ObjectMapper\Modifiers\ModifierAttribute;
 use Orisai\ObjectMapper\Rules\AllOf;
 use Orisai\ObjectMapper\Rules\AnyOf;

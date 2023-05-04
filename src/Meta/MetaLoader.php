@@ -8,6 +8,7 @@ use Orisai\ObjectMapper\MappedObject;
 use Orisai\ObjectMapper\Meta\Compile\ClassCompileMeta;
 use Orisai\ObjectMapper\Meta\Compile\CompileMeta;
 use Orisai\ObjectMapper\Meta\Runtime\RuntimeMeta;
+use Orisai\ObjectMapper\Meta\Source\MetaSourceManager;
 use Orisai\SourceMap\ClassSource;
 use ReflectionClass;
 use ReflectionEnum;

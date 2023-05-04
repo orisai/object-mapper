@@ -2,13 +2,13 @@
 
 namespace Tests\Orisai\ObjectMapper\Unit\Printers;
 
-use Orisai\ObjectMapper\Attributes\AnnotationsMetaSource;
 use Orisai\ObjectMapper\Context\TypeContext;
 use Orisai\ObjectMapper\MappedObject;
 use Orisai\ObjectMapper\Meta\ArrayMetaCache;
 use Orisai\ObjectMapper\Meta\DefaultMetaResolverFactory;
-use Orisai\ObjectMapper\Meta\DefaultMetaSourceManager;
 use Orisai\ObjectMapper\Meta\MetaLoader;
+use Orisai\ObjectMapper\Meta\Source\AnnotationsMetaSource;
+use Orisai\ObjectMapper\Meta\Source\DefaultMetaSourceManager;
 use Orisai\ObjectMapper\Printers\DefaultValuesArrayPrinter;
 use Orisai\ObjectMapper\Processing\DefaultObjectCreator;
 use Orisai\ObjectMapper\Rules\DefaultRuleManager;

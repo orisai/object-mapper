@@ -2,12 +2,12 @@
 
 namespace Orisai\ObjectMapper\Tester;
 
-use Orisai\ObjectMapper\Attributes\AnnotationsMetaSource;
-use Orisai\ObjectMapper\Attributes\AttributesMetaSource;
 use Orisai\ObjectMapper\Meta\ArrayMetaCache;
 use Orisai\ObjectMapper\Meta\DefaultMetaResolverFactory;
-use Orisai\ObjectMapper\Meta\DefaultMetaSourceManager;
 use Orisai\ObjectMapper\Meta\MetaLoader;
+use Orisai\ObjectMapper\Meta\Source\AnnotationsMetaSource;
+use Orisai\ObjectMapper\Meta\Source\AttributesMetaSource;
+use Orisai\ObjectMapper\Meta\Source\DefaultMetaSourceManager;
 use Orisai\ObjectMapper\Processing\DefaultObjectCreator;
 use Orisai\ObjectMapper\Processing\DefaultProcessor;
 use Orisai\ObjectMapper\Rules\DefaultRuleManager;
