@@ -6,8 +6,8 @@ use Orisai\ObjectMapper\Callbacks\After;
 use Orisai\ObjectMapper\Context\MappedObjectContext;
 use Orisai\ObjectMapper\Exception\InvalidData;
 use Orisai\ObjectMapper\MappedObject;
+use Orisai\ObjectMapper\Processing\Value;
 use Orisai\ObjectMapper\Rules\StringValue;
-use Orisai\ObjectMapper\Types\Value;
 
 /**
  * @After(method="after")

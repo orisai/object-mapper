@@ -1,6 +1,6 @@
 <?php declare(strict_types = 1);
 
-namespace Orisai\ObjectMapper\Types;
+namespace Orisai\ObjectMapper\Processing;
 
 use Orisai\Exceptions\Logic\InvalidState;
 use function sprintf;

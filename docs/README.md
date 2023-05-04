@@ -1572,8 +1572,8 @@ We may change that by defining `void` or `never` return type:
 use Orisai\ObjectMapper\Callbacks\After;
 use Orisai\ObjectMapper\Exception\ValueDoesNotMatch;
 use Orisai\ObjectMapper\MappedObject;
+use Orisai\ObjectMapper\Processing\Value;
 use Orisai\ObjectMapper\Rules\StringValue;
-use Orisai\ObjectMapper\Types\Value;
 
 final class WithNotReturningCallbackInput implements MappedObject
 {
@@ -1602,8 +1602,8 @@ Mapped objects can request dependencies in constructor for extended validation i
 use Orisai\ObjectMapper\Callbacks\After;
 use Orisai\ObjectMapper\Exception\ValueDoesNotMatch;
 use Orisai\ObjectMapper\MappedObject;
+use Orisai\ObjectMapper\Processing\Value;
 use Orisai\ObjectMapper\Rules\MixedValue;
-use Orisai\ObjectMapper\Types\Value;
 
 final class WithComplexCallbackInput implements MappedObject
 {

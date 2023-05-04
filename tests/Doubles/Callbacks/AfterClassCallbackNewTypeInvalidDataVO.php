@@ -6,10 +6,10 @@ use Orisai\ObjectMapper\Callbacks\After;
 use Orisai\ObjectMapper\Exception\InvalidData;
 use Orisai\ObjectMapper\Exception\ValueDoesNotMatch;
 use Orisai\ObjectMapper\MappedObject;
+use Orisai\ObjectMapper\Processing\Value;
 use Orisai\ObjectMapper\Rules\StringValue;
 use Orisai\ObjectMapper\Types\MappedObjectType;
 use Orisai\ObjectMapper\Types\MessageType;
-use Orisai\ObjectMapper\Types\Value;
 use Tests\Orisai\ObjectMapper\Doubles\EmptyVO;
 
 /**

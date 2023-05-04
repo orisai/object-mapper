@@ -3,9 +3,9 @@
 namespace Tests\Orisai\ObjectMapper\Unit\Types;
 
 use Orisai\ObjectMapper\Exception\ValueDoesNotMatch;
+use Orisai\ObjectMapper\Processing\Value;
 use Orisai\ObjectMapper\Types\ArrayShapeType;
 use Orisai\ObjectMapper\Types\MessageType;
-use Orisai\ObjectMapper\Types\Value;
 use PHPUnit\Framework\TestCase;
 
 final class ArrayShapeTypeTest extends TestCase

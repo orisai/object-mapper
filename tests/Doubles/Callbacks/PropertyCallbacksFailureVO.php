@@ -7,8 +7,8 @@ use Orisai\ObjectMapper\Callbacks\After;
 use Orisai\ObjectMapper\Callbacks\Before;
 use Orisai\ObjectMapper\Exception\ValueDoesNotMatch;
 use Orisai\ObjectMapper\MappedObject;
+use Orisai\ObjectMapper\Processing\Value;
 use Orisai\ObjectMapper\Rules\StringValue;
-use Orisai\ObjectMapper\Types\Value;
 use function is_array;
 
 /**

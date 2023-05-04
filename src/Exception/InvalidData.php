@@ -4,8 +4,8 @@ namespace Orisai\ObjectMapper\Exception;
 
 use Orisai\Exceptions\DomainException;
 use Orisai\ObjectMapper\Printers\ErrorPrinter;
+use Orisai\ObjectMapper\Processing\Value;
 use Orisai\ObjectMapper\Types\MappedObjectType;
-use Orisai\ObjectMapper\Types\Value;
 
 final class InvalidData extends DomainException implements WithTypeAndValue
 {

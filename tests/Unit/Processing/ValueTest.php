@@ -1,9 +1,9 @@
 <?php declare(strict_types = 1);
 
-namespace Tests\Orisai\ObjectMapper\Unit\Types;
+namespace Tests\Orisai\ObjectMapper\Unit\Processing;
 
 use Orisai\Exceptions\Logic\InvalidState;
-use Orisai\ObjectMapper\Types\Value;
+use Orisai\ObjectMapper\Processing\Value;
 use PHPUnit\Framework\TestCase;
 
 final class ValueTest extends TestCase
@@ -22,7 +22,7 @@ final class ValueTest extends TestCase
 		self::assertFalse($value->has());
 
 		$this->expectException(InvalidState::class);
-		$this->expectExceptionMessage('Check if value exists with Orisai\ObjectMapper\Types\Value::has()');
+		$this->expectExceptionMessage('Check if value exists with Orisai\ObjectMapper\Processing\Value::has()');
 		$value->get();
 	}
 

@@ -3,9 +3,9 @@
 namespace Orisai\ObjectMapper\Exception;
 
 use Orisai\Exceptions\DomainException;
+use Orisai\ObjectMapper\Processing\Value;
 use Orisai\ObjectMapper\Types\MessageType;
 use Orisai\ObjectMapper\Types\Type;
-use Orisai\ObjectMapper\Types\Value;
 
 final class ValueDoesNotMatch extends DomainException implements WithTypeAndValue
 {

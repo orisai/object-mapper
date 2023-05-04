@@ -5,7 +5,7 @@ namespace Tests\Orisai\ObjectMapper\Doubles\Callbacks;
 use Orisai\ObjectMapper\Callbacks\Before;
 use Orisai\ObjectMapper\Exception\ValueDoesNotMatch;
 use Orisai\ObjectMapper\MappedObject;
-use Orisai\ObjectMapper\Types\Value;
+use Orisai\ObjectMapper\Processing\Value;
 
 /**
  * @Before(method="before")
