@@ -4,7 +4,7 @@ namespace Orisai\ObjectMapper\Attributes;
 
 use Orisai\ReflectionMeta\Reader\AttributesMetaReader;
 
-final class AttributesMetaSource extends BaseMetaSource
+final class AttributesMetaSource extends ReflectorMetaSource
 {
 
 	public function __construct(?AttributesMetaReader $reader = null)

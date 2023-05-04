@@ -26,7 +26,7 @@ use ReflectionClass;
 use function get_class;
 use function sprintf;
 
-abstract class BaseMetaSource implements MetaSource
+abstract class ReflectorMetaSource implements MetaSource
 {
 
 	private MetaReader $reader;
