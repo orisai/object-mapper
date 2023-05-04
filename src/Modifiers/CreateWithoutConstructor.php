@@ -11,7 +11,7 @@ use Doctrine\Common\Annotations\Annotation\NamedArgumentConstructor;
  * @Target({"CLASS"})
  */
 #[Attribute(Attribute::TARGET_CLASS)]
-final class CreateWithoutConstructor implements ModifierAttribute
+final class CreateWithoutConstructor implements ModifierDefinition
 {
 
 	public function getType(): string

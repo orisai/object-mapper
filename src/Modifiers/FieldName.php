@@ -11,7 +11,7 @@ use Doctrine\Common\Annotations\Annotation\NamedArgumentConstructor;
  * @Target({"PROPERTY"})
  */
 #[Attribute(Attribute::TARGET_PROPERTY)]
-final class FieldName implements ModifierAttribute
+final class FieldName implements ModifierDefinition
 {
 
 	/** @var int|string */

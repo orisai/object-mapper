@@ -3,9 +3,9 @@
 namespace Orisai\ObjectMapper\Modifiers;
 
 use Orisai\ObjectMapper\Args\Args;
-use Orisai\ObjectMapper\Meta\BaseAttribute;
+use Orisai\ObjectMapper\Meta\MetaDefinition;
 
-interface ModifierAttribute extends BaseAttribute
+interface ModifierDefinition extends MetaDefinition
 {
 
 	/**

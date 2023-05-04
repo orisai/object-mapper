@@ -53,7 +53,7 @@ final class CompileMetaTest extends TestCase
 			$sources,
 			$meta->getSources(),
 		);
-		self::assertTrue($meta->hasAnyAttributes());
+		self::assertTrue($meta->hasAnyMeta());
 	}
 
 	public function testHasAnyAttributes(): void
@@ -67,7 +67,7 @@ final class CompileMetaTest extends TestCase
 			[],
 			[],
 		);
-		self::assertFalse($meta->hasAnyAttributes());
+		self::assertFalse($meta->hasAnyMeta());
 
 		$meta = new CompileMeta(
 			[
@@ -83,7 +83,7 @@ final class CompileMetaTest extends TestCase
 			[],
 			[],
 		);
-		self::assertTrue($meta->hasAnyAttributes());
+		self::assertTrue($meta->hasAnyMeta());
 
 		$meta = new CompileMeta(
 			[
@@ -100,7 +100,7 @@ final class CompileMetaTest extends TestCase
 			],
 			[],
 		);
-		self::assertTrue($meta->hasAnyAttributes());
+		self::assertTrue($meta->hasAnyMeta());
 	}
 
 }

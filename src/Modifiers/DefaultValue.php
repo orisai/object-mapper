@@ -11,7 +11,7 @@ use Doctrine\Common\Annotations\Annotation\NamedArgumentConstructor;
  * @Target({"PROPERTY"})
  */
 #[Attribute(Attribute::TARGET_PROPERTY)]
-final class DefaultValue implements ModifierAttribute
+final class DefaultValue implements ModifierDefinition
 {
 
 	/** @var mixed */

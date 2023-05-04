@@ -111,13 +111,13 @@ final class MetaLoader
 		$meta = null;
 		$sourcesByMetaSource = [];
 
-		// Current sources replace each other (needed for libs offering both annotations and attributes)
+		// Current sources replace each other
 		// Sources modifying previous source are not supported
 		foreach ($this->sourceManager->getAll() as $metaSource) {
 			$sourceMeta = $metaSource->load($class);
 			$sourcesByMetaSource[] = $sourceMeta->getSources();
 
-			if ($sourceMeta->hasAnyAttributes()) {
+			if ($sourceMeta->hasAnyMeta()) {
 				$meta = $sourceMeta;
 
 				break;

@@ -11,7 +11,7 @@ use Doctrine\Common\Annotations\Annotation\NamedArgumentConstructor;
  * @Target({"PROPERTY"})
  */
 #[Attribute(Attribute::TARGET_PROPERTY)]
-final class Skipped implements ModifierAttribute
+final class Skipped implements ModifierDefinition
 {
 
 	public function getType(): string

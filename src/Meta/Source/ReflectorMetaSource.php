@@ -3,21 +3,21 @@
 namespace Orisai\ObjectMapper\Meta\Source;
 
 use Orisai\Exceptions\Logic\InvalidArgument;
-use Orisai\ObjectMapper\Callbacks\CallableAttribute;
-use Orisai\ObjectMapper\Docs\DocumentationAttribute;
+use Orisai\ObjectMapper\Callbacks\CallbackDefinition;
+use Orisai\ObjectMapper\Docs\DocDefinition;
 use Orisai\ObjectMapper\MappedObject;
-use Orisai\ObjectMapper\Meta\BaseAttribute;
 use Orisai\ObjectMapper\Meta\Compile\CallbackCompileMeta;
 use Orisai\ObjectMapper\Meta\Compile\ClassCompileMeta;
 use Orisai\ObjectMapper\Meta\Compile\CompileMeta;
 use Orisai\ObjectMapper\Meta\Compile\FieldCompileMeta;
 use Orisai\ObjectMapper\Meta\Compile\ModifierCompileMeta;
 use Orisai\ObjectMapper\Meta\Compile\RuleCompileMeta;
+use Orisai\ObjectMapper\Meta\MetaDefinition;
 use Orisai\ObjectMapper\Meta\Shared\DocMeta;
-use Orisai\ObjectMapper\Modifiers\ModifierAttribute;
+use Orisai\ObjectMapper\Modifiers\ModifierDefinition;
 use Orisai\ObjectMapper\Rules\AllOf;
 use Orisai\ObjectMapper\Rules\AnyOf;
-use Orisai\ObjectMapper\Rules\RuleAttribute;
+use Orisai\ObjectMapper\Rules\RuleDefinition;
 use Orisai\ReflectionMeta\Reader\MetaReader;
 use Orisai\ReflectionMeta\Structure\StructureBuilder;
 use Orisai\ReflectionMeta\Structure\StructureFlattener;
@@ -70,38 +70,38 @@ abstract class ReflectorMetaSource implements MetaSource
 		$resolved = [];
 		foreach ($structures->getClasses() as $class) {
 			$reflector = $class->getSource()->getReflector();
-			$attributes = $this->reader->readClass($reflector, BaseAttribute::class);
+			$definitions = $this->reader->readClass($reflector, MetaDefinition::class);
 
 			$callbacks = [];
 			$docs = [];
 			$modifiers = [];
 
-			foreach ($attributes as $attribute) {
-				$attribute = $this->checkAnnotationType($attribute);
+			foreach ($definitions as $definition) {
+				$definition = $this->checkAnnotationType($definition);
 
-				if ($attribute instanceof RuleAttribute) {
+				if ($definition instanceof RuleDefinition) {
 					throw InvalidArgument::create()
 						->withMessage(sprintf(
-							'Rule attribute %s (subtype of %s) cannot be used on class, only properties are allowed',
-							get_class($attribute),
-							RuleAttribute::class,
+							'Rule definition %s (subtype of %s) cannot be used on class, only properties are allowed',
+							get_class($definition),
+							RuleDefinition::class,
 						));
 				}
 
-				if ($attribute instanceof CallableAttribute) {
+				if ($definition instanceof CallbackDefinition) {
 					$callbacks[] = new CallbackCompileMeta(
-						$attribute->getType(),
-						$attribute->getArgs(),
+						$definition->getType(),
+						$definition->getArgs(),
 					);
-				} elseif ($attribute instanceof DocumentationAttribute) {
+				} elseif ($definition instanceof DocDefinition) {
 					$docs[] = new DocMeta(
-						$attribute->getType(),
-						$attribute->getArgs(),
+						$definition->getType(),
+						$definition->getArgs(),
 					);
 				} else {
 					$modifiers[] = new ModifierCompileMeta(
-						$attribute->getType(),
-						$attribute->getArgs(),
+						$definition->getType(),
+						$definition->getArgs(),
 					);
 				}
 			}
@@ -121,7 +121,7 @@ abstract class ReflectorMetaSource implements MetaSource
 
 		foreach ($structures->getProperties() as $propertyStructure) {
 			$reflector = $propertyStructure->getSource()->getReflector();
-			$attributes = $this->reader->readProperty($reflector, BaseAttribute::class);
+			$definitions = $this->reader->readProperty($reflector, MetaDefinition::class);
 
 			$class = $propertyStructure->getContextClass();
 			$property = $class->getProperty($reflector->getName());
@@ -131,10 +131,10 @@ abstract class ReflectorMetaSource implements MetaSource
 			$modifiers = [];
 			$rule = null;
 
-			foreach ($attributes as $attribute) {
-				$attribute = $this->checkAnnotationType($attribute);
+			foreach ($definitions as $definition) {
+				$definition = $this->checkAnnotationType($definition);
 
-				if ($attribute instanceof RuleAttribute) {
+				if ($definition instanceof RuleDefinition) {
 					if ($rule !== null) {
 						throw InvalidArgument::create()
 							->withMessage(sprintf(
@@ -148,23 +148,23 @@ abstract class ReflectorMetaSource implements MetaSource
 					}
 
 					$rule = new RuleCompileMeta(
-						$attribute->getType(),
-						$attribute->getArgs(),
+						$definition->getType(),
+						$definition->getArgs(),
 					);
-				} elseif ($attribute instanceof CallableAttribute) {
+				} elseif ($definition instanceof CallbackDefinition) {
 					$callbacks[] = new CallbackCompileMeta(
-						$attribute->getType(),
-						$attribute->getArgs(),
+						$definition->getType(),
+						$definition->getArgs(),
 					);
-				} elseif ($attribute instanceof DocumentationAttribute) {
+				} elseif ($definition instanceof DocDefinition) {
 					$docs[] = new DocMeta(
-						$attribute->getType(),
-						$attribute->getArgs(),
+						$definition->getType(),
+						$definition->getArgs(),
 					);
 				} else {
 					$modifiers[] = new ModifierCompileMeta(
-						$attribute->getType(),
-						$attribute->getArgs(),
+						$definition->getType(),
+						$definition->getArgs(),
 					);
 				}
 			}
@@ -194,25 +194,25 @@ abstract class ReflectorMetaSource implements MetaSource
 	}
 
 	/**
-	 * @return CallableAttribute|DocumentationAttribute|ModifierAttribute|RuleAttribute
+	 * @return CallbackDefinition|DocDefinition|ModifierDefinition|RuleDefinition
 	 */
-	private function checkAnnotationType(BaseAttribute $annotation): BaseAttribute
+	private function checkAnnotationType(MetaDefinition $annotation): MetaDefinition
 	{
 		if (
-			!$annotation instanceof CallableAttribute
-			&& !$annotation instanceof DocumentationAttribute
-			&& !$annotation instanceof ModifierAttribute
-			&& !$annotation instanceof RuleAttribute
+			!$annotation instanceof CallbackDefinition
+			&& !$annotation instanceof DocDefinition
+			&& !$annotation instanceof ModifierDefinition
+			&& !$annotation instanceof RuleDefinition
 		) {
 			throw InvalidArgument::create()
 				->withMessage(sprintf(
 					'Annotation %s (subtype of %s) should implement %s, %s %s or %s',
 					get_class($annotation),
-					BaseAttribute::class,
-					CallableAttribute::class,
-					DocumentationAttribute::class,
-					ModifierAttribute::class,
-					RuleAttribute::class,
+					MetaDefinition::class,
+					CallbackDefinition::class,
+					DocDefinition::class,
+					ModifierDefinition::class,
+					RuleDefinition::class,
 				));
 		}
 

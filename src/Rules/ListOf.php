@@ -12,7 +12,7 @@ use Doctrine\Common\Annotations\Annotation\Target;
  * @Target({"PROPERTY", "ANNOTATION"})
  */
 #[Attribute(Attribute::TARGET_PROPERTY)]
-final class ListOf extends MultiValueRuleAttribute
+final class ListOf extends MultiValueRuleDefinition
 {
 
 	public function getType(): string

@@ -6,14 +6,14 @@ use Orisai\Exceptions\Logic\InvalidArgument;
 use Orisai\ObjectMapper\Meta\Compile\RuleCompileMeta;
 use function sprintf;
 
-abstract class CompoundRulesAttribute implements RuleAttribute
+abstract class CompoundRulesDefinition implements RuleDefinition
 {
 
 	/** @var array<RuleCompileMeta> */
 	private array $rules;
 
 	/**
-	 * @param array<RuleAttribute> $rules
+	 * @param array<RuleDefinition> $rules
 	 */
 	public function __construct(array $rules)
 	{
@@ -27,12 +27,12 @@ abstract class CompoundRulesAttribute implements RuleAttribute
 	private function resolveRules(array $rules): array
 	{
 		foreach ($rules as $key => $rule) {
-			if (!$rule instanceof RuleAttribute) {
+			if (!$rule instanceof RuleDefinition) {
 				throw InvalidArgument::create()
 					->withMessage(sprintf(
 						'%s() expects all values to be subtype of %s',
 						static::class,
-						RuleAttribute::class,
+						RuleDefinition::class,
 					));
 			}
 

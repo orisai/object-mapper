@@ -14,7 +14,7 @@ use function sprintf;
  * @Target({"CLASS", "PROPERTY"})
  */
 #[Attribute(Attribute::TARGET_CLASS | Attribute::TARGET_PROPERTY)]
-final class Examples implements DocumentationAttribute
+final class Examples implements DocDefinition
 {
 
 	/** @var array<DocMeta> */

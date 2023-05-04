@@ -10,7 +10,7 @@ use Doctrine\Common\Annotations\Annotation\Target;
  * @NamedArgumentConstructor()
  * @Target({"ANNOTATION"})
  */
-final class Link implements DocumentationAttribute
+final class Link implements DocDefinition
 {
 
 	private string $url;

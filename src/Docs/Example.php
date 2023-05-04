@@ -11,7 +11,7 @@ use Orisai\ObjectMapper\Meta\Source\AnnotationFilter;
  * @NamedArgumentConstructor()
  * @Target({"ANNOTATION"})
  */
-final class Example implements DocumentationAttribute
+final class Example implements DocDefinition
 {
 
 	private string $content;

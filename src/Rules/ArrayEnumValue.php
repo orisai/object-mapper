@@ -12,7 +12,7 @@ use Doctrine\Common\Annotations\Annotation\Target;
  * @Target({"PROPERTY", "ANNOTATION"})
  */
 #[Attribute(Attribute::TARGET_PROPERTY)]
-final class ArrayEnumValue implements RuleAttribute
+final class ArrayEnumValue implements RuleDefinition
 {
 
 	/** @var array<mixed> */

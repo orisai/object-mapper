@@ -6,7 +6,7 @@ use Attribute;
 use BackedEnum;
 
 #[Attribute(Attribute::TARGET_PROPERTY)]
-final class BackedEnumValue implements RuleAttribute
+final class BackedEnumValue implements RuleDefinition
 {
 
 	/** @var class-string<BackedEnum> */

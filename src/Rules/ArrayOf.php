@@ -13,14 +13,14 @@ use Orisai\ObjectMapper\Meta\Compile\RuleCompileMeta;
  * @Target({"PROPERTY", "ANNOTATION"})
  */
 #[Attribute(Attribute::TARGET_PROPERTY)]
-final class ArrayOf extends MultiValueRuleAttribute
+final class ArrayOf extends MultiValueRuleDefinition
 {
 
 	private ?RuleCompileMeta $key;
 
 	public function __construct(
-		RuleAttribute $item,
-		?RuleAttribute $key = null,
+		RuleDefinition $item,
+		?RuleDefinition $key = null,
 		?int $minItems = null,
 		?int $maxItems = null,
 		bool $mergeDefaults = false

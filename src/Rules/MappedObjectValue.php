@@ -13,7 +13,7 @@ use Orisai\ObjectMapper\MappedObject;
  * @Target({"PROPERTY", "ANNOTATION"})
  */
 #[Attribute(Attribute::TARGET_PROPERTY)]
-final class MappedObjectValue implements RuleAttribute
+final class MappedObjectValue implements RuleDefinition
 {
 
 	/** @var class-string<MappedObject> */

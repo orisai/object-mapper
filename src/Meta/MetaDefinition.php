@@ -3,11 +3,9 @@
 namespace Orisai\ObjectMapper\Meta;
 
 /**
- * Base interface for mapped object annotations
- *
  * @internal
  */
-interface BaseAttribute
+interface MetaDefinition
 {
 
 	/**
@@ -16,8 +14,6 @@ interface BaseAttribute
 	public function getType(): string;
 
 	/**
-	 * Return all annotation args provided by user
-	 *
 	 * @return array<mixed>
 	 */
 	public function getArgs(): array;

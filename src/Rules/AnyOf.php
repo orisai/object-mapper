@@ -12,7 +12,7 @@ use Doctrine\Common\Annotations\Annotation\Target;
  * @Target({"PROPERTY", "ANNOTATION"})
  */
 #[Attribute(Attribute::TARGET_PROPERTY)]
-final class AnyOf extends CompoundRulesAttribute
+final class AnyOf extends CompoundRulesDefinition
 {
 
 	public function getType(): string

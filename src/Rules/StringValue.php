@@ -12,7 +12,7 @@ use Doctrine\Common\Annotations\Annotation\Target;
  * @Target({"PROPERTY", "ANNOTATION"})
  */
 #[Attribute(Attribute::TARGET_PROPERTY)]
-final class StringValue implements RuleAttribute
+final class StringValue implements RuleDefinition
 {
 
 	private ?string $pattern;

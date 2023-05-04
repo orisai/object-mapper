@@ -47,19 +47,19 @@ final class ClassCompileMetaTest extends TestCase
 			$reflector,
 			$meta->getClass(),
 		);
-		self::assertTrue($meta->hasAnyAttributes());
+		self::assertTrue($meta->hasAnyMeta());
 
 		$meta = new ClassCompileMeta($callbacks, [], [], $reflector);
-		self::assertTrue($meta->hasAnyAttributes());
+		self::assertTrue($meta->hasAnyMeta());
 
 		$meta = new ClassCompileMeta([], $docs, [], $reflector);
-		self::assertTrue($meta->hasAnyAttributes());
+		self::assertTrue($meta->hasAnyMeta());
 
 		$meta = new ClassCompileMeta([], [], $modifiers, $reflector);
-		self::assertTrue($meta->hasAnyAttributes());
+		self::assertTrue($meta->hasAnyMeta());
 
 		$meta = new ClassCompileMeta([], [], [], $reflector);
-		self::assertFalse($meta->hasAnyAttributes());
+		self::assertFalse($meta->hasAnyMeta());
 	}
 
 }

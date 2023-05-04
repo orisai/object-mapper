@@ -13,7 +13,7 @@ use Orisai\ObjectMapper\Meta\Source\AnnotationFilter;
  * @Target({"CLASS", "PROPERTY"})
  */
 #[Attribute(Attribute::TARGET_CLASS | Attribute::TARGET_PROPERTY)]
-final class Description implements DocumentationAttribute
+final class Description implements DocDefinition
 {
 
 	private string $message;

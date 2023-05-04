@@ -14,7 +14,7 @@ use Doctrine\Common\Annotations\Annotation\Target;
  * @Target({"PROPERTY", "ANNOTATION"})
  */
 #[Attribute(Attribute::TARGET_PROPERTY)]
-final class DateTimeValue implements RuleAttribute
+final class DateTimeValue implements RuleDefinition
 {
 
 	/** @var class-string<DateTimeInterface> */

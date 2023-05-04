@@ -19,7 +19,7 @@ final class ClassCompileMeta extends NodeCompileMeta
 		$this->class = $class;
 	}
 
-	public function hasAnyAttributes(): bool
+	public function hasAnyMeta(): bool
 	{
 		return $this->getCallbacks() !== []
 			|| $this->getDocs() !== []

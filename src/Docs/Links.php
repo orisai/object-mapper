@@ -15,7 +15,7 @@ use function sprintf;
  * @Target({"CLASS", "PROPERTY"})
  */
 #[Attribute(Attribute::TARGET_CLASS | Attribute::TARGET_PROPERTY)]
-final class Links implements DocumentationAttribute
+final class Links implements DocDefinition
 {
 
 	/** @var array<DocMeta> */

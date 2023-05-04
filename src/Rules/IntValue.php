@@ -12,7 +12,7 @@ use Doctrine\Common\Annotations\Annotation\Target;
  * @Target({"PROPERTY", "ANNOTATION"})
  */
 #[Attribute(Attribute::TARGET_PROPERTY)]
-final class IntValue implements RuleAttribute
+final class IntValue implements RuleDefinition
 {
 
 	private ?int $min;

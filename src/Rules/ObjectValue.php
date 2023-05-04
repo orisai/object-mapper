@@ -12,7 +12,7 @@ use Doctrine\Common\Annotations\Annotation\Target;
  * @Target({"PROPERTY", "ANNOTATION"})
  */
 #[Attribute(Attribute::TARGET_PROPERTY)]
-final class ObjectValue implements RuleAttribute
+final class ObjectValue implements RuleDefinition
 {
 
 	public function getType(): string

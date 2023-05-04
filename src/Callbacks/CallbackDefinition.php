@@ -3,12 +3,9 @@
 namespace Orisai\ObjectMapper\Callbacks;
 
 use Orisai\ObjectMapper\Args\Args;
-use Orisai\ObjectMapper\Meta\BaseAttribute;
+use Orisai\ObjectMapper\Meta\MetaDefinition;
 
-/**
- * Base interface for callable annotations
- */
-interface CallableAttribute extends BaseAttribute
+interface CallbackDefinition extends MetaDefinition
 {
 
 	/**

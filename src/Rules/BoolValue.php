@@ -12,7 +12,7 @@ use Doctrine\Common\Annotations\Annotation\Target;
  * @Target({"PROPERTY", "ANNOTATION"})
  */
 #[Attribute(Attribute::TARGET_PROPERTY)]
-final class BoolValue implements RuleAttribute
+final class BoolValue implements RuleDefinition
 {
 
 	private bool $castBoolLike;

@@ -3,12 +3,9 @@
 namespace Orisai\ObjectMapper\Rules;
 
 use Orisai\ObjectMapper\Args\Args;
-use Orisai\ObjectMapper\Meta\BaseAttribute;
+use Orisai\ObjectMapper\Meta\MetaDefinition;
 
-/**
- * Base interface for rule annotations
- */
-interface RuleAttribute extends BaseAttribute
+interface RuleDefinition extends MetaDefinition
 {
 
 	/**

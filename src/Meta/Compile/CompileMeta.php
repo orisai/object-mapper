@@ -53,14 +53,14 @@ final class CompileMeta
 		return $this->sources;
 	}
 
-	public function hasAnyAttributes(): bool
+	public function hasAnyMeta(): bool
 	{
 		if ($this->fields !== []) {
 			return true;
 		}
 
 		foreach ($this->classes as $class) {
-			if ($class->hasAnyAttributes()) {
+			if ($class->hasAnyMeta()) {
 				return true;
 			}
 		}

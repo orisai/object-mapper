@@ -4,7 +4,7 @@ namespace Orisai\ObjectMapper\Rules;
 
 use Orisai\ObjectMapper\Meta\Compile\RuleCompileMeta;
 
-abstract class MultiValueRuleAttribute implements RuleAttribute
+abstract class MultiValueRuleDefinition implements RuleDefinition
 {
 
 	private RuleCompileMeta $item;
@@ -16,7 +16,7 @@ abstract class MultiValueRuleAttribute implements RuleAttribute
 	private bool $mergeDefaults;
 
 	public function __construct(
-		RuleAttribute $item,
+		RuleDefinition $item,
 		?int $minItems = null,
 		?int $maxItems = null,
 		bool $mergeDefaults = false
