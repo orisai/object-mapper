@@ -4,7 +4,7 @@ namespace Orisai\ObjectMapper\Docs;
 
 use Orisai\ObjectMapper\Args\ArgsChecker;
 use Orisai\ObjectMapper\Context\ResolverArgsContext;
-use Orisai\ObjectMapper\Meta\DocMeta;
+use Orisai\ObjectMapper\Meta\Shared\DocMeta;
 
 final class ExamplesDoc implements Doc
 {

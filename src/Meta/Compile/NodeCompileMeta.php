@@ -2,7 +2,7 @@
 
 namespace Orisai\ObjectMapper\Meta\Compile;
 
-use Orisai\ObjectMapper\Meta\DocMeta;
+use Orisai\ObjectMapper\Meta\Shared\DocMeta;
 use ReflectionClass;
 
 /**

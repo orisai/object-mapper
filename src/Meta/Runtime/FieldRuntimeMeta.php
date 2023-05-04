@@ -3,7 +3,7 @@
 namespace Orisai\ObjectMapper\Meta\Runtime;
 
 use Orisai\ObjectMapper\Args\Args;
-use Orisai\ObjectMapper\Meta\DefaultValueMeta;
+use Orisai\ObjectMapper\Meta\Shared\DefaultValueMeta;
 use ReflectionProperty;
 
 final class FieldRuntimeMeta extends NodeRuntimeMeta

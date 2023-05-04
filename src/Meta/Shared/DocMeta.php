@@ -1,6 +1,6 @@
 <?php declare(strict_types = 1);
 
-namespace Orisai\ObjectMapper\Meta;
+namespace Orisai\ObjectMapper\Meta\Shared;
 
 use Orisai\ObjectMapper\Docs\Doc;
 

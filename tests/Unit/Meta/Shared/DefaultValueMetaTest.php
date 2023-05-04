@@ -1,9 +1,9 @@
 <?php declare(strict_types = 1);
 
-namespace Tests\Orisai\ObjectMapper\Unit\Meta;
+namespace Tests\Orisai\ObjectMapper\Unit\Meta\Shared;
 
 use Orisai\Exceptions\Logic\InvalidState;
-use Orisai\ObjectMapper\Meta\DefaultValueMeta;
+use Orisai\ObjectMapper\Meta\Shared\DefaultValueMeta;
 use PHPUnit\Framework\TestCase;
 
 final class DefaultValueMetaTest extends TestCase
@@ -16,7 +16,7 @@ final class DefaultValueMetaTest extends TestCase
 
 		$this->expectException(InvalidState::class);
 		$this->expectExceptionMessage(
-			'Check if default value exists with Orisai\ObjectMapper\Meta\DefaultValueMeta::hasValue()',
+			'Check if default value exists with Orisai\ObjectMapper\Meta\Shared\DefaultValueMeta::hasValue()',
 		);
 		$meta->getValue();
 	}

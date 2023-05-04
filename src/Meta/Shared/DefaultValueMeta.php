@@ -1,6 +1,6 @@
 <?php declare(strict_types = 1);
 
-namespace Orisai\ObjectMapper\Meta;
+namespace Orisai\ObjectMapper\Meta\Shared;
 
 use Orisai\Exceptions\Logic\InvalidState;
 use function is_object;

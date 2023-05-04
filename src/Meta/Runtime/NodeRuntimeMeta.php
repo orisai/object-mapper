@@ -3,7 +3,7 @@
 namespace Orisai\ObjectMapper\Meta\Runtime;
 
 use Orisai\ObjectMapper\Args\Args;
-use Orisai\ObjectMapper\Meta\DocMeta;
+use Orisai\ObjectMapper\Meta\Shared\DocMeta;
 use Orisai\ObjectMapper\Modifiers\Modifier;
 
 /**

@@ -21,6 +21,8 @@ use Orisai\ObjectMapper\Meta\Runtime\FieldRuntimeMeta;
 use Orisai\ObjectMapper\Meta\Runtime\ModifierRuntimeMeta;
 use Orisai\ObjectMapper\Meta\Runtime\RuleRuntimeMeta;
 use Orisai\ObjectMapper\Meta\Runtime\RuntimeMeta;
+use Orisai\ObjectMapper\Meta\Shared\DefaultValueMeta;
+use Orisai\ObjectMapper\Meta\Shared\DocMeta;
 use Orisai\ObjectMapper\Modifiers\CreateWithoutConstructorModifier;
 use Orisai\ObjectMapper\Modifiers\DefaultValueModifier;
 use Orisai\ObjectMapper\Modifiers\FieldNameModifier;

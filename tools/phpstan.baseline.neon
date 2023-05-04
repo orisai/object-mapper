@@ -151,11 +151,6 @@ parameters:
 			path: ../tests/Unit/Meta/Runtime/CallbackRuntimeMetaTest.php
 
 		-
-			message: "#^Call to static method PHPUnit\\\\Framework\\\\Assert\\:\\:assertSame\\(\\) with array\\{Orisai\\\\ObjectMapper\\\\Meta\\\\DocMeta\\} and array\\<string, Orisai\\\\ObjectMapper\\\\Meta\\\\DocMeta\\> will always evaluate to false\\.$#"
-			count: 1
-			path: ../tests/Unit/Meta/Runtime/ClassRuntimeMetaTest.php
-
-		-
 			message: "#^Call to static method PHPUnit\\\\Framework\\\\Assert\\:\\:assertSame\\(\\) with array\\{Orisai\\\\ObjectMapper\\\\Meta\\\\Runtime\\\\CallbackRuntimeMeta\\<Orisai\\\\ObjectMapper\\\\Callbacks\\\\BaseCallbackArgs\\>\\} and array\\<int, Orisai\\\\ObjectMapper\\\\Meta\\\\Runtime\\\\CallbackRuntimeMeta\\<Orisai\\\\ObjectMapper\\\\Args\\\\Args\\>\\> will always evaluate to false\\.$#"
 			count: 1
 			path: ../tests/Unit/Meta/Runtime/ClassRuntimeMetaTest.php
@@ -166,12 +161,17 @@ parameters:
 			path: ../tests/Unit/Meta/Runtime/ClassRuntimeMetaTest.php
 
 		-
+			message: "#^Call to static method PHPUnit\\\\Framework\\\\Assert\\:\\:assertSame\\(\\) with array\\{Orisai\\\\ObjectMapper\\\\Meta\\\\Shared\\\\DocMeta\\} and array\\<string, Orisai\\\\ObjectMapper\\\\Meta\\\\Shared\\\\DocMeta\\> will always evaluate to false\\.$#"
+			count: 1
+			path: ../tests/Unit/Meta/Runtime/ClassRuntimeMetaTest.php
+
+		-
 			message: "#^Parameter \\#1 \\$callbacks of class Orisai\\\\ObjectMapper\\\\Meta\\\\Runtime\\\\ClassRuntimeMeta constructor expects array\\<int, Orisai\\\\ObjectMapper\\\\Meta\\\\Runtime\\\\CallbackRuntimeMeta\\<Orisai\\\\ObjectMapper\\\\Args\\\\Args\\>\\>, array\\{Orisai\\\\ObjectMapper\\\\Meta\\\\Runtime\\\\CallbackRuntimeMeta\\<Orisai\\\\ObjectMapper\\\\Callbacks\\\\BaseCallbackArgs\\>\\} given\\.$#"
 			count: 1
 			path: ../tests/Unit/Meta/Runtime/ClassRuntimeMetaTest.php
 
 		-
-			message: "#^Parameter \\#2 \\$docs of class Orisai\\\\ObjectMapper\\\\Meta\\\\Runtime\\\\ClassRuntimeMeta constructor expects array\\<string, Orisai\\\\ObjectMapper\\\\Meta\\\\DocMeta\\>, array\\<int, Orisai\\\\ObjectMapper\\\\Meta\\\\DocMeta\\> given\\.$#"
+			message: "#^Parameter \\#2 \\$docs of class Orisai\\\\ObjectMapper\\\\Meta\\\\Runtime\\\\ClassRuntimeMeta constructor expects array\\<string, Orisai\\\\ObjectMapper\\\\Meta\\\\Shared\\\\DocMeta\\>, array\\<int, Orisai\\\\ObjectMapper\\\\Meta\\\\Shared\\\\DocMeta\\> given\\.$#"
 			count: 1
 			path: ../tests/Unit/Meta/Runtime/ClassRuntimeMetaTest.php
 
@@ -191,11 +191,6 @@ parameters:
 			path: ../tests/Unit/Meta/Runtime/FieldRuntimeMetaTest.php
 
 		-
-			message: "#^Call to static method PHPUnit\\\\Framework\\\\Assert\\:\\:assertSame\\(\\) with array\\{Orisai\\\\ObjectMapper\\\\Meta\\\\DocMeta\\} and array\\<string, Orisai\\\\ObjectMapper\\\\Meta\\\\DocMeta\\> will always evaluate to false\\.$#"
-			count: 1
-			path: ../tests/Unit/Meta/Runtime/FieldRuntimeMetaTest.php
-
-		-
 			message: "#^Call to static method PHPUnit\\\\Framework\\\\Assert\\:\\:assertSame\\(\\) with array\\{Orisai\\\\ObjectMapper\\\\Meta\\\\Runtime\\\\CallbackRuntimeMeta\\<Orisai\\\\ObjectMapper\\\\Callbacks\\\\BaseCallbackArgs\\>\\} and array\\<int, Orisai\\\\ObjectMapper\\\\Meta\\\\Runtime\\\\CallbackRuntimeMeta\\<Orisai\\\\ObjectMapper\\\\Args\\\\Args\\>\\> will always evaluate to false\\.$#"
 			count: 1
 			path: ../tests/Unit/Meta/Runtime/FieldRuntimeMetaTest.php
@@ -206,12 +201,17 @@ parameters:
 			path: ../tests/Unit/Meta/Runtime/FieldRuntimeMetaTest.php
 
 		-
+			message: "#^Call to static method PHPUnit\\\\Framework\\\\Assert\\:\\:assertSame\\(\\) with array\\{Orisai\\\\ObjectMapper\\\\Meta\\\\Shared\\\\DocMeta\\} and array\\<string, Orisai\\\\ObjectMapper\\\\Meta\\\\Shared\\\\DocMeta\\> will always evaluate to false\\.$#"
+			count: 1
+			path: ../tests/Unit/Meta/Runtime/FieldRuntimeMetaTest.php
+
+		-
 			message: "#^Parameter \\#1 \\$callbacks of class Orisai\\\\ObjectMapper\\\\Meta\\\\Runtime\\\\FieldRuntimeMeta constructor expects array\\<int, Orisai\\\\ObjectMapper\\\\Meta\\\\Runtime\\\\CallbackRuntimeMeta\\<Orisai\\\\ObjectMapper\\\\Args\\\\Args\\>\\>, array\\{Orisai\\\\ObjectMapper\\\\Meta\\\\Runtime\\\\CallbackRuntimeMeta\\<Orisai\\\\ObjectMapper\\\\Callbacks\\\\BaseCallbackArgs\\>\\} given\\.$#"
 			count: 1
 			path: ../tests/Unit/Meta/Runtime/FieldRuntimeMetaTest.php
 
 		-
-			message: "#^Parameter \\#2 \\$docs of class Orisai\\\\ObjectMapper\\\\Meta\\\\Runtime\\\\FieldRuntimeMeta constructor expects array\\<string, Orisai\\\\ObjectMapper\\\\Meta\\\\DocMeta\\>, array\\<int, Orisai\\\\ObjectMapper\\\\Meta\\\\DocMeta\\> given\\.$#"
+			message: "#^Parameter \\#2 \\$docs of class Orisai\\\\ObjectMapper\\\\Meta\\\\Runtime\\\\FieldRuntimeMeta constructor expects array\\<string, Orisai\\\\ObjectMapper\\\\Meta\\\\Shared\\\\DocMeta\\>, array\\<int, Orisai\\\\ObjectMapper\\\\Meta\\\\Shared\\\\DocMeta\\> given\\.$#"
 			count: 1
 			path: ../tests/Unit/Meta/Runtime/FieldRuntimeMetaTest.php
 
