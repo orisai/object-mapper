@@ -3,10 +3,10 @@
 namespace Orisai\ObjectMapper\Meta\Source;
 
 use Orisai\Exceptions\Logic\InvalidArgument;
-use Orisai\ObjectMapper\Attributes\BaseAttribute;
 use Orisai\ObjectMapper\Callbacks\CallableAttribute;
 use Orisai\ObjectMapper\Docs\DocumentationAttribute;
 use Orisai\ObjectMapper\MappedObject;
+use Orisai\ObjectMapper\Meta\BaseAttribute;
 use Orisai\ObjectMapper\Meta\Compile\CallbackCompileMeta;
 use Orisai\ObjectMapper\Meta\Compile\ClassCompileMeta;
 use Orisai\ObjectMapper\Meta\Compile\CompileMeta;

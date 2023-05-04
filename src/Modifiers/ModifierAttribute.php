@@ -3,7 +3,7 @@
 namespace Orisai\ObjectMapper\Modifiers;
 
 use Orisai\ObjectMapper\Args\Args;
-use Orisai\ObjectMapper\Attributes\BaseAttribute;
+use Orisai\ObjectMapper\Meta\BaseAttribute;
 
 interface ModifierAttribute extends BaseAttribute
 {

@@ -3,7 +3,7 @@
 namespace Orisai\ObjectMapper\Rules;
 
 use Orisai\ObjectMapper\Args\Args;
-use Orisai\ObjectMapper\Attributes\BaseAttribute;
+use Orisai\ObjectMapper\Meta\BaseAttribute;
 
 /**
  * Base interface for rule annotations

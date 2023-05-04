@@ -2,7 +2,7 @@
 
 namespace Orisai\ObjectMapper\Docs;
 
-use Orisai\ObjectMapper\Attributes\BaseAttribute;
+use Orisai\ObjectMapper\Meta\BaseAttribute;
 
 /**
  * Base interface for documentation annotations
