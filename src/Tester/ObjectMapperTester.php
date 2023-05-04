@@ -3,8 +3,8 @@
 namespace Orisai\ObjectMapper\Tester;
 
 use Orisai\ObjectMapper\Meta\Cache\ArrayMetaCache;
-use Orisai\ObjectMapper\Meta\DefaultMetaResolverFactory;
 use Orisai\ObjectMapper\Meta\MetaLoader;
+use Orisai\ObjectMapper\Meta\MetaResolverFactory;
 use Orisai\ObjectMapper\Meta\Source\AnnotationsMetaSource;
 use Orisai\ObjectMapper\Meta\Source\AttributesMetaSource;
 use Orisai\ObjectMapper\Meta\Source\DefaultMetaSourceManager;
@@ -33,7 +33,7 @@ final class ObjectMapperTester
 
 		$objectCreator = new DefaultObjectCreator();
 		$cache = new ArrayMetaCache();
-		$resolverFactory = new DefaultMetaResolverFactory($ruleManager, $objectCreator);
+		$resolverFactory = new MetaResolverFactory($ruleManager, $objectCreator);
 		$metaLoader = new MetaLoader($cache, $sourceManager, $resolverFactory);
 		$metaResolver = $resolverFactory->create($metaLoader);
 

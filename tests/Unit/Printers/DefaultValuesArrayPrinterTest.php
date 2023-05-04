@@ -5,8 +5,8 @@ namespace Tests\Orisai\ObjectMapper\Unit\Printers;
 use Orisai\ObjectMapper\Context\TypeContext;
 use Orisai\ObjectMapper\MappedObject;
 use Orisai\ObjectMapper\Meta\Cache\ArrayMetaCache;
-use Orisai\ObjectMapper\Meta\DefaultMetaResolverFactory;
 use Orisai\ObjectMapper\Meta\MetaLoader;
+use Orisai\ObjectMapper\Meta\MetaResolverFactory;
 use Orisai\ObjectMapper\Meta\Source\AnnotationsMetaSource;
 use Orisai\ObjectMapper\Meta\Source\DefaultMetaSourceManager;
 use Orisai\ObjectMapper\Printers\DefaultValuesArrayPrinter;
@@ -39,7 +39,7 @@ final class DefaultValuesArrayPrinterTest extends TestCase
 
 		$objectCreator = new DefaultObjectCreator();
 		$cache = new ArrayMetaCache();
-		$resolverFactory = new DefaultMetaResolverFactory($this->ruleManager, $objectCreator);
+		$resolverFactory = new MetaResolverFactory($this->ruleManager, $objectCreator);
 		$this->metaLoader = new MetaLoader($cache, $sourceManager, $resolverFactory);
 		$this->printer = new DefaultValuesArrayPrinter($this->metaLoader);
 	}

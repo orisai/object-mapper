@@ -63,7 +63,7 @@ Configure processor:
 
 ```php
 use Orisai\ObjectMapper\Meta\Cache\ArrayMetaCache;
-use Orisai\ObjectMapper\Meta\DefaultMetaResolverFactory;
+use Orisai\ObjectMapper\Meta\MetaResolverFactory;
 use Orisai\ObjectMapper\Meta\MetaLoader;
 use Orisai\ObjectMapper\Meta\Source\AnnotationsMetaSource;
 use Orisai\ObjectMapper\Meta\Source\AttributesMetaSource;
@@ -78,7 +78,7 @@ $sourceManager->addSource(new AttributesMetaSource()); // For PHP 8 attributes
 $ruleManager = new DefaultRuleManager();
 $objectCreator = new DefaultObjectCreator();
 $cache = new ArrayMetaCache();
-$resolverFactory = new DefaultMetaResolverFactory($ruleManager, $objectCreator);
+$resolverFactory = new MetaResolverFactory($ruleManager, $objectCreator);
 $metaLoader = new MetaLoader($cache, $sourceManager, $resolverFactory);
 
 $processor = new DefaultProcessor(
