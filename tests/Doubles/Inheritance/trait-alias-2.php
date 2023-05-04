@@ -2,7 +2,7 @@
 
 namespace Tests\Orisai\ObjectMapper\Doubles\Inheritance\TraitAlias2;
 
-use Orisai\ObjectMapper\Attributes\Callbacks\After;
+use Orisai\ObjectMapper\Callbacks\After;
 use Orisai\ObjectMapper\MappedObject;
 use Orisai\ObjectMapper\Rules\StringValue;
 

@@ -2,7 +2,7 @@
 
 namespace Tests\Orisai\ObjectMapper\Doubles\Callbacks;
 
-use Orisai\ObjectMapper\Attributes\Callbacks\After;
+use Orisai\ObjectMapper\Callbacks\After;
 use Orisai\ObjectMapper\Exception\InvalidData;
 use Orisai\ObjectMapper\Exception\ValueDoesNotMatch;
 use Orisai\ObjectMapper\MappedObject;

@@ -1,10 +1,9 @@
 <?php declare(strict_types = 1);
 
-namespace Orisai\ObjectMapper\Attributes\Callbacks;
+namespace Orisai\ObjectMapper\Callbacks;
 
 use Orisai\ObjectMapper\Args\Args;
 use Orisai\ObjectMapper\Attributes\BaseAttribute;
-use Orisai\ObjectMapper\Callbacks\Callback;
 
 /**
  * Base interface for callable annotations

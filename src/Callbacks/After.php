@@ -1,12 +1,10 @@
 <?php declare(strict_types = 1);
 
-namespace Orisai\ObjectMapper\Attributes\Callbacks;
+namespace Orisai\ObjectMapper\Callbacks;
 
 use Attribute;
 use Doctrine\Common\Annotations\Annotation\NamedArgumentConstructor;
 use Doctrine\Common\Annotations\Annotation\Target;
-use Orisai\ObjectMapper\Callbacks\AfterCallback;
-use Orisai\ObjectMapper\Callbacks\CallbackRuntime;
 
 /**
  * @Annotation

@@ -1369,7 +1369,7 @@ Define callbacks before and after mapped objects and their fields:
 
 ```php
 use Orisai\ObjectMapper\MappedObject;
-use Orisai\ObjectMapper\Attributes\Callbacks\After;
+use Orisai\ObjectMapper\Callbacks\After;
 use Orisai\ObjectMapper\Rules\StringValue;
 use Orisai\ObjectMapper\Context\FieldContext;
 
@@ -1421,8 +1421,8 @@ After mapped object
 
 ```php
 use Orisai\ObjectMapper\MappedObject;
-use Orisai\ObjectMapper\Attributes\Callbacks\Before;
-use Orisai\ObjectMapper\Attributes\Callbacks\After;
+use Orisai\ObjectMapper\Callbacks\Before;
+use Orisai\ObjectMapper\Callbacks\After;
 use Orisai\ObjectMapper\Context\MappedObjectContext;
 
 /**
@@ -1473,8 +1473,8 @@ After field
 
 ```php
 use Orisai\ObjectMapper\MappedObject;
-use Orisai\ObjectMapper\Attributes\Callbacks\Before;
-use Orisai\ObjectMapper\Attributes\Callbacks\After;
+use Orisai\ObjectMapper\Callbacks\Before;
+use Orisai\ObjectMapper\Callbacks\After;
 use Orisai\ObjectMapper\Rules\StringValue;
 use Orisai\ObjectMapper\Context\FieldContext;
 
@@ -1509,7 +1509,7 @@ Field callbacks are called only when field is sent. Callback is not invoked for 
 
 ```php
 use Orisai\ObjectMapper\MappedObject;
-use Orisai\ObjectMapper\Attributes\Callbacks\After;
+use Orisai\ObjectMapper\Callbacks\After;
 use Orisai\ObjectMapper\Rules\StringValue;
 use Orisai\ObjectMapper\Context\FieldContext;
 
@@ -1543,7 +1543,7 @@ Callbacks are by default expected to return a value:
 
 ```php
 use Orisai\ObjectMapper\MappedObject;
-use Orisai\ObjectMapper\Attributes\Callbacks\After;
+use Orisai\ObjectMapper\Callbacks\After;
 use Orisai\ObjectMapper\Rules\MixedValue;
 
 final class WithReturningCallbackInput implements MappedObject
@@ -1572,7 +1572,7 @@ We may change that by defining `void` or `never` return type:
 
 ```php
 use Orisai\ObjectMapper\MappedObject;
-use Orisai\ObjectMapper\Attributes\Callbacks\After;
+use Orisai\ObjectMapper\Callbacks\After;
 use Orisai\ObjectMapper\Rules\StringValue;
 use Orisai\ObjectMapper\Exception\ValueDoesNotMatch;
 use Orisai\ObjectMapper\Types\Value;
@@ -1602,7 +1602,7 @@ Mapped objects can request dependencies in constructor for extended validation i
 
 ```php
 use Orisai\ObjectMapper\MappedObject;
-use Orisai\ObjectMapper\Attributes\Callbacks\After;
+use Orisai\ObjectMapper\Callbacks\After;
 use Orisai\ObjectMapper\Rules\MixedValue;
 use Orisai\ObjectMapper\Exception\ValueDoesNotMatch;
 use Orisai\ObjectMapper\Types\Value;

@@ -3,8 +3,8 @@
 namespace Tests\Orisai\ObjectMapper\Doubles\Callbacks;
 
 use Orisai\Exceptions\Logic\InvalidState;
-use Orisai\ObjectMapper\Attributes\Callbacks\After;
-use Orisai\ObjectMapper\Attributes\Callbacks\Before;
+use Orisai\ObjectMapper\Callbacks\After;
+use Orisai\ObjectMapper\Callbacks\Before;
 use Orisai\ObjectMapper\Exception\ValueDoesNotMatch;
 use Orisai\ObjectMapper\MappedObject;
 use Orisai\ObjectMapper\Rules\StringValue;

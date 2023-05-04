@@ -2,8 +2,8 @@
 
 namespace Tests\Orisai\ObjectMapper\Doubles\Inheritance\TraitCallback;
 
-use Orisai\ObjectMapper\Attributes\Callbacks\After;
-use Orisai\ObjectMapper\Attributes\Callbacks\Before;
+use Orisai\ObjectMapper\Callbacks\After;
+use Orisai\ObjectMapper\Callbacks\Before;
 use Orisai\ObjectMapper\MappedObject;
 use Orisai\ObjectMapper\Rules\StringValue;
 use function is_array;
