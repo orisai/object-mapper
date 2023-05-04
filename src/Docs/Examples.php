@@ -1,11 +1,10 @@
 <?php declare(strict_types = 1);
 
-namespace Orisai\ObjectMapper\Attributes\Docs;
+namespace Orisai\ObjectMapper\Docs;
 
 use Attribute;
 use Doctrine\Common\Annotations\Annotation\NamedArgumentConstructor;
 use Orisai\Exceptions\Logic\InvalidArgument;
-use Orisai\ObjectMapper\Docs\ExamplesDoc;
 use Orisai\ObjectMapper\Meta\DocMeta;
 use function sprintf;
 

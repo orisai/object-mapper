@@ -1,9 +1,8 @@
 <?php declare(strict_types = 1);
 
-namespace Orisai\ObjectMapper\Attributes\Docs;
+namespace Orisai\ObjectMapper\Docs;
 
 use Orisai\ObjectMapper\Attributes\BaseAttribute;
-use Orisai\ObjectMapper\Docs\Doc;
 
 /**
  * Base interface for documentation annotations

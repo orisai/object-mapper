@@ -1,12 +1,11 @@
 <?php declare(strict_types = 1);
 
-namespace Orisai\ObjectMapper\Attributes\Docs;
+namespace Orisai\ObjectMapper\Docs;
 
 use Attribute;
 use Doctrine\Common\Annotations\Annotation\NamedArgumentConstructor;
 use Doctrine\Common\Annotations\Annotation\Target;
 use Orisai\ObjectMapper\Attributes\AnnotationFilter;
-use Orisai\ObjectMapper\Docs\DescriptionDoc;
 
 /**
  * @Annotation
@@ -14,7 +13,7 @@ use Orisai\ObjectMapper\Docs\DescriptionDoc;
  * @Target({"CLASS", "PROPERTY"})
  */
 #[Attribute(Attribute::TARGET_CLASS | Attribute::TARGET_PROPERTY)]
-final class Description implements DocumentationAttribute
+final class Summary implements DocumentationAttribute
 {
 
 	private string $message;
@@ -26,7 +25,7 @@ final class Description implements DocumentationAttribute
 
 	public function getType(): string
 	{
-		return DescriptionDoc::class;
+		return SummaryDoc::class;
 	}
 
 	public function getArgs(): array

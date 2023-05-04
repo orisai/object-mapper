@@ -1,10 +1,9 @@
 <?php declare(strict_types = 1);
 
-namespace Orisai\ObjectMapper\Attributes\Docs;
+namespace Orisai\ObjectMapper\Docs;
 
 use Doctrine\Common\Annotations\Annotation\NamedArgumentConstructor;
 use Doctrine\Common\Annotations\Annotation\Target;
-use Orisai\ObjectMapper\Docs\LinkDoc;
 
 /**
  * @Annotation
