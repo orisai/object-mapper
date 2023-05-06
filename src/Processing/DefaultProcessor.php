@@ -70,15 +70,12 @@ final class DefaultProcessor implements Processor
 	 */
 	public function process($data, string $class, ?Options $options = null): MappedObject
 	{
-		$options ??= new Options();
-		$type = $this->createMappedObjectType($class, $options);
-		$meta = $this->metaLoader->load($class);
-		$holder = $this->createHolder($class, $meta->getClass());
-
-		$mappedObjectContext = $this->createMappedObjectContext($options, $type, true);
-		$callContext = $this->createProcessorRunContext($class, $meta, $holder);
-
-		$processedData = $this->processData($data, $mappedObjectContext, $callContext);
+		[
+			$processedData,
+			$holder,
+			$mappedObjectContext,
+			$callContext,
+		] = $this->processBase($data, $class, $options, true);
 
 		$object = $holder->getInstance();
 		$this->fillObject($object, $processedData, $data, $mappedObjectContext, $callContext);
@@ -94,15 +91,31 @@ final class DefaultProcessor implements Processor
 	 */
 	public function processWithoutMapping($data, string $class, ?Options $options = null): array
 	{
+		[$processedData] = $this->processBase($data, $class, $options, false);
+
+		return $processedData;
+	}
+
+	/**
+	 * @template T of MappedObject
+	 * @param mixed           $data
+	 * @param class-string<T> $class
+	 * @return array{array<mixed>, ObjectHolder<T>, MappedObjectContext, ProcessorCallContext<T>}
+	 * @throws InvalidData
+	 */
+	private function processBase($data, string $class, ?Options $options, bool $initializeObjects): array
+	{
 		$options ??= new Options();
 		$type = $this->createMappedObjectType($class, $options);
 		$meta = $this->metaLoader->load($class);
 		$holder = $this->createHolder($class, $meta->getClass());
 
-		$mappedObjectContext = $this->createMappedObjectContext($options, $type, false);
+		$mappedObjectContext = $this->createMappedObjectContext($options, $type, $initializeObjects);
 		$callContext = $this->createProcessorRunContext($class, $meta, $holder);
 
-		return $this->processData($data, $mappedObjectContext, $callContext);
+		$processedData = $this->processData($data, $mappedObjectContext, $callContext);
+
+		return [$processedData, $holder, $mappedObjectContext, $callContext];
 	}
 
 	private function createTypeContext(Options $options): TypeContext
@@ -651,7 +664,7 @@ final class DefaultProcessor implements Processor
 	}
 
 	/**
-	 * @param mixed                         $value
+	 * @param mixed $value
 	 */
 	private function objectSet(MappedObject $object, ReflectionProperty $property, $value): void
 	{
