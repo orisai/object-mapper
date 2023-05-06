@@ -50,6 +50,7 @@ of them to type-safe objects.
 - [Object creator](#object-creator)
 - [Create without constructor](#create-without-constructor)
 - [Metadata validation and preloading](#metadata-validation-and-preloading)
+- [Tracking input values](#tracking-input-values)
 
 ## Setup
 
@@ -1751,3 +1752,28 @@ $metaLoader->preloadFromPaths([
 	__DIR__ . '/path2',
 ]);
 ```
+
+## Tracking input values
+
+Track input values of every mapped object in hierarchy, before they were processed by rules.
+
+> Use only for debugging, because this may be memory intensive
+
+```php
+use Orisai\ObjectMapper\Processing\Options;
+
+$initialValues = [];
+
+$options = new Options();
+$options->setTrackRawValues(true);
+$object = $processor->process($initialValues, TrackedInput::class, $options);
+
+$values = $processor->getRawValues($object); // mixed
+$values === $initialValues; // true
+```
+
+To make it work,following conditions must be met:
+
+- object was mapped by object mapper (no manually created objects)
+- it was mapped in current php process (no serialization)
+- option is set to enable raw values tracking
