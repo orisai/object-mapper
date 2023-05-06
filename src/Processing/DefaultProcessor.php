@@ -619,7 +619,7 @@ final class DefaultProcessor implements Processor
 		$meta = $callContext->getMeta();
 
 		// Set raw data
-		if ($options->isFillRawValues()) {
+		if ($options->isTrackRawValues()) {
 			$this->rawValuesMap->setRawValues($object, $rawData);
 		}
 
@@ -657,9 +657,6 @@ final class DefaultProcessor implements Processor
 		return new ObjectHolder($this->objectCreator, $meta, $class, $object);
 	}
 
-	/**
-	 * @return mixed
-	 */
 	public function getRawValues(MappedObject $object)
 	{
 		return $this->rawValuesMap->getRawValues($object);

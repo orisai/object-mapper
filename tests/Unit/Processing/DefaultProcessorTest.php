@@ -455,7 +455,7 @@ MSG,
 	public function testTransformation(): void
 	{
 		$options = new Options();
-		$options->setFillRawValues();
+		$options->setTrackRawValues();
 
 		$data = [
 			'bool' => 'true',
@@ -697,7 +697,7 @@ validationFailed: string',
 	public function testBeforeClassCallbackMixedValue(): void
 	{
 		$options = new Options();
-		$options->setFillRawValues();
+		$options->setTrackRawValues();
 
 		$vo = null;
 		$exception = null;

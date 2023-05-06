@@ -17,7 +17,7 @@ final class Options
 
 	private bool $prefillDefaultValues = false;
 
-	private bool $fillRawValues = false;
+	private bool $trackRawValues = false;
 
 	/** @var array<class-string, object> */
 	private array $dynamicContexts = [];
@@ -68,20 +68,14 @@ final class Options
 		return $this->prefillDefaultValues;
 	}
 
-	/**
-	 * Make user-sent values accessible by $mappedObject->getRawValues()
-	 * Used only if objects are initialized
-	 * Use only for debug, it may lead to significant raw data grow in bigger hierarchies
-	 * 		 you can set data to a custom property in before class callback, if are always needed
-	 */
-	public function setFillRawValues(bool $fill = true): void
+	public function setTrackRawValues(bool $fill = true): void
 	{
-		$this->fillRawValues = $fill;
+		$this->trackRawValues = $fill;
 	}
 
-	public function isFillRawValues(): bool
+	public function isTrackRawValues(): bool
 	{
-		return $this->fillRawValues;
+		return $this->trackRawValues;
 	}
 
 	public function addDynamicContext(object $context): void
