@@ -30,6 +30,11 @@ interface Processor
 	public function processWithoutMapping($data, string $class, ?Options $options = null): array;
 
 	/**
+	 * @return mixed
+	 */
+	public function getRawValues(MappedObject $object);
+
+	/**
 	 * Validate and initialize MappedObject fields which were skipped due to Skipped modifier
 	 *
 	 * @param list<string> $fields
