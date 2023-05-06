@@ -11,6 +11,7 @@ use Orisai\ObjectMapper\Meta\Source\AnnotationsMetaSource;
 use Orisai\ObjectMapper\Meta\Source\DefaultMetaSourceManager;
 use Orisai\ObjectMapper\Printers\DefaultValuesArrayPrinter;
 use Orisai\ObjectMapper\Processing\DefaultObjectCreator;
+use Orisai\ObjectMapper\Processing\Options;
 use Orisai\ObjectMapper\Rules\DefaultRuleManager;
 use Orisai\ObjectMapper\Rules\MappedObjectArgs;
 use Orisai\ObjectMapper\Rules\MappedObjectRule;
@@ -51,7 +52,7 @@ final class DefaultValuesArrayPrinterTest extends TestCase
 	{
 		$type = $this->ruleManager->getRule(MappedObjectRule::class)->createType(
 			new MappedObjectArgs($class),
-			new TypeContext($this->metaLoader, $this->ruleManager),
+			new TypeContext($this->metaLoader, $this->ruleManager, new Options()),
 		);
 		self::assertInstanceOf(MappedObjectType::class, $type);
 

@@ -47,9 +47,13 @@ final class TesterDependencies
 		return new RuleArgsContext($property, $this->ruleManager, $this->metaLoader, $this->metaResolver);
 	}
 
-	public function createTypeContext(): TypeContext
+	public function createTypeContext(?Options $options = null): TypeContext
 	{
-		return new TypeContext($this->metaLoader, $this->ruleManager);
+		return new TypeContext(
+			$this->metaLoader,
+			$this->ruleManager,
+			$options !== null ? $options->createClone() : new Options(),
+		);
 	}
 
 	public function createFieldContext(
@@ -62,7 +66,7 @@ final class TesterDependencies
 			$this->metaLoader,
 			$this->ruleManager,
 			$this->processor,
-			$options !== null ? clone $options : new Options(),
+			$options !== null ? $options->createClone() : new Options(),
 			new MessageType('test'),
 			$defaultValueMeta ?? DefaultValueMeta::fromNothing(),
 			$initializeObjects,

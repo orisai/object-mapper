@@ -48,9 +48,9 @@ abstract class ProcessingTestCase extends TestCase
 		return $this->dependencies->createRuleArgsContext($property);
 	}
 
-	protected function createTypeContext(): TypeContext
+	protected function createTypeContext(?Options $options = null): TypeContext
 	{
-		return new TypeContext($this->metaLoader, $this->ruleManager);
+		return $this->dependencies->createTypeContext($options);
 	}
 
 	protected function fieldContext(

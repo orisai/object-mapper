@@ -12,8 +12,6 @@ abstract class BaseFieldContext extends TypeContext
 
 	private Processor $processor;
 
-	private Options $options;
-
 	private bool $initializeObjects;
 
 	public function __construct(
@@ -24,9 +22,8 @@ abstract class BaseFieldContext extends TypeContext
 		bool $initializeObjects
 	)
 	{
-		parent::__construct($metaLoader, $ruleManager);
+		parent::__construct($metaLoader, $ruleManager, $options);
 		$this->processor = $processor;
-		$this->options = $options;
 		$this->initializeObjects = $initializeObjects;
 	}
 
@@ -35,25 +32,9 @@ abstract class BaseFieldContext extends TypeContext
 		return $this->processor;
 	}
 
-	public function getOptions(): Options
-	{
-		return $this->options;
-	}
-
 	public function shouldInitializeObjects(): bool
 	{
 		return $this->initializeObjects;
-	}
-
-	/**
-	 * @return static
-	 */
-	public function createClone(): self
-	{
-		$clone = parent::createClone();
-		$clone->options = clone $this->options;
-
-		return $clone;
 	}
 
 }

@@ -72,9 +72,6 @@ final class MappedObjectRule implements Rule
 		$processor = $context->getProcessor();
 
 		$options = $context->getOptions()->createClone();
-		foreach ($context->getProcessedClasses() as $class) {
-			$options = $options->withProcessedClass($class);
-		}
 
 		return $context->shouldInitializeObjects()
 			? $processor->process($value, $args->type, $options)

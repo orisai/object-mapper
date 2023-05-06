@@ -109,6 +109,7 @@ final class DefaultProcessor implements Processor
 	private function processBase($data, string $class, ?Options $options, bool $initializeObjects): array
 	{
 		$options ??= new Options();
+		$options = $options->withProcessedClass($class);
 		$type = $this->createMappedObjectType($class, $options);
 		$meta = $this->metaCache[$class] ??= $this->metaLoader->load($class);
 		$holder = $this->createHolder($class, $meta->getClass());
@@ -118,18 +119,16 @@ final class DefaultProcessor implements Processor
 
 		$processedData = $this->processData($data, $mappedObjectContext, $callContext);
 
+		if ($options->getProcessedClasses() === [$class]) {
+			$this->metaCache = [];
+		}
+
 		return [$processedData, $holder, $mappedObjectContext, $callContext];
 	}
 
 	private function createTypeContext(Options $options): TypeContext
 	{
-		$context = new TypeContext($this->metaLoader, $this->ruleManager);
-
-		foreach ($options->getProcessedClasses() as $class) {
-			$context = $context->withProcessedClass($class);
-		}
-
-		return $context;
+		return new TypeContext($this->metaLoader, $this->ruleManager, $options);
 	}
 
 	// /////////////// //
