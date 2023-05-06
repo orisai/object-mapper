@@ -23,9 +23,6 @@ use function is_subclass_of;
 final class MetaLoader
 {
 
-	/** @var array<string, RuntimeMeta> */
-	private array $arrayCache;
-
 	private MetaCache $metaCache;
 
 	private MetaSourceManager $sourceManager;
@@ -47,11 +44,7 @@ final class MetaLoader
 
 	public function load(string $class): RuntimeMeta
 	{
-		if (isset($this->arrayCache[$class])) {
-			return $this->arrayCache[$class];
-		}
-
-		return $this->arrayCache[$class] = $this->metaCache->load($class)
+		return $this->metaCache->load($class)
 			?? $this->getRuntimeMeta($class);
 	}
 

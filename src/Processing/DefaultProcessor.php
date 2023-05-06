@@ -55,6 +55,9 @@ final class DefaultProcessor implements Processor
 
 	private RawValuesMap $rawValuesMap;
 
+	/** @var array<class-string<MappedObject>, RuntimeMeta> */
+	private array $metaCache = [];
+
 	public function __construct(MetaLoader $metaLoader, RuleManager $ruleManager, ObjectCreator $objectCreator)
 	{
 		$this->metaLoader = $metaLoader;
@@ -107,7 +110,7 @@ final class DefaultProcessor implements Processor
 	{
 		$options ??= new Options();
 		$type = $this->createMappedObjectType($class, $options);
-		$meta = $this->metaLoader->load($class);
+		$meta = $this->metaCache[$class] ??= $this->metaLoader->load($class);
 		$holder = $this->createHolder($class, $meta->getClass());
 
 		$mappedObjectContext = $this->createMappedObjectContext($options, $type, $initializeObjects);
