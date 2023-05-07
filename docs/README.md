@@ -119,7 +119,7 @@ use Orisai\ObjectMapper\Printers\ErrorVisualPrinter;
 use Orisai\ObjectMapper\Printers\TypeToStringConverter;
 use Orisai\ObjectMapper\Processing\DefaultProcessor;
 
-$processor = new DefaultProcessor(...);
+$processor = new DefaultProcessor(/* ... */);
 $errorPrinter = new ErrorVisualPrinter(new TypeToStringConverter());
 
 $data = [
@@ -229,7 +229,7 @@ final class ArrayEnumInput implements MappedObject
     /**
      * @ArrayEnumValue(cases={1, 2, 3})
      */
-    public string $inlineValueField;
+    public string $inlineField;
 
 }
 ```
@@ -237,10 +237,11 @@ final class ArrayEnumInput implements MappedObject
 ```php
 $data = [
 	'field' => 1,
-	'anotherField' => 'first',
+	'anotherField' => 'second',
+	'inlineField' => 3,
 ];
 $input = $processor->process($data, ArrayEnumInput::class);
-// $input == ArrayEnumInput(field: 1, anotherField: 'first')
+// $input == ArrayEnumInput(field: 1, anotherField: 'second', inlineField: 3)
 ```
 
 Parameters:
