@@ -3,9 +3,10 @@
 namespace Orisai\ObjectMapper\Processing;
 
 use Orisai\Exceptions\Logic\InvalidState;
+use Orisai\Exceptions\Message;
 use Orisai\ObjectMapper\MappedObject;
 use WeakMap;
-use function sprintf;
+use function get_class;
 
 final class RawValuesMap
 {
@@ -32,11 +33,16 @@ final class RawValuesMap
 	public function getRawValues(MappedObject $object)
 	{
 		if (!$this->map->offsetExists($object)) {
+			$objectClass = get_class($object);
+			$optionsClass = Options::class;
+			$message = Message::create()
+				->withContext("Getting raw values for object of type '$objectClass'.")
+				->withProblem('Raw values are not set.')
+				->withSolution("Ensure '$optionsClass::setTrackRawValues()' is enabled and that object was"
+					. ' processed in current request by object mapper (raw values are available only as long as reference to object exists).');
+
 			throw InvalidState::create()
-				->withMessage(sprintf(
-					'Cannot get raw values as they were never set. You may achieve it by setting %s::setFillRawValues(true)',
-					Options::class,
-				));
+				->withMessage($message);
 		}
 
 		return $this->map->offsetGet($object);
