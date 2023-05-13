@@ -22,6 +22,7 @@ use Tests\Orisai\ObjectMapper\Doubles\Callbacks\BeforeClassCallbackMixedValueVO;
 use Tests\Orisai\ObjectMapper\Doubles\Callbacks\BeforeClassCallbackValueDoesNotMatchVO;
 use Tests\Orisai\ObjectMapper\Doubles\Callbacks\CallbacksVO;
 use Tests\Orisai\ObjectMapper\Doubles\Callbacks\CallbacksVoContext;
+use Tests\Orisai\ObjectMapper\Doubles\Callbacks\InvalidateFieldBeforeClassVO;
 use Tests\Orisai\ObjectMapper\Doubles\Callbacks\ObjectInitializingVO;
 use Tests\Orisai\ObjectMapper\Doubles\Callbacks\ObjectInitializingVoPhp81;
 use Tests\Orisai\ObjectMapper\Doubles\Callbacks\PropertyCallbacksFailureVO;
@@ -736,6 +737,33 @@ validationFailed: string',
 
 		self::assertSame(
 			'Error before class',
+			$this->printer->printError($exception),
+		);
+	}
+
+	public function testBeforeClassCallbackInvalidatesSentField(): void
+	{
+		$vo = null;
+		$exception = null;
+		$data = [
+			'string' => 'foo',
+			'alsoString' => 123,
+		];
+
+		try {
+			$vo = $this->processor->process($data, InvalidateFieldBeforeClassVO::class);
+		} catch (InvalidData $exception) {
+			// Checked bellow
+		}
+
+		self::assertNull($vo);
+		self::assertInstanceOf(InvalidData::class, $exception);
+
+		self::assertSame(
+			<<<'MSG'
+string: invalidated in before callback
+alsoString: string
+MSG,
 			$this->printer->printError($exception),
 		);
 	}
