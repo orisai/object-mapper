@@ -63,9 +63,6 @@ parameters:
 			count: 1
 		# Generics - phpstan resolves correct class-string as a constant string - but not on test site https://phpstan.org/r/ce7cd979-ab2f-4373-a589-f63bfa01ca33
 		-
-			message: '#^Method (.+)\:\:getType\(\) should return class-string\<(.+)Modifier\<(.+)Args\>\> but returns ''(.+)Modifier''\.$#'
-			path: ../src/Modifiers
-		-
 			message: '#^Parameter \#5 \$callbackType of method (.+)\:\:(handleClass|apply)(Callbacks)\(\) expects class-string\<(.+)Callback\<(.+)Args\>\>, ''(.+)Callback'' given\.$#'
 			path: ../src/Processing/DefaultProcessor.php
 		# Generics - specifying type would cause too many errors like "Strict comparison using === between class-string<Modifier<Args>> and 'FieldNameModifier' will always evaluate to false."

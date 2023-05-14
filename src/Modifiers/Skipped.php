@@ -6,6 +6,8 @@ use Attribute;
 use Doctrine\Common\Annotations\Annotation\NamedArgumentConstructor;
 
 /**
+ * @implements ModifierDefinition<SkippedModifier>
+ *
  * @Annotation
  * @NamedArgumentConstructor()
  * @Target({"PROPERTY"})

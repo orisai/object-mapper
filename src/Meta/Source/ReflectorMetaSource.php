@@ -16,6 +16,7 @@ use Orisai\ObjectMapper\Meta\Compile\ModifierCompileMeta;
 use Orisai\ObjectMapper\Meta\Compile\RuleCompileMeta;
 use Orisai\ObjectMapper\Meta\MetaDefinition;
 use Orisai\ObjectMapper\Meta\Shared\DocMeta;
+use Orisai\ObjectMapper\Modifiers\Modifier;
 use Orisai\ObjectMapper\Modifiers\ModifierDefinition;
 use Orisai\ObjectMapper\Rules\AllOf;
 use Orisai\ObjectMapper\Rules\AnyOf;
@@ -197,7 +198,7 @@ abstract class ReflectorMetaSource implements MetaSource
 	}
 
 	/**
-	 * @return CallbackDefinition<Callback<Args>>|DocDefinition|ModifierDefinition|RuleDefinition<Rule<Args>>
+	 * @return CallbackDefinition<Callback<Args>>|DocDefinition|ModifierDefinition<Modifier<Args>>|RuleDefinition<Rule<Args>>
 	 */
 	private function checkAnnotationType(MetaDefinition $annotation): MetaDefinition
 	{
