@@ -11,7 +11,7 @@ use Orisai\ObjectMapper\Exception\ValueDoesNotMatch;
 use Orisai\ObjectMapper\Types\Type;
 
 /**
- * @template T_ARGS of Args
+ * @template-covariant T_ARGS of Args
  */
 interface Rule
 {

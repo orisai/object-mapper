@@ -45,6 +45,16 @@ parameters:
 			message: '#^Method (.+) throws checked exception (.+) but it''s missing from the PHPDoc @throws tag\.$#'
 			path: ../tests/Unit
 
+		# Rule template is declared as covariant for practical reasons
+		# - not declaring it covariant would cause too many errors elsewhere
+		# - Rule self-validates type of Args
+		-
+			message: '#^Template type T_ARGS is declared as covariant, but occurs in contravariant position in parameter args of method (.+)\:\:processValue\(\)\.$#'
+			path: ../src/Rules/Rule.php
+		-
+			message: '#^Template type T_ARGS is declared as covariant, but occurs in contravariant position in parameter args of method (.+)\:\:createType\(\)\.$#'
+			path: ../src/Rules/Rule.php
+
 		################################################################################################################
 
 		# Proper object -> MappedObject type checks are currently missing
