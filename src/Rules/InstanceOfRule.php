@@ -18,7 +18,7 @@ use function is_string;
 /**
  * @implements Rule<InstanceArgs>
  */
-final class InstanceRule implements Rule
+final class InstanceOfRule implements Rule
 {
 
 	private const Type = 'type';

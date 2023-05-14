@@ -5,20 +5,20 @@ namespace Tests\Orisai\ObjectMapper\Unit\Rules;
 use Generator;
 use Orisai\ObjectMapper\Exception\ValueDoesNotMatch;
 use Orisai\ObjectMapper\Rules\InstanceArgs;
-use Orisai\ObjectMapper\Rules\InstanceRule;
+use Orisai\ObjectMapper\Rules\InstanceOfRule;
 use Orisai\ObjectMapper\Types\SimpleValueType;
 use stdClass;
 use Tests\Orisai\ObjectMapper\Toolkit\ProcessingTestCase;
 
-final class InstanceRuleTest extends ProcessingTestCase
+final class InstanceOfRuleTest extends ProcessingTestCase
 {
 
-	private InstanceRule $rule;
+	private InstanceOfRule $rule;
 
 	protected function setUp(): void
 	{
 		parent::setUp();
-		$this->rule = new InstanceRule();
+		$this->rule = new InstanceOfRule();
 	}
 
 	/**

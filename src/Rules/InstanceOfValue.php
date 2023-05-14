@@ -7,7 +7,7 @@ use Doctrine\Common\Annotations\Annotation\NamedArgumentConstructor;
 use Doctrine\Common\Annotations\Annotation\Target;
 
 /**
- * @template-implements RuleDefinition<InstanceRule>
+ * @template-implements RuleDefinition<InstanceOfRule>
  *
  * @Annotation
  * @NamedArgumentConstructor()
@@ -30,7 +30,7 @@ final class InstanceOfValue implements RuleDefinition
 
 	public function getType(): string
 	{
-		return InstanceRule::class;
+		return InstanceOfRule::class;
 	}
 
 	public function getArgs(): array

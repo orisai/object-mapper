@@ -14,7 +14,7 @@ interface RuleManager
 		BoolRule::class,
 		DateTimeRule::class,
 		FloatRule::class,
-		InstanceRule::class,
+		InstanceOfRule::class,
 		IntRule::class,
 		ListOfRule::class,
 		MappedObjectRule::class,
