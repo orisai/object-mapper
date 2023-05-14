@@ -7,14 +7,14 @@ use Doctrine\Common\Annotations\Annotation\NamedArgumentConstructor;
 use Doctrine\Common\Annotations\Annotation\Target;
 
 /**
- * @extends CompoundRulesDefinition<AllOfRule>
+ * @extends CompoundDefinition<AllOfRule>
  *
  * @Annotation
  * @NamedArgumentConstructor()
  * @Target({"PROPERTY", "ANNOTATION"})
  */
 #[Attribute(Attribute::TARGET_PROPERTY)]
-final class AllOf extends CompoundRulesDefinition
+final class AllOf extends CompoundDefinition
 {
 
 	public function getType(): string

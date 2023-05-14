@@ -11,7 +11,7 @@ use function sprintf;
  * @template-covariant T of Rule
  * @template-implements RuleDefinition<T>
  */
-abstract class CompoundRulesDefinition implements RuleDefinition
+abstract class CompoundDefinition implements RuleDefinition
 {
 
 	/** @var array<RuleCompileMeta> */
