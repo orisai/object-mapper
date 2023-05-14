@@ -19,11 +19,11 @@ final class After implements CallbackDefinition
 
 	private string $method;
 
-	/** @var CallbackRuntime::Process|CallbackRuntime::ProcessWithoutMapping|CallbackRuntime::Always */
+	/** @var key-of<CallbackRuntime::ValuesAndNames> */
 	private string $runtime;
 
 	/**
-	 * @param CallbackRuntime::Process|CallbackRuntime::ProcessWithoutMapping|CallbackRuntime::Always $runtime
+	 * @param key-of<CallbackRuntime::ValuesAndNames> $runtime
 	 */
 	public function __construct(string $method, string $runtime = CallbackRuntime::Process)
 	{

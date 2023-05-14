@@ -12,7 +12,8 @@ final class CallbackRuntime
 		Process = 'process',
 		Always = 'always';
 
-	private const ValuesAndNames = [
+	/** @internal */
+	public const ValuesAndNames = [
 		self::ProcessWithoutMapping => 'ProcessWithoutMapping',
 		self::Process => 'Process',
 		self::Always => 'Always',

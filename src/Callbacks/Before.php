@@ -19,11 +19,11 @@ final class Before implements CallbackDefinition
 
 	private string $method;
 
-	/** @phpstan-var CallbackRuntime::Process|CallbackRuntime::ProcessWithoutMapping|CallbackRuntime::Always */
+	/** @var key-of<CallbackRuntime::ValuesAndNames> */
 	private string $runtime;
 
 	/**
-	 * @phpstan-param CallbackRuntime::Process|CallbackRuntime::ProcessWithoutMapping|CallbackRuntime::Always $runtime
+	 * @param key-of<CallbackRuntime::ValuesAndNames> $runtime
 	 */
 	public function __construct(string $method, string $runtime = CallbackRuntime::Process)
 	{
