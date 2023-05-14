@@ -8,7 +8,7 @@ use Orisai\ObjectMapper\Meta\Compile\RuleCompileMeta;
 use function sprintf;
 
 /**
- * @template-covariant T of Rule
+ * @template-covariant T of CompoundRule
  * @implements RuleDefinition<T>
  */
 abstract class CompoundDefinition implements RuleDefinition
