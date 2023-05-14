@@ -50,12 +50,7 @@ final class DefinitionTester
 	 */
 	public static function assertIsRuleAttribute(string $class): void
 	{
-		$definitionClass = RuleDefinition::class;
-		if (!is_a($class, $definitionClass, true)) {
-			throw InvalidArgument::create()
-				->withMessage("'$class' does not implement '$definitionClass'.");
-		}
-
+		self::assertClassType($class, RuleDefinition::class);
 		self::assertIsAttribute($class, [Attribute::TARGET_PROPERTY]);
 	}
 
@@ -64,12 +59,7 @@ final class DefinitionTester
 	 */
 	public static function assertIsRuleAnnotation(string $class): void
 	{
-		$definitionClass = RuleDefinition::class;
-		if (!is_a($class, $definitionClass, true)) {
-			throw InvalidArgument::create()
-				->withMessage("'$class' does not implement '$definitionClass'.");
-		}
-
+		self::assertClassType($class, RuleDefinition::class);
 		self::assertIsAnnotation($class, [Target::TARGET_ANNOTATION, Target::TARGET_PROPERTY]);
 	}
 
@@ -78,12 +68,7 @@ final class DefinitionTester
 	 */
 	public static function assertIsCallbackAttribute(string $class): void
 	{
-		$definitionClass = CallbackDefinition::class;
-		if (!is_a($class, $definitionClass, true)) {
-			throw InvalidArgument::create()
-				->withMessage("'$class' does not implement '$definitionClass'.");
-		}
-
+		self::assertClassType($class, CallbackDefinition::class);
 		self::assertIsAttribute($class, [Attribute::TARGET_CLASS, Attribute::TARGET_PROPERTY]);
 	}
 
@@ -92,12 +77,7 @@ final class DefinitionTester
 	 */
 	public static function assertIsCallbackAnnotation(string $class): void
 	{
-		$definitionClass = CallbackDefinition::class;
-		if (!is_a($class, $definitionClass, true)) {
-			throw InvalidArgument::create()
-				->withMessage("'$class' does not implement '$definitionClass'.");
-		}
-
+		self::assertClassType($class, CallbackDefinition::class);
 		self::assertIsAnnotation($class, [Target::TARGET_CLASS, Target::TARGET_PROPERTY]);
 	}
 
@@ -107,12 +87,7 @@ final class DefinitionTester
 	 */
 	public static function assertIsModifierAttribute(string $class, array $targets): void
 	{
-		$definitionClass = ModifierDefinition::class;
-		if (!is_a($class, $definitionClass, true)) {
-			throw InvalidArgument::create()
-				->withMessage("'$class' does not implement '$definitionClass'.");
-		}
-
+		self::assertClassType($class, ModifierDefinition::class);
 		self::assertIsAttribute($class, $targets);
 	}
 
@@ -122,13 +97,20 @@ final class DefinitionTester
 	 */
 	public static function assertIsModifierAnnotation(string $class, array $targets): void
 	{
-		$definitionClass = ModifierDefinition::class;
-		if (!is_a($class, $definitionClass, true)) {
-			throw InvalidArgument::create()
-				->withMessage("'$class' does not implement '$definitionClass'.");
-		}
-
+		self::assertClassType($class, ModifierDefinition::class);
 		self::assertIsAnnotation($class, $targets);
+	}
+
+	/**
+	 * @param class-string $class
+	 * @param class-string $type
+	 */
+	private static function assertClassType(string $class, string $type): void
+	{
+		if (!is_a($class, $type, true)) {
+			throw InvalidArgument::create()
+				->withMessage("'$class' does not implement '$type'.");
+		}
 	}
 
 	/**
