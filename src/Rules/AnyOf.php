@@ -7,7 +7,7 @@ use Doctrine\Common\Annotations\Annotation\NamedArgumentConstructor;
 use Doctrine\Common\Annotations\Annotation\Target;
 
 /**
- * @template-extends CompoundRulesDefinition<AnyOfRule>
+ * @extends CompoundRulesDefinition<AnyOfRule>
  *
  * @Annotation
  * @NamedArgumentConstructor()

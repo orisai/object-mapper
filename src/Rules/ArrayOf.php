@@ -9,7 +9,7 @@ use Orisai\ObjectMapper\Args\Args;
 use Orisai\ObjectMapper\Meta\Compile\RuleCompileMeta;
 
 /**
- * @template-extends MultiValueRuleDefinition<ArrayOfRule>
+ * @extends MultiValueRuleDefinition<ArrayOfRule>
  *
  * @Annotation
  * @NamedArgumentConstructor()
