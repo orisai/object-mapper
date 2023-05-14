@@ -6,7 +6,7 @@ use Orisai\ObjectMapper\Args\Args;
 use Orisai\ObjectMapper\Meta\Compile\RuleCompileMeta;
 
 /**
- * @template-covariant T of Rule
+ * @template-covariant T of MultiValueRule
  * @implements RuleDefinition<T>
  */
 abstract class MultiValueDefinition implements RuleDefinition
