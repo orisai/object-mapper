@@ -3,6 +3,7 @@
 namespace Orisai\ObjectMapper\Meta\Source;
 
 use Orisai\Exceptions\Logic\InvalidArgument;
+use Orisai\ObjectMapper\Args\Args;
 use Orisai\ObjectMapper\Callbacks\CallbackDefinition;
 use Orisai\ObjectMapper\Docs\DocDefinition;
 use Orisai\ObjectMapper\MappedObject;
@@ -17,6 +18,7 @@ use Orisai\ObjectMapper\Meta\Shared\DocMeta;
 use Orisai\ObjectMapper\Modifiers\ModifierDefinition;
 use Orisai\ObjectMapper\Rules\AllOf;
 use Orisai\ObjectMapper\Rules\AnyOf;
+use Orisai\ObjectMapper\Rules\Rule;
 use Orisai\ObjectMapper\Rules\RuleDefinition;
 use Orisai\ReflectionMeta\Reader\MetaReader;
 use Orisai\ReflectionMeta\Structure\StructureBuilder;
@@ -194,7 +196,7 @@ abstract class ReflectorMetaSource implements MetaSource
 	}
 
 	/**
-	 * @return CallbackDefinition|DocDefinition|ModifierDefinition|RuleDefinition
+	 * @return CallbackDefinition|DocDefinition|ModifierDefinition|RuleDefinition<Rule<Args>>
 	 */
 	private function checkAnnotationType(MetaDefinition $annotation): MetaDefinition
 	{

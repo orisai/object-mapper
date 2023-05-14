@@ -66,9 +66,6 @@ parameters:
 			message: '#^Method (.+)(Before|After)\:\:getType\(\) should return class-string\<(.+)Callback\<(.+)Args\>\> but returns ''(.+)Callback''\.$#'
 			path: ../src/Callbacks
 		-
-			message: '#^Method (.+)\:\:getType\(\) should return class-string\<(.+)Rule\<(.+)Args\>\> but returns ''(.+)Rule''\.$#'
-			path: ../src/Rules
-		-
 			message: '#^Method (.+)\:\:getType\(\) should return class-string\<(.+)Modifier\<(.+)Args\>\> but returns ''(.+)Modifier''\.$#'
 			path: ../src/Modifiers
 		-

@@ -2,14 +2,16 @@
 
 namespace Orisai\ObjectMapper\Rules;
 
-use Orisai\ObjectMapper\Args\Args;
 use Orisai\ObjectMapper\Meta\MetaDefinition;
 
+/**
+ * @template-covariant T of Rule
+ */
 interface RuleDefinition extends MetaDefinition
 {
 
 	/**
-	 * @return class-string<Rule<Args>>
+	 * @return class-string<T>
 	 */
 	public function getType(): string;
 

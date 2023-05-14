@@ -5,6 +5,9 @@ namespace Orisai\ObjectMapper\Rules;
 use Attribute;
 use BackedEnum;
 
+/**
+ * @template-implements RuleDefinition<BackedEnumRule>
+ */
 #[Attribute(Attribute::TARGET_PROPERTY)]
 final class BackedEnumValue implements RuleDefinition
 {
