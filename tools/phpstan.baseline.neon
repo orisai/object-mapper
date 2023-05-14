@@ -351,6 +351,11 @@ parameters:
 			path: ../tests/Unit/Rules/AllOfRuleTest.php
 
 		-
+			message: "#^Parameter \\#1 \\$definitions of class Orisai\\\\ObjectMapper\\\\Rules\\\\AllOf constructor expects array\\<Orisai\\\\ObjectMapper\\\\Rules\\\\RuleDefinition\\<Orisai\\\\ObjectMapper\\\\Rules\\\\Rule\\<Orisai\\\\ObjectMapper\\\\Args\\\\Args\\>\\>\\>, array\\<int, stdClass\\> given\\.$#"
+			count: 1
+			path: ../tests/Unit/Rules/AllOfTest.php
+
+		-
 			message: "#^Parameter \\#1 \\$rules of class Orisai\\\\ObjectMapper\\\\Rules\\\\CompoundArgs constructor expects array\\<Orisai\\\\ObjectMapper\\\\Meta\\\\Runtime\\\\RuleRuntimeMeta\\<Orisai\\\\ObjectMapper\\\\Args\\\\Args\\>\\>, array\\{Orisai\\\\ObjectMapper\\\\Meta\\\\Runtime\\\\RuleRuntimeMeta\\<Orisai\\\\ObjectMapper\\\\Args\\\\EmptyArgs\\>, Orisai\\\\ObjectMapper\\\\Meta\\\\Runtime\\\\RuleRuntimeMeta\\<Orisai\\\\ObjectMapper\\\\Args\\\\EmptyArgs\\>, Orisai\\\\ObjectMapper\\\\Meta\\\\Runtime\\\\RuleRuntimeMeta\\<Orisai\\\\ObjectMapper\\\\Args\\\\EmptyArgs\\>\\} given\\.$#"
 			count: 2
 			path: ../tests/Unit/Rules/AnyOfRuleTest.php
@@ -364,6 +369,11 @@ parameters:
 			message: "#^Parameter \\#1 \\$rules of class Orisai\\\\ObjectMapper\\\\Rules\\\\CompoundArgs constructor expects array\\<Orisai\\\\ObjectMapper\\\\Meta\\\\Runtime\\\\RuleRuntimeMeta\\<Orisai\\\\ObjectMapper\\\\Args\\\\Args\\>\\>, array\\{Orisai\\\\ObjectMapper\\\\Meta\\\\Runtime\\\\RuleRuntimeMeta\\<Orisai\\\\ObjectMapper\\\\Args\\\\EmptyArgs\\>, Orisai\\\\ObjectMapper\\\\Meta\\\\Runtime\\\\RuleRuntimeMeta\\<Orisai\\\\ObjectMapper\\\\Rules\\\\MappedObjectArgs\\>\\} given\\.$#"
 			count: 1
 			path: ../tests/Unit/Rules/AnyOfRuleTest.php
+
+		-
+			message: "#^Parameter \\#1 \\$definitions of class Orisai\\\\ObjectMapper\\\\Rules\\\\AnyOf constructor expects array\\<Orisai\\\\ObjectMapper\\\\Rules\\\\RuleDefinition\\<Orisai\\\\ObjectMapper\\\\Rules\\\\Rule\\<Orisai\\\\ObjectMapper\\\\Args\\\\Args\\>\\>\\>, array\\<int, stdClass\\> given\\.$#"
+			count: 1
+			path: ../tests/Unit/Rules/AnyOfTest.php
 
 		-
 			message: "#^Parameter \\#1 \\$itemRuleMeta of class Orisai\\\\ObjectMapper\\\\Rules\\\\ArrayOfArgs constructor expects Orisai\\\\ObjectMapper\\\\Meta\\\\Runtime\\\\RuleRuntimeMeta\\<Orisai\\\\ObjectMapper\\\\Args\\\\Args\\>, Orisai\\\\ObjectMapper\\\\Meta\\\\Runtime\\\\RuleRuntimeMeta\\<Orisai\\\\ObjectMapper\\\\Args\\\\EmptyArgs\\> given\\.$#"

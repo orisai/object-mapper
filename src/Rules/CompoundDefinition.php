@@ -5,7 +5,7 @@ namespace Orisai\ObjectMapper\Rules;
 use Orisai\Exceptions\Logic\InvalidArgument;
 use Orisai\ObjectMapper\Args\Args;
 use Orisai\ObjectMapper\Meta\Compile\RuleCompileMeta;
-use function sprintf;
+use function get_debug_type;
 
 /**
  * @template-covariant T of CompoundRule
@@ -33,12 +33,13 @@ abstract class CompoundDefinition implements RuleDefinition
 	{
 		foreach ($definitions as $key => $definition) {
 			if (!$definition instanceof RuleDefinition) {
+				$selfClass = static::class;
+				$definitionClass = RuleDefinition::class;
+				$givenType = get_debug_type($definition);
+
 				throw InvalidArgument::create()
-					->withMessage(sprintf(
-						'%s() expects all values to be subtype of %s',
-						static::class,
-						RuleDefinition::class,
-					));
+					->withMessage("'$selfClass(definitions)' expects all values to be subtype"
+						. " of '$definitionClass', '$givenType' given.");
 			}
 
 			$definitions[$key] = new RuleCompileMeta($definition->getType(), $definition->getArgs());
