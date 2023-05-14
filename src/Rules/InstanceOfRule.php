@@ -16,14 +16,14 @@ use function interface_exists;
 use function is_string;
 
 /**
- * @implements Rule<InstanceArgs>
+ * @implements Rule<InstanceOfArgs>
  */
 final class InstanceOfRule implements Rule
 {
 
 	private const Type = 'type';
 
-	public function resolveArgs(array $args, RuleArgsContext $context): InstanceArgs
+	public function resolveArgs(array $args, RuleArgsContext $context): InstanceOfArgs
 	{
 		$checker = new ArgsChecker($args, self::class);
 		$checker->checkAllowedArgs([self::Type]);
@@ -40,17 +40,17 @@ final class InstanceOfRule implements Rule
 				));
 		}
 
-		return new InstanceArgs($type);
+		return new InstanceOfArgs($type);
 	}
 
 	public function getArgsType(): string
 	{
-		return InstanceArgs::class;
+		return InstanceOfArgs::class;
 	}
 
 	/**
-	 * @param mixed $value
-	 * @param InstanceArgs $args
+	 * @param mixed          $value
+	 * @param InstanceOfArgs $args
 	 * @throws ValueDoesNotMatch
 	 */
 	public function processValue($value, Args $args, FieldContext $context): object
@@ -63,7 +63,7 @@ final class InstanceOfRule implements Rule
 	}
 
 	/**
-	 * @param InstanceArgs $args
+	 * @param InstanceOfArgs $args
 	 */
 	public function createType(Args $args, TypeContext $context): SimpleValueType
 	{

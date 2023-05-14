@@ -4,7 +4,7 @@ namespace Tests\Orisai\ObjectMapper\Unit\Rules;
 
 use Generator;
 use Orisai\ObjectMapper\Exception\ValueDoesNotMatch;
-use Orisai\ObjectMapper\Rules\InstanceArgs;
+use Orisai\ObjectMapper\Rules\InstanceOfArgs;
 use Orisai\ObjectMapper\Rules\InstanceOfRule;
 use Orisai\ObjectMapper\Types\SimpleValueType;
 use stdClass;
@@ -30,7 +30,7 @@ final class InstanceOfRuleTest extends ProcessingTestCase
 	{
 		$processed = $this->rule->processValue(
 			$value,
-			new InstanceArgs(stdClass::class),
+			new InstanceOfArgs(stdClass::class),
 			$this->fieldContext(),
 		);
 
@@ -60,7 +60,7 @@ final class InstanceOfRuleTest extends ProcessingTestCase
 		try {
 			$this->rule->processValue(
 				$value,
-				new InstanceArgs(stdClass::class),
+				new InstanceOfArgs(stdClass::class),
 				$this->fieldContext(),
 			);
 		} catch (ValueDoesNotMatch $exception) {
@@ -95,7 +95,7 @@ final class InstanceOfRuleTest extends ProcessingTestCase
 
 	public function testType(): void
 	{
-		$args = new InstanceArgs(stdClass::class);
+		$args = new InstanceOfArgs(stdClass::class);
 
 		$type = $this->rule->createType($args, $this->createTypeContext());
 

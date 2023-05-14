@@ -7,7 +7,7 @@ use Orisai\ObjectMapper\Args\Args;
 /**
  * @internal
  */
-final class InstanceArgs implements Args
+final class InstanceOfArgs implements Args
 {
 
 	/** @var class-string */
