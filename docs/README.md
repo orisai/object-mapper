@@ -648,7 +648,7 @@ $input = $processor->process(['field' => 'https://example.com'], AllOfInput::cla
 
 Parameters:
 
-- `rules`
+- `definitions`
 	- accepts list of rules by which is the field validated
 	- required
 
@@ -694,7 +694,7 @@ $input = $processor->process(['field' => null], AnyOfInput::class);
 
 Parameters:
 
-- `rules`
+- `definitions`
 	- accepts list of rules by which is the field validated
 	- required
 

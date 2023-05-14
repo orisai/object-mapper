@@ -18,21 +18,21 @@ abstract class CompoundDefinition implements RuleDefinition
 	private array $rules;
 
 	/**
-	 * @param array<RuleDefinition<Rule<Args>>> $rules
+	 * @param array<RuleDefinition<Rule<Args>>> $definitions
 	 */
-	public function __construct(array $rules)
+	public function __construct(array $definitions)
 	{
-		$this->rules = $this->resolveRules($rules);
+		$this->rules = $this->resolveRules($definitions);
 	}
 
 	/**
-	 * @param array<mixed> $rules
+	 * @param array<mixed> $definitions
 	 * @return array<RuleCompileMeta>
 	 */
-	private function resolveRules(array $rules): array
+	private function resolveRules(array $definitions): array
 	{
-		foreach ($rules as $key => $rule) {
-			if (!$rule instanceof RuleDefinition) {
+		foreach ($definitions as $key => $definition) {
+			if (!$definition instanceof RuleDefinition) {
 				throw InvalidArgument::create()
 					->withMessage(sprintf(
 						'%s() expects all values to be subtype of %s',
@@ -41,10 +41,10 @@ abstract class CompoundDefinition implements RuleDefinition
 					));
 			}
 
-			$rules[$key] = new RuleCompileMeta($rule->getType(), $rule->getArgs());
+			$definitions[$key] = new RuleCompileMeta($definition->getType(), $definition->getArgs());
 		}
 
-		return $rules;
+		return $definitions;
 	}
 
 	public function getArgs(): array
