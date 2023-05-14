@@ -9,7 +9,7 @@ use Orisai\ObjectMapper\Meta\Compile\RuleCompileMeta;
  * @template-covariant T of Rule
  * @implements RuleDefinition<T>
  */
-abstract class MultiValueRuleDefinition implements RuleDefinition
+abstract class MultiValueDefinition implements RuleDefinition
 {
 
 	private RuleCompileMeta $item;

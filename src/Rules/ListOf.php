@@ -7,14 +7,14 @@ use Doctrine\Common\Annotations\Annotation\NamedArgumentConstructor;
 use Doctrine\Common\Annotations\Annotation\Target;
 
 /**
- * @extends MultiValueRuleDefinition<ListOfRule>
+ * @extends MultiValueDefinition<ListOfRule>
  *
  * @Annotation
  * @NamedArgumentConstructor()
  * @Target({"PROPERTY", "ANNOTATION"})
  */
 #[Attribute(Attribute::TARGET_PROPERTY)]
-final class ListOf extends MultiValueRuleDefinition
+final class ListOf extends MultiValueDefinition
 {
 
 	public function getType(): string

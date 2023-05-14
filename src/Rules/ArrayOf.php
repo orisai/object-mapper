@@ -9,14 +9,14 @@ use Orisai\ObjectMapper\Args\Args;
 use Orisai\ObjectMapper\Meta\Compile\RuleCompileMeta;
 
 /**
- * @extends MultiValueRuleDefinition<ArrayOfRule>
+ * @extends MultiValueDefinition<ArrayOfRule>
  *
  * @Annotation
  * @NamedArgumentConstructor()
  * @Target({"PROPERTY", "ANNOTATION"})
  */
 #[Attribute(Attribute::TARGET_PROPERTY)]
-final class ArrayOf extends MultiValueRuleDefinition
+final class ArrayOf extends MultiValueDefinition
 {
 
 	private ?RuleCompileMeta $key;
