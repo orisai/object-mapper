@@ -10,6 +10,7 @@ use Doctrine\Common\Annotations\Reader;
 use Orisai\Exceptions\Logic\InvalidArgument;
 use Orisai\Exceptions\Logic\InvalidState;
 use Orisai\ObjectMapper\Callbacks\CallbackDefinition;
+use Orisai\ObjectMapper\Modifiers\ModifierDefinition;
 use Orisai\ObjectMapper\Rules\RuleDefinition;
 use ReflectionClass;
 use function array_keys;
@@ -98,6 +99,36 @@ final class DefinitionTester
 		}
 
 		self::assertIsAnnotation($class, [Target::TARGET_CLASS, Target::TARGET_PROPERTY]);
+	}
+
+	/**
+	 * @param class-string              $class
+	 * @param list<Attribute::TARGET_*> $targets
+	 */
+	public static function assertIsModifierAttribute(string $class, array $targets): void
+	{
+		$definitionClass = ModifierDefinition::class;
+		if (!is_a($class, $definitionClass, true)) {
+			throw InvalidArgument::create()
+				->withMessage("'$class' does not implement '$definitionClass'.");
+		}
+
+		self::assertIsAttribute($class, $targets);
+	}
+
+	/**
+	 * @param class-string           $class
+	 * @param list<Target::TARGET_*> $targets
+	 */
+	public static function assertIsModifierAnnotation(string $class, array $targets): void
+	{
+		$definitionClass = ModifierDefinition::class;
+		if (!is_a($class, $definitionClass, true)) {
+			throw InvalidArgument::create()
+				->withMessage("'$class' does not implement '$definitionClass'.");
+		}
+
+		self::assertIsAnnotation($class, $targets);
 	}
 
 	/**

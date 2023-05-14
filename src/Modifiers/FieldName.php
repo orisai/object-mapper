@@ -4,6 +4,7 @@ namespace Orisai\ObjectMapper\Modifiers;
 
 use Attribute;
 use Doctrine\Common\Annotations\Annotation\NamedArgumentConstructor;
+use Doctrine\Common\Annotations\Annotation\Target;
 
 /**
  * @implements ModifierDefinition<FieldNameModifier>
