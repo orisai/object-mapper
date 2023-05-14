@@ -12,14 +12,14 @@ final class MappedObjectArgs implements Args
 {
 
 	/** @var class-string<MappedObject> */
-	public string $type;
+	public string $class;
 
 	/**
-	 * @param class-string<MappedObject> $type
+	 * @param class-string<MappedObject> $class
 	 */
-	public function __construct(string $type)
+	public function __construct(string $class)
 	{
-		$this->type = $type;
+		$this->class = $class;
 	}
 
 }

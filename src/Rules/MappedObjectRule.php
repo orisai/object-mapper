@@ -25,7 +25,7 @@ use function is_a;
 final class MappedObjectRule implements Rule
 {
 
-	private const Type = 'type';
+	private const ClassName = 'class';
 
 	/** @var array<string, null> */
 	private array $alreadyResolved = [];
@@ -34,10 +34,10 @@ final class MappedObjectRule implements Rule
 	{
 		$checker = new ArgsChecker($args, self::class);
 
-		$checker->checkAllowedArgs([self::Type]);
+		$checker->checkAllowedArgs([self::ClassName]);
 
-		$checker->checkRequiredArg(self::Type);
-		$type = $checker->checkString(self::Type);
+		$checker->checkRequiredArg(self::ClassName);
+		$type = $checker->checkString(self::ClassName);
 
 		// Load object to ensure whole hierarchy is valid even if not used
 		if (!array_key_exists($type, $this->alreadyResolved)) {
@@ -74,8 +74,8 @@ final class MappedObjectRule implements Rule
 		$options = $context->getOptions()->createClone();
 
 		return $context->shouldInitializeObjects()
-			? $processor->process($value, $args->type, $options)
-			: $processor->processWithoutMapping($value, $args->type, $options);
+			? $processor->process($value, $args->class, $options)
+			: $processor->processWithoutMapping($value, $args->class, $options);
 	}
 
 	/**
@@ -83,12 +83,12 @@ final class MappedObjectRule implements Rule
 	 */
 	public function createType(Args $args, TypeContext $context): MappedObjectType
 	{
-		if (in_array($args->type, $context->getProcessedClasses(), true)) {
-			return new MappedObjectType($args->type);
+		if (in_array($args->class, $context->getProcessedClasses(), true)) {
+			return new MappedObjectType($args->class);
 		}
 
-		$type = new MappedObjectType($args->type);
-		foreach ($context->getMeta($args->type)->getFields() as $fieldName => $fieldMeta) {
+		$type = new MappedObjectType($args->class);
+		foreach ($context->getMeta($args->class)->getFields() as $fieldName => $fieldMeta) {
 			$type->addField(
 				$fieldName,
 				$this->getTypeCreator($fieldMeta, $context, $args),
@@ -113,7 +113,7 @@ final class MappedObjectRule implements Rule
 
 		return static fn (): Type => $fieldRule->createType(
 			$fieldArgs,
-			$context->withProcessedClass($args->type),
+			$context->withProcessedClass($args->class),
 		);
 	}
 

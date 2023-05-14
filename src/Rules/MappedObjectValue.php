@@ -19,14 +19,14 @@ final class MappedObjectValue implements RuleDefinition
 {
 
 	/** @var class-string<MappedObject> */
-	private string $type;
+	private string $class;
 
 	/**
-	 * @param class-string<MappedObject> $type
+	 * @param class-string<MappedObject> $class
 	 */
-	public function __construct(string $type)
+	public function __construct(string $class)
 	{
-		$this->type = $type;
+		$this->class = $class;
 	}
 
 	public function getType(): string
@@ -37,7 +37,7 @@ final class MappedObjectValue implements RuleDefinition
 	public function getArgs(): array
 	{
 		return [
-			'type' => $this->type,
+			'class' => $this->class,
 		];
 	}
 

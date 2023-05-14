@@ -1001,7 +1001,7 @@ $input = $processor->process($data, MappedObjectInput::class);
 
 Parameters:
 
-- `type`
+- `class`
 	- subclass of `MappedObject` which should be created
 	- required
 
