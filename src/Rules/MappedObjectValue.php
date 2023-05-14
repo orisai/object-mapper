@@ -8,7 +8,7 @@ use Doctrine\Common\Annotations\Annotation\Target;
 use Orisai\ObjectMapper\MappedObject;
 
 /**
- * @template-implements RuleDefinition<MappedObjectRule>
+ * @implements RuleDefinition<MappedObjectRule>
  *
  * @Annotation
  * @NamedArgumentConstructor()

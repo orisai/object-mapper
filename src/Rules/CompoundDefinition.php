@@ -9,7 +9,7 @@ use function sprintf;
 
 /**
  * @template-covariant T of Rule
- * @template-implements RuleDefinition<T>
+ * @implements RuleDefinition<T>
  */
 abstract class CompoundDefinition implements RuleDefinition
 {

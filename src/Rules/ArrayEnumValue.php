@@ -7,7 +7,7 @@ use Doctrine\Common\Annotations\Annotation\NamedArgumentConstructor;
 use Doctrine\Common\Annotations\Annotation\Target;
 
 /**
- * @template-implements RuleDefinition<ArrayEnumRule>
+ * @implements RuleDefinition<ArrayEnumRule>
  *
  * @Annotation
  * @NamedArgumentConstructor()

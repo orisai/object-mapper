@@ -7,7 +7,7 @@ use Doctrine\Common\Annotations\Annotation\NamedArgumentConstructor;
 use Doctrine\Common\Annotations\Annotation\Target;
 
 /**
- * @template-implements RuleDefinition<BoolRule>
+ * @implements RuleDefinition<BoolRule>
  *
  * @Annotation
  * @NamedArgumentConstructor()
