@@ -32,7 +32,7 @@ interface Callback
 
 	/**
 	 * @param mixed                            $data
-	 * @param T_ARGS                   $args
+	 * @param T_ARGS                           $args
 	 * @param FieldContext|MappedObjectContext $context
 	 * @param ObjectHolder<MappedObject>       $holder
 	 * @param ReflectionClass<MappedObject>    $declaringClass
