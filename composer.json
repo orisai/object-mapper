@@ -35,7 +35,8 @@
 		"orisai/object-mapper-contracts": "^1.0.0",
 		"orisai/reflection-meta": "^1.0.0",
 		"orisai/source-map": "^1.0.0",
-		"orisai/utils": "^1.0.0"
+		"orisai/utils": "^1.0.0",
+		"symfony/polyfill-php80": "^1.27.0"
 	},
 	"require-dev": {
 		"brianium/paratest": "^6.3.0",
