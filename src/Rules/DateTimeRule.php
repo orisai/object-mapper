@@ -36,7 +36,7 @@ final class DateTimeRule implements Rule
 	/** @internal */
 	public const
 		Format = 'format',
-		Type = 'type';
+		ClassName = 'class';
 
 	public const FormatTimestamp = 'timestamp',
 		FormatAny = 'any',
@@ -47,7 +47,7 @@ final class DateTimeRule implements Rule
 	public function resolveArgs(array $args, RuleArgsContext $context): DateTimeArgs
 	{
 		$checker = new ArgsChecker($args, self::class);
-		$checker->checkAllowedArgs([self::Format, self::Type]);
+		$checker->checkAllowedArgs([self::Format, self::ClassName]);
 
 		$format = self::FormatIsoCompat;
 		if ($checker->hasArg(self::Format)) {
@@ -55,8 +55,8 @@ final class DateTimeRule implements Rule
 		}
 
 		$type = DateTimeImmutable::class;
-		if ($checker->hasArg(self::Type)) {
-			$type = $args[self::Type];
+		if ($checker->hasArg(self::ClassName)) {
+			$type = $args[self::ClassName];
 
 			if (
 				!is_string($type)
@@ -70,7 +70,7 @@ final class DateTimeRule implements Rule
 							DateTimeImmutable::class,
 							DateTime::class,
 						),
-						self::Type,
+						self::ClassName,
 						$type,
 					));
 			}
@@ -104,7 +104,7 @@ final class DateTimeRule implements Rule
 		}
 
 		$stringValue = is_int($value) ? (string) $value : $value;
-		$classType = $args->type;
+		$classType = $args->class;
 
 		if ($isTimestamp) {
 			$datetime = $classType::createFromFormat('U', $stringValue);

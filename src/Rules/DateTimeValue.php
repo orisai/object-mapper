@@ -20,16 +20,19 @@ final class DateTimeValue implements RuleDefinition
 {
 
 	/** @var class-string<DateTimeInterface> */
-	private string $type;
+	private string $class;
 
 	private string $format;
 
 	/**
-	 * @param class-string<DateTimeInterface> $type
+	 * @param class-string<DateTimeInterface> $class
 	 */
-	public function __construct(string $type = DateTimeImmutable::class, string $format = DateTimeRule::FormatIsoCompat)
+	public function __construct(
+		string $class = DateTimeImmutable::class,
+		string $format = DateTimeRule::FormatIsoCompat
+	)
 	{
-		$this->type = $type;
+		$this->class = $class;
 		$this->format = $format;
 	}
 
@@ -41,7 +44,7 @@ final class DateTimeValue implements RuleDefinition
 	public function getArgs(): array
 	{
 		return [
-			'type' => $this->type,
+			'class' => $this->class,
 			'format' => $this->format,
 		];
 	}

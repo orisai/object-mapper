@@ -14,22 +14,25 @@ final class DateTimeArgs implements Args
 {
 
 	/** @var class-string<DateTimeImmutable|DateTime> */
-	public string $type;
+	public string $class;
 
 	public string $format;
 
 	/**
-	 * @param class-string<DateTimeImmutable|DateTime> $type
+	 * @param class-string<DateTimeImmutable|DateTime> $class
 	 */
-	public function __construct(string $type = DateTimeImmutable::class, string $format = DateTimeRule::FormatIsoCompat)
+	public function __construct(
+		string $class = DateTimeImmutable::class,
+		string $format = DateTimeRule::FormatIsoCompat
+	)
 	{
-		$this->type = $type;
+		$this->class = $class;
 		$this->format = $format;
 	}
 
 	public function isImmutable(): bool
 	{
-		return is_a($this->type, DateTimeImmutable::class, true);
+		return is_a($this->class, DateTimeImmutable::class, true);
 	}
 
 }

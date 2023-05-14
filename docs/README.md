@@ -926,7 +926,7 @@ final class DateTimeInput implements MappedObject
     /** @DateTimeValue() */
     public DateTimeImmutable $field;
 
-    /** @DateTimeValue(type=DateTime::class, format="timestamp") */
+    /** @DateTimeValue(class=DateTime::class, format="timestamp") */
     public DateTime $anotherField;
 
 }
@@ -943,7 +943,7 @@ $input = $processor->process($data, DateTimeInput::class);
 
 Parameters:
 
-- `type`
+- `class`
 	- subclass of `DateTimeInterface` which should be created
 	- default `DateTimeImmutable`
 - `format`

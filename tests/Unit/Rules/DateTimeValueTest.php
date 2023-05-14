@@ -20,7 +20,7 @@ final class DateTimeValueTest extends TestCase
 		self::assertSame(DateTimeRule::class, $definition->getType());
 		self::assertSame(
 			[
-				'type' => DateTimeImmutable::class,
+				'class' => DateTimeImmutable::class,
 				'format' => 'iso_compat',
 			],
 			$definition->getArgs(),
