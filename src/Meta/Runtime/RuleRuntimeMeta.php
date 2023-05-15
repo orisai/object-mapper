@@ -6,7 +6,7 @@ use Orisai\ObjectMapper\Args\Args;
 use Orisai\ObjectMapper\Rules\Rule;
 
 /**
- * @template T of Args
+ * @template-covariant T of Args
  */
 final class RuleRuntimeMeta
 {
