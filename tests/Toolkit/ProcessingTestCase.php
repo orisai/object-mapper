@@ -2,14 +2,17 @@
 
 namespace Tests\Orisai\ObjectMapper\Toolkit;
 
+use Orisai\ObjectMapper\Args\Args;
 use Orisai\ObjectMapper\Context\FieldContext;
 use Orisai\ObjectMapper\Context\RuleArgsContext;
 use Orisai\ObjectMapper\Context\TypeContext;
 use Orisai\ObjectMapper\Meta\MetaLoader;
+use Orisai\ObjectMapper\Meta\Runtime\RuleRuntimeMeta;
 use Orisai\ObjectMapper\Meta\Shared\DefaultValueMeta;
 use Orisai\ObjectMapper\Processing\DefaultProcessor;
 use Orisai\ObjectMapper\Processing\Options;
 use Orisai\ObjectMapper\Rules\DefaultRuleManager;
+use Orisai\ObjectMapper\Rules\Rule;
 use Orisai\ObjectMapper\Tester\ObjectMapperTester;
 use Orisai\ObjectMapper\Tester\TesterDependencies;
 use PHPUnit\Framework\TestCase;
@@ -36,6 +39,34 @@ abstract class ProcessingTestCase extends TestCase
 		$this->ruleManager = $deps->ruleManager;
 		$this->metaLoader = $deps->metaLoader;
 		$this->processor = $deps->processor;
+	}
+
+	/**
+	 * @template T of Args
+	 * @param class-string<Rule<T>> $rule
+	 * @param array<mixed>          $args
+	 * @return RuleRuntimeMeta<T>
+	 */
+	protected function ruleRuntimeMeta(string $rule, array $args = []): RuleRuntimeMeta
+	{
+		return new RuleRuntimeMeta(
+			$rule,
+			$this->ruleArgs($rule, $args),
+		);
+	}
+
+	/**
+	 * @template T of Args
+	 * @param class-string<Rule<T>> $rule
+	 * @param array<mixed>          $args
+	 * @return T
+	 */
+	protected function ruleArgs(string $rule, array $args = []): Args
+	{
+		return $this->ruleManager->getRule($rule)->resolveArgs(
+			$args,
+			$this->ruleArgsContext(),
+		);
 	}
 
 	protected function ruleArgsContext(?ReflectionProperty $property = null): RuleArgsContext

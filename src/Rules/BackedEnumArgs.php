@@ -16,7 +16,7 @@ final class BackedEnumArgs implements Args
 	/**
 	 * @param class-string<BackedEnum> $class
 	 */
-	public function __construct(string $class, bool $allowUnknown = false)
+	public function __construct(string $class, bool $allowUnknown)
 	{
 		$this->class = $class;
 		$this->allowUnknown = $allowUnknown;

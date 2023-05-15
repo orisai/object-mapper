@@ -153,7 +153,7 @@ final class DateTimeRuleTest extends ProcessingTestCase
 
 	public function testType(): void
 	{
-		$args = new DateTimeArgs();
+		$args = $this->ruleArgs(DateTimeRule::class);
 
 		$type = $this->rule->createType($args, $this->createTypeContext());
 

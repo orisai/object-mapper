@@ -30,7 +30,7 @@ final class BoolRuleTest extends ProcessingTestCase
 	{
 		$processed = $this->rule->processValue(
 			$value,
-			new BoolArgs(),
+			new BoolArgs(false),
 			$this->fieldContext(),
 		);
 
@@ -91,7 +91,7 @@ final class BoolRuleTest extends ProcessingTestCase
 		try {
 			$this->rule->processValue(
 				$value,
-				new BoolArgs(),
+				new BoolArgs(false),
 				$this->fieldContext(),
 			);
 		} catch (ValueDoesNotMatch $exception) {
@@ -125,7 +125,7 @@ final class BoolRuleTest extends ProcessingTestCase
 
 	public function testType(): void
 	{
-		$args = new BoolArgs();
+		$args = new BoolArgs(false);
 
 		$type = $this->rule->createType($args, $this->createTypeContext());
 

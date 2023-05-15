@@ -10,7 +10,6 @@ use Orisai\ObjectMapper\Meta\Shared\DefaultValueMeta;
 use Orisai\ObjectMapper\Rules\ArrayOfArgs;
 use Orisai\ObjectMapper\Rules\ArrayOfRule;
 use Orisai\ObjectMapper\Rules\MixedRule;
-use Orisai\ObjectMapper\Rules\StringArgs;
 use Orisai\ObjectMapper\Rules\StringRule;
 use Orisai\ObjectMapper\Types\GenericArrayType;
 use Orisai\ObjectMapper\Types\SimpleValueType;
@@ -37,7 +36,11 @@ final class ArrayOfRuleTest extends ProcessingTestCase
 		$processed = $this->rule->processValue(
 			$value,
 			new ArrayOfArgs(
-				new RuleRuntimeMeta(MixedRule::class, new EmptyArgs()),
+				$this->ruleRuntimeMeta(MixedRule::class),
+				null,
+				null,
+				null,
+				false,
 			),
 			$this->fieldContext(DefaultValueMeta::fromValue($defaults)),
 		);
@@ -52,8 +55,11 @@ final class ArrayOfRuleTest extends ProcessingTestCase
 		$processed = $this->rule->processValue(
 			$value,
 			new ArrayOfArgs(
-				new RuleRuntimeMeta(MixedRule::class, new EmptyArgs()),
-				new RuleRuntimeMeta(StringRule::class, new StringArgs()),
+				$this->ruleRuntimeMeta(MixedRule::class),
+				$this->ruleRuntimeMeta(StringRule::class),
+				null,
+				null,
+				false,
 			),
 			$this->fieldContext(),
 		);
@@ -94,6 +100,10 @@ final class ArrayOfRuleTest extends ProcessingTestCase
 				$value,
 				new ArrayOfArgs(
 					new RuleRuntimeMeta(MixedRule::class, new EmptyArgs()),
+					null,
+					null,
+					null,
+					false,
 				),
 				$this->fieldContext(),
 			);
@@ -117,9 +127,11 @@ final class ArrayOfRuleTest extends ProcessingTestCase
 			$this->rule->processValue(
 				$value,
 				new ArrayOfArgs(
-					new RuleRuntimeMeta(StringRule::class, new StringArgs()),
-					new RuleRuntimeMeta(StringRule::class, new StringArgs()),
+					$this->ruleRuntimeMeta(StringRule::class),
+					$this->ruleRuntimeMeta(StringRule::class),
 					10,
+					null,
+					false,
 				),
 				$this->fieldContext(),
 			);
@@ -160,10 +172,11 @@ final class ArrayOfRuleTest extends ProcessingTestCase
 			$this->rule->processValue(
 				$value,
 				new ArrayOfArgs(
-					new RuleRuntimeMeta(StringRule::class, new StringArgs()),
+					$this->ruleRuntimeMeta(StringRule::class),
 					null,
 					null,
 					2,
+					false,
 				),
 				$this->fieldContext(),
 			);
@@ -190,7 +203,11 @@ final class ArrayOfRuleTest extends ProcessingTestCase
 			$this->rule->processValue(
 				$value,
 				new ArrayOfArgs(
-					new RuleRuntimeMeta(StringRule::class, new StringArgs()),
+					$this->ruleRuntimeMeta(StringRule::class),
+					null,
+					null,
+					null,
+					false,
 				),
 				$this->fieldContext(),
 			);
@@ -213,6 +230,10 @@ final class ArrayOfRuleTest extends ProcessingTestCase
 	{
 		$args = new ArrayOfArgs(
 			new RuleRuntimeMeta(MixedRule::class, new EmptyArgs()),
+			null,
+			null,
+			null,
+			false,
 		);
 
 		$type = $this->rule->createType($args, $this->createTypeContext());
@@ -230,10 +251,11 @@ final class ArrayOfRuleTest extends ProcessingTestCase
 	public function testTypeWithArgs(): void
 	{
 		$args = new ArrayOfArgs(
-			new RuleRuntimeMeta(MixedRule::class, new EmptyArgs()),
-			new RuleRuntimeMeta(StringRule::class, new StringArgs()),
+			$this->ruleRuntimeMeta(MixedRule::class),
+			$this->ruleRuntimeMeta(StringRule::class),
 			10,
 			100,
+			false,
 		);
 
 		$type = $this->rule->createType($args, $this->createTypeContext());

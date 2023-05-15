@@ -19,13 +19,13 @@ final class BaseCallbackArgs implements Args
 		string $method,
 		bool $isStatic,
 		bool $returnsValue,
-		?CallbackRuntime $runtime = null
+		CallbackRuntime $runtime
 	)
 	{
 		$this->method = $method;
 		$this->isStatic = $isStatic;
 		$this->returnsValue = $returnsValue;
-		$this->runtime = $runtime ?? CallbackRuntime::always();
+		$this->runtime = $runtime;
 	}
 
 }

@@ -43,7 +43,7 @@ final class ArrayEnumRuleTest extends ProcessingTestCase
 	{
 		yield [
 			'foo',
-			new ArrayEnumArgs(['foo', 'bar']),
+			new ArrayEnumArgs(['foo', 'bar'], false),
 		];
 
 		yield [
@@ -86,7 +86,7 @@ final class ArrayEnumRuleTest extends ProcessingTestCase
 	{
 		yield [
 			0,
-			new ArrayEnumArgs(['foo', 'bar']),
+			new ArrayEnumArgs(['foo', 'bar'], false),
 			['foo', 'bar'],
 		];
 
@@ -99,7 +99,7 @@ final class ArrayEnumRuleTest extends ProcessingTestCase
 
 	public function testType(): void
 	{
-		$args = new ArrayEnumArgs(['foo', 'bar']);
+		$args = new ArrayEnumArgs(['foo', 'bar'], false);
 
 		$type = $this->rule->createType($args, $this->createTypeContext());
 

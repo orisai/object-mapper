@@ -18,7 +18,7 @@ final class ArrayEnumArgs implements Args
 	/**
 	 * @param array<int|string, mixed> $values
 	 */
-	public function __construct(array $values, bool $useKeys = false)
+	public function __construct(array $values, bool $useKeys)
 	{
 		$this->cases = $values;
 		$this->useKeys = $useKeys;

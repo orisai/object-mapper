@@ -30,7 +30,7 @@ final class StringRuleTest extends ProcessingTestCase
 	{
 		$processed = $this->rule->processValue(
 			$value,
-			new StringArgs(),
+			$this->ruleArgs(StringRule::class),
 			$this->fieldContext(),
 		);
 
@@ -58,7 +58,7 @@ final class StringRuleTest extends ProcessingTestCase
 		try {
 			$this->rule->processValue(
 				$value,
-				new StringArgs(),
+				$this->ruleArgs(StringRule::class),
 				$this->fieldContext(),
 			);
 		} catch (ValueDoesNotMatch $exception) {
@@ -150,7 +150,7 @@ final class StringRuleTest extends ProcessingTestCase
 		try {
 			$this->rule->processValue(
 				$value,
-				new StringArgs(null, true),
+				new StringArgs(null, true, null, null),
 				$this->fieldContext(),
 			);
 		} catch (ValueDoesNotMatch $exception) {
@@ -181,7 +181,7 @@ final class StringRuleTest extends ProcessingTestCase
 
 	public function testType(): void
 	{
-		$args = new StringArgs();
+		$args = $this->ruleArgs(StringRule::class);
 
 		$type = $this->rule->createType($args, $this->createTypeContext());
 

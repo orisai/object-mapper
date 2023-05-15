@@ -21,10 +21,7 @@ final class DateTimeArgs implements Args
 	/**
 	 * @param class-string<DateTimeImmutable|DateTime> $class
 	 */
-	public function __construct(
-		string $class = DateTimeImmutable::class,
-		string $format = DateTimeRule::FormatIsoCompat
-	)
+	public function __construct(string $class, string $format)
 	{
 		$this->class = $class;
 		$this->format = $format;

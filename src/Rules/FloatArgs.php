@@ -19,10 +19,10 @@ final class FloatArgs implements Args
 	public bool $castNumericString;
 
 	public function __construct(
-		?float $min = null,
-		?float $max = null,
-		bool $unsigned = false,
-		bool $castNumericString = false
+		?float $min,
+		?float $max,
+		bool $unsigned,
+		bool $castNumericString
 	)
 	{
 		$this->min = $min;

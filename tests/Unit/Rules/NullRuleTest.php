@@ -25,7 +25,7 @@ final class NullRuleTest extends ProcessingTestCase
 	{
 		$processed = $this->rule->processValue(
 			null,
-			new NullArgs(),
+			new NullArgs(false),
 			$this->fieldContext(),
 		);
 
@@ -68,7 +68,7 @@ final class NullRuleTest extends ProcessingTestCase
 		try {
 			$this->rule->processValue(
 				$value,
-				new NullArgs(),
+				new NullArgs(false),
 				$this->fieldContext(),
 			);
 		} catch (ValueDoesNotMatch $exception) {
@@ -103,7 +103,7 @@ final class NullRuleTest extends ProcessingTestCase
 
 	public function testType(): void
 	{
-		$args = new NullArgs();
+		$args = $this->ruleArgs(NullRule::class);
 
 		$type = $this->rule->createType($args, $this->createTypeContext());
 

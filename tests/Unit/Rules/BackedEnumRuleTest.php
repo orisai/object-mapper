@@ -50,13 +50,13 @@ final class BackedEnumRuleTest extends ProcessingTestCase
 		yield [
 			0,
 			ExampleIntEnum::Foo,
-			new BackedEnumArgs(ExampleIntEnum::class),
+			new BackedEnumArgs(ExampleIntEnum::class, false),
 		];
 
 		yield [
 			'foo',
 			ExampleStringEnum::Foo,
-			new BackedEnumArgs(ExampleStringEnum::class),
+			new BackedEnumArgs(ExampleStringEnum::class, false),
 		];
 
 		yield [
@@ -100,26 +100,26 @@ final class BackedEnumRuleTest extends ProcessingTestCase
 	{
 		yield [
 			0,
-			new BackedEnumArgs(ExampleStringEnum::class),
+			new BackedEnumArgs(ExampleStringEnum::class, false),
 			['foo', 'bar'],
 		];
 
 		yield [
 			123,
-			new BackedEnumArgs(ExampleIntEnum::class),
+			new BackedEnumArgs(ExampleIntEnum::class, false),
 			[0, 1],
 		];
 
 		yield [
 			'string',
-			new BackedEnumArgs(ExampleIntEnum::class),
+			new BackedEnumArgs(ExampleIntEnum::class, false),
 			[0, 1],
 		];
 	}
 
 	public function testType(): void
 	{
-		$args = new BackedEnumArgs(ExampleStringEnum::class);
+		$args = new BackedEnumArgs(ExampleStringEnum::class, false);
 
 		$type = $this->rule->createType($args, $this->createTypeContext());
 

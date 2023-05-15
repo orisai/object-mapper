@@ -29,7 +29,7 @@ final class IntRuleTest extends ProcessingTestCase
 	{
 		$processed = $this->rule->processValue(
 			$value,
-			$args ?? new IntArgs(),
+			$args ?? $this->ruleArgs(IntRule::class),
 			$this->fieldContext(),
 		);
 
@@ -45,12 +45,12 @@ final class IntRuleTest extends ProcessingTestCase
 		yield [0];
 		yield [
 			100,
-			new IntArgs(100, 100, false),
+			new IntArgs(100, 100, false, false),
 		];
 
 		yield [
 			-100,
-			new IntArgs(null, null, false),
+			new IntArgs(null, null, false, false),
 		];
 	}
 
@@ -94,7 +94,7 @@ final class IntRuleTest extends ProcessingTestCase
 		try {
 			$this->rule->processValue(
 				$value,
-				$args ?? new IntArgs(),
+				$args ?? $this->ruleArgs(IntRule::class),
 				$this->fieldContext(),
 			);
 		} catch (ValueDoesNotMatch $exception) {
@@ -182,7 +182,7 @@ final class IntRuleTest extends ProcessingTestCase
 
 	public function testType(): void
 	{
-		$args = new IntArgs();
+		$args = $this->ruleArgs(IntRule::class);
 
 		$type = $this->rule->createType($args, $this->createTypeContext());
 

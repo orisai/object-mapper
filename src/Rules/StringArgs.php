@@ -19,10 +19,10 @@ final class StringArgs implements Args
 	public ?int $maxLength;
 
 	public function __construct(
-		?string $pattern = null,
-		bool $notEmpty = false,
-		?int $minLength = null,
-		?int $maxLength = null
+		?string $pattern,
+		bool $notEmpty,
+		?int $minLength,
+		?int $maxLength
 	)
 	{
 		$this->pattern = $pattern;

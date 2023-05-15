@@ -20,10 +20,10 @@ final class ArrayOfArgs extends MultiValueArgs
 	 */
 	public function __construct(
 		RuleRuntimeMeta $itemRuleMeta,
-		?RuleRuntimeMeta $keyRuleMeta = null,
-		?int $minItems = null,
-		?int $maxItems = null,
-		bool $mergeDefaults = false
+		?RuleRuntimeMeta $keyRuleMeta,
+		?int $minItems,
+		?int $maxItems,
+		bool $mergeDefaults
 	)
 	{
 		parent::__construct($itemRuleMeta, $minItems, $maxItems, $mergeDefaults);

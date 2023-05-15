@@ -9,7 +9,6 @@ use Orisai\ObjectMapper\Meta\Shared\DefaultValueMeta;
 use Orisai\ObjectMapper\Rules\ListOfRule;
 use Orisai\ObjectMapper\Rules\MixedRule;
 use Orisai\ObjectMapper\Rules\MultiValueArgs;
-use Orisai\ObjectMapper\Rules\StringArgs;
 use Orisai\ObjectMapper\Rules\StringRule;
 use Orisai\ObjectMapper\Types\GenericArrayType;
 use Orisai\ObjectMapper\Types\KeyValueErrorPair;
@@ -38,6 +37,9 @@ final class ListOfRuleTest extends ProcessingTestCase
 			$value,
 			new MultiValueArgs(
 				new RuleRuntimeMeta(MixedRule::class, new EmptyArgs()),
+				null,
+				null,
+				false,
 			),
 			$this->fieldContext(DefaultValueMeta::fromValue($defaults)),
 		);
@@ -74,6 +76,9 @@ final class ListOfRuleTest extends ProcessingTestCase
 				$value,
 				new MultiValueArgs(
 					new RuleRuntimeMeta(MixedRule::class, new EmptyArgs()),
+					null,
+					null,
+					false,
 				),
 				$this->fieldContext(),
 			);
@@ -97,8 +102,10 @@ final class ListOfRuleTest extends ProcessingTestCase
 			$this->rule->processValue(
 				$value,
 				new MultiValueArgs(
-					new RuleRuntimeMeta(StringRule::class, new StringArgs()),
+					$this->ruleRuntimeMeta(StringRule::class),
 					10,
+					null,
+					false,
 				),
 				$this->fieldContext(),
 			);
@@ -139,9 +146,10 @@ final class ListOfRuleTest extends ProcessingTestCase
 			$this->rule->processValue(
 				$value,
 				new MultiValueArgs(
-					new RuleRuntimeMeta(StringRule::class, new StringArgs()),
+					$this->ruleRuntimeMeta(StringRule::class),
 					null,
 					2,
+					false,
 				),
 				$this->fieldContext(),
 			);
@@ -168,7 +176,10 @@ final class ListOfRuleTest extends ProcessingTestCase
 			$this->rule->processValue(
 				$value,
 				new MultiValueArgs(
-					new RuleRuntimeMeta(StringRule::class, new StringArgs()),
+					$this->ruleRuntimeMeta(StringRule::class),
+					null,
+					null,
+					false,
 				),
 				$this->fieldContext(),
 			);
@@ -191,6 +202,9 @@ final class ListOfRuleTest extends ProcessingTestCase
 	{
 		$args = new MultiValueArgs(
 			new RuleRuntimeMeta(MixedRule::class, new EmptyArgs()),
+			null,
+			null,
+			false,
 		);
 
 		$type = $this->rule->createType($args, $this->createTypeContext());
@@ -210,6 +224,7 @@ final class ListOfRuleTest extends ProcessingTestCase
 			new RuleRuntimeMeta(MixedRule::class, new EmptyArgs()),
 			10,
 			100,
+			false,
 		);
 
 		$type = $this->rule->createType($args, $this->createTypeContext());

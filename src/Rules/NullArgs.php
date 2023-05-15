@@ -12,7 +12,7 @@ final class NullArgs implements Args
 
 	public bool $castEmptyString;
 
-	public function __construct(bool $castEmptyString = false)
+	public function __construct(bool $castEmptyString)
 	{
 		$this->castEmptyString = $castEmptyString;
 	}

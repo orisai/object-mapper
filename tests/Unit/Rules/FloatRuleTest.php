@@ -29,7 +29,7 @@ final class FloatRuleTest extends ProcessingTestCase
 	{
 		$processed = $this->rule->processValue(
 			$value,
-			$args ?? new FloatArgs(),
+			$args ?? $this->ruleArgs(FloatRule::class),
 			$this->fieldContext(),
 		);
 
@@ -48,25 +48,25 @@ final class FloatRuleTest extends ProcessingTestCase
 		yield [
 			100,
 			100.0,
-			new FloatArgs(100, 100, false),
+			new FloatArgs(100, 100, false, false),
 		];
 
 		yield [
 			100.12,
 			100.12,
-			new FloatArgs(100.12, 100.12, false),
+			new FloatArgs(100.12, 100.12, false, false),
 		];
 
 		yield [
 			-100,
 			-100.0,
-			new FloatArgs(null, null, false),
+			new FloatArgs(null, null, false, false),
 		];
 
 		yield [
 			-100.12,
 			-100.12,
-			new FloatArgs(null, null, false),
+			new FloatArgs(null, null, false, false),
 		];
 	}
 
@@ -114,7 +114,7 @@ final class FloatRuleTest extends ProcessingTestCase
 		try {
 			$this->rule->processValue(
 				$value,
-				$args ?? new FloatArgs(),
+				$args ?? $this->ruleArgs(FloatRule::class),
 				$this->fieldContext(),
 			);
 		} catch (ValueDoesNotMatch $exception) {

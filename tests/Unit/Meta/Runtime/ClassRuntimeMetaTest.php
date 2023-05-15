@@ -4,6 +4,7 @@ namespace Tests\Orisai\ObjectMapper\Unit\Meta\Runtime;
 
 use Orisai\ObjectMapper\Callbacks\BaseCallbackArgs;
 use Orisai\ObjectMapper\Callbacks\BeforeCallback;
+use Orisai\ObjectMapper\Callbacks\CallbackRuntime;
 use Orisai\ObjectMapper\Docs\DescriptionDoc;
 use Orisai\ObjectMapper\Meta\Runtime\CallbackRuntimeMeta;
 use Orisai\ObjectMapper\Meta\Runtime\ClassRuntimeMeta;
@@ -24,7 +25,7 @@ final class ClassRuntimeMetaTest extends TestCase
 		$callbacks = [
 			new CallbackRuntimeMeta(
 				BeforeCallback::class,
-				new BaseCallbackArgs('method', false, false),
+				new BaseCallbackArgs('method', false, false, CallbackRuntime::process()),
 				new ReflectionClass(self::class),
 			),
 		];
