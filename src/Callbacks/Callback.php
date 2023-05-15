@@ -14,7 +14,7 @@ use Orisai\ObjectMapper\Processing\ObjectHolder;
 use ReflectionClass;
 
 /**
- * @template T_ARGS of Args
+ * @template-covariant T_ARGS of Args
  */
 interface Callback
 {

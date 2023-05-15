@@ -45,15 +45,18 @@ parameters:
 			message: '#^Method (.+) throws checked exception (.+) but it''s missing from the PHPDoc @throws tag\.$#'
 			path: ../tests/Unit
 
-		# Rule template is declared as covariant for practical reasons
+		# Callback/Rule template is declared as covariant for practical reasons
 		# - not declaring it covariant would cause too many errors elsewhere
-		# - Rule self-validates type of Args
+		# - Callback/Rule self-validates type of Args
 		-
 			message: '#^Template type T_ARGS is declared as covariant, but occurs in contravariant position in parameter args of method (.+)\:\:processValue\(\)\.$#'
 			path: ../src/Rules/Rule.php
 		-
 			message: '#^Template type T_ARGS is declared as covariant, but occurs in contravariant position in parameter args of method (.+)\:\:createType\(\)\.$#'
 			path: ../src/Rules/Rule.php
+		-
+			message: '#^Template type T_ARGS is declared as covariant, but occurs in contravariant position in parameter args of method (.+)\:\:invoke\(\)\.$#'
+			path: ../src/Callbacks/Callback.php
 
 		################################################################################################################
 
@@ -82,10 +85,6 @@ parameters:
 			message: '#^Method (.+)NodeRuntimeMeta\:\:getModifier\(\) should return (.+)ModifierRuntimeMeta\<T of (.+)Args\>\|null but returns (.+)ModifierRuntimeMeta\<(.+)Args>\|null\.$#'
 			path: ../src/Meta/Runtime/NodeRuntimeMeta.php
 			count: 1
-		# Generics - phpstan resolves correct class-string as a constant string - but not on test site https://phpstan.org/r/ce7cd979-ab2f-4373-a589-f63bfa01ca33
-		-
-			message: '#^Parameter \#5 \$callbackType of method (.+)\:\:(handleClass|apply)(Callbacks)\(\) expects class-string\<(.+)Callback\<(.+)Args\>\>, ''(.+)Callback'' given\.$#'
-			path: ../src/Processing/DefaultProcessor.php
 		# Generics - specifying type would cause too many errors like "Strict comparison using === between class-string<Modifier<Args>> and 'FieldNameModifier' will always evaluate to false."
 		-
 			message: '#^Method (.+)ModifierCompileMeta\:\:getType\(\) return type with generic interface (.+)Modifier does not specify its types: T$#'

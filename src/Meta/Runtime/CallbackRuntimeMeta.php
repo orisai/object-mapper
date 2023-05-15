@@ -8,7 +8,7 @@ use Orisai\ObjectMapper\MappedObject;
 use ReflectionClass;
 
 /**
- * @template T of Args
+ * @template-covariant T of Args
  */
 final class CallbackRuntimeMeta
 {
