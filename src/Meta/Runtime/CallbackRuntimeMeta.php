@@ -8,6 +8,8 @@ use Orisai\ObjectMapper\MappedObject;
 use ReflectionClass;
 
 /**
+ * @phpstan-type T_SERIALIZED array{type: class-string<Callback<T>>, args: T, declaringClass: class-string<MappedObject>}
+ *
  * @template-covariant T of Args
  */
 final class CallbackRuntimeMeta
@@ -59,7 +61,7 @@ final class CallbackRuntimeMeta
 	}
 
 	/**
-	 * @return array<mixed>
+	 * @return T_SERIALIZED
 	 */
 	public function __serialize(): array
 	{
@@ -71,7 +73,7 @@ final class CallbackRuntimeMeta
 	}
 
 	/**
-	 * @param array<mixed> $data
+	 * @param T_SERIALIZED $data
 	 */
 	public function __unserialize(array $data): void
 	{

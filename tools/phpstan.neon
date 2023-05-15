@@ -81,17 +81,17 @@ parameters:
 			path: ../src/Meta/Runtime/NodeRuntimeMeta.php
 			count: 1
 
+		# Generics and serialization are not quite compatible
+		-
+			message: '#^Template type T is declared as covariant, but occurs in invariant position (.+)\_\_(serialize|unserialize)\(\)\.$#'
+			path: ../src/Meta/Runtime/CallbackRuntimeMeta.php
+
 		################################################################################################################
 
 		# Proper object -> MappedObject type checks are currently missing
 		-
 			message: '#(.+)expects ReflectionClass\<(.+)MappedObject\>, ReflectionClass\<object\> given\.$#'
 			path: ../src/Meta/MetaResolver.php
-
-		# Serialization, who cares
-		-
-			message: '#^Property (.+)CallbackRuntimeMeta(.+)\$declaringClass \(ReflectionClass\<(.+)MappedObject\>\) does not accept ReflectionClass\<object\>\.$#'
-			path: ../src/Meta/Runtime/CallbackRuntimeMeta.php
 
 		# Temporary workaround
 		-
