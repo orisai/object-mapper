@@ -6,7 +6,7 @@ use Orisai\ObjectMapper\Args\Args;
 use Orisai\ObjectMapper\Context\ResolverArgsContext;
 
 /**
- * @template T of Args
+ * @template-covariant T of Args
  */
 interface Modifier
 {

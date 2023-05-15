@@ -6,7 +6,7 @@ use Orisai\ObjectMapper\Args\Args;
 use Orisai\ObjectMapper\Modifiers\Modifier;
 
 /**
- * @template T of Args
+ * @template-covariant T of Args
  */
 final class ModifierRuntimeMeta
 {

@@ -32,7 +32,7 @@ final class ClassRuntimeMetaTest extends TestCase
 			new DocMeta(DescriptionDoc::class, []),
 		];
 		$modifiers = [
-			new ModifierRuntimeMeta(FieldNameModifier::class, new FieldNameArgs('field')),
+			FieldNameModifier::class => new ModifierRuntimeMeta(FieldNameModifier::class, new FieldNameArgs('field')),
 		];
 
 		$meta = new ClassRuntimeMeta($callbacks, $docs, $modifiers);

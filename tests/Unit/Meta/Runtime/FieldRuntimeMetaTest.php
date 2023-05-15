@@ -39,7 +39,7 @@ final class FieldRuntimeMetaTest extends TestCase
 			new DocMeta(DescriptionDoc::class, []),
 		];
 		$modifiers = [
-			new ModifierRuntimeMeta(FieldNameModifier::class, new FieldNameArgs('field')),
+			FieldNameModifier::class => new ModifierRuntimeMeta(FieldNameModifier::class, new FieldNameArgs('field')),
 		];
 		$rule = new RuleRuntimeMeta(MixedRule::class, new EmptyArgs());
 		$default = DefaultValueMeta::fromNothing();
