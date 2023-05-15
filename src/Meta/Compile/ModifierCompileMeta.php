@@ -25,7 +25,7 @@ final class ModifierCompileMeta
 	}
 
 	/**
-	 * @return class-string<Modifier>
+	 * @return class-string<Modifier<Args>>
 	 */
 	public function getType(): string
 	{

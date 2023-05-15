@@ -93,10 +93,6 @@ parameters:
 			message: '#^Method (.+)NodeRuntimeMeta\:\:getModifier\(\) should return (.+)ModifierRuntimeMeta\<T of (.+)Args\>\|null but returns (.+)ModifierRuntimeMeta\<(.+)Args>\|null\.$#'
 			path: ../src/Meta/Runtime/NodeRuntimeMeta.php
 			count: 1
-		# Generics - specifying type would cause too many errors like "Strict comparison using === between class-string<Modifier<Args>> and 'FieldNameModifier' will always evaluate to false."
-		-
-			message: '#^Method (.+)ModifierCompileMeta\:\:getType\(\) return type with generic interface (.+)Modifier does not specify its types: T$#'
-			path: ../src/Meta/Compile/ModifierCompileMeta.php
 
 		# Temporary workaround
 		-
