@@ -203,10 +203,10 @@ final class DefaultProcessor implements Processor
 	}
 
 	/**
-	 * @template RC of MappedObject
-	 * @param class-string<RC> $class
-	 * @param ObjectHolder<RC> $holder
-	 * @return ProcessorCallContext<RC>
+	 * @template T of MappedObject
+	 * @param class-string<T> $class
+	 * @param ObjectHolder<T> $holder
+	 * @return ProcessorCallContext<T>
 	 */
 	private function createProcessorRunContext(
 		string $class,
@@ -647,10 +647,10 @@ final class DefaultProcessor implements Processor
 	}
 
 	/**
-	 * @template H of MappedObject
-	 * @param class-string<H> $class
-	 * @param H|null          $object
-	 * @return ObjectHolder<H>
+	 * @template T of MappedObject
+	 * @param class-string<T> $class
+	 * @param T|null          $object
+	 * @return ObjectHolder<T>
 	 */
 	private function createHolder(string $class, ClassRuntimeMeta $meta, ?MappedObject $object = null): ObjectHolder
 	{
