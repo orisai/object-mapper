@@ -1,11 +1,6 @@
 parameters:
 	ignoreErrors:
 		-
-			message: "#^Method Tests\\\\Orisai\\\\ObjectMapper\\\\Doubles\\\\Callbacks\\\\ObjectInitializingVO\\:\\:before\\(\\) is unused\\.$#"
-			count: 1
-			path: ../tests/Doubles/Callbacks/ObjectInitializingVO.php
-
-		-
 			message: "#^Property Tests\\\\Orisai\\\\ObjectMapper\\\\Doubles\\\\Circular\\\\CircularCVO\\:\\:\\$as type has no value type specified in iterable type array\\.$#"
 			count: 1
 			path: ../tests/Doubles/Circular/CircularCVO.php
@@ -14,61 +9,6 @@ parameters:
 			message: "#^Property Tests\\\\Orisai\\\\ObjectMapper\\\\Doubles\\\\FieldNames\\\\ChildCollidingFieldVO\\:\\:\\$property is unused\\.$#"
 			count: 1
 			path: ../tests/Doubles/FieldNames/ChildCollidingFieldVO.php
-
-		-
-			message: "#^Property Tests\\\\Orisai\\\\ObjectMapper\\\\Doubles\\\\FieldNames\\\\ChildFieldVO\\:\\:\\$property is never written, only read\\.$#"
-			count: 1
-			path: ../tests/Doubles/FieldNames/ChildFieldVO.php
-
-		-
-			message: "#^Property Tests\\\\Orisai\\\\ObjectMapper\\\\Doubles\\\\FieldNames\\\\ParentFieldVO\\:\\:\\$property is never written, only read\\.$#"
-			count: 1
-			path: ../tests/Doubles/FieldNames/ParentFieldVO.php
-
-		-
-			message: "#^Method Tests\\\\Orisai\\\\ObjectMapper\\\\Doubles\\\\Inheritance\\\\CallbacksVisibilityVO\\:\\:afterPrivate\\(\\) is unused\\.$#"
-			count: 1
-			path: ../tests/Doubles/Inheritance/CallbacksVisibilityVO.php
-
-		-
-			message: "#^Static method Tests\\\\Orisai\\\\ObjectMapper\\\\Doubles\\\\Inheritance\\\\CallbacksVisibilityVO\\:\\:afterPrivateStatic\\(\\) is unused\\.$#"
-			count: 1
-			path: ../tests/Doubles/Inheritance/CallbacksVisibilityVO.php
-
-		-
-			message: "#^Method Tests\\\\Orisai\\\\ObjectMapper\\\\Doubles\\\\Inheritance\\\\ChildVO\\:\\:afterProperty\\(\\) is unused\\.$#"
-			count: 1
-			path: ../tests/Doubles/Inheritance/ChildVO.php
-
-		-
-			message: "#^Method Tests\\\\Orisai\\\\ObjectMapper\\\\Doubles\\\\Inheritance\\\\ChildVO\\:\\:afterPropertyStatic\\(\\) is unused\\.$#"
-			count: 1
-			path: ../tests/Doubles/Inheritance/ChildVO.php
-
-		-
-			message: "#^Property Tests\\\\Orisai\\\\ObjectMapper\\\\Doubles\\\\Inheritance\\\\ChildVO\\:\\:\\$childPrivate is never written, only read\\.$#"
-			count: 1
-			path: ../tests/Doubles/Inheritance/ChildVO.php
-
-		-
-			message: "#^Method Tests\\\\Orisai\\\\ObjectMapper\\\\Doubles\\\\Inheritance\\\\ParentVO\\:\\:afterProperty\\(\\) is unused\\.$#"
-			count: 1
-			path: ../tests/Doubles/Inheritance/ParentVO.php
-
-		-
-			message: "#^Method Tests\\\\Orisai\\\\ObjectMapper\\\\Doubles\\\\Inheritance\\\\ParentVO\\:\\:afterPropertyStatic\\(\\) is unused\\.$#"
-			count: 1
-			path: ../tests/Doubles/Inheritance/ParentVO.php
-
-		-
-			message: "#^Property Tests\\\\Orisai\\\\ObjectMapper\\\\Doubles\\\\Inheritance\\\\ParentVO\\:\\:\\$parentPrivate is never written, only read\\.$#"
-			count: 1
-			path: ../tests/Doubles/Inheritance/ParentVO.php
-
-		-
-			message: "#^Property Tests\\\\Orisai\\\\ObjectMapper\\\\Doubles\\\\Inheritance\\\\PropertiesVisibilityVO\\:\\:\\$private is never written, only read\\.$#"
-			count: 1
-			path: ../tests/Doubles/Inheritance/PropertiesVisibilityVO.php
 
 		-
 			message: "#^Method Tests\\\\Orisai\\\\ObjectMapper\\\\Doubles\\\\Inheritance\\\\TraitCallback\\\\TraitCallbackVO\\:\\:after\\(\\) has parameter \\$data with no value type specified in iterable type array\\.$#"

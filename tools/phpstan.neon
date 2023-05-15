@@ -38,7 +38,15 @@ parameters:
 			count: 1
 
 		# Dark mapping magic
-		- '#^Class Tests\\Orisai\\ObjectMapper\\Doubles(.+) has an uninitialized readonly property (.+)\. Assign it in the constructor\.$#'
+		-
+			message: '#^Class (.+)VO has an uninitialized readonly property \$(.+)\. Assign it in the constructor\.$#'
+			path: ../tests/Doubles
+		-
+			message: '#^Property (.+)VO\:\:\$(.+) is never written, only read\.$#'
+			path: ../tests/Doubles
+		-
+			message: '#^(Method|Static method) (.+)VO\:\:(.+)\(\) is unused\.$#'
+			path: ../tests/Doubles
 
 		# Tests are expected to throw exceptions
 		-
