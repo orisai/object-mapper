@@ -14,7 +14,6 @@ use Orisai\ObjectMapper\Types\SimpleValueType;
 use Orisai\ObjectMapper\Types\Type;
 use Orisai\ObjectMapper\Types\TypeParameter;
 use function get_class;
-use function sprintf;
 
 /**
  * @template T of string|array
@@ -97,8 +96,10 @@ final class ErrorVisualPrinter implements ErrorPrinter, TypePrinter
 			return $this->printMessageType($type);
 		}
 
+		$typeName = get_class($type);
+
 		throw InvalidArgument::create()
-			->withMessage(sprintf('Unsupported type %s', get_class($type)));
+			->withMessage("Unsupported type '$typeName'.");
 	}
 
 	/**

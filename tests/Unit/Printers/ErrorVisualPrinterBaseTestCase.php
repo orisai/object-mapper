@@ -2,6 +2,7 @@
 
 namespace Tests\Orisai\ObjectMapper\Unit\Printers;
 
+use Orisai\Exceptions\Logic\InvalidArgument;
 use Orisai\ObjectMapper\Printers\ErrorVisualPrinter;
 use Orisai\ObjectMapper\Printers\TypeToPrimitiveConverter;
 use Orisai\ObjectMapper\Types\CompoundType;
@@ -10,6 +11,7 @@ use Orisai\ObjectMapper\Types\GenericArrayType;
 use Orisai\ObjectMapper\Types\MappedObjectType;
 use Orisai\ObjectMapper\Types\MessageType;
 use Orisai\ObjectMapper\Types\SimpleValueType;
+use Orisai\ObjectMapper\Types\TestType;
 use PHPUnit\Framework\TestCase;
 
 /**
@@ -22,6 +24,16 @@ abstract class ErrorVisualPrinterBaseTestCase extends TestCase
 	protected TypeToPrimitiveConverter $converter;
 
 	protected ErrorVisualPrinter $printer;
+
+	public function testUnsupportedType(): void
+	{
+		$this->expectException(InvalidArgument::class);
+		$this->expectExceptionMessage(
+			"Unsupported type 'Orisai\ObjectMapper\Types\TestType'.",
+		);
+
+		$this->printer->printType(new TestType());
+	}
 
 	abstract public function testMessage(MessageType $type): void;
 
