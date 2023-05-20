@@ -2,6 +2,7 @@
 
 namespace Tests\Orisai\ObjectMapper\Unit\Rules;
 
+use Generator;
 use Orisai\ObjectMapper\Rules\ArrayEnumRule;
 use Orisai\ObjectMapper\Rules\ArrayEnumValue;
 use Orisai\ObjectMapper\Tester\DefinitionTester;
@@ -30,6 +31,37 @@ final class ArrayEnumValueTest extends TestCase
 		if (PHP_VERSION_ID >= 8_00_00) {
 			DefinitionTester::assertIsRuleAttribute(get_class($definition));
 		}
+	}
+
+	/**
+	 * @param array<mixed> $cases
+	 *
+	 * @dataProvider provideVariant
+	 */
+	public function testVariant(array $cases, bool $useKeys): void
+	{
+		$definition = new ArrayEnumValue($cases, $useKeys);
+
+		self::assertEquals(
+			[
+				'cases' => $cases,
+				'useKeys' => $useKeys,
+			],
+			$definition->getArgs(),
+		);
+	}
+
+	public static function provideVariant(): Generator
+	{
+		yield [
+			['foo', 'bar'],
+			false,
+		];
+
+		yield [
+			[1, 2, 3],
+			true,
+		];
 	}
 
 }

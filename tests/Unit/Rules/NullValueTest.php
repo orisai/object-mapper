@@ -2,6 +2,7 @@
 
 namespace Tests\Orisai\ObjectMapper\Unit\Rules;
 
+use Generator;
 use Orisai\ObjectMapper\Rules\NullRule;
 use Orisai\ObjectMapper\Rules\NullValue;
 use Orisai\ObjectMapper\Tester\DefinitionTester;
@@ -28,6 +29,27 @@ final class NullValueTest extends TestCase
 		if (PHP_VERSION_ID >= 8_00_00) {
 			DefinitionTester::assertIsRuleAttribute(get_class($definition));
 		}
+	}
+
+	/**
+	 * @dataProvider provideVariant
+	 */
+	public function testVariant(bool $castEmptyString): void
+	{
+		$definition = new NullValue($castEmptyString);
+
+		self::assertEquals(
+			[
+				'castEmptyString' => $castEmptyString,
+			],
+			$definition->getArgs(),
+		);
+	}
+
+	public static function provideVariant(): Generator
+	{
+		yield [false];
+		yield [true];
 	}
 
 }

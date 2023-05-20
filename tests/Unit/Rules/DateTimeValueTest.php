@@ -2,7 +2,10 @@
 
 namespace Tests\Orisai\ObjectMapper\Unit\Rules;
 
+use DateTime;
 use DateTimeImmutable;
+use DateTimeInterface;
+use Generator;
 use Orisai\ObjectMapper\Rules\DateTimeRule;
 use Orisai\ObjectMapper\Rules\DateTimeValue;
 use Orisai\ObjectMapper\Tester\DefinitionTester;
@@ -30,6 +33,37 @@ final class DateTimeValueTest extends TestCase
 		if (PHP_VERSION_ID >= 8_00_00) {
 			DefinitionTester::assertIsRuleAttribute(get_class($definition));
 		}
+	}
+
+	/**
+	 * @param class-string<DateTimeInterface> $class
+	 *
+	 * @dataProvider provideVariant
+	 */
+	public function testVariant(string $class, string $format): void
+	{
+		$definition = new DateTimeValue($class, $format);
+
+		self::assertEquals(
+			[
+				'class' => $class,
+				'format' => $format,
+			],
+			$definition->getArgs(),
+		);
+	}
+
+	public static function provideVariant(): Generator
+	{
+		yield [
+			DateTimeImmutable::class,
+			DateTimeRule::FormatIsoCompat,
+		];
+
+		yield [
+			DateTime::class,
+			DateTimeInterface::W3C,
+		];
 	}
 
 }

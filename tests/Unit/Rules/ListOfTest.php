@@ -2,10 +2,15 @@
 
 namespace Tests\Orisai\ObjectMapper\Unit\Rules;
 
+use Generator;
+use Orisai\ObjectMapper\Args\Args;
 use Orisai\ObjectMapper\Meta\Compile\RuleCompileMeta;
 use Orisai\ObjectMapper\Rules\ListOf;
 use Orisai\ObjectMapper\Rules\ListOfRule;
 use Orisai\ObjectMapper\Rules\MixedValue;
+use Orisai\ObjectMapper\Rules\Rule;
+use Orisai\ObjectMapper\Rules\RuleDefinition;
+use Orisai\ObjectMapper\Rules\StringValue;
 use Orisai\ObjectMapper\Tester\DefinitionTester;
 use PHPUnit\Framework\TestCase;
 use function get_class;
@@ -34,6 +39,43 @@ final class ListOfTest extends TestCase
 		if (PHP_VERSION_ID >= 8_00_00) {
 			DefinitionTester::assertIsRuleAttribute(get_class($definition));
 		}
+	}
+
+	/**
+	 * @param RuleDefinition<Rule<Args>> $item
+	 *
+	 * @dataProvider provideVariant
+	 */
+	public function testVariant(RuleDefinition $item, ?int $minItems, ?int $maxItems, bool $mergeDefaults): void
+	{
+		$definition = new ListOf($item, $minItems, $maxItems, $mergeDefaults);
+
+		self::assertEquals(
+			[
+				'item' => new RuleCompileMeta($item->getType(), $item->getArgs()),
+				'minItems' => $minItems,
+				'maxItems' => $maxItems,
+				'mergeDefaults' => $mergeDefaults,
+			],
+			$definition->getArgs(),
+		);
+	}
+
+	public static function provideVariant(): Generator
+	{
+		yield [
+			new MixedValue(),
+			null,
+			null,
+			false,
+		];
+
+		yield [
+			new StringValue(),
+			10,
+			20,
+			true,
+		];
 	}
 
 }

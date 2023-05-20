@@ -2,11 +2,14 @@
 
 namespace Tests\Orisai\ObjectMapper\Unit\Rules;
 
+use BackedEnum;
+use Generator;
 use Orisai\ObjectMapper\Rules\BackedEnumRule;
 use Orisai\ObjectMapper\Rules\BackedEnumValue;
 use Orisai\ObjectMapper\Tester\DefinitionTester;
 use PHPUnit\Framework\TestCase;
 use Tests\Orisai\ObjectMapper\Doubles\Enums\ExampleIntEnum;
+use Tests\Orisai\ObjectMapper\Doubles\Enums\ExampleStringEnum;
 use function get_class;
 use const PHP_VERSION_ID;
 
@@ -31,6 +34,37 @@ final class BackedEnumValueTest extends TestCase
 		);
 
 		DefinitionTester::assertIsRuleAttribute(get_class($definition));
+	}
+
+	/**
+	 * @param class-string<BackedEnum> $class
+	 *
+	 * @dataProvider provideVariant
+	 */
+	public function testVariant(string $class, bool $allowUnknown): void
+	{
+		$definition = new BackedEnumValue($class, $allowUnknown);
+
+		self::assertEquals(
+			[
+				'class' => $class,
+				'allowUnknown' => $allowUnknown,
+			],
+			$definition->getArgs(),
+		);
+	}
+
+	public static function provideVariant(): Generator
+	{
+		yield [
+			ExampleIntEnum::class,
+			false,
+		];
+
+		yield [
+			ExampleStringEnum::class,
+			true,
+		];
 	}
 
 }
