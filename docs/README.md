@@ -991,7 +991,7 @@ Parameters:
 
 ### MappedObject rule
 
-Expects array with structure defined by a mapped object
+Expects `array` or `stdClass` with structure defined by a mapped object
 
 - Returns instance of `MappedObject`
 - Objects with all fields being optional are initialized even when no value is sent
