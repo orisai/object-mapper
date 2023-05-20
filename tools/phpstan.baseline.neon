@@ -176,12 +176,12 @@ parameters:
 			path: ../tests/Unit/Processing/ObjectHolderTest.php
 
 		-
-			message: "#^Parameter \\#1 \\$definitions of class Orisai\\\\ObjectMapper\\\\Rules\\\\AllOf constructor expects array\\<Orisai\\\\ObjectMapper\\\\Rules\\\\RuleDefinition\\<Orisai\\\\ObjectMapper\\\\Rules\\\\Rule\\<Orisai\\\\ObjectMapper\\\\Args\\\\Args\\>\\>\\>, array\\<int, stdClass\\> given\\.$#"
+			message: "#^Parameter \\#1 \\$definitions of class Orisai\\\\ObjectMapper\\\\Rules\\\\AllOf constructor expects array\\<Orisai\\\\ObjectMapper\\\\Rules\\\\RuleDefinition\\>, array\\<int, stdClass\\> given\\.$#"
 			count: 1
 			path: ../tests/Unit/Rules/AllOfTest.php
 
 		-
-			message: "#^Parameter \\#1 \\$definitions of class Orisai\\\\ObjectMapper\\\\Rules\\\\AnyOf constructor expects array\\<Orisai\\\\ObjectMapper\\\\Rules\\\\RuleDefinition\\<Orisai\\\\ObjectMapper\\\\Rules\\\\Rule\\<Orisai\\\\ObjectMapper\\\\Args\\\\Args\\>\\>\\>, array\\<int, stdClass\\> given\\.$#"
+			message: "#^Parameter \\#1 \\$definitions of class Orisai\\\\ObjectMapper\\\\Rules\\\\AnyOf constructor expects array\\<Orisai\\\\ObjectMapper\\\\Rules\\\\RuleDefinition\\>, array\\<int, stdClass\\> given\\.$#"
 			count: 1
 			path: ../tests/Unit/Rules/AnyOfTest.php
 

@@ -5,12 +5,9 @@ namespace Orisai\ObjectMapper\Rules;
 use Attribute;
 use Doctrine\Common\Annotations\Annotation\NamedArgumentConstructor;
 use Doctrine\Common\Annotations\Annotation\Target;
-use Orisai\ObjectMapper\Args\Args;
 use Orisai\ObjectMapper\Meta\Compile\RuleCompileMeta;
 
 /**
- * @extends MultiValueDefinition<ArrayOfRule>
- *
  * @Annotation
  * @NamedArgumentConstructor()
  * @Target({"PROPERTY", "ANNOTATION"})
@@ -21,10 +18,6 @@ final class ArrayOf extends MultiValueDefinition
 
 	private ?RuleCompileMeta $key;
 
-	/**
-	 * @param RuleDefinition<Rule<Args>>      $item
-	 * @param RuleDefinition<Rule<Args>>|null $key
-	 */
 	public function __construct(
 		RuleDefinition $item,
 		?RuleDefinition $key = null,

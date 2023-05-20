@@ -2,13 +2,8 @@
 
 namespace Orisai\ObjectMapper\Rules;
 
-use Orisai\ObjectMapper\Args\Args;
 use Orisai\ObjectMapper\Meta\Compile\RuleCompileMeta;
 
-/**
- * @template-covariant T of MultiValueRule
- * @implements RuleDefinition<T>
- */
 abstract class MultiValueDefinition implements RuleDefinition
 {
 
@@ -20,9 +15,6 @@ abstract class MultiValueDefinition implements RuleDefinition
 
 	private bool $mergeDefaults;
 
-	/**
-	 * @param RuleDefinition<Rule<Args>> $item
-	 */
 	public function __construct(
 		RuleDefinition $item,
 		?int $minItems = null,

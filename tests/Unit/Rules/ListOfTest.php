@@ -3,12 +3,10 @@
 namespace Tests\Orisai\ObjectMapper\Unit\Rules;
 
 use Generator;
-use Orisai\ObjectMapper\Args\Args;
 use Orisai\ObjectMapper\Meta\Compile\RuleCompileMeta;
 use Orisai\ObjectMapper\Rules\ListOf;
 use Orisai\ObjectMapper\Rules\ListOfRule;
 use Orisai\ObjectMapper\Rules\MixedValue;
-use Orisai\ObjectMapper\Rules\Rule;
 use Orisai\ObjectMapper\Rules\RuleDefinition;
 use Orisai\ObjectMapper\Rules\StringValue;
 use Orisai\ObjectMapper\Tester\DefinitionTester;
@@ -42,8 +40,6 @@ final class ListOfTest extends TestCase
 	}
 
 	/**
-	 * @param RuleDefinition<Rule<Args>> $item
-	 *
 	 * @dataProvider provideVariant
 	 */
 	public function testVariant(RuleDefinition $item, ?int $minItems, ?int $maxItems, bool $mergeDefaults): void

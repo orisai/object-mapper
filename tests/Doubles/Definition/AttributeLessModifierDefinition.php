@@ -5,9 +5,6 @@ namespace Tests\Orisai\ObjectMapper\Doubles\Definition;
 use Orisai\ObjectMapper\Modifiers\DefaultValueModifier;
 use Orisai\ObjectMapper\Modifiers\ModifierDefinition;
 
-/**
- * @implements ModifierDefinition<DefaultValueModifier>
- */
 final class AttributeLessModifierDefinition implements ModifierDefinition
 {
 

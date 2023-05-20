@@ -2,16 +2,14 @@
 
 namespace Orisai\ObjectMapper\Callbacks;
 
+use Orisai\ObjectMapper\Args\Args;
 use Orisai\ObjectMapper\Meta\MetaDefinition;
 
-/**
- * @template-covariant T of Callback
- */
 interface CallbackDefinition extends MetaDefinition
 {
 
 	/**
-	 * @return class-string<T>
+	 * @return class-string<Callback<Args>>
 	 */
 	public function getType(): string;
 

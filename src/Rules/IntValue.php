@@ -7,8 +7,6 @@ use Doctrine\Common\Annotations\Annotation\NamedArgumentConstructor;
 use Doctrine\Common\Annotations\Annotation\Target;
 
 /**
- * @implements RuleDefinition<IntRule>
- *
  * @Annotation
  * @NamedArgumentConstructor()
  * @Target({"PROPERTY", "ANNOTATION"})

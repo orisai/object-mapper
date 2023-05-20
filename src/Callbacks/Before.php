@@ -7,8 +7,6 @@ use Doctrine\Common\Annotations\Annotation\NamedArgumentConstructor;
 use Doctrine\Common\Annotations\Annotation\Target;
 
 /**
- * @implements CallbackDefinition<BeforeCallback>
- *
  * @Annotation
  * @NamedArgumentConstructor()
  * @Target({"CLASS", "PROPERTY"})

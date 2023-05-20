@@ -3,14 +3,9 @@
 namespace Orisai\ObjectMapper\Rules;
 
 use Orisai\Exceptions\Logic\InvalidArgument;
-use Orisai\ObjectMapper\Args\Args;
 use Orisai\ObjectMapper\Meta\Compile\RuleCompileMeta;
 use function get_debug_type;
 
-/**
- * @template-covariant T of CompoundRule
- * @implements RuleDefinition<T>
- */
 abstract class CompoundDefinition implements RuleDefinition
 {
 
@@ -18,7 +13,7 @@ abstract class CompoundDefinition implements RuleDefinition
 	private array $rules;
 
 	/**
-	 * @param array<RuleDefinition<Rule<Args>>> $definitions
+	 * @param array<RuleDefinition> $definitions
 	 */
 	public function __construct(array $definitions)
 	{

@@ -6,8 +6,6 @@ use Orisai\ObjectMapper\Rules\MixedRule;
 use Orisai\ObjectMapper\Rules\RuleDefinition;
 
 /**
- * @implements RuleDefinition<MixedRule>
- *
  * @Annotation
  */
 final class WithAttributeIncompatibleRuleDefinition implements RuleDefinition

@@ -6,8 +6,6 @@ use Attribute;
 use Doctrine\Common\Annotations\Annotation\NamedArgumentConstructor;
 
 /**
- * @implements ModifierDefinition<CreateWithoutConstructorModifier>
- *
  * @Annotation
  * @NamedArgumentConstructor()
  * @Target({"CLASS"})

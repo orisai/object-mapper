@@ -3,13 +3,11 @@
 namespace Tests\Orisai\ObjectMapper\Unit\Rules;
 
 use Generator;
-use Orisai\ObjectMapper\Args\Args;
 use Orisai\ObjectMapper\Meta\Compile\RuleCompileMeta;
 use Orisai\ObjectMapper\Rules\ArrayOf;
 use Orisai\ObjectMapper\Rules\ArrayOfRule;
 use Orisai\ObjectMapper\Rules\IntValue;
 use Orisai\ObjectMapper\Rules\MixedValue;
-use Orisai\ObjectMapper\Rules\Rule;
 use Orisai\ObjectMapper\Rules\RuleDefinition;
 use Orisai\ObjectMapper\Rules\StringValue;
 use Orisai\ObjectMapper\Tester\DefinitionTester;
@@ -44,9 +42,6 @@ final class ArrayOfTest extends TestCase
 	}
 
 	/**
-	 * @param RuleDefinition<Rule<Args>>      $item
-	 * @param RuleDefinition<Rule<Args>>|null $key
-	 *
 	 * @dataProvider provideVariant
 	 */
 	public function testVariant(

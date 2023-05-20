@@ -2,16 +2,14 @@
 
 namespace Orisai\ObjectMapper\Modifiers;
 
+use Orisai\ObjectMapper\Args\Args;
 use Orisai\ObjectMapper\Meta\MetaDefinition;
 
-/**
- * @template-covariant T of Modifier
- */
 interface ModifierDefinition extends MetaDefinition
 {
 
 	/**
-	 * @return class-string<T>
+	 * @return class-string<Modifier<Args>>
 	 */
 	public function getType(): string;
 

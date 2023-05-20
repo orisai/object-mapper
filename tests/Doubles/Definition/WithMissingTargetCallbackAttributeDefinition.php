@@ -6,9 +6,6 @@ use Attribute;
 use Orisai\ObjectMapper\Callbacks\BeforeCallback;
 use Orisai\ObjectMapper\Callbacks\CallbackDefinition;
 
-/**
- * @implements CallbackDefinition<BeforeCallback>
- */
 #[Attribute(Attribute::TARGET_CLASS)]
 final class WithMissingTargetCallbackAttributeDefinition implements CallbackDefinition
 {
