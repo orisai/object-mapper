@@ -6,18 +6,17 @@ use Attribute;
 use Doctrine\Common\Annotations\Annotation\NamedArgumentConstructor;
 use Doctrine\Common\Annotations\Annotation\Target;
 use Doctrine\Common\Annotations\AnnotationReader;
-use Doctrine\Common\Annotations\Reader;
 use Orisai\Exceptions\Logic\InvalidArgument;
 use Orisai\Exceptions\Logic\InvalidState;
 use Orisai\ObjectMapper\Callbacks\CallbackDefinition;
 use Orisai\ObjectMapper\Modifiers\ModifierDefinition;
 use Orisai\ObjectMapper\Rules\RuleDefinition;
+use Orisai\Utils\Dependencies\Dependencies;
 use ReflectionClass;
 use function array_keys;
 use function array_map;
 use function implode;
 use function in_array;
-use function interface_exists;
 use function is_a;
 use function str_contains;
 use const PHP_VERSION_ID;
@@ -26,22 +25,22 @@ final class DefinitionTester
 {
 
 	private const AttributeFlags = [
+		Attribute::TARGET_ALL => 'TARGET_ALL',
 		Attribute::TARGET_CLASS => 'TARGET_CLASS',
 		Attribute::TARGET_FUNCTION => 'TARGET_FUNCTION',
 		Attribute::TARGET_METHOD => 'TARGET_METHOD',
 		Attribute::TARGET_PROPERTY => 'TARGET_PROPERTY',
 		Attribute::TARGET_CLASS_CONSTANT => 'TARGET_CLASS_CONSTANT',
 		Attribute::TARGET_PARAMETER => 'TARGET_PARAMETER',
-		Attribute::TARGET_ALL => 'TARGET_ALL',
 		Attribute::IS_REPEATABLE => 'IS_REPEATABLE',
 	];
 
 	private const AnnotationTargetFlags = [
+		Target::TARGET_ALL => 'ALL',
 		Target::TARGET_CLASS => 'CLASS',
 		Target::TARGET_FUNCTION => 'FUNCTION',
 		Target::TARGET_METHOD => 'METHOD',
 		Target::TARGET_PROPERTY => 'PROPERTY',
-		Target::TARGET_ALL => 'ALL',
 		Target::TARGET_ANNOTATION => 'ANNOTATION',
 	];
 
@@ -146,7 +145,9 @@ final class DefinitionTester
 				$targetName = self::AttributeFlags[$requiredFlag];
 
 				throw InvalidArgument::create()
-					->withMessage("Attribute '$attributeClass' of class '$class' must define target '$targetName'.");
+					->withMessage(
+						"Attribute '#[$attributeClass]' of class '$class' must define target '$attributeClass::$targetName'.",
+					);
 			}
 		}
 
@@ -164,7 +165,7 @@ final class DefinitionTester
 
 				// If you need flag to be just contained and not being matched exactly, please open an issue
 				throw InvalidArgument::create()
-					->withMessage("Attribute '$attributeClass' of class '$class' must define only allowed flags,"
+					->withMessage("Attribute '#[$attributeClass]' of class '$class' must define only allowed flags,"
 						. " flag '$attributeClass::$givenFlagName' given. Allowed are: '$allowedFlagNames'.");
 			}
 		}
@@ -176,9 +177,9 @@ final class DefinitionTester
 	 */
 	private static function assertIsAnnotation(string $class, array $requiredTargets): void
 	{
-		if (!interface_exists(Reader::class)) {
+		if (Dependencies::getNotLoadedPackages(['doctrine/annotations']) !== []) {
 			throw InvalidState::create()
-				->withMessage('Annotations are testable only with doctrine/annotations installed.');
+				->withMessage("Annotations are testable only with 'doctrine/annotations' installed.");
 		}
 
 		$reflector = new ReflectionClass($class);
@@ -201,7 +202,7 @@ final class DefinitionTester
 		$targetAnnotation = $reader->getClassAnnotation($reflector, $targetClass);
 		if ($targetAnnotation === null) {
 			throw InvalidArgument::create()
-				->withMessage("'$class' does not define annotation '$targetClass'.");
+				->withMessage("'$class' does not define annotation '@$targetClass'.");
 		}
 
 		$givenTargets = self::bitwiseValueToArray(
@@ -214,7 +215,7 @@ final class DefinitionTester
 				$targetName = self::AnnotationTargetFlags[$requiredTarget];
 
 				throw InvalidArgument::create()
-					->withMessage("Annotation '$targetClass' of class '$class' must define target '$targetName'.");
+					->withMessage("Annotation '@$targetClass' of class '$class' must define target '$targetName'.");
 			}
 		}
 
@@ -232,7 +233,7 @@ final class DefinitionTester
 
 				// If you need flag to be just contained and not being matched exactly, please open an issue
 				throw InvalidArgument::create()
-					->withMessage("Annotation '$targetClass' of class '$class' must define only allowed targets,"
+					->withMessage("Annotation '@$targetClass' of class '$class' must define only allowed targets,"
 						. " target '$givenTargetName' given. Allowed are: '$allowedTargetNames'.");
 			}
 		}
