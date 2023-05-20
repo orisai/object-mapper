@@ -7,9 +7,9 @@ final class SimpleValueType extends ParametrizedType
 
 	private string $name;
 
-	public function __construct(string $type)
+	public function __construct(string $name)
 	{
-		$this->name = $type;
+		$this->name = $name;
 	}
 
 	public function getName(): string
