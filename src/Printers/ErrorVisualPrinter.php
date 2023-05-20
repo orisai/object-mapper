@@ -192,7 +192,6 @@ final class ErrorVisualPrinter implements ErrorPrinter, TypePrinter
 		$itemType = $type->getItemType();
 
 		if ($scope->shouldRenderValid() || $type->isInvalid()) {
-			//TODO - otestovat, že se vypíše celý složený (structure) type, pokud je celá struktura nevalidní
 			$pairScope = $scope->withValidNodes()->withImmutableState();
 
 			$printedKeyType = $keyType !== null ? $this->print($keyType, $pairScope) : null;
@@ -202,7 +201,6 @@ final class ErrorVisualPrinter implements ErrorPrinter, TypePrinter
 			$printedItemType = null;
 		}
 
-		//TODO - otestovat, že se z nevalidních itemů nevypisuje nic navíc
 		$invalidPairs = [];
 		foreach ($type->getInvalidPairs() as $key => $pair) {
 			$invalidPairScope = $scope->withoutValidNodes();

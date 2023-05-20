@@ -47,6 +47,9 @@ of them to type-safe objects.
 	- [Dependencies](#dependencies)
 	- [Context](#callback-context)
 - [Annotations and attributes](#annotations-and-attributes)
+- [Printers](#printers)
+	- [Printing errors](#printing-errors)
+	- [Printing types](#printing-types)
 - [Object creator](#object-creator)
 - [Create without constructor](#create-without-constructor)
 - [Metadata validation and preloading](#metadata-validation-and-preloading)
@@ -1687,8 +1690,87 @@ $data = [
 	'usesAnnotation' => 'value',
 	'usesAttribute' => 'value'
 ];
-$input = $processor->process($data, WithAnnotationsAndAttributesInput::class); // WithAnnotationsAndAttributesInput
+$input = $processor->process($data, WithAnnotationsAndAttributesInput::class); // WithAnnotationsAndAttributesInput(usesAnnotation: 'value', usesAttribute: 'value')
 ```
+
+## Printers
+
+Whole mapped object structure is visualized via `Type` interface. It is used for
+the [expected structure](#printing-types) and the [errors in the structure](#printing-errors) being mapped.
+
+### Printing errors
+
+Print errors from an exception thrown during processing
+
+```php
+try {
+	$user = $processor->process($data, UserInput::class);
+} catch (InvalidData $exception) {
+	$error = $errorPrinter->printError($exception);
+
+	throw new Exception("Validation failed due to following error:\n$error");
+}
+```
+
+Print to string
+
+````php
+use Orisai\ObjectMapper\Printers\ErrorVisualPrinter;
+use Orisai\ObjectMapper\Printers\TypeToStringConverter;
+
+$printer = new ErrorVisualPrinter(new TypeToStringConverter());
+````
+
+Print to array
+
+````php
+use Orisai\ObjectMapper\Printers\ErrorVisualPrinter;
+use Orisai\ObjectMapper\Printers\TypeToArrayConverter;
+
+$printer = new ErrorVisualPrinter(new TypeToArrayConverter());
+````
+
+If you only validate part of a bigger structure, you may specify path to the validated node to include it in the error
+
+```php
+$error = $errorPrinter->printError($exception, ['path', 'to', 'node']);
+```
+
+### Printing types
+
+Print types to get an abstract representation of the expected structure of the send data
+
+```php
+use Orisai\ObjectMapper\Context\TypeContext;
+use Orisai\ObjectMapper\Processing\Options;
+use Orisai\ObjectMapper\Rules\MappedObjectArgs;
+use Orisai\ObjectMapper\Rules\MappedObjectRule;
+
+$rule = $ruleManager->getRule(MappedObjectRule::class);
+$type = $rule->createType(
+	new MappedObjectArgs(UserInput::class),
+	new TypeContext($metaLoader, $ruleManager, new Options()),
+);
+$printedType = $typePrinter->printType($type);
+```
+
+Print to string
+
+````php
+use Orisai\ObjectMapper\Printers\TypeToStringConverter;
+use Orisai\ObjectMapper\Printers\TypeVisualPrinter;
+
+$printer = new TypeVisualPrinter(new TypeToStringConverter());
+````
+
+Print to array
+
+````php
+use Orisai\ObjectMapper\Printers\TypeToArrayConverter;
+use Orisai\ObjectMapper\Printers\TypeVisualPrinter;
+
+$printer = new TypeVisualPrinter(new TypeToArrayConverter());
+````
 
 ## Object creator
 
