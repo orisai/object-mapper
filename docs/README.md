@@ -10,6 +10,7 @@ of them to type-safe objects.
 - [Setup](#setup)
 - [Quick start](#quick-start)
 - [Processing](#processing)
+- [Annotations and attributes](#annotations-and-attributes)
 - [Rules](#rules)
 	- [Simple types](#simple-types)
 		- [bool](#bool-rule)
@@ -46,7 +47,6 @@ of them to type-safe objects.
 	- [Returned value](#returned-value)
 	- [Dependencies](#dependencies)
 	- [Context](#callback-context)
-- [Annotations and attributes](#annotations-and-attributes)
 - [Printers](#printers)
 	- [Printing errors](#printing-errors)
 	- [Printing types](#printing-types)
@@ -158,6 +158,35 @@ try {
 
 	throw new Exception("Validation failed due to following error:\n$error");
 }
+```
+
+## Annotations and attributes
+
+All [rule definition](#rules) can be written either as a [doctrine/annotations](https://github.com/doctrine/annotations)
+annotation or PHP 8.0+ [attribute](https://www.php.net/manual/en/language.attributes.overview.php)
+
+```php
+use Orisai\ObjectMapper\MappedObject;
+use Orisai\ObjectMapper\Rules\MixedValue;
+
+final class WithAnnotationsAndAttributesInput implements MappedObject
+{
+
+    /** @MixedValue() */
+    public mixed $usesAnnotation;
+
+    #[MixedValue()]
+    public mixed $usesAttribute;
+
+}
+```
+
+```php
+$data = [
+	'usesAnnotation' => 'value',
+	'usesAttribute' => 'value'
+];
+$input = $processor->process($data, WithAnnotationsAndAttributesInput::class); // WithAnnotationsAndAttributesInput(usesAnnotation: 'value', usesAttribute: 'value')
 ```
 
 ## Rules
@@ -1663,34 +1692,6 @@ $context->hasDefaultValue(); // bool
 $context->getDefaultValue(); // mixed|exception
 $context->getFieldName(); // int|string
 $context->getPropertyName(); // string
-```
-
-## Annotations and attributes
-
-Since PHP 8.0 annotations can be written as attributes.
-
-```php
-use Orisai\ObjectMapper\MappedObject;
-use Orisai\ObjectMapper\Rules\MixedValue;
-
-final class WithAnnotationsAndAttributesInput implements MappedObject
-{
-
-    /** @MixedValue() */
-    public mixed $usesAnnotation;
-
-    #[MixedValue()]
-    public mixed $usesAttribute;
-
-}
-```
-
-```php
-$data = [
-	'usesAnnotation' => 'value',
-	'usesAttribute' => 'value'
-];
-$input = $processor->process($data, WithAnnotationsAndAttributesInput::class); // WithAnnotationsAndAttributesInput(usesAnnotation: 'value', usesAttribute: 'value')
 ```
 
 ## Printers
