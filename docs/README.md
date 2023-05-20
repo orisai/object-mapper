@@ -256,12 +256,17 @@ final class ArrayEnumInput implements MappedObject
     /**
      * @ArrayEnumValue(cases=ArrayEnumInput::Cases, useKeys=true)
      */
-    public string $anotherField;
+    public string $usesKeysField;
 
     /**
      * @ArrayEnumValue(cases={1, 2, 3})
      */
     public string $inlineField;
+
+    /**
+     * @ArrayEnumValue(cases=ArrayEnumInput::Cases, allowUnknown=true)
+     */
+    public string $allowsUnknownField;
 
 }
 ```
@@ -269,18 +274,26 @@ final class ArrayEnumInput implements MappedObject
 ```php
 $data = [
 	'field' => 1,
-	'anotherField' => 'second',
+	'usesKeysField' => 'second',
 	'inlineField' => 3,
+	'allowsUnknownField' => 'unknown value',
 ];
 $input = $processor->process($data, ArrayEnumInput::class);
-// $input == ArrayEnumInput(field: 1, anotherField: 'second', inlineField: 3)
+// $input == ArrayEnumInput(field: 1, usesKeysField: 'second', inlineField: 3, allowsUnknownField: null)
 ```
 
 Parameters:
 
+- `cases`
+	- array of accepted values
+	- required
 - `useKeys`
 	- use keys for enumeration instead of values
 	- default `false` - values are used for enumeration
+- `allowUnknown`
+	- for unknown values rule returns null instead of failing
+	- default `false`
+
 
 ### float rule
 
@@ -882,7 +895,7 @@ final class BackedEnumInput implements MappedObject
 	public ExampleEnum $field;
 
 	#[BackedEnumValue(ExampleEnum::class, allowUnknown: true)]
-	public ExampleEnum|null $anotherField;
+	public ExampleEnum|null $allowsUnknownField;
 
 }
 
@@ -897,10 +910,10 @@ enum ExampleEnum: string
 ```php
 $data = [
 	'field' => 'foo',
-	'anotherField' => 'unknown value',
+	'allowsUnknownField' => 'unknown value',
 ];
 $input = $processor->process($data, BackedEnumInput::class);
-// $input == BackedEnumInput(field: ExampleEnum::Foo, anotherField: null)
+// $input == BackedEnumInput(field: ExampleEnum::Foo, allowsUnknownField: null)
 ```
 
 Parameters:

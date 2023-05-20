@@ -23,6 +23,7 @@ final class ArrayEnumValueTest extends TestCase
 			[
 				'cases' => $cases,
 				'useKeys' => false,
+				'allowUnknown' => false,
 			],
 			$definition->getArgs(),
 		);
@@ -38,14 +39,15 @@ final class ArrayEnumValueTest extends TestCase
 	 *
 	 * @dataProvider provideVariant
 	 */
-	public function testVariant(array $cases, bool $useKeys): void
+	public function testVariant(array $cases, bool $useKeys, bool $allowUnknown): void
 	{
-		$definition = new ArrayEnumValue($cases, $useKeys);
+		$definition = new ArrayEnumValue($cases, $useKeys, $allowUnknown);
 
 		self::assertEquals(
 			[
 				'cases' => $cases,
 				'useKeys' => $useKeys,
+				'allowUnknown' => $allowUnknown,
 			],
 			$definition->getArgs(),
 		);
@@ -56,11 +58,13 @@ final class ArrayEnumValueTest extends TestCase
 		yield [
 			['foo', 'bar'],
 			false,
+			true,
 		];
 
 		yield [
 			[1, 2, 3],
 			true,
+			false,
 		];
 	}
 

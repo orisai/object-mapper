@@ -12,10 +12,11 @@ final class ArrayEnumArgsTest extends TestCase
 
 	public function test(): void
 	{
-		$args = new ArrayEnumArgs(['foo', 'bar'], false);
+		$args = new ArrayEnumArgs(['foo', 'bar'], false, true);
 
 		self::assertSame(['foo', 'bar'], $args->cases);
 		self::assertFalse($args->useKeys);
+		self::assertTrue($args->allowUnknown);
 		self::assertEquals(
 			unserialize(serialize($args)),
 			$args,
@@ -24,10 +25,11 @@ final class ArrayEnumArgsTest extends TestCase
 
 	public function testVariant(): void
 	{
-		$args = new ArrayEnumArgs(['bar', 'baz'], true);
+		$args = new ArrayEnumArgs(['bar', 'baz'], true, false);
 
 		self::assertSame(['bar', 'baz'], $args->cases);
 		self::assertTrue($args->useKeys);
+		self::assertFalse($args->allowUnknown);
 		self::assertEquals(
 			unserialize(serialize($args)),
 			$args,

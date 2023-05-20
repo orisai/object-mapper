@@ -21,19 +21,20 @@ final class ArrayEnumRuleTest extends ProcessingTestCase
 	}
 
 	/**
-	 * @param mixed $value
+	 * @param mixed $given
+	 * @param mixed $expected
 	 *
 	 * @dataProvider provideValidValues
 	 */
-	public function testProcessValid($value, ArrayEnumArgs $args): void
+	public function testProcessValid($given, $expected, ArrayEnumArgs $args): void
 	{
 		$processed = $this->rule->processValue(
-			$value,
+			$given,
 			$args,
 			$this->fieldContext(),
 		);
 
-		self::assertSame($value, $processed);
+		self::assertSame($expected, $processed);
 	}
 
 	/**
@@ -43,12 +44,20 @@ final class ArrayEnumRuleTest extends ProcessingTestCase
 	{
 		yield [
 			'foo',
-			new ArrayEnumArgs(['foo', 'bar'], false),
+			'foo',
+			new ArrayEnumArgs(['foo', 'bar'], false, false),
 		];
 
 		yield [
 			'foo',
-			new ArrayEnumArgs(['foo' => 123, 'bar' => 456], true),
+			'foo',
+			new ArrayEnumArgs(['foo' => 123, 'bar' => 456], true, false),
+		];
+
+		yield [
+			'unknown',
+			null,
+			new ArrayEnumArgs(['foo', 'bar'], false, true),
 		];
 	}
 
@@ -86,20 +95,20 @@ final class ArrayEnumRuleTest extends ProcessingTestCase
 	{
 		yield [
 			0,
-			new ArrayEnumArgs(['foo', 'bar'], false),
+			new ArrayEnumArgs(['foo', 'bar'], false, false),
 			['foo', 'bar'],
 		];
 
 		yield [
 			123,
-			new ArrayEnumArgs(['foo' => 123, 'bar' => 456], true),
+			new ArrayEnumArgs(['foo' => 123, 'bar' => 456], true, false),
 			['foo', 'bar'],
 		];
 	}
 
 	public function testType(): void
 	{
-		$args = new ArrayEnumArgs(['foo', 'bar'], false);
+		$args = new ArrayEnumArgs(['foo', 'bar'], false, false);
 
 		$type = $this->rule->createType($args, $this->createTypeContext());
 

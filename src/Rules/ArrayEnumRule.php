@@ -26,12 +26,13 @@ final class ArrayEnumRule implements Rule
 
 	private const
 		Cases = 'cases',
-		UseKeys = 'useKeys';
+		UseKeys = 'useKeys',
+		AllowUnknown = 'allowUnknown';
 
 	public function resolveArgs(array $args, RuleArgsContext $context): ArrayEnumArgs
 	{
 		$checker = new ArgsChecker($args, self::class);
-		$checker->checkAllowedArgs([self::Cases, self::UseKeys]);
+		$checker->checkAllowedArgs([self::Cases, self::UseKeys, self::AllowUnknown]);
 
 		$checker->checkRequiredArg(self::Cases);
 		$cases = $checker->checkArray(self::Cases);
@@ -54,7 +55,12 @@ final class ArrayEnumRule implements Rule
 			$useKeys = $checker->checkBool(self::UseKeys);
 		}
 
-		return new ArrayEnumArgs($cases, $useKeys);
+		$allowUnknown = false;
+		if ($checker->hasArg(self::AllowUnknown)) {
+			$allowUnknown = $checker->checkBool(self::AllowUnknown);
+		}
+
+		return new ArrayEnumArgs($cases, $useKeys, $allowUnknown);
 	}
 
 	public function getArgsType(): string
@@ -72,6 +78,10 @@ final class ArrayEnumRule implements Rule
 	{
 		if (in_array($value, $this->getEnumCases($args), true)) {
 			return $value;
+		}
+
+		if ($args->allowUnknown) {
+			return null;
 		}
 
 		throw ValueDoesNotMatch::create($this->createType($args, $context), Value::of($value));

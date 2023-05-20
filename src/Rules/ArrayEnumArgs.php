@@ -15,13 +15,16 @@ final class ArrayEnumArgs implements Args
 
 	public bool $useKeys;
 
+	public bool $allowUnknown;
+
 	/**
 	 * @param array<int|string, mixed> $values
 	 */
-	public function __construct(array $values, bool $useKeys)
+	public function __construct(array $values, bool $useKeys, bool $allowUnknown)
 	{
 		$this->cases = $values;
 		$this->useKeys = $useKeys;
+		$this->allowUnknown = $allowUnknown;
 	}
 
 }

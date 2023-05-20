@@ -20,13 +20,16 @@ final class ArrayEnumValue implements RuleDefinition
 
 	private bool $useKeys;
 
+	private bool $allowUnknown;
+
 	/**
 	 * @param array<mixed> $cases
 	 */
-	public function __construct(array $cases, bool $useKeys = false)
+	public function __construct(array $cases, bool $useKeys = false, bool $allowUnknown = false)
 	{
 		$this->cases = $cases;
 		$this->useKeys = $useKeys;
+		$this->allowUnknown = $allowUnknown;
 	}
 
 	public function getType(): string
@@ -39,6 +42,7 @@ final class ArrayEnumValue implements RuleDefinition
 		return [
 			'cases' => $this->cases,
 			'useKeys' => $this->useKeys,
+			'allowUnknown' => $this->allowUnknown,
 		];
 	}
 
