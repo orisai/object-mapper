@@ -54,6 +54,15 @@ of them to type-safe objects.
 - [Create without constructor](#create-without-constructor)
 - [Metadata validation and preloading](#metadata-validation-and-preloading)
 - [Tracking input values](#tracking-input-values)
+- [Types](#types)
+	- [ArrayShapeType](#arrayshapetype)
+	- [CompoundType](#compoundtype)
+	- [EnumType](#enumtype)
+	- [GenericArrayType](#genericarraytype)
+	- [MappedObjectType](#mappedobjecttype)
+	- [MessageType](#messagetype)
+	- [SimpleValueType](#simplevaluetype)
+	- [ParametrizedType](#parametrizedtype)
 
 ## Setup
 
@@ -293,7 +302,6 @@ Parameters:
 - `allowUnknown`
 	- for unknown values rule returns null instead of failing
 	- default `false`
-
 
 ### float rule
 
@@ -1709,7 +1717,7 @@ $context->getPropertyName(); // string
 
 ## Printers
 
-Whole mapped object structure is visualized via `Type` interface. It is used for
+Whole mapped object structure is visualized via [Type](#types) interface. It is used for
 the [expected structure](#printing-types) and the [errors in the structure](#printing-errors) being mapped.
 
 ### Printing errors
@@ -1874,3 +1882,186 @@ To make it work,following conditions must be met:
 - object was mapped by object mapper (no manually created objects)
 - it was mapped in current php process (no serialization)
 - option is set to enable raw values tracking
+
+## Types
+
+Types are representation of a valid data structure expected to be sent for data to be successfully validated and mapped
+to a mapped object. Types also include any errors that occurred during validation.
+
+They are used in:
+
+- [rules](#rules) - Rules create types and mark them invalid during validation
+- [callbacks](#callbacks) - Callbacks may create type or use given types and mark them invalid
+- [printers](#printers) - Printers print [types](#printing-types) and [errors](#printing-errors)
+
+### ArrayShapeType
+
+Represents an array shape like `array{key1: string, key2: int}`
+
+```php
+use Orisai\ObjectMapper\Types\ArrayShapeType;
+use Orisai\ObjectMapper\Types\SimpleValueType;
+
+$type = new ArrayShapeType();
+$type->addField('field', new SimpleValueType('string'));
+$type->getFields(); // array<int|string, Type>
+
+$type->markInvalid();
+$type->isInvalid(); // bool
+
+$type->hasInvalidFields(); // bool
+$type->isFieldInvalid('field'); // bool
+$type->overwriteInvalidField('field', $exception);
+$type->getInvalidFields(); // array<int|string, WithTypeAndValue>
+
+$type->hasErrors() // bool
+$type->addError($exception);
+$type->getErrors(); // list<WithTypeAndValue>
+```
+
+### CompoundType
+
+Represents multiple types combined via `&&` or `||`
+
+```php
+use Orisai\ObjectMapper\Types\CompoundType;
+use Orisai\ObjectMapper\Types\CompoundTypeOperator;
+use Orisai\ObjectMapper\Types\SimpleValueType;
+
+$operator = CompoundTypeOperator::or();
+$type = new CompoundType($operator);
+
+$type->getOperator(); // CompoundTypeOperator, $operator
+
+$type->addSubtype(0, new SimpleValueType('int'));
+$type->addSubtype(1, new SimpleValueType('string'));
+$type->getSubtypes(); // array<int|string, Type>
+
+// Subtype validation was skipped because validation of the other types failed
+$type->setSubtypeSkipped(0);
+$type->isSubtypeSkipped(0); // bool
+
+$type->getInvalidSubtypes(); // array<int|string, Type>
+$type->isSubtypeInvalid(0); // bool
+$type->overwriteInvalidSubtype(0, $exception);
+
+$type->isSubtypeValid(0); // bool
+```
+
+### EnumType
+
+Represents an enumeration
+
+```php
+use Orisai\ObjectMapper\Types\EnumType;
+
+$cases = ['foo', 'bar', 'baz'];
+$type = new EnumType($cases);
+
+$type->getCases(); // array<mixed>, $cases
+```
+
+### GenericArrayType
+
+Represents arrays like `array<string, int>` and `array<int>` as well as `list<int>`
+
+```php
+use Orisai\ObjectMapper\Types\GenericArrayType;
+use Orisai\ObjectMapper\Types\SimpleValueType;
+
+$name = 'array';
+$keyType = null;
+$itemType = new SimpleValueType('string');
+$type = new GenericArrayType('array', $keyType, $itemType);
+
+$type->getName(); // string, $name
+$type->getKeyType(); // Type|null, $keyType
+$type->getItemType(); // Type, $itemType
+
+$type->markInvalid();
+$type->isInvalid(); // bool
+
+$type->hasInvalidPairs(); // bool
+$type->getInvalidPairs(); // array<int|string, KeyValueErrorPair>
+$type->addInvalidKey($key, $keyException);
+$type->addInvalidValue($key, $valueException);
+$type->addInvalidPair($key, $keyException, $valueException);
+```
+
+GenericArrayType is a [ParametrizedType](#parametrizedtype) and shares all of its methods.
+
+### MappedObjectType
+
+Represents a `MappedObject`
+
+```php
+use Orisai\ObjectMapper\Types\MappedObjectType;
+
+$class = UserInput::class;
+$type = new MappedObjectType($class);
+
+$type->getClass(); // class-string<MappedObject>, $class
+```
+
+MappedObjectType is an [ArrayShapeType](#arrayshapetype) and shares all of its methods.
+
+### MessageType
+
+Represents a simple text message
+
+```php
+use Orisai\ObjectMapper\Types\MessageType;
+
+$message = 'message';
+$type = new MessageType($message);
+
+$type->getMessage(); // string, $message
+```
+
+### SimpleValueType
+
+Represents simple value like string, int, user_id etc.
+
+```php
+use Orisai\ObjectMapper\Types\SimpleValueType;
+
+$name = 'int';
+$type = new SimpleValueType($name);
+
+$type->getName(); // string, $name
+```
+
+SimpleValueType is a [ParametrizedType](#parametrizedtype) and shares all of its methods.
+
+### ParametrizedType
+
+Adds parameters to a type, e.g. min and max allowed values to an int.
+
+```php
+use Orisai\ObjectMapper\Types\SimpleValueType;
+
+$type = new SimpleValueType('int'); // Or other ParametrizedType
+
+$type->addKeyParameter('unsigned');
+$type->addKeyValueParameter('min', 10);
+$type->hasParameter('min'); // bool
+$type->getParameter('min'); // TypeParameter
+$type->getParameters(); // array<int|string, TypeParameter>
+
+$type->markParameterInvalid('min');
+$type->markParametersInvalid(['min', 'max']);
+$type->hasInvalidParameters(); // bool
+
+$parameter = $type->getParameter('min'); // TypeParameter
+$parameter->getKey(); // int|string
+$parameter->hasValue(); // bool
+$parameter->getValue(); // mixed
+
+$parameter->markInvalid();
+$parameter->isInvalid(); // bool
+```
+
+Parametrized types are:
+
+- [SimpleValueType](#simplevaluetype)
+- [GenericArrayType](#genericarraytype)
