@@ -12,7 +12,7 @@ of them to type-safe objects.
 - [Processing](#processing)
 - [Annotations and attributes](#annotations-and-attributes)
 - [Rules](#rules)
-	- [Simple types](#simple-types)
+	- [Simple rules](#simple-rules)
 		- [bool](#bool-rule)
 		- [enum - from array](#enum---from-array-rule)
 		- [float](#float-rule)
@@ -23,7 +23,7 @@ of them to type-safe objects.
 		- [object](#object-rule)
 		- [scalar](#scalar-rule)
 		- [string](#string-rule)
-	- [Composed types](#composed-types)
+	- [Composed rules](#composed-rules)
 		- [All of rules - &&](#all-of-rules---)
 		- [Any of rules - ||](#any-of-rules---)
 		- [Array of keys and items](#array-of-keys-and-items-rule)
@@ -200,7 +200,7 @@ $input = $processor->process($data, WithAnnotationsAndAttributesInput::class); /
 
 ## Rules
 
-### Simple types
+### Simple rules
 
 ### bool rule
 
@@ -663,7 +663,7 @@ Parameters:
 	- default `null` - no validation by pattern
 	- e.g. `/[\s\S]/`
 
-### Composed types
+### Composed rules
 
 ### All of rules - &&
 
