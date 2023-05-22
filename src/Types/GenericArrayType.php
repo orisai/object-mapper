@@ -77,7 +77,7 @@ final class GenericArrayType extends ParametrizedType
 	/**
 	 * @param int|string $key
 	 */
-	public function addInvalidKey($key, ?WithTypeAndValue $keyTypeAndValue): void
+	public function addInvalidKey($key, WithTypeAndValue $keyTypeAndValue): void
 	{
 		$previous = $this->invalidPairs[$key] ?? null;
 		$this->invalidPairs[$key] = $previous !== null
@@ -88,7 +88,7 @@ final class GenericArrayType extends ParametrizedType
 	/**
 	 * @param int|string $key
 	 */
-	public function addInvalidValue($key, ?WithTypeAndValue $itemTypeAndValue): void
+	public function addInvalidValue($key, WithTypeAndValue $itemTypeAndValue): void
 	{
 		$previous = $this->invalidPairs[$key] ?? null;
 		$this->invalidPairs[$key] = $previous !== null
