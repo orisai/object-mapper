@@ -17,5 +17,10 @@
 		<include>
 			<directory suffix=".php">../src</directory>
 		</include>
+		<exclude>
+			<!-- Unfinished feature, don't care for now -->
+			<directory>../src/Docs</directory>
+			<directory>../src/Printers/DocsArrayPrinter.php</directory>
+		</exclude>
 	</coverage>
 </phpunit>
