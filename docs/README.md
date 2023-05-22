@@ -1858,6 +1858,17 @@ $metaLoader->preloadFromPaths([
 ]);
 ```
 
+You may as well exclude paths
+
+```php
+$metaLoader->preloadFromPaths([
+	__DIR__ . '/path1',
+	__DIR__ . '/path2',
+], [
+	__DIR__ . '/path1/excluded',
+]);
+```
+
 ## Tracking input values
 
 Track input values of every mapped object in hierarchy, before they were processed by rules.

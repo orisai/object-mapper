@@ -18,7 +18,9 @@ use function array_unique;
 use function array_values;
 use function assert;
 use function class_exists;
+use function interface_exists;
 use function is_subclass_of;
+use function trait_exists;
 
 final class MetaLoader
 {
@@ -147,18 +149,27 @@ final class MetaLoader
 
 	/**
 	 * @param list<string> $paths
+	 * @param list<string> $excludePaths
 	 */
-	public function preloadFromPaths(array $paths): void
+	public function preloadFromPaths(array $paths, array $excludePaths = []): void
 	{
 		$loader = new RobotLoader();
+
 		foreach ($paths as $path) {
 			$loader->addDirectory($path);
+		}
+
+		foreach ($excludePaths as $excludePath) {
+			$loader->excludeDirectory($excludePath);
 		}
 
 		$loader->rebuild();
 
 		foreach ($loader->getIndexedClasses() as $class => $file) {
-			assert(class_exists($class));
+			require_once $file;
+
+			assert(class_exists($class) || interface_exists($class) || trait_exists($class));
+
 			$classRef = new ReflectionClass($class);
 
 			if (!$classRef->isSubclassOf(MappedObject::class)) {

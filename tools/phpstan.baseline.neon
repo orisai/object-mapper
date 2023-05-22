@@ -21,6 +21,11 @@ parameters:
 			path: ../tests/Doubles/Inheritance/trait-callback.php
 
 		-
+			message: "#^Call to static method PHPUnit\\\\Framework\\\\Assert\\:\\:assertTrue\\(\\) with true will always evaluate to true\\.$#"
+			count: 1
+			path: ../tests/Unit/Meta/MetaLoaderTest.php
+
+		-
 			message: "#^Call to static method PHPUnit\\\\Framework\\\\Assert\\:\\:assertSame\\(\\) with ReflectionClass\\<Tests\\\\Orisai\\\\ObjectMapper\\\\Unit\\\\Meta\\\\Runtime\\\\CallbackRuntimeMetaTest\\> and ReflectionClass\\<Orisai\\\\ObjectMapper\\\\MappedObject\\> will always evaluate to false\\.$#"
 			count: 1
 			path: ../tests/Unit/Meta/Runtime/CallbackRuntimeMetaTest.php

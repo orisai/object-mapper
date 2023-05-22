@@ -8,6 +8,7 @@ use Tests\Orisai\ObjectMapper\Doubles\FieldNames\ChildFieldVO;
 use Tests\Orisai\ObjectMapper\Doubles\FieldNames\FieldNameIdenticalWithAnotherPropertyNameVO;
 use Tests\Orisai\ObjectMapper\Doubles\FieldNames\MultipleIdenticalFieldNamesVO;
 use Tests\Orisai\ObjectMapper\Toolkit\ProcessingTestCase;
+use const PHP_VERSION_ID;
 
 final class MetaLoaderTest extends ProcessingTestCase
 {
@@ -67,6 +68,44 @@ TXT,
 		);
 
 		$this->metaLoader->load(ChildCollidingFieldVO::class);
+	}
+
+	/**
+	 * @runInSeparateProcess
+	 */
+	public function testPreload(): void
+	{
+		$excludes = [];
+		$excludes[] = __DIR__ . '/../../Doubles/FieldNames/FieldNameIdenticalWithAnotherPropertyNameVO.php';
+		$excludes[] = __DIR__ . '/../../Doubles/FieldNames/MultipleIdenticalFieldNamesVO.php';
+		$excludes[] = __DIR__ . '/../../Doubles/FieldNames/ChildCollidingFieldVO.php';
+		$excludes[] = __DIR__ . '/../../Doubles/Constructing/DependentVO.php';
+
+		if (PHP_VERSION_ID < 8_00_00) {
+			$excludes[] = __DIR__ . '/../../Doubles/PhpVersionSpecific/AttributesVO.php';
+		}
+
+		if (PHP_VERSION_ID < 8_01_00) {
+			$excludes[] = __DIR__ . '/../../Doubles/Callbacks/ObjectInitializingVoPhp81.php';
+			$excludes[] = __DIR__ . '/../../Doubles/Enums';
+			$excludes[] = __DIR__ . '/../../Doubles/PhpVersionSpecific/ConstructorPromotedVO.php';
+			$excludes[] = __DIR__ . '/../../Doubles/PhpVersionSpecific/ObjectDefaultVO.php';
+			$excludes[] = __DIR__ . '/../../Doubles/PhpVersionSpecific/ReadonlyPropertiesVO.php';
+		}
+
+		if (PHP_VERSION_ID < 8_02_00) {
+			$excludes[] = __DIR__ . '/../../Doubles/PhpVersionSpecific/ReadonlyClassVO.php';
+		}
+
+		$this->metaLoader->preloadFromPaths(
+			[
+				__DIR__ . '/../../Doubles',
+			],
+			$excludes,
+		);
+
+		// Makes PHPUnit happy
+		self::assertTrue(true);
 	}
 
 }
