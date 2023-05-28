@@ -8,6 +8,7 @@ use Orisai\ObjectMapper\Rules\DefaultRuleManager;
 use Orisai\ObjectMapper\Rules\RuleManager;
 use PHPUnit\Framework\TestCase;
 use Tests\Orisai\ObjectMapper\Doubles\AlwaysInvalidRule;
+use function get_class;
 use function sprintf;
 use const PHP_VERSION_ID;
 
@@ -29,7 +30,7 @@ final class DefaultRuleManagerTest extends TestCase
 				continue;
 			}
 
-			self::assertInstanceOf($rule, $this->ruleManager->getRule($rule));
+			self::assertSame($rule, get_class($this->ruleManager->getRule($rule)));
 		}
 	}
 
