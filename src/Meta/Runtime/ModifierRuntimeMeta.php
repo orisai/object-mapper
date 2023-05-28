@@ -43,4 +43,24 @@ final class ModifierRuntimeMeta
 		return $this->args;
 	}
 
+	/**
+	 * @return array<mixed>
+	 */
+	public function __serialize(): array
+	{
+		return [
+			'type' => $this->type,
+			'args' => $this->args,
+		];
+	}
+
+	/**
+	 * @param array<mixed> $data
+	 */
+	public function __unserialize(array $data): void
+	{
+		$this->type = $data['type'];
+		$this->args = $data['args'];
+	}
+
 }

@@ -35,4 +35,24 @@ final class RuntimeMeta
 		return $this->fields;
 	}
 
+	/**
+	 * @return array<mixed>
+	 */
+	public function __serialize(): array
+	{
+		return [
+			'class' => $this->class,
+			'fields' => $this->fields,
+		];
+	}
+
+	/**
+	 * @param array<mixed> $data
+	 */
+	public function __unserialize(array $data): void
+	{
+		$this->class = $data['class'];
+		$this->fields = $data['fields'];
+	}
+
 }
