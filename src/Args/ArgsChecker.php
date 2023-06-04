@@ -4,15 +4,17 @@ namespace Orisai\ObjectMapper\Args;
 
 use Nette\Utils\Helpers;
 use Orisai\Exceptions\Logic\InvalidArgument;
+use Orisai\ObjectMapper\Printers\Dumper;
 use function array_key_exists;
 use function array_keys;
-use function gettype;
+use function get_debug_type;
 use function implode;
 use function in_array;
 use function is_array;
 use function is_bool;
 use function is_float;
 use function is_int;
+use function is_scalar;
 use function is_string;
 use function sprintf;
 
@@ -271,7 +273,9 @@ final class ArgsChecker
 			$argName,
 			$this->class,
 			$type,
-			gettype($argValue),
+			is_scalar($argValue) || $argValue === null
+				? Dumper::dumpValue($argValue)
+				: get_debug_type($argValue),
 		);
 	}
 
