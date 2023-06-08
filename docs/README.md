@@ -52,6 +52,7 @@ of them to type-safe objects.
 	- [Printing types](#printing-types)
 - [Metadata validation and preloading](#metadata-validation-and-preloading)
 - [Tracking input values](#tracking-input-values)
+- [Create mapped object without using object mapper](#create-mapped-object-without-using-object-mapper)
 - [Types](#types)
 	- [ArrayShapeType](#arrayshapetype)
 	- [CompoundType](#compoundtype)
@@ -1901,6 +1902,43 @@ To make it work,following conditions must be met:
 - object was mapped by object mapper (no manually created objects)
 - it was mapped in current php process (no serialization)
 - option is set to enable raw values tracking
+
+## Create mapped object without using object mapper
+
+Object mapper never uses mapped object constructor, all [mapped properties](#mapped-properties) are set directly and
+for [dependencies](#dependencies) you can use either properties or setters.
+
+In practice that means, you can create your objects directly without using object mapper, using a constructor:
+
+```php
+use Orisai\ObjectMapper\MappedObject;
+use Orisai\ObjectMapper\Rules\StringValue;
+
+final class OptionallyMappedInput implements MappedObject
+{
+
+	/** @StringValue() */
+	public string $field;
+
+	public function __construct(string $field)
+	{
+		$this->field = $field;
+	}
+
+}
+```
+
+```php
+$mappedInput = $processor->process(['field' => 'string'], OptionallyMappedInput::class); // OptionallyMappedInput
+$manuallyCreatedInput = new OptionallyMappedInput('string');
+// $mappedInput == $manuallyCreatedInput;
+```
+
+Bonus: MappedObject interface is part
+of [orisai/object-mapper-contracts](https://github.com/orisai/object-mapper-contracts) package and classes used
+in [annotations and attributes](#annotations-and-attributes) and [callbacks](#callbacks) don't have to exist in runtime
+for the manual creation to still work. That means your mapped objects containing library can use object mapper as an
+optional dependency.
 
 ## Types
 
