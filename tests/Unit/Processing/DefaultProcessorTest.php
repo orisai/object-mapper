@@ -30,8 +30,11 @@ use Tests\Orisai\ObjectMapper\Doubles\Circular\CircularAVO;
 use Tests\Orisai\ObjectMapper\Doubles\Circular\CircularBVO;
 use Tests\Orisai\ObjectMapper\Doubles\Circular\CircularCVO;
 use Tests\Orisai\ObjectMapper\Doubles\Circular\SelfReferenceVO;
-use Tests\Orisai\ObjectMapper\Doubles\Constructing\ConstructorUsingVO;
 use Tests\Orisai\ObjectMapper\Doubles\DefaultsVO;
+use Tests\Orisai\ObjectMapper\Doubles\Dependencies\DependentBaseVoInjector;
+use Tests\Orisai\ObjectMapper\Doubles\Dependencies\DependentChildVO;
+use Tests\Orisai\ObjectMapper\Doubles\Dependencies\DependentChildVoInjector1;
+use Tests\Orisai\ObjectMapper\Doubles\Dependencies\DependentChildVoInjector2;
 use Tests\Orisai\ObjectMapper\Doubles\EmptyVO;
 use Tests\Orisai\ObjectMapper\Doubles\FieldNames\ChildFieldVO;
 use Tests\Orisai\ObjectMapper\Doubles\FieldNames\FieldNamesVO;
@@ -475,15 +478,6 @@ MSG,
 		self::assertSame($data, $this->processor->getRawValues($vo));
 	}
 
-	public function testDontUseConstructor(): void
-	{
-		$vo = new ConstructorUsingVO('string');
-		self::assertSame('string', $vo->string);
-
-		$vo = $this->processor->process(['string' => 'string'], ConstructorUsingVO::class);
-		self::assertSame('string', $vo->string);
-	}
-
 	public function testSelfReference(): void
 	{
 		$data = [
@@ -618,7 +612,7 @@ MSG,
 					'afterArrayProcessingCallback' => [false],
 					'afterClassCallback' => [false],
 				],
-				'callbackSetValue' => 'givenByConstructor',
+				'callbackSetValue' => 'givenByBeforeCallback',
 				'structure' => [
 					'string' => 'foo',
 					'defaultByAttributeString' => 'attribute default',
@@ -648,7 +642,7 @@ MSG,
 		self::assertSame('overriddenValue', $vo->overriddenDefaultValue);
 		self::assertSame('defaultValue_immutable', $vo->immutableDefaultValue);
 		self::assertSame('overriddenValue', $vo->requiredValue);
-		self::assertSame('givenByConstructor', $vo->callbackSetValue);
+		self::assertSame('givenByBeforeCallback', $vo->callbackSetValue);
 	}
 
 	public function testCallbacksVisibility(): void
@@ -947,6 +941,28 @@ arrayOfMixed: array<mixed>',
 		self::assertNull($vo->required);
 		self::assertNull($vo->optional);
 		self::assertInstanceOf(EmptyVO::class, $vo->structure);
+	}
+
+	/**
+	 * @runInSeparateProcess
+	 */
+	public function testDependencies(): void
+	{
+		$manager = $this->dependencies->dependencyInjectorManager;
+		$manager->addInjector(new DependentBaseVoInjector(new stdClass()));
+		$manager->addInjector(new DependentChildVoInjector1('string'));
+		$manager->addInjector(new DependentChildVoInjector2(123));
+
+		$vo = $this->processor->process([], DependentChildVO::class);
+
+		self::assertEquals(
+			new DependentChildVO(
+				new stdClass(),
+				'string',
+				123,
+			),
+			$vo,
+		);
 	}
 
 	public function testMappedFieldNames(): void

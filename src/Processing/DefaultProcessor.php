@@ -654,7 +654,7 @@ final class DefaultProcessor implements Processor
 	 */
 	private function createHolder(string $class, ClassRuntimeMeta $meta, ?MappedObject $object = null): ObjectHolder
 	{
-		return new ObjectHolder($this->objectCreator, $meta, $class, $object);
+		return new ObjectHolder($this->objectCreator, $class, $meta, $object);
 	}
 
 	public function getRawValues(MappedObject $object)

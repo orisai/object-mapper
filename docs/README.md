@@ -45,13 +45,11 @@ of them to type-safe objects.
 	- [Mapped object callbacks](#mapped-object-callbacks)
 	- [Field callbacks](#field-callbacks)
 	- [Returned value](#returned-value)
-	- [Dependencies](#dependencies)
 	- [Context](#callback-context)
+- [Dependencies](#dependencies)
 - [Printers](#printers)
 	- [Printing errors](#printing-errors)
 	- [Printing types](#printing-types)
-- [Object creator](#object-creator)
-- [Create without constructor](#create-without-constructor)
 - [Metadata validation and preloading](#metadata-validation-and-preloading)
 - [Tracking input values](#tracking-input-values)
 - [Types](#types)
@@ -81,17 +79,19 @@ use Orisai\ObjectMapper\Meta\MetaLoader;
 use Orisai\ObjectMapper\Meta\Source\AnnotationsMetaSource;
 use Orisai\ObjectMapper\Meta\Source\AttributesMetaSource;
 use Orisai\ObjectMapper\Meta\Source\DefaultMetaSourceManager;
-use Orisai\ObjectMapper\Processing\DefaultObjectCreator;
+use Orisai\ObjectMapper\Processing\DefaultDependencyInjectorManager;
 use Orisai\ObjectMapper\Processing\DefaultProcessor;
+use Orisai\ObjectMapper\Processing\ObjectCreator;
 use Orisai\ObjectMapper\Rules\DefaultRuleManager;
 
 $sourceManager = new DefaultMetaSourceManager();
 $sourceManager->addSource(new AnnotationsMetaSource()); // For doctrine/annotations
 $sourceManager->addSource(new AttributesMetaSource()); // For PHP 8 attributes
+$injectorManager = new DefaultDependencyInjectorManager();
+$objectCreator = new ObjectCreator($injectorManager);
 $ruleManager = new DefaultRuleManager();
-$objectCreator = new DefaultObjectCreator();
-$cache = new ArrayMetaCache();
 $resolverFactory = new MetaResolverFactory($ruleManager, $objectCreator);
+$cache = new ArrayMetaCache();
 $metaLoader = new MetaLoader($cache, $sourceManager, $resolverFactory);
 
 $processor = new DefaultProcessor(
@@ -1647,28 +1647,98 @@ final class WithNotReturningCallbackInput implements MappedObject
 }
 ```
 
-### Dependencies
+### Callback context
 
-> To use this feature, check [object creator](#object-creator)
+Both [mapped object callbacks](#mapped-object-callbacks) and [field callbacks](#field-callbacks) have additional context
+available as a second parameter, for extended processing:
 
-Mapped objects can request dependencies in constructor for extended validation in callbacks:
+Mapped object and field contexts
+
+```php
+$context->getProcessor(); // Processor
+$context->getOptions(); // Options
+$context->shouldMapDataToObjects(); // bool
+$context->getType(); // Type
+```
+
+Field context
+
+```php
+$context->hasDefaultValue(); // bool
+$context->getDefaultValue(); // mixed|exception
+$context->getFieldName(); // int|string
+$context->getPropertyName(); // string
+```
+
+## Dependencies
+
+Mapped object can use services for extended validation in [callbacks](#callbacks). To do so, you have to:
+
+- create a `DependencyInjector` for specific `MappedObject` implementation and set its dependencies
+- register injector into `DependencyInjectorManager`
+- request injector in `MappedObject` via `RequiresDependencies`
+
+An example, step-by-step implementation is bellow:
+
+Create a `DependencyInjector` for your mapped object
+
+```php
+use Orisai\ObjectMapper\MappedObject;
+use Orisai\ObjectMapper\Processing\DependencyInjector;
+
+/**
+ * @implements DependencyInjector<WithDependenciesInput>
+ */
+final class WithDependenciesInputInjector implements DependencyInjector
+{
+
+	private ExampleService $exampleService;
+
+	public function __construct(ExampleService $exampleService)
+	{
+		$this->exampleService = $exampleService;
+	}
+
+	public function getClass(): string
+	{
+		return WithDependenciesInput::class;
+	}
+
+	/**
+	 * @param WithDependenciesInput $object
+	 */
+	public function inject(MappedObject $object): void
+	{
+		$object->exampleService = $this->exampleService;
+	}
+
+}
+```
+
+Register injector to the injector manager
+
+```php
+$dependencyInjectorManager->add(new WithDependenciesInputInjector(new ExampleService()));
+```
+
+
+Create mapped object that requires dependencies via `RequiresDependencies`, specifying a `DependencyInjector`
 
 ```php
 use Orisai\ObjectMapper\Callbacks\After;
 use Orisai\ObjectMapper\Exception\ValueDoesNotMatch;
 use Orisai\ObjectMapper\MappedObject;
+use Orisai\ObjectMapper\Modifiers\RequiresDependencies;
 use Orisai\ObjectMapper\Processing\Value;
 use Orisai\ObjectMapper\Rules\MixedValue;
 
-final class WithComplexCallbackInput implements MappedObject
+/**
+ * @RequiresDependencies(injector=WithDependenciesInputInjector::class)
+ */
+final class WithDependenciesInput implements MappedObject
 {
 
-	private ExampleService $service;
-
-	public function __construct(ExampleService $service)
-	{
-		$this->service = $service;
-	}
+	public ExampleService $service;
 
 	/**
      * @MixedValue()
@@ -1692,27 +1762,11 @@ final class WithComplexCallbackInput implements MappedObject
 }
 ```
 
-### Callback context
-
-Both [mapped object callbacks](#mapped-object-callbacks) and [field callbacks](#field-callbacks) have additional context
-available as a second parameter, for extended processing:
-
-Mapped object and field contexts
+Create an instance of mapped object
 
 ```php
-$context->getProcessor(); // Processor
-$context->getOptions(); // Options
-$context->shouldMapDataToObjects(); // bool
-$context->getType(); // Type
-```
-
-Field context
-
-```php
-$context->hasDefaultValue(); // bool
-$context->getDefaultValue(); // mixed|exception
-$context->getFieldName(); // int|string
-$context->getPropertyName(); // string
+$input = $processor->process(['field' => 'value'], WithDependenciesInput::class); // WithDependenciesInput
+// $input == WithDependenciesInput(field: 'value', service: ExampleService())
 ```
 
 ## Printers
@@ -1793,52 +1847,6 @@ use Orisai\ObjectMapper\Printers\TypeVisualPrinter;
 
 $printer = new TypeVisualPrinter(new TypeToArrayConverter());
 ````
-
-## Object creator
-
-Class responsible for creating objects and injecting [dependencies](#dependencies)
-is `Orisai\ObjectMapper\Processing\ObjectCreator`. Default
-implementation `Orisai\ObjectMapper\Processing\DefaultObjectCreator` does not have ability to inject dependencies, and
-we have to use different one for that use-case:
-
-- `Orisai\ObjectMapper\Bridge\NetteDI\LazyObjectCreator` - injects autowired dependencies
-  from [Nette DIC](https://github.com/nette/di)
-- Implement `Orisai\ObjectMapper\Processing\ObjectCreator` ourself
-
-## Create without constructor
-
-Processor uses [object creator](#object-creator) to inject dependencies for [callbacks](#callbacks) via mapped object
-constructor. This makes object creation viable only via `$processor->process()`. To create a mapped object manually,
-without object mapper, use `CreateWithoutConstructor` modifier.
-
-```php
-use Orisai\ObjectMapper\MappedObject;
-use Orisai\ObjectMapper\Modifiers\CreateWithoutConstructor;
-use Orisai\ObjectMapper\Rules\StringValue;
-
-/**
- * @CreateWithoutConstructor()
- */
-final class ConstructorUsingVO implements MappedObject
-{
-
-	/** @StringValue() */
-	public string $string;
-
-	public function __construct(string $string)
-	{
-		$this->string = $string;
-	}
-
-}
-```
-
-With this modifier, both manual and object mapper approach work
-
-```php
-$vo = new ConstructorUsingVO('string');
-$vo = $processor->process(['string' => 'string'], ConstructorUsingVO::class); // ConstructorUsingVO
-```
 
 ## Metadata validation and preloading
 

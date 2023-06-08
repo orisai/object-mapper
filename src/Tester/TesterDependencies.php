@@ -8,6 +8,7 @@ use Orisai\ObjectMapper\Context\TypeContext;
 use Orisai\ObjectMapper\Meta\MetaLoader;
 use Orisai\ObjectMapper\Meta\MetaResolver;
 use Orisai\ObjectMapper\Meta\Shared\DefaultValueMeta;
+use Orisai\ObjectMapper\Processing\DefaultDependencyInjectorManager;
 use Orisai\ObjectMapper\Processing\Options;
 use Orisai\ObjectMapper\Processing\Processor;
 use Orisai\ObjectMapper\Rules\DefaultRuleManager;
@@ -25,6 +26,8 @@ final class TesterDependencies
 
 	public Processor $processor;
 
+	public DefaultDependencyInjectorManager $dependencyInjectorManager;
+
 	/**
 	 * @internal
 	 * @see ObjectMapperTester::buildDependencies()
@@ -33,13 +36,15 @@ final class TesterDependencies
 		MetaLoader $metaLoader,
 		MetaResolver $metaResolver,
 		DefaultRuleManager $ruleManager,
-		Processor $processor
+		Processor $processor,
+		DefaultDependencyInjectorManager $dependencyInjectorManager
 	)
 	{
 		$this->metaLoader = $metaLoader;
 		$this->metaResolver = $metaResolver;
 		$this->ruleManager = $ruleManager;
 		$this->processor = $processor;
+		$this->dependencyInjectorManager = $dependencyInjectorManager;
 	}
 
 	public function createRuleArgsContext(ReflectionProperty $property): RuleArgsContext

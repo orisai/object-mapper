@@ -3,6 +3,11 @@
 namespace Tests\Orisai\ObjectMapper\Unit\Meta;
 
 use Orisai\Exceptions\Logic\InvalidState;
+use stdClass;
+use Tests\Orisai\ObjectMapper\Doubles\Dependencies\DependenciesUsingVoInjector;
+use Tests\Orisai\ObjectMapper\Doubles\Dependencies\DependentBaseVoInjector;
+use Tests\Orisai\ObjectMapper\Doubles\Dependencies\DependentChildVoInjector1;
+use Tests\Orisai\ObjectMapper\Doubles\Dependencies\DependentChildVoInjector2;
 use Tests\Orisai\ObjectMapper\Doubles\FieldNames\ChildCollidingFieldVO;
 use Tests\Orisai\ObjectMapper\Doubles\FieldNames\ChildFieldVO;
 use Tests\Orisai\ObjectMapper\Doubles\FieldNames\FieldNameIdenticalWithAnotherPropertyNameVO;
@@ -75,6 +80,12 @@ TXT,
 	 */
 	public function testPreload(): void
 	{
+		$manager = $this->dependencies->dependencyInjectorManager;
+		$manager->addInjector(new DependenciesUsingVoInjector(new stdClass()));
+		$manager->addInjector(new DependentBaseVoInjector(new stdClass()));
+		$manager->addInjector(new DependentChildVoInjector1('string'));
+		$manager->addInjector(new DependentChildVoInjector2(123));
+
 		$excludes = [];
 		$excludes[] = __DIR__ . '/../../Doubles/FieldNames/FieldNameIdenticalWithAnotherPropertyNameVO.php';
 		$excludes[] = __DIR__ . '/../../Doubles/FieldNames/MultipleIdenticalFieldNamesVO.php';

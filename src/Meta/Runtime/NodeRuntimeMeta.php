@@ -4,7 +4,6 @@ namespace Orisai\ObjectMapper\Meta\Runtime;
 
 use Orisai\ObjectMapper\Args\Args;
 use Orisai\ObjectMapper\Meta\Shared\DocMeta;
-use Orisai\ObjectMapper\Modifiers\Modifier;
 
 /**
  * @internal
@@ -18,19 +17,14 @@ abstract class NodeRuntimeMeta
 	/** @var array<string, DocMeta> */
 	private array $docs;
 
-	/** @var array<class-string<Modifier<Args>>, ModifierRuntimeMeta<Args>> */
-	private array $modifiers;
-
 	/**
-	 * @param array<int, CallbackRuntimeMeta<Args>>                          $callbacks
-	 * @param array<string, DocMeta>                                         $docs
-	 * @param array<class-string<Modifier<Args>>, ModifierRuntimeMeta<Args>> $modifiers
+	 * @param array<int, CallbackRuntimeMeta<Args>> $callbacks
+	 * @param array<string, DocMeta>                $docs
 	 */
-	public function __construct(array $callbacks, array $docs, array $modifiers)
+	public function __construct(array $callbacks, array $docs)
 	{
 		$this->callbacks = $callbacks;
 		$this->docs = $docs;
-		$this->modifiers = $modifiers;
 	}
 
 	/**
@@ -50,24 +44,6 @@ abstract class NodeRuntimeMeta
 	}
 
 	/**
-	 * @return array<class-string<Modifier<Args>>, ModifierRuntimeMeta<Args>>
-	 */
-	public function getModifiers(): array
-	{
-		return $this->modifiers;
-	}
-
-	/**
-	 * @template T of Args
-	 * @param class-string<Modifier<T>> $type
-	 * @return ModifierRuntimeMeta<T>|null
-	 */
-	public function getModifier(string $type): ?ModifierRuntimeMeta
-	{
-		return $this->getModifiers()[$type] ?? null;
-	}
-
-	/**
 	 * @return array<mixed>
 	 */
 	public function __serialize(): array
@@ -75,7 +51,6 @@ abstract class NodeRuntimeMeta
 		return [
 			'callbacks' => $this->callbacks,
 			'docs' => $this->docs,
-			'modifiers' => $this->modifiers,
 		];
 	}
 
@@ -86,7 +61,6 @@ abstract class NodeRuntimeMeta
 	{
 		$this->callbacks = $data['callbacks'];
 		$this->docs = $data['docs'];
-		$this->modifiers = $data['modifiers'];
 	}
 
 }

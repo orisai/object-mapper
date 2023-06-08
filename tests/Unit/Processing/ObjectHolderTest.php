@@ -2,24 +2,29 @@
 
 namespace Tests\Orisai\ObjectMapper\Unit\Processing;
 
-use Orisai\ObjectMapper\Args\EmptyArgs;
 use Orisai\ObjectMapper\Meta\Runtime\ClassRuntimeMeta;
 use Orisai\ObjectMapper\Meta\Runtime\ModifierRuntimeMeta;
-use Orisai\ObjectMapper\Modifiers\CreateWithoutConstructorModifier;
-use Orisai\ObjectMapper\Processing\DefaultObjectCreator;
+use Orisai\ObjectMapper\Modifiers\RequiresDependenciesArgs;
+use Orisai\ObjectMapper\Modifiers\RequiresDependenciesModifier;
+use Orisai\ObjectMapper\Processing\DefaultDependencyInjectorManager;
+use Orisai\ObjectMapper\Processing\ObjectCreator;
 use Orisai\ObjectMapper\Processing\ObjectHolder;
 use PHPUnit\Framework\TestCase;
-use Tests\Orisai\ObjectMapper\Doubles\Constructing\ConstructorUsingVO;
+use stdClass;
 use Tests\Orisai\ObjectMapper\Doubles\DefaultsVO;
+use Tests\Orisai\ObjectMapper\Doubles\Dependencies\DependentBaseVoInjector;
+use Tests\Orisai\ObjectMapper\Doubles\Dependencies\DependentChildVO;
+use Tests\Orisai\ObjectMapper\Doubles\Dependencies\DependentChildVoInjector1;
+use Tests\Orisai\ObjectMapper\Doubles\Dependencies\DependentChildVoInjector2;
 
 final class ObjectHolderTest extends TestCase
 {
 
 	public function testInitInstance(): void
 	{
-		$creator = new DefaultObjectCreator();
+		$creator = new ObjectCreator(new DefaultDependencyInjectorManager());
 		$meta = new ClassRuntimeMeta([], [], []);
-		$holder = new ObjectHolder($creator, $meta, DefaultsVO::class);
+		$holder = new ObjectHolder($creator, DefaultsVO::class, $meta);
 
 		self::assertSame(DefaultsVO::class, $holder->getClass());
 		$instance = $holder->getInstance();
@@ -29,10 +34,10 @@ final class ObjectHolderTest extends TestCase
 
 	public function testGetInstance(): void
 	{
-		$creator = new DefaultObjectCreator();
+		$creator = new ObjectCreator(new DefaultDependencyInjectorManager());
 		$meta = new ClassRuntimeMeta([], [], []);
 		$vo = new DefaultsVO();
-		$holder = new ObjectHolder($creator, $meta, DefaultsVO::class, $vo);
+		$holder = new ObjectHolder($creator, DefaultsVO::class, $meta, $vo);
 
 		self::assertSame(DefaultsVO::class, $holder->getClass());
 		$instance = $holder->getInstance();
@@ -40,21 +45,45 @@ final class ObjectHolderTest extends TestCase
 		self::assertSame($instance, $holder->getInstance());
 	}
 
-	public function testSkipConstructor(): void
+	public function testInjectDependencies(): void
 	{
-		$creator = new DefaultObjectCreator();
-		$meta = new ClassRuntimeMeta([], [], [
-			CreateWithoutConstructorModifier::class => new ModifierRuntimeMeta(
-				CreateWithoutConstructorModifier::class,
-				new EmptyArgs(),
-			),
-		]);
-		$holder = new ObjectHolder($creator, $meta, ConstructorUsingVO::class);
+		$manager = new DefaultDependencyInjectorManager();
+		$manager->addInjector(new DependentBaseVoInjector(new stdClass()));
+		$manager->addInjector(new DependentChildVoInjector1('string'));
+		$manager->addInjector(new DependentChildVoInjector2(123));
 
-		self::assertSame(ConstructorUsingVO::class, $holder->getClass());
+		$modifiers = [
+			RequiresDependenciesModifier::class => [
+				new ModifierRuntimeMeta(
+					RequiresDependenciesModifier::class,
+					new RequiresDependenciesArgs(DependentBaseVoInjector::class),
+				),
+				new ModifierRuntimeMeta(
+					RequiresDependenciesModifier::class,
+					new RequiresDependenciesArgs(DependentChildVoInjector1::class),
+				),
+				new ModifierRuntimeMeta(
+					RequiresDependenciesModifier::class,
+					new RequiresDependenciesArgs(DependentChildVoInjector2::class),
+				),
+			],
+		];
+
+		$creator = new ObjectCreator($manager);
+		$meta = new ClassRuntimeMeta([], [], $modifiers);
+		$holder = new ObjectHolder($creator, DependentChildVO::class, $meta);
+
+		self::assertSame(DependentChildVO::class, $holder->getClass());
 		$instance = $holder->getInstance();
-		self::assertInstanceOf(ConstructorUsingVO::class, $instance);
 		self::assertSame($instance, $holder->getInstance());
+		self::assertEquals(
+			new DependentChildVO(
+				new stdClass(),
+				'string',
+				123,
+			),
+			$instance,
+		);
 	}
 
 }

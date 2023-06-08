@@ -4,7 +4,7 @@ namespace Orisai\ObjectMapper\Processing;
 
 use Orisai\ObjectMapper\MappedObject;
 use Orisai\ObjectMapper\Meta\Runtime\ClassRuntimeMeta;
-use Orisai\ObjectMapper\Modifiers\CreateWithoutConstructorModifier;
+use Orisai\ObjectMapper\Modifiers\RequiresDependenciesModifier;
 
 /**
  * @template T of MappedObject
@@ -14,28 +14,28 @@ final class ObjectHolder
 
 	private ObjectCreator $creator;
 
+	/** @var class-string<T> */
+	private string $class;
+
 	private ClassRuntimeMeta $meta;
 
 	/** @var T|null */
 	private ?MappedObject $instance;
 
-	/** @var class-string<T> */
-	private string $class;
-
 	/**
 	 * @param class-string<T> $class
-	 * @param T|null $instance
+	 * @param T|null          $instance
 	 */
 	public function __construct(
 		ObjectCreator $creator,
-		ClassRuntimeMeta $meta,
 		string $class,
+		ClassRuntimeMeta $meta,
 		?MappedObject $instance = null
 	)
 	{
 		$this->creator = $creator;
-		$this->meta = $meta;
 		$this->class = $class;
+		$this->meta = $meta;
 		$this->instance = $instance;
 	}
 
@@ -52,10 +52,16 @@ final class ObjectHolder
 	 */
 	public function getInstance(): MappedObject
 	{
-		return $this->instance ?? ($this->instance = $this->creator->createInstance(
-			$this->class,
-			$this->meta->getModifier(CreateWithoutConstructorModifier::class) === null,
-		));
+		if ($this->instance !== null) {
+			return $this->instance;
+		}
+
+		$injectors = [];
+		foreach ($this->meta->getModifier(RequiresDependenciesModifier::class) as $modifier) {
+			$injectors[] = $modifier->getArgs()->injector;
+		}
+
+		return $this->instance = $this->creator->createInstance($this->class, $injectors);
 	}
 
 }

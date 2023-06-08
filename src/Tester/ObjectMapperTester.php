@@ -8,8 +8,9 @@ use Orisai\ObjectMapper\Meta\MetaResolverFactory;
 use Orisai\ObjectMapper\Meta\Source\AnnotationsMetaSource;
 use Orisai\ObjectMapper\Meta\Source\AttributesMetaSource;
 use Orisai\ObjectMapper\Meta\Source\DefaultMetaSourceManager;
-use Orisai\ObjectMapper\Processing\DefaultObjectCreator;
+use Orisai\ObjectMapper\Processing\DefaultDependencyInjectorManager;
 use Orisai\ObjectMapper\Processing\DefaultProcessor;
+use Orisai\ObjectMapper\Processing\ObjectCreator;
 use Orisai\ObjectMapper\Rules\DefaultRuleManager;
 use Orisai\ReflectionMeta\Reader\AnnotationsMetaReader;
 use Orisai\ReflectionMeta\Reader\AttributesMetaReader;
@@ -31,7 +32,8 @@ final class ObjectMapperTester
 			$sourceManager->addSource(new AttributesMetaSource());
 		}
 
-		$objectCreator = new DefaultObjectCreator();
+		$injector = new DefaultDependencyInjectorManager();
+		$objectCreator = new ObjectCreator($injector);
 		$cache = new ArrayMetaCache();
 		$resolverFactory = new MetaResolverFactory($ruleManager, $objectCreator);
 		$metaLoader = new MetaLoader($cache, $sourceManager, $resolverFactory);
@@ -40,7 +42,7 @@ final class ObjectMapperTester
 		$processor = new DefaultProcessor(
 			$metaLoader,
 			$ruleManager,
-			new DefaultObjectCreator(),
+			$objectCreator,
 		);
 
 		return new TesterDependencies(
@@ -48,6 +50,7 @@ final class ObjectMapperTester
 			$metaResolver,
 			$ruleManager,
 			$processor,
+			$injector,
 		);
 	}
 
