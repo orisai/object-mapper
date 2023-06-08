@@ -161,7 +161,12 @@ parameters:
 			path: ../tests/Unit/Processing/DefaultProcessorTest.php
 
 		-
-			message: "#^Parameter \\#2 \\$class of method Orisai\\\\ObjectMapper\\\\Processing\\\\DefaultProcessor\\:\\:process\\(\\) expects class\\-string\\<T of Orisai\\\\ObjectMapper\\\\MappedObject\\>, string given\\.$#"
+			message: "#^Parameter \\#2 \\$class of method Orisai\\\\ObjectMapper\\\\Processing\\\\Processor\\:\\:process\\(\\) expects class\\-string\\<Orisai\\\\ObjectMapper\\\\MappedObject\\>, string given\\.$#"
+			count: 2
+			path: ../tests/Unit/Processing/DefaultProcessorTest.php
+
+		-
+			message: "#^Unable to resolve the template type T in call to method Orisai\\\\ObjectMapper\\\\Processing\\\\Processor\\:\\:process\\(\\)$#"
 			count: 2
 			path: ../tests/Unit/Processing/DefaultProcessorTest.php
 

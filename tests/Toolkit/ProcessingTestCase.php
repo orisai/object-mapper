@@ -9,8 +9,8 @@ use Orisai\ObjectMapper\Context\TypeContext;
 use Orisai\ObjectMapper\Meta\MetaLoader;
 use Orisai\ObjectMapper\Meta\Runtime\RuleRuntimeMeta;
 use Orisai\ObjectMapper\Meta\Shared\DefaultValueMeta;
-use Orisai\ObjectMapper\Processing\DefaultProcessor;
 use Orisai\ObjectMapper\Processing\Options;
+use Orisai\ObjectMapper\Processing\Processor;
 use Orisai\ObjectMapper\Rules\DefaultRuleManager;
 use Orisai\ObjectMapper\Rules\Rule;
 use Orisai\ObjectMapper\Tester\ObjectMapperTester;
@@ -29,7 +29,7 @@ abstract class ProcessingTestCase extends TestCase
 
 	protected DefaultRuleManager $ruleManager;
 
-	protected DefaultProcessor $processor;
+	protected Processor $processor;
 
 	protected function setUp(): void
 	{

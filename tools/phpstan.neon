@@ -92,8 +92,3 @@ parameters:
 		-
 			message: '#(.+)expects ReflectionClass\<(.+)MappedObject\>, ReflectionClass\<object\> given\.$#'
 			path: ../src/Meta/MetaResolver.php
-
-		# Temporary workaround
-		-
-			message: '#^Property (.+)\:\:\$processor \((.+)DefaultProcessor\) does not accept (.+)\\Processor\.$#'
-			path: ../tests/Toolkit/ProcessingTestCase.php
