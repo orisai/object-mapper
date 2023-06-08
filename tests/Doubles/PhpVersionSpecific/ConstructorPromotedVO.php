@@ -3,13 +3,11 @@
 namespace Tests\Orisai\ObjectMapper\Doubles\PhpVersionSpecific;
 
 use Orisai\ObjectMapper\MappedObject;
-use Orisai\ObjectMapper\Modifiers\CreateWithoutConstructor;
 use Orisai\ObjectMapper\Rules\MappedObjectValue;
 use Orisai\ObjectMapper\Rules\NullValue;
 use Orisai\ObjectMapper\Rules\StringValue;
 use Tests\Orisai\ObjectMapper\Doubles\DefaultsVO;
 
-#[CreateWithoutConstructor]
 final class ConstructorPromotedVO implements MappedObject
 {
 

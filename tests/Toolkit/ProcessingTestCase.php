@@ -23,7 +23,7 @@ use Tests\Orisai\ObjectMapper\Doubles\NoDefaultsVO;
 abstract class ProcessingTestCase extends TestCase
 {
 
-	private TesterDependencies $dependencies;
+	protected TesterDependencies $dependencies;
 
 	protected MetaLoader $metaLoader;
 

@@ -4,6 +4,7 @@ namespace Orisai\ObjectMapper\Meta\Runtime;
 
 use Orisai\ObjectMapper\Args\Args;
 use Orisai\ObjectMapper\Meta\Shared\DefaultValueMeta;
+use Orisai\ObjectMapper\Modifiers\Modifier;
 use ReflectionProperty;
 
 final class FieldRuntimeMeta extends NodeRuntimeMeta
@@ -16,7 +17,11 @@ final class FieldRuntimeMeta extends NodeRuntimeMeta
 
 	private ReflectionProperty $property;
 
+	/** @var array<class-string<Modifier<Args>>, ModifierRuntimeMeta<Args>> */
+	private array $modifiers;
+
 	/**
+	 * @param array<class-string<Modifier<Args>>, ModifierRuntimeMeta<Args>> $modifiers
 	 * @param RuleRuntimeMeta<Args> $rule
 	 */
 	public function __construct(
@@ -28,10 +33,11 @@ final class FieldRuntimeMeta extends NodeRuntimeMeta
 		ReflectionProperty $property
 	)
 	{
-		parent::__construct($callbacks, $docs, $modifiers);
+		parent::__construct($callbacks, $docs);
 		$this->rule = $rule;
 		$this->default = $default;
 		$this->property = $property;
+		$this->modifiers = $modifiers;
 	}
 
 	/**
@@ -53,6 +59,24 @@ final class FieldRuntimeMeta extends NodeRuntimeMeta
 	}
 
 	/**
+	 * @return array<class-string<Modifier<Args>>, ModifierRuntimeMeta<Args>>
+	 */
+	public function getModifiers(): array
+	{
+		return $this->modifiers;
+	}
+
+	/**
+	 * @template T of Args
+	 * @param class-string<Modifier<T>> $type
+	 * @return ModifierRuntimeMeta<T>|null
+	 */
+	public function getModifier(string $type): ?ModifierRuntimeMeta
+	{
+		return $this->getModifiers()[$type] ?? null;
+	}
+
+	/**
 	 * @return array<mixed>
 	 */
 	public function __serialize(): array
@@ -63,6 +87,7 @@ final class FieldRuntimeMeta extends NodeRuntimeMeta
 			'default' => $this->default,
 			'class' => $this->property->getDeclaringClass()->getName(),
 			'property' => $this->property->getName(),
+			'modifiers' => $this->modifiers,
 		];
 	}
 
@@ -75,6 +100,7 @@ final class FieldRuntimeMeta extends NodeRuntimeMeta
 		$this->rule = $data['rule'];
 		$this->default = $data['default'];
 		$this->property = new ReflectionProperty($data['class'], $data['property']);
+		$this->modifiers = $data['modifiers'];
 	}
 
 }

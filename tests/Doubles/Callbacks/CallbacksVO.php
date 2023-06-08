@@ -23,8 +23,6 @@ use function is_array;
 final class CallbacksVO implements MappedObject
 {
 
-	private string $constructorGivenValue;
-
 	/**
 	 * @var array<string, array<mixed>>
 	 *
@@ -66,11 +64,6 @@ final class CallbacksVO implements MappedObject
 	 * @After(method="afterCallbackSetValue", runtime=CallbackRuntime::Always)
 	 */
 	public string $callbackSetValue;
-
-	public function __construct()
-	{
-		$this->constructorGivenValue = 'givenByConstructor';
-	}
 
 	/**
 	 * @param mixed $data
@@ -175,8 +168,7 @@ final class CallbacksVO implements MappedObject
 
 	public function beforeCallbackSetValue(): string
 	{
-		// Set value from constructor
-		return $this->constructorGivenValue;
+		return 'givenByBeforeCallback';
 	}
 
 	public function afterCallbackSetValue(string $value): void

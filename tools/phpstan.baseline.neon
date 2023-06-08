@@ -76,11 +76,6 @@ parameters:
 			path: ../tests/Unit/Printers/TypeVisualPrinterTest.php
 
 		-
-			message: "#^Call to static method PHPUnit\\\\Framework\\\\Assert\\:\\:assertInstanceOf\\(\\) with 'Tests\\\\\\\\Orisai\\\\\\\\ObjectMapper\\\\\\\\Doubles\\\\\\\\EmptyVO' and Tests\\\\Orisai\\\\ObjectMapper\\\\Doubles\\\\EmptyVO will always evaluate to true\\.$#"
-			count: 1
-			path: ../tests/Unit/Processing/DefaultObjectCreatorTest.php
-
-		-
 			message: "#^Call to static method PHPUnit\\\\Framework\\\\Assert\\:\\:assertInstanceOf\\(\\) with 'DateTimeImmutable' and DateTimeImmutable will always evaluate to true\\.$#"
 			count: 1
 			path: ../tests/Unit/Processing/DefaultProcessorTest.php
@@ -174,11 +169,6 @@ parameters:
 			message: "#^Unreachable statement \\- code above always terminates\\.$#"
 			count: 3
 			path: ../tests/Unit/Processing/DefaultProcessorTest.php
-
-		-
-			message: "#^Call to static method PHPUnit\\\\Framework\\\\Assert\\:\\:assertInstanceOf\\(\\) with 'Tests\\\\\\\\Orisai\\\\\\\\ObjectMapper\\\\\\\\Doubles\\\\\\\\Constructing\\\\\\\\ConstructorUsingVO' and Tests\\\\Orisai\\\\ObjectMapper\\\\Doubles\\\\Constructing\\\\ConstructorUsingVO will always evaluate to true\\.$#"
-			count: 1
-			path: ../tests/Unit/Processing/ObjectHolderTest.php
 
 		-
 			message: "#^Call to static method PHPUnit\\\\Framework\\\\Assert\\:\\:assertInstanceOf\\(\\) with 'Tests\\\\\\\\Orisai\\\\\\\\ObjectMapper\\\\\\\\Doubles\\\\\\\\DefaultsVO' and Tests\\\\Orisai\\\\ObjectMapper\\\\Doubles\\\\DefaultsVO will always evaluate to true\\.$#"

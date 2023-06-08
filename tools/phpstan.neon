@@ -53,9 +53,9 @@ parameters:
 			message: '#^Method (.+) throws checked exception (.+) but it''s missing from the PHPDoc @throws tag\.$#'
 			path: ../tests/Unit
 
-		# Callback/Rule template is declared as covariant for practical reasons
+		# Callback/Rule/Injector template is declared as covariant for practical reasons
 		# - not declaring it covariant would cause too many errors elsewhere
-		# - Callback/Rule self-validates type of Args
+		# - they self-validate type of Args
 		-
 			message: '#^Template type T_ARGS is declared as covariant, but occurs in contravariant position in parameter args of method (.+)\:\:processValue\(\)\.$#'
 			path: ../src/Rules/Rule.php
@@ -65,6 +65,9 @@ parameters:
 		-
 			message: '#^Template type T_ARGS is declared as covariant, but occurs in contravariant position in parameter args of method (.+)\:\:invoke\(\)\.$#'
 			path: ../src/Callbacks/Callback.php
+		-
+			message: '#^Template type T is declared as covariant, but occurs in contravariant position in parameter object of method (.+)\:\:inject\(\)\.$#'
+			path: ../src/Processing/DependencyInjector.php
 
 		# Generics - class-string-map https://psalm.dev/r/155368cea8
 		-
@@ -77,9 +80,24 @@ parameters:
 			message: '#^Method (.+)Options\:\:getDynamicContext\(\) should return T of object but returns object\.$#'
 			path: ../src/Processing/Options.php
 		-
-			message: '#^Method (.+)NodeRuntimeMeta\:\:getModifier\(\) should return (.+)ModifierRuntimeMeta\<T of (.+)Args\>\|null but returns (.+)ModifierRuntimeMeta\<(.+)Args>\|null\.$#'
-			path: ../src/Meta/Runtime/NodeRuntimeMeta.php
+			message: '#^Method (.+)\:\:getModifier\(\) should return list\<(.+)ModifierRuntimeMeta\<T of (.+)Args\>\> but returns list\<(.+)ModifierRuntimeMeta\<(.+)Args>\>\.$#'
+			path: ../src/Meta/Runtime/ClassRuntimeMeta.php
 			count: 1
+		-
+			message: '#^Method (.+)\:\:getModifier\(\) should return (.+)ModifierRuntimeMeta\<T of (.+)Args\>\|null but returns (.+)ModifierRuntimeMeta\<(.+)Args>\|null\.$#'
+			path: ../src/Meta/Runtime/FieldRuntimeMeta.php
+			count: 1
+		-
+			message: '#^Method (.+)\:\:get\(\) should return T of (.+)DependencyInjector but returns (.+)DependencyInjector\<(.+)MappedObject\>\.$#'
+			path: ../src/Processing/DefaultDependencyInjectorManager.php
+
+		# Dunno, seems to be all fine
+		-
+			message: '#^Method (.+)\:\:getInstance\(\) should return T of (.+)MappedObject but returns Orisai\\ObjectMapper\\MappedObject\.$#'
+			path: ../src/Processing/ObjectHolder.php
+		-
+			message: '#^Property (.+)\:\:\$instance \(\(T of (.+)MappedObject\)\|null\) does not accept Orisai\\ObjectMapper\\MappedObject\.$#'
+			path: ../src/Processing/ObjectHolder.php
 
 		# Generics and serialization are not quite compatible
 		-

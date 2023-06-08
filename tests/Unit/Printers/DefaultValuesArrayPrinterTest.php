@@ -10,7 +10,8 @@ use Orisai\ObjectMapper\Meta\MetaResolverFactory;
 use Orisai\ObjectMapper\Meta\Source\AnnotationsMetaSource;
 use Orisai\ObjectMapper\Meta\Source\DefaultMetaSourceManager;
 use Orisai\ObjectMapper\Printers\DefaultValuesArrayPrinter;
-use Orisai\ObjectMapper\Processing\DefaultObjectCreator;
+use Orisai\ObjectMapper\Processing\DefaultDependencyInjectorManager;
+use Orisai\ObjectMapper\Processing\ObjectCreator;
 use Orisai\ObjectMapper\Processing\Options;
 use Orisai\ObjectMapper\Rules\DefaultRuleManager;
 use Orisai\ObjectMapper\Rules\MappedObjectArgs;
@@ -38,7 +39,7 @@ final class DefaultValuesArrayPrinterTest extends TestCase
 		$sourceManager = new DefaultMetaSourceManager();
 		$sourceManager->addSource(new AnnotationsMetaSource());
 
-		$objectCreator = new DefaultObjectCreator();
+		$objectCreator = new ObjectCreator(new DefaultDependencyInjectorManager());
 		$cache = new ArrayMetaCache();
 		$resolverFactory = new MetaResolverFactory($this->ruleManager, $objectCreator);
 		$this->metaLoader = new MetaLoader($cache, $sourceManager, $resolverFactory);

@@ -10,10 +10,11 @@ use Orisai\ObjectMapper\Meta\Runtime\CallbackRuntimeMeta;
 use Orisai\ObjectMapper\Meta\Runtime\ClassRuntimeMeta;
 use Orisai\ObjectMapper\Meta\Runtime\ModifierRuntimeMeta;
 use Orisai\ObjectMapper\Meta\Shared\DocMeta;
-use Orisai\ObjectMapper\Modifiers\FieldNameArgs;
-use Orisai\ObjectMapper\Modifiers\FieldNameModifier;
+use Orisai\ObjectMapper\Modifiers\RequiresDependenciesArgs;
+use Orisai\ObjectMapper\Modifiers\RequiresDependenciesModifier;
 use PHPUnit\Framework\TestCase;
 use ReflectionClass;
+use Tests\Orisai\ObjectMapper\Doubles\Dependencies\DependenciesUsingVoInjector;
 use function serialize;
 use function unserialize;
 
@@ -33,7 +34,12 @@ final class ClassRuntimeMetaTest extends TestCase
 			new DocMeta(DescriptionDoc::class, []),
 		];
 		$modifiers = [
-			FieldNameModifier::class => new ModifierRuntimeMeta(FieldNameModifier::class, new FieldNameArgs('field')),
+			RequiresDependenciesModifier::class => [
+				new ModifierRuntimeMeta(
+					RequiresDependenciesModifier::class,
+					new RequiresDependenciesArgs(DependenciesUsingVoInjector::class),
+				),
+			],
 		];
 
 		$meta = new ClassRuntimeMeta($callbacks, $docs, $modifiers);

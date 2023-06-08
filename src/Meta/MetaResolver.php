@@ -10,6 +10,7 @@ use Orisai\ObjectMapper\Context\ResolverArgsContext;
 use Orisai\ObjectMapper\Context\RuleArgsContext;
 use Orisai\ObjectMapper\MappedObject;
 use Orisai\ObjectMapper\Meta\Compile\CallbackCompileMeta;
+use Orisai\ObjectMapper\Meta\Compile\ClassCompileMeta;
 use Orisai\ObjectMapper\Meta\Compile\CompileMeta;
 use Orisai\ObjectMapper\Meta\Compile\FieldCompileMeta;
 use Orisai\ObjectMapper\Meta\Compile\ModifierCompileMeta;
@@ -23,10 +24,10 @@ use Orisai\ObjectMapper\Meta\Runtime\RuleRuntimeMeta;
 use Orisai\ObjectMapper\Meta\Runtime\RuntimeMeta;
 use Orisai\ObjectMapper\Meta\Shared\DefaultValueMeta;
 use Orisai\ObjectMapper\Meta\Shared\DocMeta;
-use Orisai\ObjectMapper\Modifiers\CreateWithoutConstructorModifier;
 use Orisai\ObjectMapper\Modifiers\DefaultValueModifier;
 use Orisai\ObjectMapper\Modifiers\FieldNameModifier;
 use Orisai\ObjectMapper\Modifiers\Modifier;
+use Orisai\ObjectMapper\Modifiers\RequiresDependenciesModifier;
 use Orisai\ObjectMapper\Processing\ObjectCreator;
 use Orisai\ObjectMapper\Rules\RuleManager;
 use ReflectionClass;
@@ -87,13 +88,22 @@ final class MetaResolver
 
 			$callbacksByMeta[] = $this->resolveCallbacksMeta($classMeta, $context);
 			$docsByMeta[] = $this->resolveDocsMeta($classMeta, $context);
-			$modifiersByMeta[] = $this->resolveModifiersMeta($classMeta, $context);
+			$modifiersByMeta[] = $this->resolveClassModifiersMeta($classMeta, $context);
+		}
+
+		$modifiers = [];
+		foreach ($modifiersByMeta as $value) {
+			foreach ($value as $modifierClass => $modifierMetas) {
+				foreach ($modifierMetas as $modifierMeta) {
+					$modifiers[$modifierClass][] = $modifierMeta;
+				}
+			}
 		}
 
 		return new ClassRuntimeMeta(
 			array_merge(...$callbacksByMeta),
 			array_merge(...$docsByMeta),
-			array_merge(...$modifiersByMeta),
+			$modifiers,
 		);
 	}
 
@@ -102,10 +112,12 @@ final class MetaResolver
 	 */
 	private function checkObjectCanBeInstantiated(ReflectionClass $class, ClassRuntimeMeta $meta): void
 	{
-		$this->objectCreator->checkClassIsInstantiable(
-			$class->getName(),
-			$meta->getModifier(CreateWithoutConstructorModifier::class) === null,
-		);
+		$injectors = [];
+		foreach ($meta->getModifier(RequiresDependenciesModifier::class) as $modifier) {
+			$injectors[] = $modifier->getArgs()->injector;
+		}
+
+		$this->objectCreator->createInstance($class->getName(), $injectors);
 	}
 
 	/**
@@ -161,7 +173,7 @@ final class MetaResolver
 		return new FieldRuntimeMeta(
 			$this->resolveCallbacksMeta($meta, $context),
 			$this->resolveDocsMeta($meta, $context),
-			$this->resolveModifiersMeta($meta, $context),
+			$this->resolveFieldModifiersMeta($meta, $context),
 			$this->resolveRuleMeta(
 				$meta->getRule(),
 				$this->createRuleArgsContext($property),
@@ -225,9 +237,22 @@ final class MetaResolver
 	}
 
 	/**
+	 * @return array<class-string<Modifier<Args>>, list<ModifierRuntimeMeta<Args>>>
+	 */
+	private function resolveClassModifiersMeta(ClassCompileMeta $meta, ResolverArgsContext $context): array
+	{
+		$array = [];
+		foreach ($meta->getModifiers() as $modifier) {
+			$array[$modifier->getType()][] = $this->resolveModifierMeta($modifier, $context);
+		}
+
+		return $array;
+	}
+
+	/**
 	 * @return array<class-string<Modifier<Args>>, ModifierRuntimeMeta<Args>>
 	 */
-	private function resolveModifiersMeta(NodeCompileMeta $meta, ResolverArgsContext $context): array
+	private function resolveFieldModifiersMeta(FieldCompileMeta $meta, ResolverArgsContext $context): array
 	{
 		$array = [];
 		foreach ($meta->getModifiers() as $modifier) {
