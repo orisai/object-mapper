@@ -151,7 +151,6 @@ final class TypeVisualPrinterTest extends TestCase
 
 	public function testCompound(): void
 	{
-		//TODO - brackets
 		$subtype1 = new CompoundType(CompoundTypeOperator::and());
 		$subtype1->addSubtype(0, new SimpleValueType('int'));
 		$subtype1->addSubtype(1, new SimpleValueType('float'));
@@ -165,7 +164,7 @@ final class TypeVisualPrinterTest extends TestCase
 		$type1->addSubtype(1, $subtype2);
 
 		self::assertSame(
-			'int&&float||foo&&bar',
+			'(int&&float)||(foo&&bar)',
 			$this->printer->printType($type1),
 		);
 	}

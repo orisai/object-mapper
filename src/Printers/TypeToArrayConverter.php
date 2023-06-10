@@ -56,7 +56,11 @@ final class TypeToArrayConverter implements TypeToPrimitiveConverter
 		return $processed;
 	}
 
-	public function printCompound(CompoundTypeOperator $operator, array $subtypes): array
+	public function printCompound(
+		CompoundTypeOperator $operator,
+		array $subtypes,
+		bool $isParentCompound
+	): array
 	{
 		return [
 			'type' => 'compound',

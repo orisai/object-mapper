@@ -48,12 +48,12 @@ final class ErrorVisualPrinter implements ErrorPrinter, TypePrinter
 				? $scope->withValidNodes()
 				: $scope->withoutValidNodes();
 
-			$printedFields[$fieldName] = $this->print($fieldType, $fieldScope);
+			$printedFields[$fieldName] = $this->print($fieldType, $fieldScope, null);
 		}
 
 		$printedErrors = [];
 		foreach ($errors as $errorKey => $error) {
-			$printedErrors[$errorKey] = $this->print($error->getType(), $scope->withoutValidNodes());
+			$printedErrors[$errorKey] = $this->print($error->getType(), $scope->withoutValidNodes(), null);
 		}
 
 		return $this->converter->printError($pathNodes, $printedFields, $printedErrors);
@@ -64,20 +64,20 @@ final class ErrorVisualPrinter implements ErrorPrinter, TypePrinter
 	 */
 	public function printType(Type $type)
 	{
-		return $this->print($type, PrinterScope::forInvalidScope());
+		return $this->print($type, PrinterScope::forInvalidScope(), null);
 	}
 
 	/**
 	 * @return T
 	 */
-	private function print(Type $type, PrinterScope $scope)
+	private function print(Type $type, PrinterScope $scope, ?Type $parent)
 	{
 		if ($type instanceof ArrayShapeType) {
 			return $this->printArrayShapeType($type, $scope);
 		}
 
 		if ($type instanceof CompoundType) {
-			return $this->printCompoundType($type, $scope);
+			return $this->printCompoundType($type, $scope, $parent);
 		}
 
 		if ($type instanceof GenericArrayType) {
@@ -113,12 +113,12 @@ final class ErrorVisualPrinter implements ErrorPrinter, TypePrinter
 				? $scope->withValidNodes()
 				: $scope->withoutValidNodes();
 
-			$printedFields[$fieldName] = $this->print($fieldType, $fieldScope);
+			$printedFields[$fieldName] = $this->print($fieldType, $fieldScope, $type);
 		}
 
 		$printedErrors = [];
 		foreach ($type->getErrors() as $errorKey => $error) {
-			$printedErrors[$errorKey] = $this->print($error->getType(), $scope->withoutValidNodes());
+			$printedErrors[$errorKey] = $this->print($error->getType(), $scope->withoutValidNodes(), $type);
 		}
 
 		return $this->converter->printShape($printedFields, $printedErrors);
@@ -146,7 +146,7 @@ final class ErrorVisualPrinter implements ErrorPrinter, TypePrinter
 	/**
 	 * @return T
 	 */
-	private function printCompoundType(CompoundType $type, PrinterScope $scope)
+	private function printCompoundType(CompoundType $type, PrinterScope $scope, ?Type $parent)
 	{
 		$printedSubtypes = [];
 		foreach ($this->getSubtypes($scope, $type) as $key => $subtype) {
@@ -157,10 +157,14 @@ final class ErrorVisualPrinter implements ErrorPrinter, TypePrinter
 				? $scope->withValidNodes()->withImmutableState()
 				: $scope->withoutValidNodes();
 
-			$printedSubtypes[$key] = $this->print($subtype, $subtypeScope);
+			$printedSubtypes[$key] = $this->print($subtype, $subtypeScope, $type);
 		}
 
-		return $this->converter->printCompound($type->getOperator(), $printedSubtypes);
+		return $this->converter->printCompound(
+			$type->getOperator(),
+			$printedSubtypes,
+			$parent instanceof CompoundType,
+		);
 	}
 
 	/**
@@ -195,8 +199,8 @@ final class ErrorVisualPrinter implements ErrorPrinter, TypePrinter
 		if ($scope->shouldRenderValid() || $type->isInvalid()) {
 			$pairScope = $scope->withValidNodes()->withImmutableState();
 
-			$printedKeyType = $keyType !== null ? $this->print($keyType, $pairScope) : null;
-			$printedItemType = $this->print($itemType, $pairScope);
+			$printedKeyType = $keyType !== null ? $this->print($keyType, $pairScope, $type) : null;
+			$printedItemType = $this->print($itemType, $pairScope, $type);
 		} else {
 			$printedKeyType = null;
 			$printedItemType = null;
@@ -208,12 +212,12 @@ final class ErrorVisualPrinter implements ErrorPrinter, TypePrinter
 
 			$pairKeyType = $pair->getKey();
 			$pairKey = $pairKeyType !== null
-				? $this->print($pairKeyType->getType(), $invalidPairScope)
+				? $this->print($pairKeyType->getType(), $invalidPairScope, $type)
 				: null;
 
 			$pairItemType = $pair->getValue();
 			$pairValue = $pairItemType !== null
-				? $this->print($pairItemType->getType(), $invalidPairScope)
+				? $this->print($pairItemType->getType(), $invalidPairScope, $type)
 				: null;
 
 			$invalidPairs[$key] = [$pairKey, $pairValue];

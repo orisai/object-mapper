@@ -33,20 +33,20 @@ final class TypeVisualPrinter implements TypePrinter
 
 	public function printType(Type $type)
 	{
-		return $this->print($type);
+		return $this->print($type, null);
 	}
 
 	/**
 	 * @return T
 	 */
-	private function print(Type $type)
+	private function print(Type $type, ?Type $parent)
 	{
 		if ($type instanceof ArrayShapeType) {
 			return $this->printArrayShapeType($type);
 		}
 
 		if ($type instanceof CompoundType) {
-			return $this->printCompoundType($type);
+			return $this->printCompoundType($type, $parent);
 		}
 
 		if ($type instanceof GenericArrayType) {
@@ -78,7 +78,7 @@ final class TypeVisualPrinter implements TypePrinter
 	{
 		$printedFields = [];
 		foreach ($this->filterFields($type) as $fieldName => $fieldType) {
-			$printedFields[$fieldName] = $this->print($fieldType);
+			$printedFields[$fieldName] = $this->print($fieldType, $type);
 		}
 
 		return $this->converter->printShape($printedFields);
@@ -95,14 +95,18 @@ final class TypeVisualPrinter implements TypePrinter
 	/**
 	 * @return T
 	 */
-	private function printCompoundType(CompoundType $type)
+	private function printCompoundType(CompoundType $type, ?Type $parent)
 	{
 		$printedSubtypes = [];
 		foreach ($type->getSubtypes() as $key => $subtype) {
-			$printedSubtypes[$key] = $this->print($subtype);
+			$printedSubtypes[$key] = $this->print($subtype, $type);
 		}
 
-		return $this->converter->printCompound($type->getOperator(), $printedSubtypes);
+		return $this->converter->printCompound(
+			$type->getOperator(),
+			$printedSubtypes,
+			$parent instanceof CompoundType,
+		);
 	}
 
 	/**
@@ -111,13 +115,13 @@ final class TypeVisualPrinter implements TypePrinter
 	private function printArrayType(GenericArrayType $type)
 	{
 		$keyType = $type->getKeyType();
-		$printedKeyType = $keyType !== null ? $this->print($keyType) : null;
+		$printedKeyType = $keyType !== null ? $this->print($keyType, $type) : null;
 
 		return $this->converter->printArray(
 			$type->getName(),
 			$this->getParameters($type),
 			$printedKeyType,
-			$this->print($type->getItemType()),
+			$this->print($type->getItemType(), $type),
 		);
 	}
 

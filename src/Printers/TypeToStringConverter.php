@@ -115,7 +115,11 @@ final class TypeToStringConverter implements TypeToPrimitiveConverter
 		return Dumper::dumpValue($value, $options);
 	}
 
-	public function printCompound(CompoundTypeOperator $operator, array $subtypes): string
+	public function printCompound(
+		CompoundTypeOperator $operator,
+		array $subtypes,
+		bool $isParentCompound
+	): string
 	{
 		$lastKey = array_key_last($subtypes);
 		$formatted = '';
@@ -123,6 +127,10 @@ final class TypeToStringConverter implements TypeToPrimitiveConverter
 		foreach ($subtypes as $key => $subtype) {
 			$separator = $key === $lastKey ? '' : $operator->value;
 			$formatted .= $subtype . $separator;
+		}
+
+		if ($isParentCompound) {
+			$formatted = "($formatted)";
 		}
 
 		return $formatted;

@@ -32,7 +32,7 @@ interface TypeToPrimitiveConverter
 	 * @param array<int|string, T> $subtypes
 	 * @return T
 	 */
-	public function printCompound(CompoundTypeOperator $operator, array $subtypes);
+	public function printCompound(CompoundTypeOperator $operator, array $subtypes, bool $isParentCompound);
 
 	/**
 	 * @param T|null                                   $keyType

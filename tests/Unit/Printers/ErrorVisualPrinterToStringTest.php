@@ -236,9 +236,8 @@ final class ErrorVisualPrinterToStringTest extends ErrorVisualPrinterBaseTestCas
 	 */
 	public function testCompoundTypeOverwriteSubtypeComplex(CompoundType $type): void
 	{
-		//TODO - brackets
 		self::assertSame(
-			'int&&float||foo&&bar',
+			'(int&&float)||(foo&&bar)',
 			$this->printer->printType($type),
 		);
 	}
