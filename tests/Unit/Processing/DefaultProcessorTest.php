@@ -248,6 +248,33 @@ manyStructures: array<int, shape{
 		$data = [
 			'unknown' => 'Example',
 			123 => 'Numeric example',
+		];
+
+		try {
+			$vo = $this->processor->process($data, EmptyVO::class);
+		} catch (InvalidData $exception) {
+			// Checked bellow
+		}
+
+		self::assertNull($vo);
+		self::assertInstanceOf(InvalidData::class, $exception);
+
+		self::assertSame(
+			<<<'MSG'
+unknown: Field is unknown.
+123: Field is unknown.
+MSG,
+			$this->printer->printError($exception),
+		);
+	}
+
+	public function testUnknownValuesDidYouMean(): void
+	{
+		$vo = null;
+		$exception = null;
+		$data = [
+			'nulableString' => null,
+			'nullableString' => null,
 			'stringg' => 'foo',
 		];
 
@@ -261,9 +288,10 @@ manyStructures: array<int, shape{
 		self::assertInstanceOf(InvalidData::class, $exception);
 
 		self::assertSame(
-			'unknown: Field is unknown.
-123: Field is unknown.
-stringg: Field is unknown, did you mean `string`?',
+			<<<'MSG'
+nulableString: Field is unknown.
+stringg: Field is unknown, did you mean 'string'?
+MSG,
 			$this->printer->printError($exception),
 		);
 	}

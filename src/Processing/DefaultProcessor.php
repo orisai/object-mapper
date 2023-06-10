@@ -301,13 +301,15 @@ final class DefaultProcessor implements Processor
 					array_map(static fn ($fieldName) => (string) $fieldName, $fieldNames),
 					(string) $fieldName,
 				);
-				$hint = $hintedFieldName !== null ? sprintf(', did you mean `%s`?', $hintedFieldName) : '.';
+				$hint = $hintedFieldName !== null && !array_key_exists($hintedFieldName, $data)
+					? ", did you mean '$hintedFieldName'?"
+					: '.';
 
 				// Add error to type
 				$type->overwriteInvalidField(
 					$fieldName,
 					ValueDoesNotMatch::create(
-						new MessageType(sprintf('Field is unknown%s', $hint)),
+						new MessageType("Field is unknown$hint"),
 						Value::of($value),
 					),
 				);
