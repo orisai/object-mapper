@@ -101,7 +101,7 @@ parameters:
 
 		# Generics and serialization are not quite compatible
 		-
-			message: '#^Template type T is declared as covariant, but occurs in invariant position (.+)\_\_(serialize|unserialize)\(\)\.$#'
+			message: '#^Template type T is declared as covariant, but occurs in contravariant position (.+)\_\_(serialize|unserialize)\(\)\.$#'
 			path: ../src/Meta/Runtime/CallbackRuntimeMeta.php
 
 		################################################################################################################
