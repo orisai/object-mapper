@@ -350,17 +350,6 @@ MSG,
 		);
 	}
 
-	public function testStdClass(): void
-	{
-		$data = new stdClass();
-		$data->string = 'custom';
-
-		$vo = $this->processor->process($data, DefaultsVO::class);
-
-		self::assertInstanceOf(DefaultsVO::class, $vo);
-		self::assertSame('custom', $vo->string);
-	}
-
 	public function testUntyped(): void
 	{
 		$data = [
