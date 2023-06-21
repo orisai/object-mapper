@@ -7,7 +7,7 @@ use Orisai\ObjectMapper\Rules\BackedEnumRule;
 use Orisai\ObjectMapper\Rules\DefaultRuleManager;
 use Orisai\ObjectMapper\Rules\RuleManager;
 use PHPUnit\Framework\TestCase;
-use Tests\Orisai\ObjectMapper\Doubles\AlwaysInvalidRule;
+use Tests\Orisai\ObjectMapper\Doubles\Rules\AlwaysInvalidRule;
 use function get_class;
 use function sprintf;
 use const PHP_VERSION_ID;

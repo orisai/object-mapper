@@ -16,8 +16,8 @@ use Orisai\ObjectMapper\Types\CompoundType;
 use Orisai\ObjectMapper\Types\CompoundTypeOperator;
 use Orisai\ObjectMapper\Types\MessageType;
 use Orisai\ObjectMapper\Types\SimpleValueType;
-use Tests\Orisai\ObjectMapper\Doubles\AlwaysInvalidRule;
 use Tests\Orisai\ObjectMapper\Doubles\DefaultsVO;
+use Tests\Orisai\ObjectMapper\Doubles\Rules\AlwaysInvalidRule;
 use Tests\Orisai\ObjectMapper\Toolkit\ProcessingTestCase;
 use function sprintf;
 

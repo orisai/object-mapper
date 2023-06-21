@@ -13,7 +13,7 @@ use Orisai\ObjectMapper\Rules\MixedRule;
 use Orisai\ObjectMapper\Rules\StringRule;
 use Orisai\ObjectMapper\Types\GenericArrayType;
 use Orisai\ObjectMapper\Types\SimpleValueType;
-use Tests\Orisai\ObjectMapper\Doubles\AlwaysInvalidRule;
+use Tests\Orisai\ObjectMapper\Doubles\Rules\AlwaysInvalidRule;
 use Tests\Orisai\ObjectMapper\Toolkit\ProcessingTestCase;
 
 final class ArrayOfRuleTest extends ProcessingTestCase

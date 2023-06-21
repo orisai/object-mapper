@@ -186,7 +186,7 @@ parameters:
 			path: ../tests/Unit/Rules/AnyOfTest.php
 
 		-
-			message: "#^Call to static method PHPUnit\\\\Framework\\\\Assert\\:\\:assertInstanceOf\\(\\) with 'Tests\\\\\\\\Orisai\\\\\\\\ObjectMapper\\\\\\\\Doubles\\\\\\\\AlwaysInvalidRule' and Tests\\\\Orisai\\\\ObjectMapper\\\\Doubles\\\\AlwaysInvalidRule will always evaluate to true\\.$#"
+			message: "#^Call to static method PHPUnit\\\\Framework\\\\Assert\\:\\:assertInstanceOf\\(\\) with 'Tests\\\\\\\\Orisai\\\\\\\\ObjectMapper\\\\\\\\Doubles\\\\\\\\Rules\\\\\\\\AlwaysInvalidRule' and Tests\\\\Orisai\\\\ObjectMapper\\\\Doubles\\\\Rules\\\\AlwaysInvalidRule will always evaluate to true\\.$#"
 			count: 1
 			path: ../tests/Unit/Rules/DefaultRuleManagerTest.php
 
