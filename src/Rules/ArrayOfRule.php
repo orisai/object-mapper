@@ -107,6 +107,9 @@ final class ArrayOfRule extends MultiValueRule
 		$itemMeta = $args->itemRuleMeta;
 		$itemRule = $context->getRule($itemMeta->getType());
 		$itemArgs = $itemMeta->getArgs();
+		if (!$itemRule instanceof MultiValueEfficientRule) {
+			$itemRule = new MultiValueEfficientRuleAdapter($itemRule);
+		}
 
 		$keyMeta = $args->keyRuleMeta;
 		if ($keyMeta !== null) {
@@ -117,74 +120,45 @@ final class ArrayOfRule extends MultiValueRule
 			$keyArgs = null;
 		}
 
-		if ($itemRule instanceof MultiValueEfficientRule) {
-			foreach ($value as $key => $item) {
-				$keyException = null;
-				$itemException = null;
+		foreach ($value as $key => $item) {
+			$keyException = null;
+			$itemException = null;
 
-				if ($keyRule !== null && $keyArgs !== null) {
-					try {
-						$key = $keyRule->processValue($key, $keyArgs, $context->createClone());
-					} catch (ValueDoesNotMatch | InvalidData $exception) {
-						$keyException = $exception;
-					}
-				}
-
+			if ($keyRule !== null && $keyArgs !== null) {
 				try {
-					$value[$key] = $itemRule->processValuePhase1(
-						$item,
-						$itemArgs,
-						$context->createClone(),
-					);
+					$key = $keyRule->processValue($key, $keyArgs, $context->createClone());
 				} catch (ValueDoesNotMatch | InvalidData $exception) {
-					$itemException = $exception;
-				}
-
-				if ($itemException !== null || $keyException !== null) {
-					unset($value[$key]);
-					$type->addInvalidPair($key, $keyException, $itemException);
+					$keyException = $exception;
 				}
 			}
 
-			$itemRule->processValuePhase2(array_values($value), $args, $context->createClone());
-
-			foreach ($value as $key => $item) {
-				try {
-					$value[$key] = $itemRule->processValuePhase3(
-						$item,
-						$itemArgs,
-						$context->createClone(),
-					);
-				} catch (ValueDoesNotMatch | InvalidData $exception) {
-					$type->addInvalidPair($key, null, $exception);
-				}
+			try {
+				$value[$key] = $itemRule->processValuePhase1(
+					$item,
+					$itemArgs,
+					$context->createClone(),
+				);
+			} catch (ValueDoesNotMatch | InvalidData $exception) {
+				$itemException = $exception;
 			}
-		} else {
-			foreach ($value as $key => $item) {
-				$keyException = null;
-				$itemException = null;
 
-				if ($keyRule !== null && $keyArgs !== null) {
-					try {
-						$key = $keyRule->processValue($key, $keyArgs, $context->createClone());
-					} catch (ValueDoesNotMatch | InvalidData $exception) {
-						$keyException = $exception;
-					}
-				}
+			if ($itemException !== null || $keyException !== null) {
+				unset($value[$key]);
+				$type->addInvalidPair($key, $keyException, $itemException);
+			}
+		}
 
-				try {
-					$value[$key] = $itemRule->processValue(
-						$item,
-						$itemArgs,
-						$context->createClone(),
-					);
-				} catch (ValueDoesNotMatch | InvalidData $exception) {
-					$itemException = $exception;
-				}
+		$itemRule->processValuePhase2(array_values($value), $args, $context->createClone());
 
-				if ($itemException !== null || $keyException !== null) {
-					$type->addInvalidPair($key, $keyException, $itemException);
-				}
+		foreach ($value as $key => $item) {
+			try {
+				$value[$key] = $itemRule->processValuePhase3(
+					$item,
+					$itemArgs,
+					$context->createClone(),
+				);
+			} catch (ValueDoesNotMatch | InvalidData $exception) {
+				$type->addInvalidPair($key, null, $exception);
 			}
 		}
 

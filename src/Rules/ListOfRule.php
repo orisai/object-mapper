@@ -97,74 +97,49 @@ final class ListOfRule extends MultiValueRule
 		$itemMeta = $args->itemRuleMeta;
 		$itemRule = $context->getRule($itemMeta->getType());
 		$itemArgs = $itemMeta->getArgs();
+		if (!$itemRule instanceof MultiValueEfficientRule) {
+			$itemRule = new MultiValueEfficientRuleAdapter($itemRule);
+		}
 
 		$lastIntKey = -1; // List starts from 0
-		if ($itemRule instanceof MultiValueEfficientRule) {
-			foreach ($value as $key => $item) {
-				if (!is_int($key) || $key !== ++$lastIntKey) {
-					$keyType = $this->createKeyType();
-					$keyType->markParameterInvalid(self::Continuous);
+		foreach ($value as $key => $item) {
+			if (!is_int($key) || $key !== ++$lastIntKey) {
+				$keyType = $this->createKeyType();
+				$keyType->markParameterInvalid(self::Continuous);
 
-					$type->addInvalidKey(
-						$key,
-						ValueDoesNotMatch::create($keyType, Value::of($key)),
-					);
-				}
-
-				if (is_int($key)) {
-					$lastIntKey = $key;
-				}
-
-				try {
-					$value[$key] = $itemRule->processValuePhase1(
-						$item,
-						$itemArgs,
-						$context->createClone(),
-					);
-				} catch (ValueDoesNotMatch | InvalidData $exception) {
-					unset($value[$key]);
-					$type->addInvalidValue($key, $exception);
-				}
+				$type->addInvalidKey(
+					$key,
+					ValueDoesNotMatch::create($keyType, Value::of($key)),
+				);
 			}
 
-			$itemRule->processValuePhase2(array_values($value), $args, $context->createClone());
-
-			foreach ($value as $key => $item) {
-				try {
-					$value[$key] = $itemRule->processValuePhase3(
-						$item,
-						$itemArgs,
-						$context->createClone(),
-					);
-				} catch (ValueDoesNotMatch | InvalidData $exception) {
-					$type->addInvalidPair($key, null, $exception);
-				}
+			if (is_int($key)) {
+				$lastIntKey = $key;
 			}
-		} else {
-			foreach ($value as $key => $item) {
-				if (!is_int($key) || $key !== ++$lastIntKey) {
-					$keyType = $this->createKeyType();
-					$keyType->markParameterInvalid(self::Continuous);
 
-					$type->addInvalidKey(
-						$key,
-						ValueDoesNotMatch::create($keyType, Value::of($key)),
-					);
-				}
+			try {
+				$value[$key] = $itemRule->processValuePhase1(
+					$item,
+					$itemArgs,
+					$context->createClone(),
+				);
+			} catch (ValueDoesNotMatch | InvalidData $exception) {
+				unset($value[$key]);
+				$type->addInvalidValue($key, $exception);
+			}
+		}
 
-				if (is_int($key)) {
-					$lastIntKey = $key;
-				}
+		$itemRule->processValuePhase2(array_values($value), $args, $context->createClone());
 
-				try {
-					$value[$key] = $itemRule->processValue(
-						$item,
-						$itemArgs,
-						$context->createClone(),
-					);
-				} catch (ValueDoesNotMatch | InvalidData $exception) {
-					$type->addInvalidValue($key, $exception);
-				}
+		foreach ($value as $key => $item) {
+			try {
+				$value[$key] = $itemRule->processValuePhase3(
+					$item,
+					$itemArgs,
+					$context->createClone(),
+				);
+			} catch (ValueDoesNotMatch | InvalidData $exception) {
+				$type->addInvalidPair($key, null, $exception);
 			}
 		}
 
