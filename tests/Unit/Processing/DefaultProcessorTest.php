@@ -20,6 +20,7 @@ use Tests\Orisai\ObjectMapper\Doubles\Callbacks\AfterClassCallbackNewTypeInvalid
 use Tests\Orisai\ObjectMapper\Doubles\Callbacks\AfterClassCallbackValueDoesNotMatchVO;
 use Tests\Orisai\ObjectMapper\Doubles\Callbacks\BeforeClassCallbackMixedValueVO;
 use Tests\Orisai\ObjectMapper\Doubles\Callbacks\BeforeClassCallbackValueDoesNotMatchVO;
+use Tests\Orisai\ObjectMapper\Doubles\Callbacks\CallbackOverrideChildVO;
 use Tests\Orisai\ObjectMapper\Doubles\Callbacks\CallbacksVO;
 use Tests\Orisai\ObjectMapper\Doubles\Callbacks\CallbacksVoContext;
 use Tests\Orisai\ObjectMapper\Doubles\Callbacks\InvalidateFieldBeforeClassVO;
@@ -847,6 +848,20 @@ MSG,
 	test
 }',
 			$this->printer->printError($exception),
+		);
+	}
+
+	public function testCallbackMethodOverride(): void
+	{
+		$data = [
+			'field' => 'value',
+		];
+
+		$vo = $this->processor->process($data, CallbackOverrideChildVO::class);
+
+		self::assertEquals(
+			$vo,
+			new CallbackOverrideChildVO('value-parent-child-parentStatic-childStatic'),
 		);
 	}
 
