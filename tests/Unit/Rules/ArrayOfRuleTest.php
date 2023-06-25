@@ -14,6 +14,7 @@ use Orisai\ObjectMapper\Rules\StringRule;
 use Orisai\ObjectMapper\Types\GenericArrayType;
 use Orisai\ObjectMapper\Types\SimpleValueType;
 use Tests\Orisai\ObjectMapper\Doubles\Rules\AlwaysInvalidRule;
+use Tests\Orisai\ObjectMapper\Doubles\Rules\EfficientTestRule;
 use Tests\Orisai\ObjectMapper\Toolkit\ProcessingTestCase;
 
 final class ArrayOfRuleTest extends ProcessingTestCase
@@ -46,6 +47,69 @@ final class ArrayOfRuleTest extends ProcessingTestCase
 		);
 
 		self::assertSame($value, $processed);
+	}
+
+	public function testProcessMultiStepCallOrder(): void
+	{
+		$rule = new EfficientTestRule();
+		$this->ruleManager->addRule($rule);
+
+		$value = ['foo', 'bar', 'baz', 123];
+
+		$processed = $this->rule->processValue(
+			$value,
+			new ArrayOfArgs(
+				$this->ruleRuntimeMeta(EfficientTestRule::class),
+				null,
+				null,
+				null,
+				false,
+			),
+			$this->fieldContext(),
+		);
+
+		self::assertSame($value, $processed);
+		self::assertSame(
+			$rule->calls,
+			[
+				[
+					'phase' => 1,
+					'value' => 'foo',
+				],
+				[
+					'phase' => 1,
+					'value' => 'bar',
+				],
+				[
+					'phase' => 1,
+					'value' => 'baz',
+				],
+				[
+					'phase' => 1,
+					'value' => 123,
+				],
+				[
+					'phase' => 2,
+					'value' => ['foo', 'bar', 'baz', 123],
+				],
+				[
+					'phase' => 3,
+					'value' => 'foo',
+				],
+				[
+					'phase' => 3,
+					'value' => 'bar',
+				],
+				[
+					'phase' => 3,
+					'value' => 'baz',
+				],
+				[
+					'phase' => 3,
+					'value' => 123,
+				],
+			],
+		);
 	}
 
 	public function testProcessValidWithKeys(): void
