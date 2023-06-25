@@ -9,6 +9,7 @@ use Orisai\ObjectMapper\Meta\Runtime\RuleRuntimeMeta;
 use Orisai\ObjectMapper\Meta\Shared\DefaultValueMeta;
 use Orisai\ObjectMapper\Rules\ArrayOfArgs;
 use Orisai\ObjectMapper\Rules\ArrayOfRule;
+use Orisai\ObjectMapper\Rules\IntRule;
 use Orisai\ObjectMapper\Rules\MixedRule;
 use Orisai\ObjectMapper\Rules\StringRule;
 use Orisai\ObjectMapper\Types\GenericArrayType;
@@ -117,7 +118,7 @@ final class ArrayOfRuleTest extends ProcessingTestCase
 		$rule = new EfficientTestRule();
 		$this->ruleManager->addRule($rule);
 
-		$value = [$rule::Fail1, $rule::Fail3, 'baz', 123];
+		$value = [$rule::Fail1, 'string' => $rule::Fail3, 'baz', 123];
 		$exception = null;
 
 		try {
@@ -125,7 +126,7 @@ final class ArrayOfRuleTest extends ProcessingTestCase
 				$value,
 				new ArrayOfArgs(
 					$this->ruleRuntimeMeta(EfficientTestRule::class),
-					null,
+					$this->ruleRuntimeMeta(IntRule::class),
 					null,
 					null,
 					false,
@@ -133,13 +134,19 @@ final class ArrayOfRuleTest extends ProcessingTestCase
 				$this->fieldContext(),
 			);
 		} catch (ValueDoesNotMatch $exception) {
-			// Handled bellow
+			$type = $exception->getType();
+			self::assertInstanceOf(GenericArrayType::class, $type);
+
+			$pairs = $type->getInvalidPairs();
+			self::assertCount(2, $pairs);
+
+			self::assertNull($pairs[0]->getKey());
+			self::assertNotNull($pairs[0]->getValue());
+			self::assertNotNull($pairs['string']->getKey());
+			self::assertNotNull($pairs['string']->getValue());
 		}
 
 		self::assertNotNull($exception);
-		$type = $exception->getType();
-		self::assertInstanceOf(GenericArrayType::class, $type);
-		self::assertCount(2, $type->getInvalidPairs());
 		self::assertSame(
 			$rule->calls,
 			[

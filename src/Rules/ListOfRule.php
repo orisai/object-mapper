@@ -124,8 +124,10 @@ final class ListOfRule extends MultiValueRule
 					$context->createClone(),
 				);
 			} catch (ValueDoesNotMatch | InvalidData $exception) {
-				unset($value[$key]);
 				$type->addInvalidValue($key, $exception);
+				// Remove invalid value because only valid values are expected beyond this point
+				// Invalid keys are fine because we don't work them beyond
+				unset($value[$key]);
 			}
 		}
 

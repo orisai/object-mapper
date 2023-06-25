@@ -137,9 +137,8 @@ final class ArrayOfRule extends MultiValueRule
 				);
 			} catch (ValueDoesNotMatch | InvalidData $exception) {
 				$type->addInvalidValue($key, $exception);
-			}
-
-			if (isset($type->getInvalidPairs()[$key])) {
+				// Remove invalid value because only valid values are expected beyond this point
+				// Invalid keys are fine because we don't work them beyond
 				unset($value[$key]);
 			}
 		}
