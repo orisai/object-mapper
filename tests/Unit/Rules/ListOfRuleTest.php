@@ -110,6 +110,72 @@ final class ListOfRuleTest extends ProcessingTestCase
 		);
 	}
 
+	public function testProcessMultiStepCallOrderWithErrors(): void
+	{
+		$rule = new EfficientTestRule();
+		$this->ruleManager->addRule($rule);
+
+		$value = [$rule::Fail1, $rule::Fail3, 'baz', 123];
+		$exception = null;
+
+		try {
+			$this->rule->processValue(
+				$value,
+				new MultiValueArgs(
+					new RuleRuntimeMeta(EfficientTestRule::class, new EmptyArgs()),
+					null,
+					null,
+					false,
+				),
+				$this->fieldContext(),
+			);
+		} catch (ValueDoesNotMatch $exception) {
+			// Handled bellow
+		}
+
+		self::assertNotNull($exception);
+		$type = $exception->getType();
+		self::assertInstanceOf(GenericArrayType::class, $type);
+		self::assertCount(2, $type->getInvalidPairs());
+		self::assertSame(
+			$rule->calls,
+			[
+				[
+					'phase' => 1,
+					'value' => $rule::Fail1,
+				],
+				[
+					'phase' => 1,
+					'value' => $rule::Fail3,
+				],
+				[
+					'phase' => 1,
+					'value' => 'baz',
+				],
+				[
+					'phase' => 1,
+					'value' => 123,
+				],
+				[
+					'phase' => 2,
+					'value' => [$rule::Fail3, 'baz', 123],
+				],
+				[
+					'phase' => 3,
+					'value' => $rule::Fail3,
+				],
+				[
+					'phase' => 3,
+					'value' => 'baz',
+				],
+				[
+					'phase' => 3,
+					'value' => 123,
+				],
+			],
+		);
+	}
+
 	public function testProcessDefaultsExceedLimit(): void
 	{
 		$value = ['foo', 'bar', 'baz', 123];

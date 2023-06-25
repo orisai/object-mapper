@@ -6,6 +6,8 @@ use Orisai\ObjectMapper\Args\Args;
 use Orisai\ObjectMapper\Args\EmptyArgs;
 use Orisai\ObjectMapper\Context\FieldContext;
 use Orisai\ObjectMapper\Context\TypeContext;
+use Orisai\ObjectMapper\Exception\ValueDoesNotMatch;
+use Orisai\ObjectMapper\Processing\Value;
 use Orisai\ObjectMapper\Rules\MultiValueEfficientRule;
 use Orisai\ObjectMapper\Rules\NoArgsRule;
 use Orisai\ObjectMapper\Types\SimpleValueType;
@@ -17,6 +19,9 @@ final class EfficientTestRule implements MultiValueEfficientRule
 {
 
 	use NoArgsRule;
+
+	public const Fail1 = 'fail1',
+		Fail3 = 'fail3';
 
 	/** @var array<mixed> */
 	public array $calls = [];
@@ -33,6 +38,13 @@ final class EfficientTestRule implements MultiValueEfficientRule
 	{
 		$this->addCall($value, 1);
 
+		if ($value === self::Fail1) {
+			throw ValueDoesNotMatch::create(
+				$this->createType($args, $context),
+				Value::of($value),
+			);
+		}
+
 		return $value;
 	}
 
@@ -44,6 +56,13 @@ final class EfficientTestRule implements MultiValueEfficientRule
 	public function processValuePhase3($value, Args $args, FieldContext $context)
 	{
 		$this->addCall($value, 3);
+
+		if ($value === self::Fail3) {
+			throw ValueDoesNotMatch::create(
+				$this->createType($args, $context),
+				Value::of($value),
+			);
+		}
 
 		return $value;
 	}
