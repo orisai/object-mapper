@@ -139,7 +139,7 @@ final class ListOfRule extends MultiValueRule
 					$context->createClone(),
 				);
 			} catch (ValueDoesNotMatch | InvalidData $exception) {
-				$type->addInvalidPair($key, null, $exception);
+				$type->addInvalidValue($key, $exception);
 			}
 		}
 

@@ -121,14 +121,11 @@ final class ArrayOfRule extends MultiValueRule
 		}
 
 		foreach ($value as $key => $item) {
-			$keyException = null;
-			$itemException = null;
-
 			if ($keyRule !== null && $keyArgs !== null) {
 				try {
 					$key = $keyRule->processValue($key, $keyArgs, $context->createClone());
 				} catch (ValueDoesNotMatch | InvalidData $exception) {
-					$keyException = $exception;
+					$type->addInvalidKey($key, $exception);
 				}
 			}
 
@@ -139,12 +136,11 @@ final class ArrayOfRule extends MultiValueRule
 					$context->createClone(),
 				);
 			} catch (ValueDoesNotMatch | InvalidData $exception) {
-				$itemException = $exception;
+				$type->addInvalidValue($key, $exception);
 			}
 
-			if ($itemException !== null || $keyException !== null) {
+			if (isset($type->getInvalidPairs()[$key])) {
 				unset($value[$key]);
-				$type->addInvalidPair($key, $keyException, $itemException);
 			}
 		}
 
@@ -158,7 +154,7 @@ final class ArrayOfRule extends MultiValueRule
 					$context->createClone(),
 				);
 			} catch (ValueDoesNotMatch | InvalidData $exception) {
-				$type->addInvalidPair($key, null, $exception);
+				$type->addInvalidValue($key, $exception);
 			}
 		}
 
