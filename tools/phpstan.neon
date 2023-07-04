@@ -91,6 +91,11 @@ parameters:
 			message: '#^Method (.+)\:\:get\(\) should return T of (.+)DependencyInjector but returns (.+)DependencyInjector\<(.+)MappedObject\>\.$#'
 			path: ../src/Processing/DefaultDependencyInjectorManager.php
 
+		# Non-strict comparison, intentional
+		-
+			message: '#^Loose comparison via "!=" is not allowed\.$#'
+			path: ../src/Meta/Compile/FieldCompileMeta.php
+
 		# Dunno, seems to be all fine
 		-
 			message: '#^Method (.+)\:\:getInstance\(\) should return T of (.+)MappedObject but returns Orisai\\ObjectMapper\\MappedObject\.$#'

@@ -21,8 +21,10 @@ use Orisai\ObjectMapper\Rules\RuleDefinition;
 use Orisai\ReflectionMeta\Reader\MetaReader;
 use Orisai\ReflectionMeta\Structure\StructureBuilder;
 use Orisai\ReflectionMeta\Structure\StructureFlattener;
-use Orisai\ReflectionMeta\Structure\StructureList;
+use Orisai\ReflectionMeta\Structure\StructureGroup;
+use Orisai\ReflectionMeta\Structure\StructureGrouper;
 use ReflectionClass;
+use function array_key_first;
 use function get_class;
 use function sprintf;
 
@@ -38,7 +40,7 @@ abstract class ReflectorMetaSource implements MetaSource
 
 	public function load(ReflectionClass $class): CompileMeta
 	{
-		$structures = $this->getStructureList($class);
+		$structures = $this->getStructureGroup($class);
 
 		$sources = [];
 		foreach ($structures->getClasses() as $structure) {
@@ -55,20 +57,22 @@ abstract class ReflectorMetaSource implements MetaSource
 	/**
 	 * @param ReflectionClass<MappedObject> $class
 	 */
-	private function getStructureList(ReflectionClass $class): StructureList
+	private function getStructureGroup(ReflectionClass $class): StructureGroup
 	{
-		return StructureFlattener::flatten(
-			StructureBuilder::build($class),
+		return StructureGrouper::group(
+			StructureFlattener::flatten(
+				StructureBuilder::build($class),
+			),
 		);
 	}
 
 	/**
 	 * @return list<ClassCompileMeta>
 	 */
-	private function loadClassMeta(StructureList $structures): array
+	private function loadClassMeta(StructureGroup $group): array
 	{
 		$resolved = [];
-		foreach ($structures->getClasses() as $class) {
+		foreach ($group->getClasses() as $class) {
 			$reflector = $class->getSource()->getReflector();
 			$definitions = $this->reader->readClass($reflector, MetaDefinition::class);
 
@@ -77,7 +81,7 @@ abstract class ReflectorMetaSource implements MetaSource
 			$modifiers = [];
 
 			foreach ($definitions as $definition) {
-				$definition = $this->checkAnnotationType($definition);
+				$definition = $this->checkDefinitionType($definition);
 
 				if ($definition instanceof RuleDefinition) {
 					throw InvalidArgument::create()
@@ -115,99 +119,108 @@ abstract class ReflectorMetaSource implements MetaSource
 	/**
 	 * @return list<FieldCompileMeta>
 	 */
-	private function loadPropertiesMeta(StructureList $structures): array
+	private function loadPropertiesMeta(StructureGroup $group): array
 	{
-		$fields = [];
+		$resolved = [];
+		foreach ($group->getGroupedProperties() as $groupedProperty) {
+			$resolvedGroup = [];
+			foreach ($groupedProperty as $propertyStructure) {
+				$reflector = $propertyStructure->getSource()->getReflector();
+				$definitions = $this->reader->readProperty($reflector, MetaDefinition::class);
 
-		foreach ($structures->getProperties() as $propertyStructure) {
-			$reflector = $propertyStructure->getSource()->getReflector();
-			$definitions = $this->reader->readProperty($reflector, MetaDefinition::class);
+				$class = $propertyStructure->getContextClass();
+				$property = $class->getProperty($reflector->getName());
 
-			$class = $propertyStructure->getContextClass();
-			$property = $class->getProperty($reflector->getName());
+				$callbacks = [];
+				$docs = [];
+				$modifiers = [];
+				$rule = null;
 
-			$callbacks = [];
-			$docs = [];
-			$modifiers = [];
-			$rule = null;
+				foreach ($definitions as $definition) {
+					$definition = $this->checkDefinitionType($definition);
 
-			foreach ($definitions as $definition) {
-				$definition = $this->checkAnnotationType($definition);
+					if ($definition instanceof RuleDefinition) {
+						if ($rule !== null) {
+							throw InvalidArgument::create()
+								->withMessage(sprintf(
+									'Mapped property %s::$%s has multiple expectation definitions, while only one is allowed. ' .
+									'Combine multiple with %s or %s',
+									$class->getName(),
+									$property->getName(),
+									AnyOf::class,
+									AllOf::class,
+								));
+						}
 
-				if ($definition instanceof RuleDefinition) {
-					if ($rule !== null) {
-						throw InvalidArgument::create()
-							->withMessage(sprintf(
-								'Mapped property %s::$%s has multiple expectation annotations, while only one is allowed. ' .
-								'Combine multiple with %s or %s',
-								$class->getName(),
-								$property->getName(),
-								AnyOf::class,
-								AllOf::class,
-							));
+						$rule = new RuleCompileMeta(
+							$definition->getType(),
+							$definition->getArgs(),
+						);
+					} elseif ($definition instanceof CallbackDefinition) {
+						$callbacks[] = new CallbackCompileMeta(
+							$definition->getType(),
+							$definition->getArgs(),
+						);
+					} elseif ($definition instanceof DocDefinition) {
+						$docs[] = new DocMeta(
+							$definition->getType(),
+							$definition->getArgs(),
+						);
+					} else {
+						$modifiers[] = new ModifierCompileMeta(
+							$definition->getType(),
+							$definition->getArgs(),
+						);
 					}
-
-					$rule = new RuleCompileMeta(
-						$definition->getType(),
-						$definition->getArgs(),
-					);
-				} elseif ($definition instanceof CallbackDefinition) {
-					$callbacks[] = new CallbackCompileMeta(
-						$definition->getType(),
-						$definition->getArgs(),
-					);
-				} elseif ($definition instanceof DocDefinition) {
-					$docs[] = new DocMeta(
-						$definition->getType(),
-						$definition->getArgs(),
-					);
-				} else {
-					$modifiers[] = new ModifierCompileMeta(
-						$definition->getType(),
-						$definition->getArgs(),
-					);
 				}
+
+				if ($rule === null && $callbacks === [] && $docs === [] && $modifiers === []) {
+					continue;
+				}
+
+				if ($rule === null) {
+					throw InvalidArgument::create()
+						->withMessage(
+							"Property {$class->getName()}::\${$property->getName()} has mapped object definition, " .
+							'but no rule definition.',
+						);
+				}
+
+				$resolvedGroup[] = new FieldCompileMeta(
+					$callbacks,
+					$docs,
+					$modifiers,
+					$rule,
+					$property,
+				);
 			}
 
-			if ($rule === null && $callbacks === [] && $docs === [] && $modifiers === []) {
+			if ($resolvedGroup === []) {
 				continue;
 			}
 
-			if ($rule === null) {
-				throw InvalidArgument::create()
-					->withMessage(
-						"Property {$class->getName()}::\${$property->getName()} has mapped object annotation, " .
-						'but no rule annotation.',
-					);
-			}
-
-			$fields[] = new FieldCompileMeta(
-				$callbacks,
-				$docs,
-				$modifiers,
-				$rule,
-				$property,
-			);
+			$this->checkFieldInvariance($resolvedGroup);
+			$resolved[] = $resolvedGroup[array_key_first($resolvedGroup)];
 		}
 
-		return $fields;
+		return $resolved;
 	}
 
 	/**
 	 * @return CallbackDefinition|DocDefinition|ModifierDefinition|RuleDefinition
 	 */
-	private function checkAnnotationType(MetaDefinition $annotation): MetaDefinition
+	private function checkDefinitionType(MetaDefinition $definition): MetaDefinition
 	{
 		if (
-			!$annotation instanceof CallbackDefinition
-			&& !$annotation instanceof DocDefinition
-			&& !$annotation instanceof ModifierDefinition
-			&& !$annotation instanceof RuleDefinition
+			!$definition instanceof CallbackDefinition
+			&& !$definition instanceof DocDefinition
+			&& !$definition instanceof ModifierDefinition
+			&& !$definition instanceof RuleDefinition
 		) {
 			throw InvalidArgument::create()
 				->withMessage(sprintf(
-					'Annotation %s (subtype of %s) should implement %s, %s %s or %s',
-					get_class($annotation),
+					'Definition %s (subtype of %s) should implement %s, %s %s or %s',
+					get_class($definition),
 					MetaDefinition::class,
 					CallbackDefinition::class,
 					DocDefinition::class,
@@ -216,7 +229,26 @@ abstract class ReflectorMetaSource implements MetaSource
 				));
 		}
 
-		return $annotation;
+		return $definition;
+	}
+
+	/**
+	 * @param list<FieldCompileMeta> $resolvedGroup
+	 */
+	private function checkFieldInvariance(array $resolvedGroup): void
+	{
+		$previousFieldMeta = null;
+		foreach ($resolvedGroup as $fieldMeta) {
+			if ($previousFieldMeta !== null && !$fieldMeta->hasEqualMeta($previousFieldMeta)) {
+				throw InvalidArgument::create()
+					->withMessage(
+						"Definition of property '{$fieldMeta->getClass()->getName()}::\${$fieldMeta->getProperty()->getName()}'" .
+						" can't be changed but it differs from definition in '{$previousFieldMeta->getClass()->getName()}'.",
+					);
+			}
+
+			$previousFieldMeta = $fieldMeta;
+		}
 	}
 
 }

@@ -40,4 +40,26 @@ final class FieldCompileMeta extends NodeCompileMeta
 		return $this->property;
 	}
 
+	public function hasEqualMeta(self $meta): bool
+	{
+		if ($this->rule != $meta->getRule()) {
+			return false;
+		}
+
+		if ($this->getCallbacks() != $meta->getCallbacks()) {
+			return false;
+		}
+
+		if ($this->getDocs() != $meta->getDocs()) {
+			return false;
+		}
+
+		// phpcs:disable SlevomatCodingStandard.ControlStructures.UselessIfConditionWithReturn
+		if ($this->getModifiers() != $meta->getModifiers()) {
+			return false;
+		}
+
+		return true;
+	}
+
 }
