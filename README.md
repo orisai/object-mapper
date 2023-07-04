@@ -76,7 +76,7 @@ use Orisai\ObjectMapper\Printers\ErrorVisualPrinter;
 use Orisai\ObjectMapper\Printers\TypeToStringConverter;
 use Orisai\ObjectMapper\Processing\DefaultProcessor;
 
-$processor = new DefaultProcessor(...);
+$processor = new DefaultProcessor(/* dependencies */);
 $errorPrinter = new ErrorVisualPrinter(new TypeToStringConverter());
 
 $data = [
