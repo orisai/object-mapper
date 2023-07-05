@@ -9,8 +9,6 @@ use ReflectionProperty;
 final class RuleArgsContext extends BaseArgsContext
 {
 
-	private ReflectionProperty $property;
-
 	private MetaLoader $metaLoader;
 
 	public function __construct(
@@ -20,13 +18,7 @@ final class RuleArgsContext extends BaseArgsContext
 	)
 	{
 		parent::__construct($property->getDeclaringClass(), $metaResolver);
-		$this->property = $property;
 		$this->metaLoader = $metaLoader;
-	}
-
-	public function getProperty(): ReflectionProperty
-	{
-		return $this->property;
 	}
 
 	public function getMetaLoader(): MetaLoader
