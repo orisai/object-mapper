@@ -8,7 +8,7 @@ use Orisai\ObjectMapper\Rules\NullValue;
 use Orisai\ObjectMapper\Rules\StringValue;
 use Tests\Orisai\ObjectMapper\Doubles\DefaultsVO;
 
-final class ConstructorPromotedVO implements MappedObject
+final class NewInInitializersVO implements MappedObject
 {
 
 	/**
@@ -24,6 +24,8 @@ final class ConstructorPromotedVO implements MappedObject
 		public $requiredUntyped,
 		#[StringValue]
 		public string $optionalString = 'default',
+		#[MappedObjectValue(DefaultsVO::class)]
+		public DefaultsVO $optionalObject = new DefaultsVO(),
 		#[NullValue]
 		public $optionalUntyped = null,
 	)

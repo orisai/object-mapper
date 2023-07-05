@@ -325,7 +325,7 @@ final class MetaResolver
 		$declaringClass = $property->getDeclaringClass();
 
 		// Promoted property default value is accessible only via ctor parameter
-		if (PHP_VERSION_ID >= 8_01_00 && $property->isPromoted()) {
+		if (PHP_VERSION_ID >= 8_00_00 && $property->isPromoted()) {
 			$ctor = $declaringClass->getMethod('__construct');
 			foreach ($ctor->getParameters() as $parameter) {
 				if ($parameter->getName() === $propertyName) {
