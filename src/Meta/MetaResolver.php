@@ -85,7 +85,7 @@ final class MetaResolver
 		foreach ($meta->getClasses() as $classMeta) {
 			$class = $classMeta->getClass();
 
-			$context = new ResolverArgsContext($this);
+			$context = new ResolverArgsContext($this->loader, $this);
 
 			$callbacksByMeta[] = $this->resolveCallbacksMeta($classMeta, $context, $class);
 			$docsByMeta[] = $this->resolveDocsMeta($classMeta, $context);
@@ -169,7 +169,7 @@ final class MetaResolver
 				));
 		}
 
-		$context = new ResolverArgsContext($this);
+		$context = new ResolverArgsContext($this->loader, $this);
 
 		return new FieldRuntimeMeta(
 			$this->resolveCallbacksMeta($meta, $context, $property),

@@ -2,6 +2,7 @@
 
 namespace Orisai\ObjectMapper\Context;
 
+use Orisai\ObjectMapper\Meta\MetaLoader;
 use Orisai\ObjectMapper\Meta\MetaResolver;
 
 /**
@@ -10,11 +11,19 @@ use Orisai\ObjectMapper\Meta\MetaResolver;
 abstract class BaseArgsContext
 {
 
+	private MetaLoader $metaLoader;
+
 	private MetaResolver $metaResolver;
 
-	public function __construct(MetaResolver $metaResolver)
+	public function __construct(MetaLoader $metaLoader, MetaResolver $metaResolver)
 	{
+		$this->metaLoader = $metaLoader;
 		$this->metaResolver = $metaResolver;
+	}
+
+	public function getMetaLoader(): MetaLoader
+	{
+		return $this->metaLoader;
 	}
 
 	public function getMetaResolver(): MetaResolver
