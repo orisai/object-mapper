@@ -3,7 +3,7 @@
 namespace Orisai\ObjectMapper\Docs;
 
 use Orisai\ObjectMapper\Args\ArgsChecker;
-use Orisai\ObjectMapper\Context\ResolverArgsContext;
+use Orisai\ObjectMapper\Context\ArgsContext;
 use Orisai\ObjectMapper\Meta\Shared\DocMeta;
 
 final class ExamplesDoc implements Doc
@@ -15,7 +15,7 @@ final class ExamplesDoc implements Doc
 	 * @param array<mixed> $args
 	 * @return array<mixed>
 	 */
-	public static function resolveArgs(array $args, ResolverArgsContext $context): array
+	public static function resolveArgs(array $args, ArgsContext $context): array
 	{
 		$checker = new ArgsChecker($args, self::class);
 		$checker->checkAllowedArgs([self::Examples]);

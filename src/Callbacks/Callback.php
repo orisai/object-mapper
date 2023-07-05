@@ -3,10 +3,10 @@
 namespace Orisai\ObjectMapper\Callbacks;
 
 use Orisai\ObjectMapper\Args\Args;
+use Orisai\ObjectMapper\Context\ArgsContext;
 use Orisai\ObjectMapper\Context\BaseFieldContext;
 use Orisai\ObjectMapper\Context\FieldContext;
 use Orisai\ObjectMapper\Context\MappedObjectContext;
-use Orisai\ObjectMapper\Context\ResolverArgsContext;
 use Orisai\ObjectMapper\Exception\InvalidData;
 use Orisai\ObjectMapper\Exception\ValueDoesNotMatch;
 use Orisai\ObjectMapper\MappedObject;
@@ -26,7 +26,7 @@ interface Callback
 	 * @param ReflectionClass<MappedObject>|ReflectionProperty $reflector
 	 * @return T_ARGS
 	 */
-	public static function resolveArgs(array $args, ResolverArgsContext $context, Reflector $reflector): Args;
+	public static function resolveArgs(array $args, ArgsContext $context, Reflector $reflector): Args;
 
 	/**
 	 * @return class-string<T_ARGS>

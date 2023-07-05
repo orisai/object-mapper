@@ -4,8 +4,8 @@ namespace Orisai\ObjectMapper\Rules;
 
 use Orisai\Exceptions\Logic\NotImplemented;
 use Orisai\ObjectMapper\Args\Args;
+use Orisai\ObjectMapper\Context\ArgsContext;
 use Orisai\ObjectMapper\Context\FieldContext;
-use Orisai\ObjectMapper\Context\ResolverArgsContext;
 use Orisai\ObjectMapper\Context\TypeContext;
 use Orisai\ObjectMapper\Types\Type;
 
@@ -26,7 +26,7 @@ final class MultiValueEfficientRuleAdapter implements MultiValueEfficientRule
 		$this->rule = $rule;
 	}
 
-	public function resolveArgs(array $args, ResolverArgsContext $context): Args
+	public function resolveArgs(array $args, ArgsContext $context): Args
 	{
 		$this->throwNotImplemented(__FUNCTION__);
 	}

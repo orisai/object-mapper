@@ -5,8 +5,8 @@ namespace Orisai\ObjectMapper\Rules;
 use Orisai\Exceptions\Logic\InvalidArgument;
 use Orisai\ObjectMapper\Args\Args;
 use Orisai\ObjectMapper\Args\ArgsChecker;
+use Orisai\ObjectMapper\Context\ArgsContext;
 use Orisai\ObjectMapper\Context\FieldContext;
-use Orisai\ObjectMapper\Context\ResolverArgsContext;
 use Orisai\ObjectMapper\Context\TypeContext;
 use Orisai\ObjectMapper\Exception\ValueDoesNotMatch;
 use Orisai\ObjectMapper\Processing\Value;
@@ -29,7 +29,7 @@ final class ArrayEnumRule implements Rule
 		UseKeys = 'useKeys',
 		AllowUnknown = 'allowUnknown';
 
-	public function resolveArgs(array $args, ResolverArgsContext $context): ArrayEnumArgs
+	public function resolveArgs(array $args, ArgsContext $context): ArrayEnumArgs
 	{
 		$checker = new ArgsChecker($args, self::class);
 		$checker->checkAllowedArgs([self::Cases, self::UseKeys, self::AllowUnknown]);

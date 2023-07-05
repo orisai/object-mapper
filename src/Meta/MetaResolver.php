@@ -6,7 +6,7 @@ use Orisai\Exceptions\Logic\InvalidArgument;
 use Orisai\Exceptions\Logic\InvalidState;
 use Orisai\Exceptions\Message;
 use Orisai\ObjectMapper\Args\Args;
-use Orisai\ObjectMapper\Context\ResolverArgsContext;
+use Orisai\ObjectMapper\Context\ArgsContext;
 use Orisai\ObjectMapper\MappedObject;
 use Orisai\ObjectMapper\Meta\Compile\CallbackCompileMeta;
 use Orisai\ObjectMapper\Meta\Compile\ClassCompileMeta;
@@ -84,7 +84,7 @@ final class MetaResolver
 		foreach ($meta->getClasses() as $classMeta) {
 			$class = $classMeta->getClass();
 
-			$context = new ResolverArgsContext($this->loader, $this);
+			$context = new ArgsContext($this->loader, $this);
 
 			$callbacksByMeta[] = $this->resolveCallbacksMeta($classMeta, $context, $class);
 			$docsByMeta[] = $this->resolveDocsMeta($classMeta, $context);
@@ -168,7 +168,7 @@ final class MetaResolver
 				));
 		}
 
-		$context = new ResolverArgsContext($this->loader, $this);
+		$context = new ArgsContext($this->loader, $this);
 
 		return new FieldRuntimeMeta(
 			$this->resolveCallbacksMeta($meta, $context, $property),
@@ -176,7 +176,7 @@ final class MetaResolver
 			$this->resolveFieldModifiersMeta($meta, $context),
 			$this->resolveRuleMeta(
 				$meta->getRule(),
-				$this->createResolverArgsContext(),
+				$this->createArgsContext(),
 			),
 			$defaultValue,
 			$property,
@@ -189,7 +189,7 @@ final class MetaResolver
 	 */
 	private function resolveCallbacksMeta(
 		NodeCompileMeta $meta,
-		ResolverArgsContext $context,
+		ArgsContext $context,
 		Reflector $reflector
 	): array
 	{
@@ -208,7 +208,7 @@ final class MetaResolver
 	 */
 	private function resolveCallbackMeta(
 		CallbackCompileMeta $meta,
-		ResolverArgsContext $context,
+		ArgsContext $context,
 		Reflector $reflector,
 		ReflectionClass $declaringClass
 	): CallbackRuntimeMeta
@@ -225,7 +225,7 @@ final class MetaResolver
 	/**
 	 * @return array<string, DocMeta>
 	 */
-	private function resolveDocsMeta(NodeCompileMeta $meta, ResolverArgsContext $context): array
+	private function resolveDocsMeta(NodeCompileMeta $meta, ArgsContext $context): array
 	{
 		$array = [];
 		foreach ($meta->getDocs() as $doc) {
@@ -235,7 +235,7 @@ final class MetaResolver
 		return $array;
 	}
 
-	public function resolveDocMeta(DocMeta $meta, ResolverArgsContext $context): DocMeta
+	public function resolveDocMeta(DocMeta $meta, ArgsContext $context): DocMeta
 	{
 		$type = $meta->getName();
 		$args = $type::resolveArgs($meta->getArgs(), $context);
@@ -246,7 +246,7 @@ final class MetaResolver
 	/**
 	 * @return array<class-string<Modifier<Args>>, list<ModifierRuntimeMeta<Args>>>
 	 */
-	private function resolveClassModifiersMeta(ClassCompileMeta $meta, ResolverArgsContext $context): array
+	private function resolveClassModifiersMeta(ClassCompileMeta $meta, ArgsContext $context): array
 	{
 		$array = [];
 		foreach ($meta->getModifiers() as $modifier) {
@@ -259,7 +259,7 @@ final class MetaResolver
 	/**
 	 * @return array<class-string<Modifier<Args>>, ModifierRuntimeMeta<Args>>
 	 */
-	private function resolveFieldModifiersMeta(FieldCompileMeta $meta, ResolverArgsContext $context): array
+	private function resolveFieldModifiersMeta(FieldCompileMeta $meta, ArgsContext $context): array
 	{
 		$array = [];
 		foreach ($meta->getModifiers() as $modifier) {
@@ -272,7 +272,7 @@ final class MetaResolver
 	/**
 	 * @return ModifierRuntimeMeta<Args>
 	 */
-	private function resolveModifierMeta(ModifierCompileMeta $meta, ResolverArgsContext $context): ModifierRuntimeMeta
+	private function resolveModifierMeta(ModifierCompileMeta $meta, ArgsContext $context): ModifierRuntimeMeta
 	{
 		$type = $meta->getType();
 		$args = $type::resolveArgs($meta->getArgs(), $context);
@@ -283,7 +283,7 @@ final class MetaResolver
 	/**
 	 * @return RuleRuntimeMeta<Args>
 	 */
-	public function resolveRuleMeta(RuleCompileMeta $meta, ResolverArgsContext $context): RuleRuntimeMeta
+	public function resolveRuleMeta(RuleCompileMeta $meta, ArgsContext $context): RuleRuntimeMeta
 	{
 		$type = $meta->getType();
 		$rule = $this->ruleManager->getRule($type);
@@ -396,9 +396,9 @@ final class MetaResolver
 		}
 	}
 
-	private function createResolverArgsContext(): ResolverArgsContext
+	private function createArgsContext(): ArgsContext
 	{
-		return new ResolverArgsContext($this->loader, $this);
+		return new ArgsContext($this->loader, $this);
 	}
 
 }

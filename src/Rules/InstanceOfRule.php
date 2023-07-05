@@ -5,8 +5,8 @@ namespace Orisai\ObjectMapper\Rules;
 use Orisai\Exceptions\Logic\InvalidArgument;
 use Orisai\ObjectMapper\Args\Args;
 use Orisai\ObjectMapper\Args\ArgsChecker;
+use Orisai\ObjectMapper\Context\ArgsContext;
 use Orisai\ObjectMapper\Context\FieldContext;
-use Orisai\ObjectMapper\Context\ResolverArgsContext;
 use Orisai\ObjectMapper\Context\TypeContext;
 use Orisai\ObjectMapper\Exception\ValueDoesNotMatch;
 use Orisai\ObjectMapper\Processing\Value;
@@ -23,7 +23,7 @@ final class InstanceOfRule implements Rule
 
 	private const Type = 'type';
 
-	public function resolveArgs(array $args, ResolverArgsContext $context): InstanceOfArgs
+	public function resolveArgs(array $args, ArgsContext $context): InstanceOfArgs
 	{
 		$checker = new ArgsChecker($args, self::class);
 		$checker->checkAllowedArgs([self::Type]);

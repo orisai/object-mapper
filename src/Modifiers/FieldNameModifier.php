@@ -4,7 +4,7 @@ namespace Orisai\ObjectMapper\Modifiers;
 
 use Orisai\Exceptions\Logic\InvalidArgument;
 use Orisai\ObjectMapper\Args\ArgsChecker;
-use Orisai\ObjectMapper\Context\ResolverArgsContext;
+use Orisai\ObjectMapper\Context\ArgsContext;
 use function is_int;
 use function is_string;
 
@@ -17,7 +17,7 @@ final class FieldNameModifier implements Modifier
 	/** @internal */
 	public const Name = 'name';
 
-	public static function resolveArgs(array $args, ResolverArgsContext $context): FieldNameArgs
+	public static function resolveArgs(array $args, ArgsContext $context): FieldNameArgs
 	{
 		$checker = new ArgsChecker($args, self::class);
 		$checker->checkAllowedArgs([self::Name]);

@@ -166,7 +166,7 @@ final class AllOfRuleTest extends ProcessingTestCase
 					]),
 				],
 			],
-			$this->resolverArgsContext(),
+			$this->argsContext(),
 		);
 	}
 

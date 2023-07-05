@@ -5,8 +5,8 @@ namespace Orisai\ObjectMapper\Rules;
 use Closure;
 use Orisai\ObjectMapper\Args\Args;
 use Orisai\ObjectMapper\Args\ArgsChecker;
+use Orisai\ObjectMapper\Context\ArgsContext;
 use Orisai\ObjectMapper\Context\FieldContext;
-use Orisai\ObjectMapper\Context\ResolverArgsContext;
 use Orisai\ObjectMapper\Context\TypeContext;
 use Orisai\ObjectMapper\Exception\InvalidData;
 use Orisai\ObjectMapper\MappedObject;
@@ -30,7 +30,7 @@ final class MappedObjectRule implements Rule
 	/** @var array<string, null> */
 	private array $alreadyResolved = [];
 
-	public function resolveArgs(array $args, ResolverArgsContext $context): MappedObjectArgs
+	public function resolveArgs(array $args, ArgsContext $context): MappedObjectArgs
 	{
 		$checker = new ArgsChecker($args, self::class);
 

@@ -10,8 +10,8 @@ use Nette\Utils\Validators;
 use Orisai\Exceptions\Logic\InvalidArgument;
 use Orisai\ObjectMapper\Args\Args;
 use Orisai\ObjectMapper\Args\ArgsChecker;
+use Orisai\ObjectMapper\Context\ArgsContext;
 use Orisai\ObjectMapper\Context\FieldContext;
-use Orisai\ObjectMapper\Context\ResolverArgsContext;
 use Orisai\ObjectMapper\Context\TypeContext;
 use Orisai\ObjectMapper\Exception\ValueDoesNotMatch;
 use Orisai\ObjectMapper\Processing\Value;
@@ -44,7 +44,7 @@ final class DateTimeRule implements Rule
 
 	private const JsIsoFormat = 'Y-m-d\TH:i:s.v\Z';
 
-	public function resolveArgs(array $args, ResolverArgsContext $context): DateTimeArgs
+	public function resolveArgs(array $args, ArgsContext $context): DateTimeArgs
 	{
 		$checker = new ArgsChecker($args, self::class);
 		$checker->checkAllowedArgs([self::Format, self::ClassName]);

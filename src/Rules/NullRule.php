@@ -4,8 +4,8 @@ namespace Orisai\ObjectMapper\Rules;
 
 use Orisai\ObjectMapper\Args\Args;
 use Orisai\ObjectMapper\Args\ArgsChecker;
+use Orisai\ObjectMapper\Context\ArgsContext;
 use Orisai\ObjectMapper\Context\FieldContext;
-use Orisai\ObjectMapper\Context\ResolverArgsContext;
 use Orisai\ObjectMapper\Context\TypeContext;
 use Orisai\ObjectMapper\Exception\ValueDoesNotMatch;
 use Orisai\ObjectMapper\Processing\Value;
@@ -21,7 +21,7 @@ final class NullRule implements Rule
 
 	private const CastEmptyString = 'castEmptyString';
 
-	public function resolveArgs(array $args, ResolverArgsContext $context): NullArgs
+	public function resolveArgs(array $args, ArgsContext $context): NullArgs
 	{
 		$checker = new ArgsChecker($args, self::class);
 		$checker->checkAllowedArgs([self::CastEmptyString]);

@@ -5,7 +5,7 @@ namespace Orisai\ObjectMapper\Rules;
 use Orisai\Exceptions\Logic\InvalidArgument;
 use Orisai\ObjectMapper\Args\Args;
 use Orisai\ObjectMapper\Args\ArgsChecker;
-use Orisai\ObjectMapper\Context\ResolverArgsContext;
+use Orisai\ObjectMapper\Context\ArgsContext;
 use Orisai\ObjectMapper\Context\TypeContext;
 use Orisai\ObjectMapper\Meta\Compile\RuleCompileMeta;
 use Orisai\ObjectMapper\Types\CompoundType;
@@ -21,7 +21,7 @@ abstract class CompoundRule implements Rule
 	/** @internal */
 	public const Rules = 'rules';
 
-	public function resolveArgs(array $args, ResolverArgsContext $context): CompoundArgs
+	public function resolveArgs(array $args, ArgsContext $context): CompoundArgs
 	{
 		$checker = new ArgsChecker($args, static::class);
 		$checker->checkAllowedArgs([self::Rules]);
