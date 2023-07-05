@@ -1183,6 +1183,25 @@ final class ReadonlyOptionalInput implements MappedObject
 }
 ```
 
+For constructor promoted properties are default values loaded from constructor parameter default value. Explicit
+assignments to property in constructor body are not recognized by object mapper.
+
+```php
+final class ConstructorPromotedInput implements MappedObject
+{
+
+	public function __construct(
+		#[StringValue]
+		public string $field = 'default value',
+	)
+	{
+		// This would be not recognized by object mapper
+		//$this->field = 'different default value';
+	}
+
+}
+```
+
 ## Allow unknown fields
 
 Make unknown fields allowed instead of throwing exception.
