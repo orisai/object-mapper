@@ -34,7 +34,6 @@ use ReflectionProperty;
 use Reflector;
 use function array_key_exists;
 use function array_merge;
-use function class_exists;
 use function get_class;
 use function sprintf;
 use const PHP_VERSION_ID;
@@ -290,16 +289,6 @@ final class MetaResolver
 		$args = $rule->resolveArgs($meta->getArgs(), $context);
 
 		$argsType = $rule->getArgsType();
-
-		if (!class_exists($argsType)) {
-			throw InvalidArgument::create()
-				->withMessage(sprintf(
-					'Class %s returned by %s::getArgsType() does not exist',
-					$argsType,
-					get_class($rule),
-				));
-		}
-
 		$argsRef = new ReflectionClass($argsType);
 
 		if ($argsRef->isAbstract() || $argsRef->isInterface() || $argsRef->isTrait()) {
