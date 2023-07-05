@@ -7,7 +7,6 @@ use Orisai\Exceptions\Logic\InvalidState;
 use Orisai\Exceptions\Message;
 use Orisai\ObjectMapper\Args\Args;
 use Orisai\ObjectMapper\Context\ResolverArgsContext;
-use Orisai\ObjectMapper\Context\RuleArgsContext;
 use Orisai\ObjectMapper\MappedObject;
 use Orisai\ObjectMapper\Meta\Compile\CallbackCompileMeta;
 use Orisai\ObjectMapper\Meta\Compile\ClassCompileMeta;
@@ -177,7 +176,7 @@ final class MetaResolver
 			$this->resolveFieldModifiersMeta($meta, $context),
 			$this->resolveRuleMeta(
 				$meta->getRule(),
-				$this->createRuleArgsContext(),
+				$this->createResolverArgsContext(),
 			),
 			$defaultValue,
 			$property,
@@ -284,7 +283,7 @@ final class MetaResolver
 	/**
 	 * @return RuleRuntimeMeta<Args>
 	 */
-	public function resolveRuleMeta(RuleCompileMeta $meta, RuleArgsContext $context): RuleRuntimeMeta
+	public function resolveRuleMeta(RuleCompileMeta $meta, ResolverArgsContext $context): RuleRuntimeMeta
 	{
 		$type = $meta->getType();
 		$rule = $this->ruleManager->getRule($type);
@@ -397,9 +396,9 @@ final class MetaResolver
 		}
 	}
 
-	private function createRuleArgsContext(): RuleArgsContext
+	private function createResolverArgsContext(): ResolverArgsContext
 	{
-		return new RuleArgsContext($this->loader, $this);
+		return new ResolverArgsContext($this->loader, $this);
 	}
 
 }

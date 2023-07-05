@@ -3,7 +3,7 @@
 namespace Orisai\ObjectMapper\Tester;
 
 use Orisai\ObjectMapper\Context\FieldContext;
-use Orisai\ObjectMapper\Context\RuleArgsContext;
+use Orisai\ObjectMapper\Context\ResolverArgsContext;
 use Orisai\ObjectMapper\Context\TypeContext;
 use Orisai\ObjectMapper\Meta\MetaLoader;
 use Orisai\ObjectMapper\Meta\MetaResolver;
@@ -47,9 +47,9 @@ final class TesterDependencies
 		$this->dependencyInjectorManager = $dependencyInjectorManager;
 	}
 
-	public function createRuleArgsContext(): RuleArgsContext
+	public function createResolverArgsContext(): ResolverArgsContext
 	{
-		return new RuleArgsContext($this->metaLoader, $this->metaResolver);
+		return new ResolverArgsContext($this->metaLoader, $this->metaResolver);
 	}
 
 	public function createTypeContext(?Options $options = null): TypeContext

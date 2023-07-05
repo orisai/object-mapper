@@ -162,7 +162,7 @@ final class AnyOfRuleTest extends ProcessingTestCase
 					]),
 				],
 			],
-			$this->ruleArgsContext(),
+			$this->resolverArgsContext(),
 		);
 	}
 

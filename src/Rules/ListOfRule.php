@@ -5,7 +5,7 @@ namespace Orisai\ObjectMapper\Rules;
 use Orisai\ObjectMapper\Args\Args;
 use Orisai\ObjectMapper\Args\ArgsChecker;
 use Orisai\ObjectMapper\Context\FieldContext;
-use Orisai\ObjectMapper\Context\RuleArgsContext;
+use Orisai\ObjectMapper\Context\ResolverArgsContext;
 use Orisai\ObjectMapper\Context\TypeContext;
 use Orisai\ObjectMapper\Exception\InvalidData;
 use Orisai\ObjectMapper\Exception\ValueDoesNotMatch;
@@ -27,7 +27,7 @@ final class ListOfRule extends MultiValueRule
 
 	private const Continuous = 'continuous';
 
-	public function resolveArgs(array $args, RuleArgsContext $context): MultiValueArgs
+	public function resolveArgs(array $args, ResolverArgsContext $context): MultiValueArgs
 	{
 		$checker = new ArgsChecker($args, self::class);
 		$checker->checkAllowedArgs([self::ItemRule, self::MinItems, self::MaxItems, self::MergeDefaults]);

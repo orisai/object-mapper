@@ -199,7 +199,7 @@ final class FloatRuleTest extends ProcessingTestCase
 
 	public function testType(): void
 	{
-		$args = $this->rule->resolveArgs([], $this->ruleArgsContext());
+		$args = $this->rule->resolveArgs([], $this->resolverArgsContext());
 
 		$type = $this->rule->createType($args, $this->createTypeContext());
 

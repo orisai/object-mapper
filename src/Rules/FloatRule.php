@@ -6,7 +6,7 @@ use Orisai\Exceptions\Logic\InvalidArgument;
 use Orisai\ObjectMapper\Args\Args;
 use Orisai\ObjectMapper\Args\ArgsChecker;
 use Orisai\ObjectMapper\Context\FieldContext;
-use Orisai\ObjectMapper\Context\RuleArgsContext;
+use Orisai\ObjectMapper\Context\ResolverArgsContext;
 use Orisai\ObjectMapper\Context\TypeContext;
 use Orisai\ObjectMapper\Exception\ValueDoesNotMatch;
 use Orisai\ObjectMapper\Processing\Value;
@@ -30,7 +30,7 @@ final class FloatRule implements Rule
 		Unsigned = 'unsigned',
 		CastNumericString = 'castNumericString';
 
-	public function resolveArgs(array $args, RuleArgsContext $context): FloatArgs
+	public function resolveArgs(array $args, ResolverArgsContext $context): FloatArgs
 	{
 		$checker = new ArgsChecker($args, self::class);
 		$checker->checkAllowedArgs([self::Min, self::Max, self::Unsigned, self::CastNumericString]);

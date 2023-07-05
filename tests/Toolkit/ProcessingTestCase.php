@@ -4,7 +4,7 @@ namespace Tests\Orisai\ObjectMapper\Toolkit;
 
 use Orisai\ObjectMapper\Args\Args;
 use Orisai\ObjectMapper\Context\FieldContext;
-use Orisai\ObjectMapper\Context\RuleArgsContext;
+use Orisai\ObjectMapper\Context\ResolverArgsContext;
 use Orisai\ObjectMapper\Context\TypeContext;
 use Orisai\ObjectMapper\Meta\MetaLoader;
 use Orisai\ObjectMapper\Meta\Runtime\RuleRuntimeMeta;
@@ -62,13 +62,13 @@ abstract class ProcessingTestCase extends TestCase
 	{
 		return $this->ruleManager->getRule($rule)->resolveArgs(
 			$args,
-			$this->ruleArgsContext(),
+			$this->resolverArgsContext(),
 		);
 	}
 
-	protected function ruleArgsContext(): RuleArgsContext
+	protected function resolverArgsContext(): ResolverArgsContext
 	{
-		return $this->dependencies->createRuleArgsContext();
+		return $this->dependencies->createResolverArgsContext();
 	}
 
 	protected function createTypeContext(?Options $options = null): TypeContext

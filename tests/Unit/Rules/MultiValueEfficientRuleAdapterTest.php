@@ -27,7 +27,7 @@ final class MultiValueEfficientRuleAdapterTest extends ProcessingTestCase
 			"Method 'resolveArgs()' should never be called, adapter is used internally at runtime for phased processing.",
 		);
 
-		$this->rule->resolveArgs([], $this->ruleArgsContext());
+		$this->rule->resolveArgs([], $this->resolverArgsContext());
 	}
 
 	public function testGetArgsType(): void
