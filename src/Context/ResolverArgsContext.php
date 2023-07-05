@@ -10,11 +10,18 @@ use ReflectionProperty;
 final class ResolverArgsContext extends BaseArgsContext
 {
 
+	/** @var ReflectionClass<MappedObject> */
+	private ReflectionClass $class;
+
 	private ?ReflectionProperty $property;
 
+	/**
+	 * @param ReflectionClass<MappedObject> $class
+	 */
 	private function __construct(ReflectionClass $class, ?ReflectionProperty $property, MetaResolver $metaResolver)
 	{
-		parent::__construct($class, $metaResolver);
+		parent::__construct($metaResolver);
+		$this->class = $class;
 		$this->property = $property;
 	}
 
@@ -29,6 +36,14 @@ final class ResolverArgsContext extends BaseArgsContext
 	public static function forProperty(ReflectionProperty $property, MetaResolver $metaResolver): self
 	{
 		return new self($property->getDeclaringClass(), $property, $metaResolver);
+	}
+
+	/**
+	 * @return ReflectionClass<MappedObject>
+	 */
+	public function getClass(): ReflectionClass
+	{
+		return $this->class;
 	}
 
 	public function getProperty(): ?ReflectionProperty

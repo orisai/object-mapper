@@ -16,9 +16,6 @@ use Orisai\ObjectMapper\Rules\Rule;
 use Orisai\ObjectMapper\Tester\ObjectMapperTester;
 use Orisai\ObjectMapper\Tester\TesterDependencies;
 use PHPUnit\Framework\TestCase;
-use ReflectionClass;
-use ReflectionProperty;
-use Tests\Orisai\ObjectMapper\Doubles\NoDefaultsVO;
 
 abstract class ProcessingTestCase extends TestCase
 {
@@ -69,14 +66,9 @@ abstract class ProcessingTestCase extends TestCase
 		);
 	}
 
-	protected function ruleArgsContext(?ReflectionProperty $property = null): RuleArgsContext
+	protected function ruleArgsContext(): RuleArgsContext
 	{
-		if ($property === null) {
-			$class = new ReflectionClass(NoDefaultsVO::class);
-			$property = $class->getProperty('string');
-		}
-
-		return $this->dependencies->createRuleArgsContext($property);
+		return $this->dependencies->createRuleArgsContext();
 	}
 
 	protected function createTypeContext(?Options $options = null): TypeContext

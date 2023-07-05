@@ -47,9 +47,9 @@ final class TesterDependencies
 		$this->dependencyInjectorManager = $dependencyInjectorManager;
 	}
 
-	public function createRuleArgsContext(ReflectionProperty $property): RuleArgsContext
+	public function createRuleArgsContext(): RuleArgsContext
 	{
-		return new RuleArgsContext($property, $this->metaLoader, $this->metaResolver);
+		return new RuleArgsContext($this->metaLoader, $this->metaResolver);
 	}
 
 	public function createTypeContext(?Options $options = null): TypeContext

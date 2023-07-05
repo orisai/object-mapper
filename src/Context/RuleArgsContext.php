@@ -4,7 +4,6 @@ namespace Orisai\ObjectMapper\Context;
 
 use Orisai\ObjectMapper\Meta\MetaLoader;
 use Orisai\ObjectMapper\Meta\MetaResolver;
-use ReflectionProperty;
 
 final class RuleArgsContext extends BaseArgsContext
 {
@@ -12,12 +11,11 @@ final class RuleArgsContext extends BaseArgsContext
 	private MetaLoader $metaLoader;
 
 	public function __construct(
-		ReflectionProperty $property,
 		MetaLoader $metaLoader,
 		MetaResolver $metaResolver
 	)
 	{
-		parent::__construct($property->getDeclaringClass(), $metaResolver);
+		parent::__construct($metaResolver);
 		$this->metaLoader = $metaLoader;
 	}
 

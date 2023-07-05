@@ -31,7 +31,6 @@ use Orisai\ObjectMapper\Modifiers\RequiresDependenciesModifier;
 use Orisai\ObjectMapper\Processing\ObjectCreator;
 use Orisai\ObjectMapper\Rules\RuleManager;
 use ReflectionClass;
-use ReflectionProperty;
 use function array_key_exists;
 use function array_merge;
 use function class_exists;
@@ -176,7 +175,7 @@ final class MetaResolver
 			$this->resolveFieldModifiersMeta($meta, $context),
 			$this->resolveRuleMeta(
 				$meta->getRule(),
-				$this->createRuleArgsContext($property),
+				$this->createRuleArgsContext(),
 			),
 			$defaultValue,
 			$property,
@@ -389,9 +388,9 @@ final class MetaResolver
 		}
 	}
 
-	private function createRuleArgsContext(ReflectionProperty $property): RuleArgsContext
+	private function createRuleArgsContext(): RuleArgsContext
 	{
-		return new RuleArgsContext($property, $this->loader, $this);
+		return new RuleArgsContext($this->loader, $this);
 	}
 
 }
