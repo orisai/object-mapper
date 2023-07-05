@@ -1038,7 +1038,7 @@ class InnerInput implements MappedObject
     /**
      * @StringValue()
      */
-    public string $field;
+    public string $innerField;
 
 }
 ```
@@ -1046,11 +1046,11 @@ class InnerInput implements MappedObject
 ```php
 $data = [
 	'field' => [
-		'field' => 'string',
+		'innerField' => 'string',
 	],
 ];
 $input = $processor->process($data, MappedObjectInput::class);
-// $input == MappedObjectInputInput(field: InnerInput(field: 'string'))
+// $input == MappedObjectInputInput(field: InnerInput(innerField: 'string'))
 ```
 
 Parameters:

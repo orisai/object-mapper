@@ -63,9 +63,14 @@ final class UserInput implements MappedObject
 
 ```php
 use Orisai\ObjectMapper\MappedObject;
+use Orisai\ObjectMapper\Rules\StringValue;
 
 final class UserAddressInput implements MappedObject
 {
+
+	/** @StringValue(notEmpty=true) */
+	public string $street;
+
 	// ...
 }
 ```
@@ -82,7 +87,9 @@ $errorPrinter = new ErrorVisualPrinter(new TypeToStringConverter());
 $data = [
 	'firstName' => 'Tony',
 	'lastName' => 'Stark',
-	'address' => [],
+	'address' => [
+		'street' => '10880 Malibu Point',
+	],
 ];
 
 try {
