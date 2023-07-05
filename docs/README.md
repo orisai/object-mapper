@@ -1369,8 +1369,7 @@ $input->optional; // true, default
 
 ### All fields are required
 
-Send all fields, including these with default values and (with default mode) [auto-initialized](#mappedobject-rule)
-mapped objects .
+Send all fields, including these with default values.
 
 ```php
 use Orisai\ObjectMapper\Processing\Options;
@@ -1394,9 +1393,6 @@ $input->optional; // true
 
 We can make all fields optional. This is useful for partial updates, like PATCH requests in REST APIs. Only changed
 fields are sent, and we have to check which ones are available with reflection.
-
-Unlike with default mode, mapped object are not auto-initialized as described
-under [mapped object rule](#mappedobject-rule). At least empty array (`[]`) should be sent to initialize them.
 
 Even default values, when not sent, are not initialized - they are unset before assigning sent data.
 
