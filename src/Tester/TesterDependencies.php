@@ -49,7 +49,7 @@ final class TesterDependencies
 
 	public function createRuleArgsContext(ReflectionProperty $property): RuleArgsContext
 	{
-		return new RuleArgsContext($property, $this->ruleManager, $this->metaLoader, $this->metaResolver);
+		return new RuleArgsContext($property, $this->metaLoader, $this->metaResolver);
 	}
 
 	public function createTypeContext(?Options $options = null): TypeContext

@@ -391,7 +391,7 @@ final class MetaResolver
 
 	private function createRuleArgsContext(ReflectionProperty $property): RuleArgsContext
 	{
-		return new RuleArgsContext($property, $this->ruleManager, $this->loader, $this);
+		return new RuleArgsContext($property, $this->loader, $this);
 	}
 
 }
