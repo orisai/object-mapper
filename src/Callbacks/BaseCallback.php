@@ -18,6 +18,7 @@ use ReflectionNamedType;
 use ReflectionParameter;
 use ReflectionProperty;
 use ReflectionType;
+use Reflector;
 use function array_map;
 use function in_array;
 use function is_a;
@@ -50,7 +51,11 @@ abstract class BaseCallback implements Callback
 		// Static constructor is required
 	}
 
-	public static function resolveArgs(array $args, ResolverArgsContext $context): BaseCallbackArgs
+	public static function resolveArgs(
+		array $args,
+		ResolverArgsContext $context,
+		Reflector $reflector
+	): BaseCallbackArgs
 	{
 		$checker = new ArgsChecker($args, static::class);
 		$checker->checkAllowedArgs([self::Method, self::Runtime]);
@@ -67,8 +72,14 @@ abstract class BaseCallback implements Callback
 			]);
 		}
 
-		$class = $context->getClass();
-		$property = $context->getProperty();
+		if ($reflector instanceof ReflectionProperty) {
+			$class = $reflector->getDeclaringClass();
+			$property = $reflector;
+		} else {
+			$class = $reflector;
+			$property = null;
+		}
+
 		$method = self::validateMethod($class, $property, $methodName);
 
 		return new BaseCallbackArgs(

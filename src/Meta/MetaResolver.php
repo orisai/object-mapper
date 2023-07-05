@@ -209,7 +209,7 @@ final class MetaResolver
 
 		return new CallbackRuntimeMeta(
 			$type,
-			$type::resolveArgs($meta->getArgs(), $context),
+			$type::resolveArgs($meta->getArgs(), $context, $context->getProperty() ?? $context->getClass()),
 			$declaringClass,
 		);
 	}

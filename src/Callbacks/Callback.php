@@ -12,6 +12,8 @@ use Orisai\ObjectMapper\Exception\ValueDoesNotMatch;
 use Orisai\ObjectMapper\MappedObject;
 use Orisai\ObjectMapper\Processing\ObjectHolder;
 use ReflectionClass;
+use ReflectionProperty;
+use Reflector;
 
 /**
  * @template-covariant T_ARGS of Args
@@ -20,10 +22,11 @@ interface Callback
 {
 
 	/**
-	 * @param array<int|string, mixed> $args
+	 * @param array<int|string, mixed>                         $args
+	 * @param ReflectionClass<MappedObject>|ReflectionProperty $reflector
 	 * @return T_ARGS
 	 */
-	public static function resolveArgs(array $args, ResolverArgsContext $context): Args;
+	public static function resolveArgs(array $args, ResolverArgsContext $context, Reflector $reflector): Args;
 
 	/**
 	 * @return class-string<T_ARGS>
