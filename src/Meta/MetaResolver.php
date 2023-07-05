@@ -31,6 +31,8 @@ use Orisai\ObjectMapper\Modifiers\RequiresDependenciesModifier;
 use Orisai\ObjectMapper\Processing\ObjectCreator;
 use Orisai\ObjectMapper\Rules\RuleManager;
 use ReflectionClass;
+use ReflectionProperty;
+use Reflector;
 use function array_key_exists;
 use function array_merge;
 use function class_exists;
@@ -83,9 +85,9 @@ final class MetaResolver
 		foreach ($meta->getClasses() as $classMeta) {
 			$class = $classMeta->getClass();
 
-			$context = ResolverArgsContext::forClass($class, $this);
+			$context = new ResolverArgsContext($this);
 
-			$callbacksByMeta[] = $this->resolveCallbacksMeta($classMeta, $context);
+			$callbacksByMeta[] = $this->resolveCallbacksMeta($classMeta, $context, $class);
 			$docsByMeta[] = $this->resolveDocsMeta($classMeta, $context);
 			$modifiersByMeta[] = $this->resolveClassModifiersMeta($classMeta, $context);
 		}
@@ -167,10 +169,10 @@ final class MetaResolver
 				));
 		}
 
-		$context = ResolverArgsContext::forProperty($property, $this);
+		$context = new ResolverArgsContext($this);
 
 		return new FieldRuntimeMeta(
-			$this->resolveCallbacksMeta($meta, $context),
+			$this->resolveCallbacksMeta($meta, $context, $property),
 			$this->resolveDocsMeta($meta, $context),
 			$this->resolveFieldModifiersMeta($meta, $context),
 			$this->resolveRuleMeta(
@@ -183,25 +185,32 @@ final class MetaResolver
 	}
 
 	/**
+	 * @param ReflectionClass<MappedObject>|ReflectionProperty $reflector
 	 * @return array<int, CallbackRuntimeMeta<Args>>
 	 */
-	private function resolveCallbacksMeta(NodeCompileMeta $meta, ResolverArgsContext $context): array
+	private function resolveCallbacksMeta(
+		NodeCompileMeta $meta,
+		ResolverArgsContext $context,
+		Reflector $reflector
+	): array
 	{
 		$array = [];
 		foreach ($meta->getCallbacks() as $key => $callback) {
-			$array[$key] = $this->resolveCallbackMeta($callback, $context, $meta->getClass());
+			$array[$key] = $this->resolveCallbackMeta($callback, $context, $reflector, $meta->getClass());
 		}
 
 		return $array;
 	}
 
 	/**
-	 * @param ReflectionClass<MappedObject> $declaringClass
+	 * @param ReflectionClass<MappedObject>|ReflectionProperty $reflector
+	 * @param ReflectionClass<MappedObject>                   $declaringClass
 	 * @return CallbackRuntimeMeta<Args>
 	 */
 	private function resolveCallbackMeta(
 		CallbackCompileMeta $meta,
 		ResolverArgsContext $context,
+		Reflector $reflector,
 		ReflectionClass $declaringClass
 	): CallbackRuntimeMeta
 	{
@@ -209,7 +218,7 @@ final class MetaResolver
 
 		return new CallbackRuntimeMeta(
 			$type,
-			$type::resolveArgs($meta->getArgs(), $context, $context->getProperty() ?? $context->getClass()),
+			$type::resolveArgs($meta->getArgs(), $context, $reflector),
 			$declaringClass,
 		);
 	}

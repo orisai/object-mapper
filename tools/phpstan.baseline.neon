@@ -1,6 +1,11 @@
 parameters:
 	ignoreErrors:
 		-
+			message: "#^Parameter \\#3 \\$reflector of method Orisai\\\\ObjectMapper\\\\Meta\\\\MetaResolver\\:\\:resolveCallbacksMeta\\(\\) expects ReflectionClass\\<Orisai\\\\ObjectMapper\\\\MappedObject\\>\\|ReflectionProperty, ReflectionClass\\<object\\> given\\.$#"
+			count: 1
+			path: ../src/Meta/MetaResolver.php
+
+		-
 			message: "#^Property Tests\\\\Orisai\\\\ObjectMapper\\\\Doubles\\\\Circular\\\\CircularCVO\\:\\:\\$as type has no value type specified in iterable type array\\.$#"
 			count: 1
 			path: ../tests/Doubles/Circular/CircularCVO.php
