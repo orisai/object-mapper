@@ -48,6 +48,7 @@ final class DefaultRuleManagerTest extends TestCase
 	public function testAddedRule(): void
 	{
 		$this->ruleManager->addRule(new AlwaysInvalidRule());
+		/** @phpstan-ignore-next-line */
 		self::assertInstanceOf(AlwaysInvalidRule::class, $this->ruleManager->getRule(AlwaysInvalidRule::class));
 	}
 

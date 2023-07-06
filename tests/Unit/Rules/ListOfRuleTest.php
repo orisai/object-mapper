@@ -11,7 +11,6 @@ use Orisai\ObjectMapper\Rules\MixedRule;
 use Orisai\ObjectMapper\Rules\MultiValueArgs;
 use Orisai\ObjectMapper\Rules\StringRule;
 use Orisai\ObjectMapper\Types\GenericArrayType;
-use Orisai\ObjectMapper\Types\KeyValueErrorPair;
 use Orisai\ObjectMapper\Types\SimpleValueType;
 use Tests\Orisai\ObjectMapper\Doubles\Rules\AlwaysInvalidRule;
 use Tests\Orisai\ObjectMapper\Doubles\Rules\EfficientTestRule;
@@ -256,16 +255,17 @@ final class ListOfRuleTest extends ProcessingTestCase
 			$invalidItems = $type->getInvalidPairs();
 			self::assertCount(3, $invalidItems);
 
-			self::assertInstanceOf(KeyValueErrorPair::class, $invalidItems[3]);
+			self::assertNotNull($invalidItems[3]->getKey());
 			self::assertInstanceOf(SimpleValueType::class, $invalidItems[3]->getKey()->getType());
 			self::assertNull($invalidItems[3]->getValue());
 
-			self::assertInstanceOf(KeyValueErrorPair::class, $invalidItems['key']);
+			self::assertNotNull($invalidItems['key']->getKey());
 			self::assertInstanceOf(SimpleValueType::class, $invalidItems['key']->getKey()->getType());
+			self::assertNotNull($invalidItems['key']->getValue());
 			self::assertInstanceOf(SimpleValueType::class, $invalidItems['key']->getValue()->getType());
 
-			self::assertInstanceOf(KeyValueErrorPair::class, $invalidItems[5]);
 			self::assertNull($invalidItems[5]->getKey());
+			self::assertNotNull($invalidItems[5]->getValue());
 			self::assertInstanceOf(SimpleValueType::class, $invalidItems[5]->getValue()->getType());
 		}
 

@@ -476,10 +476,13 @@ MSG,
 		];
 		$vo = $this->processor->process($data, InitializingVO::class);
 
+		$dateTime = DateTimeImmutable::createFromFormat(DateTimeInterface::ATOM, '1990-12-31T12:34:56+00:00');
+		self::assertNotFalse($dateTime);
+
 		self::assertEquals(
 			$vo,
 			new InitializingVO(
-				DateTimeImmutable::createFromFormat(DateTimeInterface::ATOM, '1990-12-31T12:34:56+00:00'),
+				$dateTime,
 				$instance,
 				new DefaultsVO(),
 			),

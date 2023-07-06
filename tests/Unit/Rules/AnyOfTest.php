@@ -49,6 +49,7 @@ final class AnyOfTest extends TestCase
 MSG,
 		);
 
+		/** @phpstan-ignore-next-line */
 		new AnyOf([new stdClass()]);
 	}
 

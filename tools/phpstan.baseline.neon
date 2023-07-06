@@ -6,56 +6,6 @@ parameters:
 			path: ../src/Meta/MetaResolver.php
 
 		-
-			message: "#^Property Tests\\\\Orisai\\\\ObjectMapper\\\\Doubles\\\\FieldNames\\\\ChildCollidingFieldVO\\:\\:\\$property is unused\\.$#"
-			count: 1
-			path: ../tests/Doubles/FieldNames/ChildCollidingFieldVO.php
-
-		-
-			message: "#^Call to static method PHPUnit\\\\Framework\\\\Assert\\:\\:assertTrue\\(\\) with true will always evaluate to true\\.$#"
-			count: 1
-			path: ../tests/Unit/Meta/MetaLoaderTest.php
-
-		-
-			message: "#^Parameter \\#1 \\$datetime of class Tests\\\\Orisai\\\\ObjectMapper\\\\Doubles\\\\InitializingVO constructor expects DateTimeImmutable, DateTimeImmutable\\|false given\\.$#"
-			count: 1
-			path: ../tests/Unit/Processing/DefaultProcessorTest.php
-
-		-
 			message: "#^Unreachable statement \\- code above always terminates\\.$#"
 			count: 3
 			path: ../tests/Unit/Processing/DefaultProcessorTest.php
-
-		-
-			message: "#^Call to static method PHPUnit\\\\Framework\\\\Assert\\:\\:assertInstanceOf\\(\\) with 'Tests\\\\\\\\Orisai\\\\\\\\ObjectMapper\\\\\\\\Doubles\\\\\\\\DefaultsVO' and Tests\\\\Orisai\\\\ObjectMapper\\\\Doubles\\\\DefaultsVO will always evaluate to true\\.$#"
-			count: 1
-			path: ../tests/Unit/Processing/ObjectHolderTest.php
-
-		-
-			message: "#^Parameter \\#1 \\$definitions of class Orisai\\\\ObjectMapper\\\\Rules\\\\AllOf constructor expects array\\<Orisai\\\\ObjectMapper\\\\Rules\\\\RuleDefinition\\>, array\\<int, stdClass\\> given\\.$#"
-			count: 1
-			path: ../tests/Unit/Rules/AllOfTest.php
-
-		-
-			message: "#^Parameter \\#1 \\$definitions of class Orisai\\\\ObjectMapper\\\\Rules\\\\AnyOf constructor expects array\\<Orisai\\\\ObjectMapper\\\\Rules\\\\RuleDefinition\\>, array\\<int, stdClass\\> given\\.$#"
-			count: 1
-			path: ../tests/Unit/Rules/AnyOfTest.php
-
-		-
-			message: "#^Call to static method PHPUnit\\\\Framework\\\\Assert\\:\\:assertInstanceOf\\(\\) with 'Tests\\\\\\\\Orisai\\\\\\\\ObjectMapper\\\\\\\\Doubles\\\\\\\\Rules\\\\\\\\AlwaysInvalidRule' and Tests\\\\Orisai\\\\ObjectMapper\\\\Doubles\\\\Rules\\\\AlwaysInvalidRule will always evaluate to true\\.$#"
-			count: 1
-			path: ../tests/Unit/Rules/DefaultRuleManagerTest.php
-
-		-
-			message: "#^Call to static method PHPUnit\\\\Framework\\\\Assert\\:\\:assertInstanceOf\\(\\) with 'Orisai\\\\\\\\ObjectMapper\\\\\\\\Types\\\\\\\\KeyValueErrorPair' and Orisai\\\\ObjectMapper\\\\Types\\\\KeyValueErrorPair will always evaluate to true\\.$#"
-			count: 3
-			path: ../tests/Unit/Rules/ListOfRuleTest.php
-
-		-
-			message: "#^Cannot call method getType\\(\\) on Orisai\\\\ObjectMapper\\\\Exception\\\\WithTypeAndValue\\|null\\.$#"
-			count: 4
-			path: ../tests/Unit/Rules/ListOfRuleTest.php
-
-		-
-			message: "#^Call to static method PHPUnit\\\\Framework\\\\Assert\\:\\:assertNull\\(\\) with null will always evaluate to true\\.$#"
-			count: 2
-			path: ../tests/Unit/Rules/NullRuleTest.php

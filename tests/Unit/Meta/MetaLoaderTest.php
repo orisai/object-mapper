@@ -117,6 +117,7 @@ TXT,
 		);
 
 		// Makes PHPUnit happy
+		/** @phpstan-ignore-next-line */
 		self::assertTrue(true);
 	}
 

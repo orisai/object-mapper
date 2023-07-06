@@ -28,7 +28,7 @@ final class ObjectHolderTest extends TestCase
 
 		self::assertSame(DefaultsVO::class, $holder->getClass());
 		$instance = $holder->getInstance();
-		self::assertInstanceOf(DefaultsVO::class, $instance);
+		self::assertEquals(new DefaultsVO(), $instance);
 		self::assertSame($instance, $holder->getInstance());
 	}
 

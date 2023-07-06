@@ -29,6 +29,7 @@ final class NullRuleTest extends ProcessingTestCase
 			$this->fieldContext(),
 		);
 
+		/** @phpstan-ignore-next-line  */
 		self::assertNull($processed);
 	}
 
@@ -43,6 +44,7 @@ final class NullRuleTest extends ProcessingTestCase
 			$this->fieldContext(),
 		);
 
+		/** @phpstan-ignore-next-line  */
 		self::assertNull($processed);
 	}
 

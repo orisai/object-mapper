@@ -49,6 +49,7 @@ final class AllOfTest extends TestCase
 MSG,
 		);
 
+		/** @phpstan-ignore-next-line */
 		new AllOf([new stdClass()]);
 	}
 
