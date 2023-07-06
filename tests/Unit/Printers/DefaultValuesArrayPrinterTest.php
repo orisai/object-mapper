@@ -51,13 +51,10 @@ final class DefaultValuesArrayPrinterTest extends TestCase
 	 */
 	private function createType(string $class): MappedObjectType
 	{
-		$type = $this->ruleManager->getRule(MappedObjectRule::class)->createType(
+		return $this->ruleManager->getRule(MappedObjectRule::class)->createType(
 			new MappedObjectArgs($class),
 			new TypeContext($this->metaLoader, $this->ruleManager, new Options()),
 		);
-		self::assertInstanceOf(MappedObjectType::class, $type);
-
-		return $type;
 	}
 
 	public function testDefaults(): void

@@ -36,6 +36,10 @@ trait A
 		return $data;
 	}
 
+	/**
+	 * @param array<mixed> $data
+	 * @return array<mixed>
+	 */
 	private function after(array $data): array
 	{
 		$data['string'] .= '-A::after';

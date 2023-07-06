@@ -14,6 +14,7 @@ use Orisai\ObjectMapper\Modifiers\RequiresDependenciesArgs;
 use Orisai\ObjectMapper\Modifiers\RequiresDependenciesModifier;
 use PHPUnit\Framework\TestCase;
 use ReflectionClass;
+use Tests\Orisai\ObjectMapper\Doubles\DefaultsVO;
 use Tests\Orisai\ObjectMapper\Doubles\Dependencies\DependenciesUsingVoInjector;
 use function serialize;
 use function unserialize;
@@ -27,11 +28,11 @@ final class ClassRuntimeMetaTest extends TestCase
 			new CallbackRuntimeMeta(
 				BeforeCallback::class,
 				new BaseCallbackArgs('method', false, false, CallbackRuntime::process()),
-				new ReflectionClass(self::class),
+				new ReflectionClass(DefaultsVO::class),
 			),
 		];
 		$docs = [
-			new DocMeta(DescriptionDoc::class, []),
+			DescriptionDoc::getUniqueName() => new DocMeta(DescriptionDoc::class, []),
 		];
 		$modifiers = [
 			RequiresDependenciesModifier::class => [

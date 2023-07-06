@@ -9,7 +9,11 @@ use Orisai\ObjectMapper\Rules\MappedObjectValue;
 final class CircularCVO implements MappedObject
 {
 
-	/** @ListOf(@MappedObjectValue(CircularAVO::class)) */
+	/**
+	 * @var list<CircularAVO>
+	 *
+	 * @ListOf(@MappedObjectValue(CircularAVO::class))
+	 */
 	public array $as;
 
 }

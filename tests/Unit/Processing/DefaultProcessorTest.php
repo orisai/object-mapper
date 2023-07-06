@@ -576,6 +576,7 @@ MSG,
 		self::assertNull($a1->b->c);
 
 		$a2 = $as[1];
+		self::assertNotNull($a2->b->c);
 		self::assertSame([], $a2->b->c->as);
 	}
 
@@ -1258,6 +1259,7 @@ arrayOfMixed: array<mixed>',
 		$this->expectException(InvalidArgument::class);
 		$this->expectExceptionMessage("Class 'foo' does not exist");
 
+		/** @phpstan-ignore-next-line */
 		$this->processor->process([], 'foo');
 	}
 
@@ -1270,6 +1272,7 @@ arrayOfMixed: array<mixed>',
 			MappedObject::class,
 		));
 
+		/** @phpstan-ignore-next-line */
 		$this->processor->process([], stdClass::class);
 	}
 

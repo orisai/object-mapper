@@ -22,6 +22,7 @@ use PHPUnit\Framework\TestCase;
 final class TypeVisualPrinterTest extends TestCase
 {
 
+	/** @var TypeVisualPrinter<string> */
 	private TypeVisualPrinter $printer;
 
 	protected function setUp(): void

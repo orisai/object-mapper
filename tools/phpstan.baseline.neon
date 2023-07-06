@@ -6,79 +6,14 @@ parameters:
 			path: ../src/Meta/MetaResolver.php
 
 		-
-			message: "#^Property Tests\\\\Orisai\\\\ObjectMapper\\\\Doubles\\\\Circular\\\\CircularCVO\\:\\:\\$as type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: ../tests/Doubles/Circular/CircularCVO.php
-
-		-
 			message: "#^Property Tests\\\\Orisai\\\\ObjectMapper\\\\Doubles\\\\FieldNames\\\\ChildCollidingFieldVO\\:\\:\\$property is unused\\.$#"
 			count: 1
 			path: ../tests/Doubles/FieldNames/ChildCollidingFieldVO.php
 
 		-
-			message: "#^Method Tests\\\\Orisai\\\\ObjectMapper\\\\Doubles\\\\Inheritance\\\\TraitCallback\\\\TraitCallbackVO\\:\\:after\\(\\) has parameter \\$data with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: ../tests/Doubles/Inheritance/trait-callback.php
-
-		-
-			message: "#^Method Tests\\\\Orisai\\\\ObjectMapper\\\\Doubles\\\\Inheritance\\\\TraitCallback\\\\TraitCallbackVO\\:\\:after\\(\\) return type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: ../tests/Doubles/Inheritance/trait-callback.php
-
-		-
 			message: "#^Call to static method PHPUnit\\\\Framework\\\\Assert\\:\\:assertTrue\\(\\) with true will always evaluate to true\\.$#"
 			count: 1
 			path: ../tests/Unit/Meta/MetaLoaderTest.php
-
-		-
-			message: "#^Call to static method PHPUnit\\\\Framework\\\\Assert\\:\\:assertSame\\(\\) with ReflectionClass\\<Tests\\\\Orisai\\\\ObjectMapper\\\\Unit\\\\Meta\\\\Runtime\\\\CallbackRuntimeMetaTest\\> and ReflectionClass\\<Orisai\\\\ObjectMapper\\\\MappedObject\\> will always evaluate to false\\.$#"
-			count: 1
-			path: ../tests/Unit/Meta/Runtime/CallbackRuntimeMetaTest.php
-
-		-
-			message: "#^Parameter \\#3 \\$declaringClass of class Orisai\\\\ObjectMapper\\\\Meta\\\\Runtime\\\\CallbackRuntimeMeta constructor expects ReflectionClass\\<Orisai\\\\ObjectMapper\\\\MappedObject\\>, ReflectionClass\\<Tests\\\\Orisai\\\\ObjectMapper\\\\Unit\\\\Meta\\\\Runtime\\\\CallbackRuntimeMetaTest\\> given\\.$#"
-			count: 1
-			path: ../tests/Unit/Meta/Runtime/CallbackRuntimeMetaTest.php
-
-		-
-			message: "#^Call to static method PHPUnit\\\\Framework\\\\Assert\\:\\:assertSame\\(\\) with array\\{Orisai\\\\ObjectMapper\\\\Meta\\\\Shared\\\\DocMeta\\} and array\\<string, Orisai\\\\ObjectMapper\\\\Meta\\\\Shared\\\\DocMeta\\> will always evaluate to false\\.$#"
-			count: 1
-			path: ../tests/Unit/Meta/Runtime/ClassRuntimeMetaTest.php
-
-		-
-			message: "#^Parameter \\#2 \\$docs of class Orisai\\\\ObjectMapper\\\\Meta\\\\Runtime\\\\ClassRuntimeMeta constructor expects array\\<string, Orisai\\\\ObjectMapper\\\\Meta\\\\Shared\\\\DocMeta\\>, array\\<int, Orisai\\\\ObjectMapper\\\\Meta\\\\Shared\\\\DocMeta\\> given\\.$#"
-			count: 1
-			path: ../tests/Unit/Meta/Runtime/ClassRuntimeMetaTest.php
-
-		-
-			message: "#^Parameter \\#3 \\$declaringClass of class Orisai\\\\ObjectMapper\\\\Meta\\\\Runtime\\\\CallbackRuntimeMeta constructor expects ReflectionClass\\<Orisai\\\\ObjectMapper\\\\MappedObject\\>, ReflectionClass\\<Tests\\\\Orisai\\\\ObjectMapper\\\\Unit\\\\Meta\\\\Runtime\\\\ClassRuntimeMetaTest\\> given\\.$#"
-			count: 1
-			path: ../tests/Unit/Meta/Runtime/ClassRuntimeMetaTest.php
-
-		-
-			message: "#^Call to static method PHPUnit\\\\Framework\\\\Assert\\:\\:assertSame\\(\\) with array\\{Orisai\\\\ObjectMapper\\\\Meta\\\\Shared\\\\DocMeta\\} and array\\<string, Orisai\\\\ObjectMapper\\\\Meta\\\\Shared\\\\DocMeta\\> will always evaluate to false\\.$#"
-			count: 1
-			path: ../tests/Unit/Meta/Runtime/FieldRuntimeMetaTest.php
-
-		-
-			message: "#^Parameter \\#2 \\$docs of class Orisai\\\\ObjectMapper\\\\Meta\\\\Runtime\\\\FieldRuntimeMeta constructor expects array\\<string, Orisai\\\\ObjectMapper\\\\Meta\\\\Shared\\\\DocMeta\\>, array\\<int, Orisai\\\\ObjectMapper\\\\Meta\\\\Shared\\\\DocMeta\\> given\\.$#"
-			count: 1
-			path: ../tests/Unit/Meta/Runtime/FieldRuntimeMetaTest.php
-
-		-
-			message: "#^Call to static method PHPUnit\\\\Framework\\\\Assert\\:\\:assertInstanceOf\\(\\) with 'Orisai\\\\\\\\ObjectMapper\\\\\\\\Types\\\\\\\\MappedObjectType' and Orisai\\\\ObjectMapper\\\\Types\\\\MappedObjectType will always evaluate to true\\.$#"
-			count: 1
-			path: ../tests/Unit/Printers/DefaultValuesArrayPrinterTest.php
-
-		-
-			message: "#^Property Tests\\\\Orisai\\\\ObjectMapper\\\\Unit\\\\Printers\\\\ErrorVisualPrinterBaseTestCase\\:\\:\\$printer with generic class Orisai\\\\ObjectMapper\\\\Printers\\\\ErrorVisualPrinter does not specify its types\\: T$#"
-			count: 1
-			path: ../tests/Unit/Printers/ErrorVisualPrinterBaseTestCase.php
-
-		-
-			message: "#^Property Tests\\\\Orisai\\\\ObjectMapper\\\\Unit\\\\Printers\\\\TypeVisualPrinterTest\\:\\:\\$printer with generic class Orisai\\\\ObjectMapper\\\\Printers\\\\TypeVisualPrinter does not specify its types\\: T$#"
-			count: 1
-			path: ../tests/Unit/Printers/TypeVisualPrinterTest.php
 
 		-
 			message: "#^Call to static method PHPUnit\\\\Framework\\\\Assert\\:\\:assertInstanceOf\\(\\) with 'DateTimeImmutable' and DateTimeImmutable will always evaluate to true\\.$#"
@@ -163,16 +98,6 @@ parameters:
 		-
 			message: "#^Call to static method PHPUnit\\\\Framework\\\\Assert\\:\\:assertInstanceOf\\(\\) with 'stdClass' and stdClass will always evaluate to true\\.$#"
 			count: 1
-			path: ../tests/Unit/Processing/DefaultProcessorTest.php
-
-		-
-			message: "#^Parameter \\#2 \\$class of method Orisai\\\\ObjectMapper\\\\Processing\\\\Processor\\:\\:process\\(\\) expects class\\-string\\<Orisai\\\\ObjectMapper\\\\MappedObject\\>, string given\\.$#"
-			count: 2
-			path: ../tests/Unit/Processing/DefaultProcessorTest.php
-
-		-
-			message: "#^Unable to resolve the template type T in call to method Orisai\\\\ObjectMapper\\\\Processing\\\\Processor\\:\\:process\\(\\)$#"
-			count: 2
 			path: ../tests/Unit/Processing/DefaultProcessorTest.php
 
 		-

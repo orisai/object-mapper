@@ -37,7 +37,7 @@ final class FieldRuntimeMetaTest extends TestCase
 			),
 		];
 		$docs = [
-			new DocMeta(DescriptionDoc::class, []),
+			DescriptionDoc::getUniqueName() => new DocMeta(DescriptionDoc::class, []),
 		];
 		$modifiers = [
 			FieldNameModifier::class => new ModifierRuntimeMeta(FieldNameModifier::class, new FieldNameArgs('field')),
