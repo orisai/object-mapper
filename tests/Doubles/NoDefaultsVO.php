@@ -47,4 +47,23 @@ final class NoDefaultsVO implements MappedObject
 	 */
 	public array $manyStructures;
 
+	/**
+	 * @param array<mixed> $arrayOfMixed
+	 * @param array<int, DefaultsVO> $manyStructures
+	 */
+	public function __construct(
+		string $string,
+		?string $nullableString,
+		array $arrayOfMixed,
+		DefaultsVO $structure,
+		array $manyStructures
+	)
+	{
+		$this->string = $string;
+		$this->nullableString = $nullableString;
+		$this->arrayOfMixed = $arrayOfMixed;
+		$this->structure = $structure;
+		$this->manyStructures = $manyStructures;
+	}
+
 }

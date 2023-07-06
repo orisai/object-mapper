@@ -64,7 +64,6 @@ final class DefaultValuesArrayPrinterTest extends TestCase
 		self::assertSame(
 			[
 				'string' => 'foo',
-				'defaultByAttributeString' => 'attribute default',
 				'nullableString' => null,
 				'arrayOfMixed' => [
 					0 => 'foo',
@@ -83,7 +82,6 @@ final class DefaultValuesArrayPrinterTest extends TestCase
 			[
 				'structure' => [
 					'string' => 'foo',
-					'defaultByAttributeString' => 'attribute default',
 					'nullableString' => null,
 					'arrayOfMixed' => [
 						0 => 'foo',
@@ -103,7 +101,6 @@ final class DefaultValuesArrayPrinterTest extends TestCase
 				'arrayOfMixed' => '__REQUIRED__',
 				'structure' => [
 					'string' => 'foo',
-					'defaultByAttributeString' => 'attribute default',
 					'nullableString' => null,
 					'arrayOfMixed' => [
 						0 => 'foo',
@@ -124,7 +121,6 @@ final class DefaultValuesArrayPrinterTest extends TestCase
 			[
 				'structure' => [
 					'string' => 'foo',
-					'defaultByAttributeString' => 'attribute default',
 					'nullableString' => null,
 					'arrayOfMixed' => [
 						0 => 'foo',
@@ -141,7 +137,6 @@ final class DefaultValuesArrayPrinterTest extends TestCase
 			[
 				'structure' => [
 					'string' => 'foo',
-					'defaultByAttributeString' => 'attribute default',
 					'nullableString' => null,
 					'arrayOfMixed' => [
 						0 => 'foo',

@@ -17,6 +17,11 @@ final class ObjectInitializingVO implements MappedObject
 	/** @MappedObjectValue(DefaultsVO::class) */
 	public DefaultsVO $inner;
 
+	public function __construct(DefaultsVO $inner)
+	{
+		$this->inner = $inner;
+	}
+
 	/**
 	 * @param mixed $values
 	 * @return array<mixed>

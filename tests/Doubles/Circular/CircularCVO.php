@@ -16,4 +16,12 @@ final class CircularCVO implements MappedObject
 	 */
 	public array $as;
 
+	/**
+	 * @param list<CircularAVO> $as
+	 */
+	public function __construct(array $as)
+	{
+		$this->as = $as;
+	}
+
 }

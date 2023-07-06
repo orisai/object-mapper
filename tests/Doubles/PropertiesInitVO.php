@@ -11,6 +11,9 @@ use Orisai\ObjectMapper\Rules\StringValue;
 final class PropertiesInitVO implements MappedObject
 {
 
+	/** @MappedObjectValue(EmptyVO::class) */
+	public EmptyVO $structure;
+
 	/**
 	 * @AnyOf({
 	 *     @StringValue(),
@@ -27,7 +30,11 @@ final class PropertiesInitVO implements MappedObject
 	 */
 	public ?string $optional = null;
 
-	/** @MappedObjectValue(EmptyVO::class) */
-	public EmptyVO $structure;
+	public function __construct(EmptyVO $structure, ?string $required, ?string $optional = null)
+	{
+		$this->structure = $structure;
+		$this->required = $required;
+		$this->optional = $optional;
+	}
 
 }

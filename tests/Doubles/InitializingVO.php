@@ -21,4 +21,11 @@ final class InitializingVO implements MappedObject
 	/** @MappedObjectValue(DefaultsVO::class) */
 	public DefaultsVO $structure;
 
+	public function __construct(DateTimeImmutable $datetime, stdClass $instance, DefaultsVO $structure)
+	{
+		$this->datetime = $datetime;
+		$this->instance = $instance;
+		$this->structure = $structure;
+	}
+
 }

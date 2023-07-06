@@ -50,4 +50,22 @@ final class StructuresVO implements MappedObject
 	 */
 	public array $manyStructures;
 
+	/**
+	 * @param DefaultsVO|array<mixed> $structureOrArray
+	 * @param DefaultsVO|array<mixed> $anotherStructureOrArray
+	 * @param array<DefaultsVO|NoDefaultsVO> $manyStructures
+	 */
+	public function __construct(
+		DefaultsVO $structure,
+		$structureOrArray,
+		$anotherStructureOrArray,
+		array $manyStructures
+	)
+	{
+		$this->structure = $structure;
+		$this->structureOrArray = $structureOrArray;
+		$this->anotherStructureOrArray = $anotherStructureOrArray;
+		$this->manyStructures = $manyStructures;
+	}
+
 }

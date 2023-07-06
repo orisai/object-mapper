@@ -22,4 +22,10 @@ final class SelfReferenceVO implements MappedObject
 	/** @StringValue() */
 	public string $another;
 
+	public function __construct(?self $selfOrNull, string $another)
+	{
+		$this->selfOrNull = $selfOrNull;
+		$this->another = $another;
+	}
+
 }

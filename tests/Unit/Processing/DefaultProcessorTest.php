@@ -128,13 +128,11 @@ nullableString: string||null
 arrayOfMixed: array<mixed>
 structure: shape{
 	string: string
-	defaultByAttributeString: string
 	nullableString: string||null
 	arrayOfMixed: array<mixed>
 }
 manyStructures: array<int, shape{
 	string: string
-	defaultByAttributeString: string
 	nullableString: string||null
 	arrayOfMixed: array<mixed>
 }>',
@@ -198,15 +196,20 @@ manyStructures: array<int, shape{
 		];
 		$vo = $this->processor->process($data, NoDefaultsVO::class);
 
-		self::assertInstanceOf(NoDefaultsVO::class, $vo);
-		self::assertSame('foo', $vo->string);
-		self::assertNull($vo->nullableString);
-		self::assertSame([], $vo->arrayOfMixed);
-		self::assertCount(3, $vo->manyStructures);
-
-		foreach ($vo->manyStructures as $structure) {
-			self::assertInstanceOf(DefaultsVO::class, $structure);
-		}
+		self::assertEquals(
+			$vo,
+			new NoDefaultsVO(
+				'foo',
+				null,
+				[],
+				new DefaultsVO(),
+				[
+					new DefaultsVO(),
+					new DefaultsVO(),
+					new DefaultsVO(),
+				],
+			),
+		);
 	}
 
 	public function testStructures(): void
@@ -231,16 +234,19 @@ manyStructures: array<int, shape{
 		];
 		$vo = $this->processor->process($data, StructuresVO::class);
 
-		self::assertInstanceOf(StructuresVO::class, $vo);
-		self::assertInstanceOf(DefaultsVO::class, $vo->structure);
-		self::assertIsArray($vo->structureOrArray);
-		self::assertSame(['valueWhichIsNotInDefaultsVO' => null], $vo->structureOrArray);
-		self::assertInstanceOf(DefaultsVO::class, $vo->anotherStructureOrArray);
-		self::assertSame('value of property which is in DefaultsVO', $vo->anotherStructureOrArray->string);
-		self::assertCount(3, $vo->manyStructures);
-		self::assertInstanceOf(DefaultsVO::class, $vo->manyStructures[0]);
-		self::assertInstanceOf(DefaultsVO::class, $vo->manyStructures[1]);
-		self::assertInstanceOf(NoDefaultsVO::class, $vo->manyStructures[2]);
+		self::assertEquals(
+			$vo,
+			new StructuresVO(
+				new DefaultsVO(),
+				['valueWhichIsNotInDefaultsVO' => null],
+				new DefaultsVO('value of property which is in DefaultsVO'),
+				[
+					new DefaultsVO('example'),
+					new DefaultsVO(),
+					new NoDefaultsVO('example', 'example', [], new DefaultsVO(), []),
+				],
+			),
+		);
 	}
 
 	public function testUnknownValues(): void
@@ -303,14 +309,16 @@ MSG,
 		$options = new Options();
 		$options->setAllowUnknownFields();
 
+		$vo = null;
 		$exception = null;
 		try {
-			$this->processor->process(['unknown' => true], EmptyVO::class, $options);
+			$vo = $this->processor->process(['unknown' => true], EmptyVO::class, $options);
 		} catch (InvalidData $exception) {
 			// Checked bellow
 		}
 
 		self::assertNull($exception);
+		self::assertEquals($vo, new EmptyVO());
 	}
 
 	public function testDefaultValues(): void
@@ -318,16 +326,16 @@ MSG,
 		$data = [];
 		$vo = $this->processor->process($data, DefaultsVO::class);
 
-		self::assertInstanceOf(DefaultsVO::class, $vo);
-		self::assertSame('foo', $vo->string);
-		self::assertSame('attribute default', $vo->defaultByAttributeString);
-		self::assertNull($vo->nullableString);
-		self::assertSame(
-			[
-				0 => 'foo',
-				'bar' => 'baz',
-			],
-			$vo->arrayOfMixed,
+		self::assertEquals(
+			$vo,
+			new DefaultsVO(
+				'foo',
+				null,
+				[
+					0 => 'foo',
+					'bar' => 'baz',
+				],
+			),
 		);
 
 		// Defaults are not pre-filled by default
@@ -341,7 +349,6 @@ MSG,
 		self::assertSame(
 			[
 				'string' => 'foo',
-				'defaultByAttributeString' => 'attribute default',
 				'nullableString' => null,
 				'arrayOfMixed' => [
 					0 => 'foo',
@@ -360,29 +367,27 @@ MSG,
 		];
 		$vo = $this->processor->process($data, UntypedVO::class);
 
-		self::assertInstanceOf(UntypedVO::class, $vo);
-		self::assertNull($vo->nullableStringWithDefault);
-		self::assertNull($vo->nullWithDefault);
-		self::assertNull($vo->nullableString);
-		self::assertNull($vo->null);
+		self::assertEquals(
+			$vo,
+			new UntypedVO(null, null),
+		);
 		self::assertSame(
 			$data,
 			$this->processor->processWithoutMapping($data, UntypedVO::class),
 		);
 
 		$data = [
-			'nullableStringWithDefault' => 'a',
-			'nullWithDefault' => null,
 			'nullableString' => 'c',
 			'null' => null,
+			'nullableStringWithDefault' => 'a',
+			'nullWithDefault' => null,
 		];
 		$vo = $this->processor->process($data, UntypedVO::class);
 
-		self::assertInstanceOf(UntypedVO::class, $vo);
-		self::assertSame('a', $vo->nullableStringWithDefault);
-		self::assertNull($vo->nullWithDefault);
-		self::assertSame('c', $vo->nullableString);
-		self::assertNull($vo->null);
+		self::assertEquals(
+			$vo,
+			new UntypedVO('c', null, 'a', null),
+		);
 		self::assertSame(
 			$data,
 			$this->processor->processWithoutMapping($data, UntypedVO::class),
@@ -398,10 +403,10 @@ MSG,
 		self::assertNotNull($exception);
 		self::assertSame(
 			<<<'MSG'
-nullableStringWithDefault: string||null
-nullWithDefault: null
 nullableString: string||null
 null: null
+nullableStringWithDefault: string||null
+nullWithDefault: null
 MSG,
 			$this->printer->printError($exception),
 		);
@@ -417,7 +422,10 @@ MSG,
 
 		$vo = $this->processor->process($data, PropertiesVisibilityVO::class);
 
-		self::assertInstanceOf(PropertiesVisibilityVO::class, $vo);
+		self::assertEquals(
+			$vo,
+			new PropertiesVisibilityVO('public', 'protected', 'private'),
+		);
 		self::assertSame('public', $vo->public);
 		self::assertSame('protected', $vo->getProtected());
 		self::assertSame('private', $vo->getPrivate());
@@ -445,7 +453,6 @@ MSG,
 				'instance' => $instance,
 				'structure' => [
 					'string' => 'foo',
-					'defaultByAttributeString' => 'attribute default',
 					'nullableString' => null,
 					'arrayOfMixed' => [
 						0 => 'foo',
@@ -469,10 +476,16 @@ MSG,
 		];
 		$vo = $this->processor->process($data, InitializingVO::class);
 
-		self::assertInstanceOf(InitializingVO::class, $vo);
-		self::assertInstanceOf(DateTimeImmutable::class, $vo->datetime);
+		self::assertEquals(
+			$vo,
+			new InitializingVO(
+				DateTimeImmutable::createFromFormat(DateTimeInterface::ATOM, '1990-12-31T12:34:56+00:00'),
+				$instance,
+				new DefaultsVO(),
+			),
+		);
 		self::assertSame('1990-12-31T12:34:56+00:00', $vo->datetime->format(DateTimeInterface::ATOM));
-		self::assertInstanceOf(stdClass::class, $vo->instance);
+		self::assertSame($instance, $vo->instance);
 	}
 
 	public function testTransformation(): void
@@ -488,12 +501,10 @@ MSG,
 		];
 		$vo = $this->processor->process($data, TransformingVO::class, $options);
 
-		self::assertInstanceOf(TransformingVO::class, $vo);
-		self::assertTrue($vo->bool);
-		self::assertSame(123, $vo->int);
-		self::assertSame(123.456, $vo->float);
-		self::assertNull($vo->stdClassOrNull);
-
+		self::assertEquals(
+			$vo,
+			new TransformingVO(true, 123, 123.456, null),
+		);
 		self::assertSame($data, $this->processor->getRawValues($vo));
 	}
 
@@ -509,6 +520,13 @@ MSG,
 
 		$vo = $this->processor->process($data, SelfReferenceVO::class);
 
+		self::assertEquals(
+			$vo,
+			new SelfReferenceVO(
+				new SelfReferenceVO(null, 'string'),
+				'string',
+			),
+		);
 		self::assertInstanceOf(SelfReferenceVO::class, $vo->selfOrNull);
 		self::assertNull($vo->selfOrNull->selfOrNull);
 	}
@@ -563,10 +581,27 @@ MSG,
 
 		$a = $this->processor->process($data, CircularAVO::class);
 
-		$b = $a->b;
-		self::assertInstanceOf(CircularBVO::class, $b);
+		self::assertEquals(
+			$a,
+			new CircularAVO(
+				new CircularBVO(
+					new CircularCVO(
+						[
+							new CircularAVO(
+								new CircularBVO(null),
+							),
+							new CircularAVO(
+								new CircularBVO(
+									new CircularCVO([]),
+								),
+							),
+						],
+					),
+				),
+			),
+		);
 
-		$c = $b->c;
+		$c = $a->b->c;
 		self::assertInstanceOf(CircularCVO::class, $c);
 
 		$as = $c->as;
@@ -635,7 +670,6 @@ MSG,
 				'callbackSetValue' => 'givenByBeforeCallback',
 				'structure' => [
 					'string' => 'foo',
-					'defaultByAttributeString' => 'attribute default',
 					'nullableString' => null,
 					'arrayOfMixed' => [
 						0 => 'foo',
@@ -678,13 +712,17 @@ MSG,
 
 		$vo = $this->processor->process($data, CallbacksVisibilityVO::class);
 
-		self::assertInstanceOf(CallbacksVisibilityVO::class, $vo);
-		self::assertSame('a-public', $vo->public);
-		self::assertSame('b-protected', $vo->protected);
-		self::assertSame('c-private', $vo->private);
-		self::assertSame('d-public-static', $vo->publicStatic);
-		self::assertSame('e-protected-static', $vo->protectedStatic);
-		self::assertSame('f-private-static', $vo->privateStatic);
+		self::assertEquals(
+			$vo,
+			new CallbacksVisibilityVO(
+				'a-public',
+				'b-protected',
+				'c-private',
+				'd-public-static',
+				'e-protected-static',
+				'f-private-static',
+			),
+		);
 	}
 
 	public function testPropertyCallbacksFailure(): void
@@ -873,24 +911,28 @@ MSG,
 		$options->setRequiredFields(RequiredFields::nonDefault());
 
 		$vo = $this->processor->process([
-			'required' => null,
 			'structure' => [],
+			'required' => null,
 		], PropertiesInitVO::class, $options);
 
+		self::assertTrue($this->isInitialized($vo, 'structure'));
 		self::assertTrue($this->isInitialized($vo, 'required'));
 		self::assertTrue($this->isInitialized($vo, 'optional'));
-		self::assertTrue($this->isInitialized($vo, 'structure'));
 
-		self::assertNull($vo->required);
-		self::assertNull($vo->optional);
-		self::assertInstanceOf(EmptyVO::class, $vo->structure);
+		self::assertEquals(
+			$vo,
+			new PropertiesInitVO(new EmptyVO(), null),
+		);
 	}
 
 	public function testObjectInitialization(): void
 	{
 		$vo = $this->processor->process([], ObjectInitializingVO::class);
 
-		self::assertInstanceOf(DefaultsVO::class, $vo->inner);
+		self::assertEquals(
+			$vo,
+			new ObjectInitializingVO(new DefaultsVO()),
+		);
 	}
 
 	public function testObjectInitializationPhp81(): void
@@ -901,7 +943,10 @@ MSG,
 
 		$vo = $this->processor->process([], ObjectInitializingVoPhp81::class);
 
-		self::assertInstanceOf(DefaultsVO::class, $vo->inner);
+		self::assertEquals(
+			$vo,
+			new ObjectInitializingVoPhp81(new DefaultsVO()),
+		);
 	}
 
 	public function testRequireAllFields(): void
@@ -910,18 +955,19 @@ MSG,
 		$options->setRequiredFields(RequiredFields::all());
 
 		$vo = $this->processor->process([
+			'structure' => [],
 			'required' => null,
 			'optional' => null,
-			'structure' => [],
 		], PropertiesInitVO::class, $options);
 
+		self::assertTrue($this->isInitialized($vo, 'structure'));
 		self::assertTrue($this->isInitialized($vo, 'required'));
 		self::assertTrue($this->isInitialized($vo, 'optional'));
-		self::assertTrue($this->isInitialized($vo, 'structure'));
 
-		self::assertNull($vo->required);
-		self::assertNull($vo->optional);
-		self::assertInstanceOf(EmptyVO::class, $vo->structure);
+		self::assertEquals(
+			$vo,
+			new PropertiesInitVO(new EmptyVO(), null, null),
+		);
 	}
 
 	public function testRequireAllFieldsError(): void
@@ -958,23 +1004,24 @@ arrayOfMixed: array<mixed>',
 
 		$vo = $this->processor->process([], PropertiesInitVO::class, $options);
 
+		self::assertFalse($this->isInitialized($vo, 'structure'));
 		self::assertFalse($this->isInitialized($vo, 'required'));
 		self::assertFalse($this->isInitialized($vo, 'optional'));
-		self::assertFalse($this->isInitialized($vo, 'structure'));
 
 		$vo = $this->processor->process([
+			'structure' => [],
 			'required' => null,
 			'optional' => null,
-			'structure' => [],
 		], PropertiesInitVO::class, $options);
 
+		self::assertTrue($this->isInitialized($vo, 'structure'));
 		self::assertTrue($this->isInitialized($vo, 'required'));
 		self::assertTrue($this->isInitialized($vo, 'optional'));
-		self::assertTrue($this->isInitialized($vo, 'structure'));
 
-		self::assertNull($vo->required);
-		self::assertNull($vo->optional);
-		self::assertInstanceOf(EmptyVO::class, $vo->structure);
+		self::assertEquals(
+			$vo,
+			new PropertiesInitVO(new EmptyVO(), null, null),
+		);
 	}
 
 	/**
@@ -1288,8 +1335,10 @@ arrayOfMixed: array<mixed>',
 
 		$vo = $this->processor->process($data, AttributesVO::class);
 
-		self::assertInstanceOf(AttributesVO::class, $vo);
-		self::assertSame('foo', $vo->string);
+		self::assertEquals(
+			$vo,
+			new AttributesVO('foo'),
+		);
 	}
 
 	public function testObjectDefault(): void
@@ -1322,10 +1371,10 @@ arrayOfMixed: array<mixed>',
 
 		$vo = $this->processor->process($data, ReadonlyClassVO::class);
 
-		self::assertInstanceOf(ReadonlyClassVO::class, $vo);
-		self::assertSame('value', $vo->readonly);
-		self::assertSame('default', $vo->default1);
-		self::assertSame('overridden', $vo->default2);
+		self::assertEquals(
+			$vo,
+			new ReadonlyClassVO('value', 'default', 'overridden'),
+		);
 	}
 
 	public function testReadonlyProperties(): void
@@ -1341,10 +1390,10 @@ arrayOfMixed: array<mixed>',
 
 		$vo = $this->processor->process($data, ReadonlyPropertiesVO::class);
 
-		self::assertInstanceOf(ReadonlyPropertiesVO::class, $vo);
-		self::assertSame('value', $vo->readonly);
-		self::assertSame('default', $vo->default1);
-		self::assertSame('overridden', $vo->default2);
+		self::assertEquals(
+			$vo,
+			new ReadonlyPropertiesVO('value', 'default', 'overridden'),
+		);
 	}
 
 	public function testConstructorPromotion(): void
@@ -1361,10 +1410,15 @@ arrayOfMixed: array<mixed>',
 
 		$vo = $this->processor->process($data, ConstructorPromotedVO::class);
 
-		self::assertInstanceOf(ConstructorPromotedVO::class, $vo);
-		self::assertSame('given', $vo->requiredString);
-		self::assertNull($vo->requiredUntyped);
-		self::assertInstanceOf(DefaultsVO::class, $vo->requiredObject);
+		self::assertEquals(
+			$vo,
+			new ConstructorPromotedVO(
+				'given',
+				new DefaultsVO(),
+				null,
+			),
+		);
+
 		self::assertSame('default', $vo->optionalString);
 		self::assertNull($vo->optionalUntyped);
 	}
@@ -1383,13 +1437,17 @@ arrayOfMixed: array<mixed>',
 
 		$vo = $this->processor->process($data, NewInInitializersVO::class);
 
-		self::assertInstanceOf(NewInInitializersVO::class, $vo);
-		self::assertSame('given', $vo->requiredString);
-		self::assertNull($vo->requiredUntyped);
-		self::assertInstanceOf(DefaultsVO::class, $vo->requiredObject);
-		self::assertSame('default', $vo->optionalString);
-		self::assertInstanceOf(DefaultsVO::class, $vo->optionalObject);
-		self::assertNull($vo->optionalUntyped);
+		self::assertEquals(
+			$vo,
+			new NewInInitializersVO(
+				'given',
+				new DefaultsVO(),
+				null,
+				'default',
+				new DefaultsVO(),
+				null,
+			),
+		);
 	}
 
 	private function isInitialized(MappedObject $object, string $property): bool

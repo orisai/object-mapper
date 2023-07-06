@@ -22,4 +22,10 @@ final class CircularAVO implements MappedObject
 	 */
 	public ?string $stringOrNull = null;
 
+	public function __construct(CircularBVO $b, ?string $stringOrNull = null)
+	{
+		$this->b = $b;
+		$this->stringOrNull = $stringOrNull;
+	}
+
 }

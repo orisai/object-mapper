@@ -80,7 +80,7 @@ final class MappedObjectRuleTest extends ProcessingTestCase
 
 		self::assertSame(DefaultsVO::class, $type->getClass());
 		self::assertSame(
-			['string', 'defaultByAttributeString', 'nullableString', 'arrayOfMixed'],
+			['string', 'nullableString', 'arrayOfMixed'],
 			array_keys($type->getFields()),
 		);
 	}

@@ -18,4 +18,9 @@ final class CircularBVO implements MappedObject
 	 */
 	public ?CircularCVO $c;
 
+	public function __construct(?CircularCVO $c)
+	{
+		$this->c = $c;
+	}
+
 }

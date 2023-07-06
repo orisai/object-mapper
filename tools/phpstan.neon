@@ -39,9 +39,6 @@ parameters:
 
 		# Dark mapping magic
 		-
-			message: '#^Class (.+)VO has an uninitialized readonly property \$(.+)\. Assign it in the constructor\.$#'
-			path: ../tests/Doubles
-		-
 			message: '#^Property (.+)VO\:\:\$(.+) is never written, only read\.$#'
 			path: ../tests/Doubles
 		-

@@ -45,6 +45,23 @@ final class CallbacksVisibilityVO implements MappedObject
 	 */
 	public string $privateStatic;
 
+	public function __construct(
+		string $public,
+		string $protected,
+		string $private,
+		string $publicStatic,
+		string $protectedStatic,
+		string $privateStatic
+	)
+	{
+		$this->public = $public;
+		$this->protected = $protected;
+		$this->private = $private;
+		$this->publicStatic = $publicStatic;
+		$this->protectedStatic = $protectedStatic;
+		$this->privateStatic = $privateStatic;
+	}
+
 	public function afterPublic(string $data): string
 	{
 		return "$data-public";

@@ -11,4 +11,9 @@ final class AttributesVO implements MappedObject
 	#[StringValue]
 	public string $string;
 
+	public function __construct(string $string)
+	{
+		$this->string = $string;
+	}
+
 }

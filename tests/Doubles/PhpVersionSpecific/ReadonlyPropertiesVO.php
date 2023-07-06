@@ -20,4 +20,11 @@ final class ReadonlyPropertiesVO implements MappedObject
 	#[StringValue]
 	public readonly string $default2;
 
+	public function __construct(string $readonly, string $default1, string $default2)
+	{
+		$this->readonly = $readonly;
+		$this->default1 = $default1;
+		$this->default2 = $default2;
+	}
+
 }

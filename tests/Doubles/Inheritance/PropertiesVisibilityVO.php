@@ -17,6 +17,13 @@ final class PropertiesVisibilityVO implements MappedObject
 	/** @StringValue() */
 	private string $private;
 
+	public function __construct(string $public, string $protected, string $private)
+	{
+		$this->public = $public;
+		$this->protected = $protected;
+		$this->private = $private;
+	}
+
 	public function getProtected(): string
 	{
 		return $this->protected;

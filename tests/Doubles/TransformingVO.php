@@ -31,4 +31,12 @@ final class TransformingVO implements MappedObject
 	 */
 	public ?stdClass $stdClassOrNull;
 
+	public function __construct(bool $bool, int $int, float $float, ?stdClass $stdClassOrNull)
+	{
+		$this->bool = $bool;
+		$this->int = $int;
+		$this->float = $float;
+		$this->stdClassOrNull = $stdClassOrNull;
+	}
+
 }

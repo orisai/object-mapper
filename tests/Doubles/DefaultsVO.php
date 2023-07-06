@@ -3,7 +3,6 @@
 namespace Tests\Orisai\ObjectMapper\Doubles;
 
 use Orisai\ObjectMapper\MappedObject;
-use Orisai\ObjectMapper\Modifiers\DefaultValue;
 use Orisai\ObjectMapper\Rules\AnyOf;
 use Orisai\ObjectMapper\Rules\ArrayOf;
 use Orisai\ObjectMapper\Rules\MixedValue;
@@ -15,12 +14,6 @@ final class DefaultsVO implements MappedObject
 
 	/** @StringValue() */
 	public string $string = 'foo';
-
-	/**
-	 * @DefaultValue("attribute default")
-	 * @StringValue()
-	 */
-	public string $defaultByAttributeString = 'property default';
 
 	/**
 	 * @AnyOf({
@@ -41,5 +34,22 @@ final class DefaultsVO implements MappedObject
 		0 => 'foo',
 		'bar' => 'baz',
 	];
+
+	/**
+	 * @param array<string> $arrayOfMixed
+	 */
+	public function __construct(
+		string $string = 'foo',
+		?string $nullableString = null,
+		array $arrayOfMixed = [
+			0 => 'foo',
+			'bar' => 'baz',
+		]
+	)
+	{
+		$this->string = $string;
+		$this->nullableString = $nullableString;
+		$this->arrayOfMixed = $arrayOfMixed;
+	}
 
 }

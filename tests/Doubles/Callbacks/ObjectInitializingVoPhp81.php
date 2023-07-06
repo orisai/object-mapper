@@ -14,4 +14,9 @@ final class ObjectInitializingVoPhp81 implements MappedObject
 	#[MappedObjectValue(DefaultsVO::class)]
 	public DefaultsVO $inner;
 
+	public function __construct(DefaultsVO $inner)
+	{
+		$this->inner = $inner;
+	}
+
 }

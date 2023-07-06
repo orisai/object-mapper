@@ -14,6 +14,23 @@ final class UntypedVO implements MappedObject
 	/**
 	 * @var string|null
 	 *
+	 * @AnyOf({
+	 *     @StringValue(),
+	 *     @NullValue(),
+	 * })
+	 */
+	public $nullableString;
+
+	/**
+	 * @var null
+	 *
+	 * @NullValue()
+	 */
+	public $null;
+
+	/**
+	 * @var string|null
+	 *
 	 * @DefaultValue(value=null)
 	 * @AnyOf({
 	 *     @StringValue(),
@@ -31,20 +48,20 @@ final class UntypedVO implements MappedObject
 	public $nullWithDefault;
 
 	/**
-	 * @var string|null
-	 *
-	 * @AnyOf({
-	 *     @StringValue(),
-	 *     @NullValue(),
-	 * })
+	 * @param null $null
+	 * @param null $nullWithDefault
 	 */
-	public $nullableString;
-
-	/**
-	 * @var null
-	 *
-	 * @NullValue()
-	 */
-	public $null;
+	public function __construct(
+		?string $nullableString,
+		$null,
+		?string $nullableStringWithDefault = null,
+		$nullWithDefault = null
+	)
+	{
+		$this->nullableString = $nullableString;
+		$this->null = $null;
+		$this->nullableStringWithDefault = $nullableStringWithDefault;
+		$this->nullWithDefault = $nullWithDefault;
+	}
 
 }
