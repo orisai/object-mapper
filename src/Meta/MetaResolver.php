@@ -126,11 +126,13 @@ final class MetaResolver
 	{
 		$fields = [];
 		foreach ($meta->getFields() as $fieldMeta) {
-			$fieldName = $this->propertyNameToFieldName($fieldMeta);
-			$fields[$fieldName] = $this->resolveFieldMeta(
+			$resolved = $this->resolveFieldMeta(
 				$fieldMeta,
 				$this->getDefaultValue($fieldMeta),
 			);
+
+			$fieldName = $this->propertyNameToFieldName($resolved);
+			$fields[$fieldName] = $resolved;
 		}
 
 		return $fields;
@@ -139,12 +141,11 @@ final class MetaResolver
 	/**
 	 * @return int|string
 	 */
-	private function propertyNameToFieldName(FieldCompileMeta $fieldMeta)
+	private function propertyNameToFieldName(FieldRuntimeMeta $fieldMeta)
 	{
-		foreach ($fieldMeta->getModifiers() as $modifier) {
-			if ($modifier->getType() === FieldNameModifier::class) {
-				return $modifier->getArgs()[FieldNameModifier::Name];
-			}
+		$modifier = $fieldMeta->getModifier(FieldNameModifier::class);
+		if ($modifier !== null) {
+			return $modifier->getArgs()->name;
 		}
 
 		return $fieldMeta->getProperty()->getName();
