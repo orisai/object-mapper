@@ -14,6 +14,7 @@ use Orisai\ObjectMapper\Printers\TypeToStringConverter;
 use Orisai\ObjectMapper\Processing\Options;
 use Orisai\ObjectMapper\Processing\RequiredFields;
 use ReflectionProperty;
+use RuntimeException;
 use stdClass;
 use Tests\Orisai\ObjectMapper\Doubles\Callbacks\AfterClassCallbackCurrentTypeInvalidDataVO;
 use Tests\Orisai\ObjectMapper\Doubles\Callbacks\AfterClassCallbackNewTypeInvalidDataVO;
@@ -39,6 +40,7 @@ use Tests\Orisai\ObjectMapper\Doubles\Dependencies\DependentChildVoInjector2;
 use Tests\Orisai\ObjectMapper\Doubles\EmptyVO;
 use Tests\Orisai\ObjectMapper\Doubles\FieldNames\ChildFieldVO;
 use Tests\Orisai\ObjectMapper\Doubles\FieldNames\FieldNamesVO;
+use Tests\Orisai\ObjectMapper\Doubles\ForbiddenConstructorVO;
 use Tests\Orisai\ObjectMapper\Doubles\Inheritance\CallbacksVisibilityVO;
 use Tests\Orisai\ObjectMapper\Doubles\Inheritance\ChildVO;
 use Tests\Orisai\ObjectMapper\Doubles\Inheritance\InterfaceUsingVO;
@@ -950,6 +952,19 @@ MSG,
 			$vo,
 			new ObjectInitializingVoPhp81(new DefaultsVO()),
 		);
+	}
+
+	public function testConstructorIsNotUsed(): void
+	{
+		$data = [
+			'field' => 'foo',
+		];
+		$vo = $this->processor->process($data, ForbiddenConstructorVO::class);
+
+		self::assertSame('foo', $vo->field);
+
+		$this->expectException(RuntimeException::class);
+		new ForbiddenConstructorVO();
 	}
 
 	public function testRequireAllFields(): void
