@@ -110,6 +110,10 @@ abstract class ReflectorMetaSource implements MetaSource
 				}
 			}
 
+			if ($callbacks === [] && $docs === [] && $modifiers === []) {
+				continue;
+			}
+
 			$resolved[] = new ClassCompileMeta($callbacks, $docs, $modifiers, $class->getContextClass());
 		}
 
