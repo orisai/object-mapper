@@ -2,26 +2,32 @@
 
 namespace Orisai\ObjectMapper\Meta\Compile;
 
-use ReflectionClass;
-use ReflectionProperty;
+use Orisai\ReflectionMeta\Structure\ClassStructure;
+use Orisai\ReflectionMeta\Structure\PropertyStructure;
 
 final class FieldCompileMeta extends NodeCompileMeta
 {
 
 	private RuleCompileMeta $rule;
 
-	private ReflectionProperty $property;
+	private ClassStructure $class;
+
+	private PropertyStructure $property;
 
 	public function __construct(
 		array $callbacks,
 		array $docs,
 		array $modifiers,
 		RuleCompileMeta $rule,
-		ReflectionProperty $property
+		PropertyStructure $property
 	)
 	{
 		parent::__construct($callbacks, $docs, $modifiers);
 		$this->rule = $rule;
+		$this->class = new ClassStructure(
+			$property->getContextClass(),
+			$property->getSource()->getClass(),
+		);
 		$this->property = $property;
 	}
 
@@ -30,12 +36,12 @@ final class FieldCompileMeta extends NodeCompileMeta
 		return $this->rule;
 	}
 
-	public function getClass(): ReflectionClass
+	public function getClass(): ClassStructure
 	{
-		return $this->property->getDeclaringClass();
+		return $this->class;
 	}
 
-	public function getProperty(): ReflectionProperty
+	public function getProperty(): PropertyStructure
 	{
 		return $this->property;
 	}

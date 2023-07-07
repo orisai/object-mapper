@@ -114,7 +114,7 @@ abstract class ReflectorMetaSource implements MetaSource
 				continue;
 			}
 
-			$resolved[] = new ClassCompileMeta($callbacks, $docs, $modifiers, $class->getContextClass());
+			$resolved[] = new ClassCompileMeta($callbacks, $docs, $modifiers, $class);
 		}
 
 		return $resolved;
@@ -195,7 +195,7 @@ abstract class ReflectorMetaSource implements MetaSource
 					$docs,
 					$modifiers,
 					$rule,
-					$property,
+					$propertyStructure,
 				);
 			}
 
@@ -246,8 +246,9 @@ abstract class ReflectorMetaSource implements MetaSource
 			if ($previousFieldMeta !== null && !$fieldMeta->hasEqualMeta($previousFieldMeta)) {
 				throw InvalidArgument::create()
 					->withMessage(
-						"Definition of property '{$fieldMeta->getClass()->getName()}::\${$fieldMeta->getProperty()->getName()}'" .
-						" can't be changed but it differs from definition in '{$previousFieldMeta->getClass()->getName()}'.",
+						"Definition of property '{$fieldMeta->getClass()->getContextClass()->getName()}"
+						. "::\${$fieldMeta->getProperty()->getSource()->getReflector()->getName()}'"
+						. " can't be changed but it differs from definition in '{$previousFieldMeta->getClass()->getContextClass()->getName()}'.",
 					);
 			}
 

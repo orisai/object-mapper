@@ -10,6 +10,7 @@ use Orisai\ObjectMapper\Meta\Compile\ClassCompileMeta;
 use Orisai\ObjectMapper\Meta\Compile\CompileMeta;
 use Orisai\ObjectMapper\Meta\Runtime\RuntimeMeta;
 use Orisai\ObjectMapper\Meta\Source\MetaSourceManager;
+use Orisai\ReflectionMeta\Structure\ClassStructure;
 use Orisai\SourceMap\ClassSource;
 use ReflectionClass;
 use ReflectionEnum;
@@ -121,7 +122,14 @@ final class MetaLoader
 
 		if ($meta === null) {
 			$meta = new CompileMeta(
-				[new ClassCompileMeta([], [], [], $class)],
+				[
+					new ClassCompileMeta(
+						[],
+						[],
+						[],
+						new ClassStructure($class, new ClassSource($class)),
+					),
+				],
 				[],
 				[],
 			);

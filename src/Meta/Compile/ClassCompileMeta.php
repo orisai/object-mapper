@@ -2,18 +2,14 @@
 
 namespace Orisai\ObjectMapper\Meta\Compile;
 
-use ReflectionClass;
+use Orisai\ReflectionMeta\Structure\ClassStructure;
 
 final class ClassCompileMeta extends NodeCompileMeta
 {
 
-	/** @var ReflectionClass<object> */
-	private ReflectionClass $class;
+	private ClassStructure $class;
 
-	/**
-	 * @param ReflectionClass<object> $class
-	 */
-	public function __construct(array $callbacks, array $docs, array $modifiers, ReflectionClass $class)
+	public function __construct(array $callbacks, array $docs, array $modifiers, ClassStructure $class)
 	{
 		parent::__construct($callbacks, $docs, $modifiers);
 		$this->class = $class;
@@ -26,7 +22,7 @@ final class ClassCompileMeta extends NodeCompileMeta
 			|| $this->getModifiers() !== [];
 	}
 
-	public function getClass(): ReflectionClass
+	public function getClass(): ClassStructure
 	{
 		return $this->class;
 	}

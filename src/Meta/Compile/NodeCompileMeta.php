@@ -3,7 +3,7 @@
 namespace Orisai\ObjectMapper\Meta\Compile;
 
 use Orisai\ObjectMapper\Meta\Shared\DocMeta;
-use ReflectionClass;
+use Orisai\ReflectionMeta\Structure\ClassStructure;
 
 /**
  * @internal
@@ -56,9 +56,6 @@ abstract class NodeCompileMeta
 		return $this->modifiers;
 	}
 
-	/**
-	 * @return ReflectionClass<object>
-	 */
-	abstract public function getClass(): ReflectionClass;
+	abstract public function getClass(): ClassStructure;
 
 }

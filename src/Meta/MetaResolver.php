@@ -85,7 +85,7 @@ final class MetaResolver
 
 			$context = new ArgsContext($this->loader, $this);
 
-			$callbacksByMeta[] = $this->resolveCallbacksMeta($classMeta, $context, $class);
+			$callbacksByMeta[] = $this->resolveCallbacksMeta($classMeta, $context, $class->getContextClass());
 			$docsByMeta[] = $this->resolveDocsMeta($classMeta, $context);
 			$modifiersByMeta[] = $this->resolveClassModifiersMeta($classMeta, $context);
 		}
@@ -156,7 +156,10 @@ final class MetaResolver
 		DefaultValueMeta $defaultValue
 	): FieldRuntimeMeta
 	{
-		$property = $meta->getProperty();
+		$propertyStructure = $meta->getProperty();
+		$property = $propertyStructure->getContextClass()->getProperty(
+			$propertyStructure->getSource()->getReflector()->getName(),
+		);
 
 		if ($property->isStatic()) {
 			throw InvalidArgument::create()
@@ -195,7 +198,12 @@ final class MetaResolver
 	{
 		$array = [];
 		foreach ($meta->getCallbacks() as $key => $callback) {
-			$array[$key] = $this->resolveCallbackMeta($callback, $context, $reflector, $meta->getClass());
+			$array[$key] = $this->resolveCallbackMeta(
+				$callback,
+				$context,
+				$reflector,
+				$meta->getClass()->getContextClass(),
+			);
 		}
 
 		return $array;
@@ -310,7 +318,10 @@ final class MetaResolver
 			}
 		}
 
-		$property = $meta->getProperty();
+		$propertyStructure = $meta->getProperty();
+		$property = $propertyStructure->getContextClass()->getProperty(
+			$propertyStructure->getSource()->getReflector()->getName(),
+		);
 		$propertyName = $property->getName();
 		$declaringClass = $property->getDeclaringClass();
 
@@ -347,7 +358,10 @@ final class MetaResolver
 	{
 		$map = [];
 		foreach ($meta->getFields() as $fieldMeta) {
-			$property = $fieldMeta->getProperty();
+			$propertyStructure = $fieldMeta->getProperty();
+			$property = $propertyStructure->getContextClass()->getProperty(
+				$propertyStructure->getSource()->getReflector()->getName(),
+			);
 
 			$fieldName = $property->getName();
 			$source = 'property name';

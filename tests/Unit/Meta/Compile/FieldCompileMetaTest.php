@@ -15,6 +15,8 @@ use Orisai\ObjectMapper\Modifiers\DefaultValueModifier;
 use Orisai\ObjectMapper\Modifiers\FieldNameModifier;
 use Orisai\ObjectMapper\Rules\MixedRule;
 use Orisai\ObjectMapper\Rules\StringRule;
+use Orisai\ReflectionMeta\Structure\PropertyStructure;
+use Orisai\SourceMap\PropertySource;
 use PHPUnit\Framework\TestCase;
 use ReflectionProperty;
 use Tests\Orisai\ObjectMapper\Doubles\NoDefaultsVO;
@@ -34,7 +36,12 @@ final class FieldCompileMetaTest extends TestCase
 			new ModifierCompileMeta(FieldNameModifier::class, []),
 		];
 		$rule = new RuleCompileMeta(MixedRule::class, []);
-		$property = new ReflectionProperty(NoDefaultsVO::class, 'string');
+		$reflector = new ReflectionProperty(NoDefaultsVO::class, 'string');
+		$property = new PropertyStructure(
+			$reflector->getDeclaringClass(),
+			new PropertySource($reflector),
+			[],
+		);
 
 		$meta = new FieldCompileMeta($callbacks, $docs, $modifiers, $rule, $property);
 
@@ -63,7 +70,12 @@ final class FieldCompileMetaTest extends TestCase
 
 	public function testUnequalRuleMeta(): void
 	{
-		$property = new ReflectionProperty(NoDefaultsVO::class, 'string');
+		$reflector = new ReflectionProperty(NoDefaultsVO::class, 'string');
+		$property = new PropertyStructure(
+			$reflector->getDeclaringClass(),
+			new PropertySource($reflector),
+			[],
+		);
 
 		$meta1 = new FieldCompileMeta(
 			[],
@@ -85,7 +97,12 @@ final class FieldCompileMetaTest extends TestCase
 
 	public function testUnequalCallbacksMeta(): void
 	{
-		$property = new ReflectionProperty(NoDefaultsVO::class, 'string');
+		$reflector = new ReflectionProperty(NoDefaultsVO::class, 'string');
+		$property = new PropertyStructure(
+			$reflector->getDeclaringClass(),
+			new PropertySource($reflector),
+			[],
+		);
 
 		$meta1 = new FieldCompileMeta(
 			[
@@ -111,7 +128,12 @@ final class FieldCompileMetaTest extends TestCase
 
 	public function testUnequalDocsMeta(): void
 	{
-		$property = new ReflectionProperty(NoDefaultsVO::class, 'string');
+		$reflector = new ReflectionProperty(NoDefaultsVO::class, 'string');
+		$property = new PropertyStructure(
+			$reflector->getDeclaringClass(),
+			new PropertySource($reflector),
+			[],
+		);
 
 		$meta1 = new FieldCompileMeta(
 			[],
@@ -137,7 +159,12 @@ final class FieldCompileMetaTest extends TestCase
 
 	public function testUnequalModifiersMeta(): void
 	{
-		$property = new ReflectionProperty(NoDefaultsVO::class, 'string');
+		$reflector = new ReflectionProperty(NoDefaultsVO::class, 'string');
+		$property = new PropertyStructure(
+			$reflector->getDeclaringClass(),
+			new PropertySource($reflector),
+			[],
+		);
 
 		$meta1 = new FieldCompileMeta(
 			[],

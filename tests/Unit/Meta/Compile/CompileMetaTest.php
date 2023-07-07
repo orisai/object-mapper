@@ -9,11 +9,13 @@ use Orisai\ObjectMapper\Meta\Compile\CompileMeta;
 use Orisai\ObjectMapper\Meta\Compile\FieldCompileMeta;
 use Orisai\ObjectMapper\Meta\Compile\RuleCompileMeta;
 use Orisai\ObjectMapper\Rules\MixedRule;
+use Orisai\ReflectionMeta\Structure\ClassStructure;
+use Orisai\ReflectionMeta\Structure\PropertyStructure;
 use Orisai\SourceMap\ClassSource;
 use Orisai\SourceMap\FileSource;
+use Orisai\SourceMap\PropertySource;
 use PHPUnit\Framework\TestCase;
 use ReflectionClass;
-use ReflectionProperty;
 use Tests\Orisai\ObjectMapper\Doubles\NoDefaultsVO;
 
 final class CompileMetaTest extends TestCase
@@ -22,8 +24,12 @@ final class CompileMetaTest extends TestCase
 	public function test(): void
 	{
 		$reflector = new ReflectionClass(NoDefaultsVO::class);
+		$class = new ClassStructure(
+			$reflector,
+			new ClassSource($reflector),
+		);
 		$classes = [
-			new ClassCompileMeta([], [], [], $reflector),
+			new ClassCompileMeta([], [], [], $class),
 		];
 		$fields = [
 			new FieldCompileMeta(
@@ -31,7 +37,11 @@ final class CompileMetaTest extends TestCase
 				[],
 				[],
 				new RuleCompileMeta(MixedRule::class, []),
-				$reflector->getProperty('string'),
+				new PropertyStructure(
+					$reflector,
+					new PropertySource($reflector->getProperty('string')),
+					[],
+				),
 			),
 		];
 		$sources = [
@@ -59,10 +69,14 @@ final class CompileMetaTest extends TestCase
 	public function testHasAnyAttributes(): void
 	{
 		$reflector = new ReflectionClass(NoDefaultsVO::class);
+		$class = new ClassStructure(
+			$reflector,
+			new ClassSource($reflector),
+		);
 
 		$meta = new CompileMeta(
 			[
-				new ClassCompileMeta([], [], [], $reflector),
+				new ClassCompileMeta([], [], [], $class),
 			],
 			[],
 			[],
@@ -77,7 +91,7 @@ final class CompileMetaTest extends TestCase
 					],
 					[],
 					[],
-					$reflector,
+					$class,
 				),
 			],
 			[],
@@ -87,7 +101,7 @@ final class CompileMetaTest extends TestCase
 
 		$meta = new CompileMeta(
 			[
-				new ClassCompileMeta([], [], [], $reflector),
+				new ClassCompileMeta([], [], [], $class),
 			],
 			[
 				new FieldCompileMeta(
@@ -95,7 +109,11 @@ final class CompileMetaTest extends TestCase
 					[],
 					[],
 					new RuleCompileMeta(MixedRule::class, []),
-					new ReflectionProperty(NoDefaultsVO::class, 'string'),
+					new PropertyStructure(
+						$reflector,
+						new PropertySource($reflector->getProperty('string')),
+						[],
+					),
 				),
 			],
 			[],
