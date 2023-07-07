@@ -56,6 +56,7 @@ use Tests\Orisai\ObjectMapper\Doubles\InitializingVO;
 use Tests\Orisai\ObjectMapper\Doubles\NoDefaultsVO;
 use Tests\Orisai\ObjectMapper\Doubles\PhpVersionSpecific\AttributesVO;
 use Tests\Orisai\ObjectMapper\Doubles\PhpVersionSpecific\ConstructorPromotedVO;
+use Tests\Orisai\ObjectMapper\Doubles\PhpVersionSpecific\DefaultsOverrideVO;
 use Tests\Orisai\ObjectMapper\Doubles\PhpVersionSpecific\NewInInitializersVO;
 use Tests\Orisai\ObjectMapper\Doubles\PhpVersionSpecific\ObjectDefaultVO;
 use Tests\Orisai\ObjectMapper\Doubles\PhpVersionSpecific\ReadonlyClassVO;
@@ -1412,6 +1413,20 @@ arrayOfMixed: array<mixed>',
 			$vo,
 			new ReadonlyPropertiesVO('value', 'default', 'overridden'),
 		);
+	}
+
+	public function testDefaultsOverride(): void
+	{
+		if (PHP_VERSION_ID < 8_00_00) {
+			self::markTestSkipped('Defaults override test uses features from PHP 8.0');
+		}
+
+		$vo = $this->processor->process([], DefaultsOverrideVO::class);
+
+		self::assertSame('property', $vo->propertyDefault);
+		self::assertSame('annotation', $vo->annotationDefault);
+		self::assertSame('ctor', $vo->ctorDefault);
+		self::assertSame('annotationCtor', $vo->annotationCtorDefault);
 	}
 
 	public function testConstructorPromotion(): void

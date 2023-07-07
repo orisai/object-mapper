@@ -95,6 +95,7 @@ TXT,
 		if (PHP_VERSION_ID < 8_00_00) {
 			$excludes[] = __DIR__ . '/../../Doubles/PhpVersionSpecific/AttributesVO.php';
 			$excludes[] = __DIR__ . '/../../Doubles/PhpVersionSpecific/ConstructorPromotedVO.php';
+			$excludes[] = __DIR__ . '/../../Doubles/PhpVersionSpecific/DefaultsOverrideVO.php';
 		}
 
 		if (PHP_VERSION_ID < 8_01_00) {
