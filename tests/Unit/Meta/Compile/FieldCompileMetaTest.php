@@ -38,7 +38,7 @@ final class FieldCompileMetaTest extends TestCase
 		$rule = new RuleCompileMeta(MixedRule::class, []);
 		$reflector = new ReflectionProperty(NoDefaultsVO::class, 'string');
 		$property = new PropertyStructure(
-			$reflector->getDeclaringClass(),
+			$reflector,
 			new PropertySource($reflector),
 			[],
 		);
@@ -72,7 +72,7 @@ final class FieldCompileMetaTest extends TestCase
 	{
 		$reflector = new ReflectionProperty(NoDefaultsVO::class, 'string');
 		$property = new PropertyStructure(
-			$reflector->getDeclaringClass(),
+			$reflector,
 			new PropertySource($reflector),
 			[],
 		);
@@ -99,7 +99,7 @@ final class FieldCompileMetaTest extends TestCase
 	{
 		$reflector = new ReflectionProperty(NoDefaultsVO::class, 'string');
 		$property = new PropertyStructure(
-			$reflector->getDeclaringClass(),
+			$reflector,
 			new PropertySource($reflector),
 			[],
 		);
@@ -130,7 +130,7 @@ final class FieldCompileMetaTest extends TestCase
 	{
 		$reflector = new ReflectionProperty(NoDefaultsVO::class, 'string');
 		$property = new PropertyStructure(
-			$reflector->getDeclaringClass(),
+			$reflector,
 			new PropertySource($reflector),
 			[],
 		);
@@ -161,7 +161,7 @@ final class FieldCompileMetaTest extends TestCase
 	{
 		$reflector = new ReflectionProperty(NoDefaultsVO::class, 'string');
 		$property = new PropertyStructure(
-			$reflector->getDeclaringClass(),
+			$reflector,
 			new PropertySource($reflector),
 			[],
 		);

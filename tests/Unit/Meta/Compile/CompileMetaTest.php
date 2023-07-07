@@ -38,7 +38,7 @@ final class CompileMetaTest extends TestCase
 				[],
 				new RuleCompileMeta(MixedRule::class, []),
 				new PropertyStructure(
-					$reflector,
+					$reflector->getProperty('string'),
 					new PropertySource($reflector->getProperty('string')),
 					[],
 				),
@@ -110,7 +110,7 @@ final class CompileMetaTest extends TestCase
 					[],
 					new RuleCompileMeta(MixedRule::class, []),
 					new PropertyStructure(
-						$reflector,
+						$reflector->getProperty('string'),
 						new PropertySource($reflector->getProperty('string')),
 						[],
 					),

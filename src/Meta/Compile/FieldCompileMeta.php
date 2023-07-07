@@ -25,7 +25,7 @@ final class FieldCompileMeta extends NodeCompileMeta
 		parent::__construct($callbacks, $docs, $modifiers);
 		$this->rule = $rule;
 		$this->class = new ClassStructure(
-			$property->getContextClass(),
+			$property->getContextReflector()->getDeclaringClass(),
 			$property->getSource()->getClass(),
 		);
 		$this->property = $property;
