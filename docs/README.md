@@ -62,6 +62,7 @@ of them to type-safe objects.
 	- [MessageType](#messagetype)
 	- [SimpleValueType](#simplevaluetype)
 	- [ParametrizedType](#parametrizedtype)
+- [Integrations and extensions](#integrations-and-extensions)
 
 ## Setup
 
@@ -2137,3 +2138,8 @@ Parametrized types are:
 
 - [SimpleValueType](#simplevaluetype)
 - [GenericArrayType](#genericarraytype)
+
+## Integrations and extensions
+
+- [Nette](https://github.com/nette) integration - [orisai/nette-object-mapper](https://github.com/orisai/nette-object-mapper)
+- [Nextras Orm](https://github.com/nextras/orm) integration - [orisai/nextras-object-mapper](https://github.com/orisai/nextras-object-mapper)
