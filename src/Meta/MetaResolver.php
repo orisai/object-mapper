@@ -176,7 +176,7 @@ final class MetaResolver
 			$this->resolveFieldModifiersMeta($meta, $context),
 			$this->resolveRuleMeta(
 				$meta->getRule(),
-				$this->createArgsContext(),
+				$context,
 			),
 			$defaultValue,
 			$property,
@@ -389,11 +389,6 @@ final class MetaResolver
 				'source' => $source,
 			];
 		}
-	}
-
-	private function createArgsContext(): ArgsContext
-	{
-		return new ArgsContext($this->loader, $this);
 	}
 
 }
