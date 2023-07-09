@@ -91,6 +91,11 @@ TXT,
 		$excludes[] = __DIR__ . '/../../Doubles/FieldNames/MultipleIdenticalFieldNamesVO.php';
 		$excludes[] = __DIR__ . '/../../Doubles/FieldNames/ChildCollidingFieldVO.php';
 		$excludes[] = __DIR__ . '/../../Doubles/Constructing/DependentVO.php';
+		$excludes[] = __DIR__ . '/../../Doubles/Meta/ClassMetaInvalidScopeRootVO.php';
+		$excludes[] = __DIR__ . '/../../Doubles/Meta/ClassInterfaceMetaInvalidScopeRootVO.php';
+		$excludes[] = __DIR__ . '/../../Doubles/Meta/ClassTraitMetaInvalidScopeRootVO.php';
+		$excludes[] = __DIR__ . '/../../Doubles/Meta/FieldMetaInvalidScopeRootVO.php';
+		$excludes[] = __DIR__ . '/../../Doubles/Meta/FieldTraitMetaInvalidScopeRootVO.php';
 
 		if (PHP_VERSION_ID < 8_00_00) {
 			$excludes[] = __DIR__ . '/../../Doubles/PhpVersionSpecific/AttributesVO.php';

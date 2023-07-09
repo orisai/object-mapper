@@ -105,10 +105,3 @@ parameters:
 		-
 			message: '#^Template type T is declared as covariant, but occurs in contravariant position (.+)\_\_(serialize|unserialize)\(\)\.$#'
 			path: ../src/Meta/Runtime/CallbackRuntimeMeta.php
-
-		################################################################################################################
-
-		# Proper object -> MappedObject type checks are currently missing
-		-
-			message: '#(.+)expects ReflectionClass\<(.+)MappedObject\>, ReflectionClass\<object\> given\.$#'
-			path: ../src/Meta/MetaResolver.php

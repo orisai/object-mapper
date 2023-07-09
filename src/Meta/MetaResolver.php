@@ -29,6 +29,8 @@ use Orisai\ObjectMapper\Modifiers\Modifier;
 use Orisai\ObjectMapper\Modifiers\RequiresDependenciesModifier;
 use Orisai\ObjectMapper\Processing\ObjectCreator;
 use Orisai\ObjectMapper\Rules\RuleManager;
+use Orisai\SourceMap\ClassSource;
+use Orisai\SourceMap\PropertySource;
 use ReflectionClass;
 use ReflectionProperty;
 use Reflector;
@@ -65,8 +67,8 @@ final class MetaResolver
 		$this->checkFieldNames($meta);
 
 		$runtimeMeta = new RuntimeMeta(
-			$this->resolveClassMeta($meta),
-			$this->resolveFieldsMeta($meta),
+			$this->resolveClassMeta($class, $meta),
+			$this->resolveFieldsMeta($class, $meta),
 		);
 
 		$this->checkObjectCanBeInstantiated($class, $runtimeMeta->getClass());
@@ -74,18 +76,35 @@ final class MetaResolver
 		return $runtimeMeta;
 	}
 
-	private function resolveClassMeta(CompileMeta $meta): ClassRuntimeMeta
+	/**
+	 * @param ReflectionClass<MappedObject> $rootClass
+	 */
+	private function resolveClassMeta(ReflectionClass $rootClass, CompileMeta $meta): ClassRuntimeMeta
 	{
 		$callbacksByMeta = [];
 		$docsByMeta = [];
 		$modifiersByMeta = [];
 
 		foreach ($meta->getClasses() as $classMeta) {
-			$class = $classMeta->getClass();
+			$classStructure = $classMeta->getClass();
+			$reflector = $classStructure->getContextReflector();
+
+			$source = $classStructure->getSource();
+			$sourceReflector = $source->getReflector();
+			if (
+				!$reflector->isSubclassOf(MappedObject::class)
+				|| ($sourceReflector->isInterface() && !$sourceReflector->isSubclassOf(MappedObject::class))
+			) {
+				$this->throwClassMetaOutsideOfMappedObject(
+					$rootClass,
+					$classStructure->getContextReflector(),
+					$source,
+				);
+			}
 
 			$context = new ArgsContext($this->loader, $this);
 
-			$callbacksByMeta[] = $this->resolveCallbacksMeta($classMeta, $context, $class->getContextReflector());
+			$callbacksByMeta[] = $this->resolveCallbacksMeta($classMeta, $context, $reflector, $reflector);
 			$docsByMeta[] = $this->resolveDocsMeta($classMeta, $context);
 			$modifiersByMeta[] = $this->resolveClassModifiersMeta($classMeta, $context);
 		}
@@ -107,6 +126,48 @@ final class MetaResolver
 	}
 
 	/**
+	 * @param ReflectionClass<MappedObject> $rootClass
+	 * @param ReflectionClass<object> $reflector
+	 * @return never
+	 */
+	private function throwClassMetaOutsideOfMappedObject(
+		ReflectionClass $rootClass,
+		ReflectionClass $reflector,
+		ClassSource $source
+	): void
+	{
+		$sourceReflector = $source->getReflector();
+
+		$objectInterface = MappedObject::class;
+		$actionName = $sourceReflector->isInterface()
+			? 'Extend'
+			: 'Implement';
+		$message = Message::create()
+			->withContext("Resolving metadata of mapped object '{$rootClass->getName()}'.")
+			->withSolution("$actionName the '$objectInterface' interface.");
+
+		if ($sourceReflector->isTrait()) {
+			$message->withProblem(
+				"Trait '{$source->toString()}' defines metadata, but is used in class"
+				. " '{$reflector->getName()}' which does not implement mapped object.",
+			);
+		} elseif ($sourceReflector->isInterface()) {
+			$message->withProblem(
+				"Interface '{$source->toString()}' defines metadata,"
+				. ' but does not extend mapped object.',
+			);
+		} else {
+			$message->withProblem(
+				"Class '{$source->toString()}' defines metadata,"
+				. ' but does not implement mapped object.',
+			);
+		}
+
+		throw InvalidArgument::create()
+			->withMessage($message);
+	}
+
+	/**
 	 * @param ReflectionClass<MappedObject> $class
 	 */
 	private function checkObjectCanBeInstantiated(ReflectionClass $class, ClassRuntimeMeta $meta): void
@@ -120,13 +181,15 @@ final class MetaResolver
 	}
 
 	/**
+	 * @param ReflectionClass<MappedObject> $rootClass
 	 * @return array<int|string, FieldRuntimeMeta>
 	 */
-	private function resolveFieldsMeta(CompileMeta $meta): array
+	private function resolveFieldsMeta(ReflectionClass $rootClass, CompileMeta $meta): array
 	{
 		$fields = [];
 		foreach ($meta->getFields() as $fieldMeta) {
 			$resolved = $this->resolveFieldMeta(
+				$rootClass,
 				$fieldMeta,
 				$this->getDefaultValue($fieldMeta),
 			);
@@ -151,27 +214,37 @@ final class MetaResolver
 		return $fieldMeta->getProperty()->getName();
 	}
 
+	/**
+	 * @param ReflectionClass<MappedObject> $rootClass
+	 */
 	private function resolveFieldMeta(
+		ReflectionClass $rootClass,
 		FieldCompileMeta $meta,
 		DefaultValueMeta $defaultValue
 	): FieldRuntimeMeta
 	{
-		$property = $meta->getProperty()->getContextReflector();
+		$fieldStructure = $meta->getProperty();
+		$reflector = $fieldStructure->getContextReflector();
 
-		if ($property->isStatic()) {
+		if ($reflector->isStatic()) {
 			throw InvalidArgument::create()
 				->withMessage(sprintf(
 					'Property %s::$%s is not valid mapped property, \'%s\' supports only non-static properties to be mapped.',
-					$property->getDeclaringClass()->getName(),
-					$property->getName(),
+					$reflector->getDeclaringClass()->getName(),
+					$reflector->getName(),
 					MappedObject::class,
 				));
+		}
+
+		$classReflector = $reflector->getDeclaringClass();
+		if (!$classReflector->isSubclassOf(MappedObject::class)) {
+			$this->throwFieldMetaOutsideOfMappedObject($rootClass, $classReflector, $fieldStructure->getSource());
 		}
 
 		$context = new ArgsContext($this->loader, $this);
 
 		return new FieldRuntimeMeta(
-			$this->resolveCallbacksMeta($meta, $context, $property),
+			$this->resolveCallbacksMeta($meta, $context, $reflector, $classReflector),
 			$this->resolveDocsMeta($meta, $context),
 			$this->resolveFieldModifiersMeta($meta, $context),
 			$this->resolveRuleMeta(
@@ -179,18 +252,52 @@ final class MetaResolver
 				$context,
 			),
 			$defaultValue,
-			$property,
+			$reflector,
 		);
 	}
 
 	/**
+	 * @param ReflectionClass<MappedObject> $rootClass
+	 * @param ReflectionClass<object> $classReflector
+	 * @return never
+	 */
+	private function throwFieldMetaOutsideOfMappedObject(
+		ReflectionClass $rootClass,
+		ReflectionClass $classReflector,
+		PropertySource $source
+	): void
+	{
+		$objectInterface = MappedObject::class;
+		$message = Message::create()
+			->withContext("Resolving metadata of mapped object '{$rootClass->getName()}'.")
+			->withSolution("Implement the '$objectInterface' interface.");
+
+		if ($source->getReflector()->getDeclaringClass()->isTrait()) {
+			$message->withProblem(
+				"Property '{$source->toString()}' defines metadata, but its trait is used in class"
+				. " '{$classReflector->getName()}' which does not implement mapped object.",
+			);
+		} else {
+			$message->withProblem(
+				"Property '{$source->toString()}' defines metadata,"
+				. " but the class '{$classReflector->getName()}' does not implement mapped object.",
+			);
+		}
+
+		throw InvalidArgument::create()
+			->withMessage($message);
+	}
+
+	/**
 	 * @param ReflectionClass<MappedObject>|ReflectionProperty $reflector
+	 * @param ReflectionClass<MappedObject>                    $classReflector
 	 * @return array<int, CallbackRuntimeMeta<Args>>
 	 */
 	private function resolveCallbacksMeta(
 		NodeCompileMeta $meta,
 		ArgsContext $context,
-		Reflector $reflector
+		Reflector $reflector,
+		ReflectionClass $classReflector
 	): array
 	{
 		$array = [];
@@ -199,7 +306,7 @@ final class MetaResolver
 				$callback,
 				$context,
 				$reflector,
-				$meta->getClass()->getContextReflector(),
+				$classReflector,
 			);
 		}
 
@@ -208,7 +315,7 @@ final class MetaResolver
 
 	/**
 	 * @param ReflectionClass<MappedObject>|ReflectionProperty $reflector
-	 * @param ReflectionClass<MappedObject>                   $declaringClass
+	 * @param ReflectionClass<MappedObject>                    $declaringClass
 	 * @return CallbackRuntimeMeta<Args>
 	 */
 	private function resolveCallbackMeta(
