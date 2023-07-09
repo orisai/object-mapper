@@ -11,6 +11,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 - Ensure metadata are defined in scope of `MappedObject`
 - Conflicting field name exception reports error in source property instead of context property
+- Conflicting field name exception reports in which class did the conflict occur
 
 ## [0.1.0](https://github.com/orisai/object-mapper/releases/tag/0.1.0) - 2023-07-07
 

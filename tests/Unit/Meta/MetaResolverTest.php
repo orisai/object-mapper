@@ -125,12 +125,13 @@ MSG,
 		$this->expectException(InvalidState::class);
 		$this->expectExceptionMessage(
 			<<<'TXT'
-Context: Validating mapped property
-         'Tests\Orisai\ObjectMapper\Doubles\FieldNames\MultipleIdenticalFieldNamesVO->$property2'.
-Problem: Field name 'field' defined in field name meta collides with field name
-         of property
+Context: Resolving metadata of mapped object
+         'Tests\Orisai\ObjectMapper\Doubles\FieldNames\MultipleIdenticalFieldNamesVO'.
+Problem: Properties
+         'Tests\Orisai\ObjectMapper\Doubles\FieldNames\MultipleIdenticalFieldNamesVO->$property2'
+         and
          'Tests\Orisai\ObjectMapper\Doubles\FieldNames\MultipleIdenticalFieldNamesVO->$property1'
-         defined in field name meta.
+         have conflicting field name 'field'.
 Solution: Define unique field name for each mapped property.
 TXT,
 		);
@@ -143,12 +144,13 @@ TXT,
 		$this->expectException(InvalidState::class);
 		$this->expectExceptionMessage(
 			<<<'TXT'
-Context: Validating mapped property
-         'Tests\Orisai\ObjectMapper\Doubles\FieldNames\FieldNameIdenticalWithAnotherPropertyNameVO->$property'.
-Problem: Field name 'field' defined in field name meta collides with field name
-         of property
+Context: Resolving metadata of mapped object
+         'Tests\Orisai\ObjectMapper\Doubles\FieldNames\FieldNameIdenticalWithAnotherPropertyNameVO'.
+Problem: Properties
+         'Tests\Orisai\ObjectMapper\Doubles\FieldNames\FieldNameIdenticalWithAnotherPropertyNameVO->$property'
+         and
          'Tests\Orisai\ObjectMapper\Doubles\FieldNames\FieldNameIdenticalWithAnotherPropertyNameVO->$field'
-         defined in property name.
+         have conflicting field name 'field'.
 Solution: Define unique field name for each mapped property.
 TXT,
 		);
@@ -164,12 +166,13 @@ TXT,
 		$this->expectException(InvalidState::class);
 		$this->expectExceptionMessage(
 			<<<'TXT'
-Context: Validating mapped property
-         'Tests\Orisai\ObjectMapper\Doubles\FieldNames\ChildCollidingFieldVO->$property'.
-Problem: Field name 'property' defined in property name collides with field name
-         of property
+Context: Resolving metadata of mapped object
+         'Tests\Orisai\ObjectMapper\Doubles\FieldNames\ChildCollidingFieldVO'.
+Problem: Properties
+         'Tests\Orisai\ObjectMapper\Doubles\FieldNames\ChildCollidingFieldVO->$property'
+         and
          'Tests\Orisai\ObjectMapper\Doubles\FieldNames\ParentFieldVO->$property'
-         defined in property name.
+         have conflicting field name 'property'.
 Solution: Define unique field name for each mapped property.
 TXT,
 		);
@@ -182,12 +185,13 @@ TXT,
 		$this->expectException(InvalidState::class);
 		$this->expectExceptionMessage(
 			<<<'TXT'
-Context: Validating mapped property
-         'Tests\Orisai\ObjectMapper\Doubles\FieldNames\FieldNamesTrait2->$property2'.
-Problem: Field name 'field' defined in field name meta collides with field name
-         of property
+Context: Resolving metadata of mapped object
+         'Tests\Orisai\ObjectMapper\Doubles\FieldNames\FieldNamesFromTraitVO'.
+Problem: Properties
+         'Tests\Orisai\ObjectMapper\Doubles\FieldNames\FieldNamesTrait2->$property2'
+         and
          'Tests\Orisai\ObjectMapper\Doubles\FieldNames\FieldNamesTrait1->$property1'
-         defined in field name meta.
+         have conflicting field name 'field'.
 Solution: Define unique field name for each mapped property.
 TXT,
 		);

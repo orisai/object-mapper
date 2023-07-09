@@ -63,7 +63,7 @@ final class MetaResolver
 	 */
 	public function resolve(ReflectionClass $class, CompileMeta $meta): RuntimeMeta
 	{
-		$this->checkFieldNames($meta);
+		$this->checkFieldNames($class, $meta);
 
 		$runtimeMeta = new RuntimeMeta(
 			$this->resolveClassMeta($class, $meta),
@@ -456,7 +456,10 @@ final class MetaResolver
 		return DefaultValueMeta::fromValue($propertyValue);
 	}
 
-	private function checkFieldNames(CompileMeta $meta): void
+	/**
+	 * @param ReflectionClass<MappedObject> $rootClass
+	 */
+	private function checkFieldNames(ReflectionClass $rootClass, CompileMeta $meta): void
 	{
 		$map = [];
 		foreach ($meta->getFields() as $fieldMeta) {
@@ -464,35 +467,29 @@ final class MetaResolver
 			$property = $propertyStructure->getContextReflector();
 
 			$fieldName = $property->getName();
-			$sourceName = 'property name';
 
 			foreach ($fieldMeta->getModifiers() as $modifier) {
 				if ($modifier->getType() === FieldNameModifier::class) {
 					$fieldName = $modifier->getArgs()[FieldNameModifier::Name];
-					$sourceName = 'field name meta';
 
 					break;
 				}
 			}
 
-			$colliding = $map[$fieldName] ?? null;
-			if ($colliding !== null) {
-				[$collidingPropertyStructure, $collidingSource] = $colliding;
-
+			$collidingPropertyStructure = $map[$fieldName] ?? null;
+			if ($collidingPropertyStructure !== null) {
 				$message = Message::create()
-					->withContext("Validating mapped property '{$propertyStructure->getSource()->toString()}'.")
-					->withProblem("Field name '$fieldName' defined in $sourceName collides with " .
-						"field name of property '{$collidingPropertyStructure->getSource()->toString()}' defined in $collidingSource.")
+					->withContext("Resolving metadata of mapped object '{$rootClass->getName()}'.")
+					->withProblem("Properties '{$propertyStructure->getSource()->toString()}'"
+						. " and '{$collidingPropertyStructure->getSource()->toString()}'"
+						. " have conflicting field name '$fieldName'.")
 					->withSolution('Define unique field name for each mapped property.');
 
 				throw InvalidState::create()
 					->withMessage($message);
 			}
 
-			$map[$fieldName] = [
-				$propertyStructure,
-				$sourceName,
-			];
+			$map[$fieldName] = $propertyStructure;
 		}
 	}
 
