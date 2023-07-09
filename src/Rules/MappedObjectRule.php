@@ -43,6 +43,7 @@ final class MappedObjectRule implements Rule
 		if (!array_key_exists($type, $this->alreadyResolved)) {
 			$this->alreadyResolved[$type] = null;
 			try {
+				/** @phpstan-ignore-next-line Meta loader validates type */
 				$context->getMetaLoader()->load($type);
 			} catch (Throwable $e) {
 				unset($this->alreadyResolved[$type]);

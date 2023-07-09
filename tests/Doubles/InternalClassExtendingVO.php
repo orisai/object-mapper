@@ -4,8 +4,9 @@ namespace Tests\Orisai\ObjectMapper\Doubles;
 
 use Orisai\ObjectMapper\MappedObject;
 use Orisai\ObjectMapper\Rules\StringValue;
+use stdClass;
 
-final class InternalClassExtendingVO extends \stdClass implements MappedObject
+final class InternalClassExtendingVO extends stdClass implements MappedObject
 {
 
 	/** @StringValue() */

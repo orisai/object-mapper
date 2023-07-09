@@ -4,6 +4,7 @@ namespace Orisai\ObjectMapper\Meta;
 
 use Nette\Loaders\RobotLoader;
 use Orisai\Exceptions\Logic\InvalidArgument;
+use Orisai\Exceptions\Message;
 use Orisai\ObjectMapper\MappedObject;
 use Orisai\ObjectMapper\Meta\Cache\MetaCache;
 use Orisai\ObjectMapper\Meta\Compile\ClassCompileMeta;
@@ -13,7 +14,8 @@ use Orisai\ObjectMapper\Meta\Source\MetaSourceManager;
 use Orisai\ReflectionMeta\Structure\ClassStructure;
 use Orisai\SourceMap\ClassSource;
 use ReflectionClass;
-use ReflectionEnum;
+use ReflectionException;
+use UnitEnum;
 use function array_merge;
 use function array_unique;
 use function array_values;
@@ -22,6 +24,7 @@ use function class_exists;
 use function interface_exists;
 use function is_subclass_of;
 use function trait_exists;
+use const PHP_VERSION_ID;
 
 final class MetaLoader
 {
@@ -45,6 +48,9 @@ final class MetaLoader
 		$this->resolverFactory = $resolverFactory;
 	}
 
+	/**
+	 * @param class-string<MappedObject> $class
+	 */
 	public function load(string $class): RuntimeMeta
 	{
 		return $this->metaCache->load($class)
@@ -70,32 +76,56 @@ final class MetaLoader
 	 */
 	private function validateClass(string $class): ReflectionClass
 	{
-		if (!class_exists($class)) {
+		try {
+			/** @phpstan-ignore-next-line In case object is not a class, ReflectionException is thrown */
+			$reflector = new ReflectionClass($class);
+		} catch (ReflectionException $exception) {
 			throw InvalidArgument::create()
-				->withMessage("Class '$class' does not exist");
+				->withMessage("Class '$class' does not exist.");
 		}
 
-		$classRef = new ReflectionClass($class);
-
-		if (!$classRef->isSubclassOf(MappedObject::class)) {
+		if (!$reflector->isSubclassOf(MappedObject::class)) {
 			$mappedObjectClass = MappedObject::class;
 
+			$message = Message::create()
+				->withContext("Resolving metadata of mapped object '$class'.")
+				->withProblem('Class does not implement interface of mapped object.')
+				->withSolution("Implement the '$mappedObjectClass' interface.");
+
 			throw InvalidArgument::create()
-				->withMessage("Class '$class' should be subclass of '$mappedObjectClass'.");
+				->withMessage($message);
 		}
 
-		// Intentionally not calling isInstantiable() - we are able to skip (private) ctor
-		if ($classRef->isAbstract() || $classRef->isInterface()) {
+		if ($reflector->isInterface()) {
+			$message = Message::create()
+				->withContext("Resolving metadata of mapped object '$class'.")
+				->withProblem("'$class' is an interface.")
+				->withSolution('Load metadata only for classes.');
+
 			throw InvalidArgument::create()
-				->withMessage("Class '$class' must be instantiable.");
+				->withMessage($message);
 		}
 
-		if ($classRef instanceof ReflectionEnum) {
+		if ($reflector->isAbstract()) {
+			$message = Message::create()
+				->withContext("Resolving metadata of mapped object '$class'.")
+				->withProblem("'$class' is abstract.")
+				->withSolution('Load metadata only for non-abstract classes.');
+
 			throw InvalidArgument::create()
-				->withMessage("Class '$class' can't be an enum.");
+				->withMessage($message);
 		}
 
-		return $classRef;
+		if (PHP_VERSION_ID >= 8_01_00 && $reflector->isSubclassOf(UnitEnum::class)) {
+			$message = Message::create()
+				->withContext("Resolving metadata of mapped object '$class'.")
+				->withProblem("Mapped object can't be an enum.");
+
+			throw InvalidArgument::create()
+				->withMessage($message);
+		}
+
+		return $reflector;
 	}
 
 	/**

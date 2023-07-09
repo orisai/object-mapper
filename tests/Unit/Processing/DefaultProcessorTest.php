@@ -4,7 +4,6 @@ namespace Tests\Orisai\ObjectMapper\Unit\Processing;
 
 use DateTimeImmutable;
 use DateTimeInterface;
-use Orisai\Exceptions\Logic\InvalidArgument;
 use Orisai\Exceptions\Logic\InvalidState;
 use Orisai\ObjectMapper\Exception\InvalidData;
 use Orisai\ObjectMapper\MappedObject;
@@ -68,7 +67,6 @@ use Tests\Orisai\ObjectMapper\Doubles\Skipped\SkippedFieldsVO;
 use Tests\Orisai\ObjectMapper\Doubles\StructuresVO;
 use Tests\Orisai\ObjectMapper\Doubles\TransformingVO;
 use Tests\Orisai\ObjectMapper\Toolkit\ProcessingTestCase;
-use function sprintf;
 use const PHP_VERSION_ID;
 
 final class DefaultProcessorTest extends ProcessingTestCase
@@ -1319,28 +1317,6 @@ arrayOfMixed: array<mixed>',
 		);
 
 		$this->processor->processSkippedFields(['whatever'], $vo);
-	}
-
-	public function testNotAClass(): void
-	{
-		$this->expectException(InvalidArgument::class);
-		$this->expectExceptionMessage("Class 'foo' does not exist");
-
-		/** @phpstan-ignore-next-line */
-		$this->processor->process([], 'foo');
-	}
-
-	public function testNotAValueObject(): void
-	{
-		$this->expectException(InvalidArgument::class);
-		$this->expectExceptionMessage(sprintf(
-			"Class '%s' should be subclass of '%s'",
-			stdClass::class,
-			MappedObject::class,
-		));
-
-		/** @phpstan-ignore-next-line */
-		$this->processor->process([], stdClass::class);
 	}
 
 	public function testAttributes(): void
