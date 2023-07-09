@@ -17,6 +17,8 @@ use Tests\Orisai\ObjectMapper\Doubles\Meta\ClassTraitMetaInvalidScopeRootVO;
 use Tests\Orisai\ObjectMapper\Doubles\Meta\FieldMetaInvalidScopeRootVO;
 use Tests\Orisai\ObjectMapper\Doubles\Meta\FieldTraitMetaInvalidScopeRootVO;
 use Tests\Orisai\ObjectMapper\Doubles\Meta\StaticMappedPropertyVO;
+use Tests\Orisai\ObjectMapper\Doubles\Meta\WrongArgsTypeRule;
+use Tests\Orisai\ObjectMapper\Doubles\Meta\WrongArgsTypeVO;
 use Tests\Orisai\ObjectMapper\Toolkit\ProcessingTestCase;
 
 final class MetaResolverTest extends ProcessingTestCase
@@ -197,6 +199,19 @@ TXT,
 		);
 
 		$this->metaLoader->load(FieldNamesFromTraitVO::class);
+	}
+
+	public function testNotMatchingArgsType(): void
+	{
+		$this->ruleManager->addRule(new WrongArgsTypeRule());
+
+		$this->expectException(InvalidArgument::class);
+		$this->expectExceptionMessage(
+			"'Tests\Orisai\ObjectMapper\Doubles\Meta\WrongArgsTypeRule->resolveArgs()' should return 'nonsense'"
+			. " (as defined in 'getArgsType()' method), but returns 'Orisai\ObjectMapper\Args\EmptyArgs'.",
+		);
+
+		$this->metaLoader->load(WrongArgsTypeVO::class);
 	}
 
 }

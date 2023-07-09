@@ -36,6 +36,7 @@ final class MetaLoaderTest extends ProcessingTestCase
 		$excludes[] = __DIR__ . '/../../Doubles/Meta/FieldMetaInvalidScopeRootVO.php';
 		$excludes[] = __DIR__ . '/../../Doubles/Meta/FieldTraitMetaInvalidScopeRootVO.php';
 		$excludes[] = __DIR__ . '/../../Doubles/Meta/StaticMappedPropertyVO.php';
+		$excludes[] = __DIR__ . '/../../Doubles/Meta/WrongArgsTypeVO.php';
 
 		if (PHP_VERSION_ID < 8_00_00) {
 			$excludes[] = __DIR__ . '/../../Doubles/PhpVersionSpecific/AttributesVO.php';
