@@ -26,6 +26,7 @@ final class MetaLoaderTest extends ProcessingTestCase
 
 		$excludes = [];
 		$excludes[] = __DIR__ . '/../../Doubles/FieldNames/FieldNameIdenticalWithAnotherPropertyNameVO.php';
+		$excludes[] = __DIR__ . '/../../Doubles/FieldNames/FieldNamesFromTraitVO.php';
 		$excludes[] = __DIR__ . '/../../Doubles/FieldNames/MultipleIdenticalFieldNamesVO.php';
 		$excludes[] = __DIR__ . '/../../Doubles/FieldNames/ChildCollidingFieldVO.php';
 		$excludes[] = __DIR__ . '/../../Doubles/Constructing/DependentVO.php';

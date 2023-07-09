@@ -460,15 +460,16 @@ final class MetaResolver
 	{
 		$map = [];
 		foreach ($meta->getFields() as $fieldMeta) {
-			$property = $fieldMeta->getProperty()->getContextReflector();
+			$propertyStructure = $fieldMeta->getProperty();
+			$property = $propertyStructure->getContextReflector();
 
 			$fieldName = $property->getName();
-			$source = 'property name';
+			$sourceName = 'property name';
 
 			foreach ($fieldMeta->getModifiers() as $modifier) {
 				if ($modifier->getType() === FieldNameModifier::class) {
 					$fieldName = $modifier->getArgs()[FieldNameModifier::Name];
-					$source = 'field name meta';
+					$sourceName = 'field name meta';
 
 					break;
 				}
@@ -476,16 +477,12 @@ final class MetaResolver
 
 			$colliding = $map[$fieldName] ?? null;
 			if ($colliding !== null) {
-				$fullName = "{$property->getDeclaringClass()->getName()}::\${$property->getName()}";
-
-				$collidingProperty = $colliding['property'];
-				$collidingFullName = "{$collidingProperty->getDeclaringClass()->getName()}::\${$collidingProperty->getName()}";
-				$collidingSource = $colliding['source'];
+				[$collidingPropertyStructure, $collidingSource] = $colliding;
 
 				$message = Message::create()
-					->withContext("Validating mapped property '$fullName'.")
-					->withProblem("Field name '$fieldName' defined in $source collides with " .
-						"field name of property '$collidingFullName' defined in $collidingSource.")
+					->withContext("Validating mapped property '{$propertyStructure->getSource()->toString()}'.")
+					->withProblem("Field name '$fieldName' defined in $sourceName collides with " .
+						"field name of property '{$collidingPropertyStructure->getSource()->toString()}' defined in $collidingSource.")
 					->withSolution('Define unique field name for each mapped property.');
 
 				throw InvalidState::create()
@@ -493,8 +490,8 @@ final class MetaResolver
 			}
 
 			$map[$fieldName] = [
-				'property' => $property,
-				'source' => $source,
+				$propertyStructure,
+				$sourceName,
 			];
 		}
 	}

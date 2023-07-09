@@ -9,6 +9,7 @@ use Orisai\ObjectMapper\MappedObject;
 use Tests\Orisai\ObjectMapper\Doubles\FieldNames\ChildCollidingFieldVO;
 use Tests\Orisai\ObjectMapper\Doubles\FieldNames\ChildFieldVO;
 use Tests\Orisai\ObjectMapper\Doubles\FieldNames\FieldNameIdenticalWithAnotherPropertyNameVO;
+use Tests\Orisai\ObjectMapper\Doubles\FieldNames\FieldNamesFromTraitVO;
 use Tests\Orisai\ObjectMapper\Doubles\FieldNames\MultipleIdenticalFieldNamesVO;
 use Tests\Orisai\ObjectMapper\Doubles\Meta\ClassInterfaceMetaInvalidScopeRootVO;
 use Tests\Orisai\ObjectMapper\Doubles\Meta\ClassMetaInvalidScopeRootVO;
@@ -125,10 +126,10 @@ MSG,
 		$this->expectExceptionMessage(
 			<<<'TXT'
 Context: Validating mapped property
-         'Tests\Orisai\ObjectMapper\Doubles\FieldNames\MultipleIdenticalFieldNamesVO::$property2'.
+         'Tests\Orisai\ObjectMapper\Doubles\FieldNames\MultipleIdenticalFieldNamesVO->$property2'.
 Problem: Field name 'field' defined in field name meta collides with field name
          of property
-         'Tests\Orisai\ObjectMapper\Doubles\FieldNames\MultipleIdenticalFieldNamesVO::$property1'
+         'Tests\Orisai\ObjectMapper\Doubles\FieldNames\MultipleIdenticalFieldNamesVO->$property1'
          defined in field name meta.
 Solution: Define unique field name for each mapped property.
 TXT,
@@ -143,10 +144,10 @@ TXT,
 		$this->expectExceptionMessage(
 			<<<'TXT'
 Context: Validating mapped property
-         'Tests\Orisai\ObjectMapper\Doubles\FieldNames\FieldNameIdenticalWithAnotherPropertyNameVO::$property'.
+         'Tests\Orisai\ObjectMapper\Doubles\FieldNames\FieldNameIdenticalWithAnotherPropertyNameVO->$property'.
 Problem: Field name 'field' defined in field name meta collides with field name
          of property
-         'Tests\Orisai\ObjectMapper\Doubles\FieldNames\FieldNameIdenticalWithAnotherPropertyNameVO::$field'
+         'Tests\Orisai\ObjectMapper\Doubles\FieldNames\FieldNameIdenticalWithAnotherPropertyNameVO->$field'
          defined in property name.
 Solution: Define unique field name for each mapped property.
 TXT,
@@ -164,16 +165,34 @@ TXT,
 		$this->expectExceptionMessage(
 			<<<'TXT'
 Context: Validating mapped property
-         'Tests\Orisai\ObjectMapper\Doubles\FieldNames\ChildCollidingFieldVO::$property'.
+         'Tests\Orisai\ObjectMapper\Doubles\FieldNames\ChildCollidingFieldVO->$property'.
 Problem: Field name 'property' defined in property name collides with field name
          of property
-         'Tests\Orisai\ObjectMapper\Doubles\FieldNames\ParentFieldVO::$property'
+         'Tests\Orisai\ObjectMapper\Doubles\FieldNames\ParentFieldVO->$property'
          defined in property name.
 Solution: Define unique field name for each mapped property.
 TXT,
 		);
 
 		$this->metaLoader->load(ChildCollidingFieldVO::class);
+	}
+
+	public function testFieldNamesFromTrait(): void
+	{
+		$this->expectException(InvalidState::class);
+		$this->expectExceptionMessage(
+			<<<'TXT'
+Context: Validating mapped property
+         'Tests\Orisai\ObjectMapper\Doubles\FieldNames\FieldNamesTrait2->$property2'.
+Problem: Field name 'field' defined in field name meta collides with field name
+         of property
+         'Tests\Orisai\ObjectMapper\Doubles\FieldNames\FieldNamesTrait1->$property1'
+         defined in field name meta.
+Solution: Define unique field name for each mapped property.
+TXT,
+		);
+
+		$this->metaLoader->load(FieldNamesFromTraitVO::class);
 	}
 
 }
