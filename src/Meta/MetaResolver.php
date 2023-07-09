@@ -37,7 +37,6 @@ use Reflector;
 use function array_key_exists;
 use function array_merge;
 use function get_class;
-use function sprintf;
 use const PHP_VERSION_ID;
 
 /**
@@ -227,13 +226,15 @@ final class MetaResolver
 		$reflector = $fieldStructure->getContextReflector();
 
 		if ($reflector->isStatic()) {
+			$message = Message::create()
+				->withContext("Resolving metadata of mapped object '{$rootClass->getName()}'.")
+				->withProblem(
+					"Mapped property {$fieldStructure->getSource()->toString()} is static, but static properties are not supported.",
+				)
+				->withSolution('Make the property non-static.');
+
 			throw InvalidArgument::create()
-				->withMessage(sprintf(
-					'Property %s::$%s is not valid mapped property, \'%s\' supports only non-static properties to be mapped.',
-					$reflector->getDeclaringClass()->getName(),
-					$reflector->getName(),
-					MappedObject::class,
-				));
+				->withMessage($message);
 		}
 
 		$classReflector = $reflector->getDeclaringClass();

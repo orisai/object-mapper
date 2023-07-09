@@ -10,10 +10,28 @@ use Tests\Orisai\ObjectMapper\Doubles\Meta\ClassMetaInvalidScopeRootVO;
 use Tests\Orisai\ObjectMapper\Doubles\Meta\ClassTraitMetaInvalidScopeRootVO;
 use Tests\Orisai\ObjectMapper\Doubles\Meta\FieldMetaInvalidScopeRootVO;
 use Tests\Orisai\ObjectMapper\Doubles\Meta\FieldTraitMetaInvalidScopeRootVO;
+use Tests\Orisai\ObjectMapper\Doubles\Meta\StaticMappedPropertyVO;
 use Tests\Orisai\ObjectMapper\Toolkit\ProcessingTestCase;
 
 final class MetaResolverTest extends ProcessingTestCase
 {
+
+	public function testStaticMappedProperty(): void
+	{
+		$this->expectException(InvalidArgument::class);
+		$this->expectExceptionMessage(
+			<<<'MSG'
+Context: Resolving metadata of mapped object
+         'Tests\Orisai\ObjectMapper\Doubles\Meta\StaticMappedPropertyVO'.
+Problem: Mapped property
+         Tests\Orisai\ObjectMapper\Doubles\Meta\StaticMappedPropertyTraitVO::$field
+         is static, but static properties are not supported.
+Solution: Make the property non-static.
+MSG,
+		);
+
+		$this->metaLoader->load(StaticMappedPropertyVO::class);
+	}
 
 	/**
 	 * @param class-string<MappedObject> $class
