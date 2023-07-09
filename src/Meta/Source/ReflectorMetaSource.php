@@ -3,6 +3,7 @@
 namespace Orisai\ObjectMapper\Meta\Source;
 
 use Orisai\Exceptions\Logic\InvalidArgument;
+use Orisai\Exceptions\Message;
 use Orisai\ObjectMapper\Callbacks\CallbackDefinition;
 use Orisai\ObjectMapper\Docs\DocDefinition;
 use Orisai\ObjectMapper\MappedObject;
@@ -48,8 +49,8 @@ abstract class ReflectorMetaSource implements MetaSource
 		}
 
 		return new CompileMeta(
-			$this->loadClassMeta($structures),
-			$this->loadPropertiesMeta($structures),
+			$this->loadClassMeta($class, $structures),
+			$this->loadPropertiesMeta($class, $structures),
 			$sources,
 		);
 	}
@@ -67,9 +68,10 @@ abstract class ReflectorMetaSource implements MetaSource
 	}
 
 	/**
+	 * @param ReflectionClass<MappedObject> $rootClass
 	 * @return list<ClassCompileMeta>
 	 */
-	private function loadClassMeta(StructureGroup $group): array
+	private function loadClassMeta(ReflectionClass $rootClass, StructureGroup $group): array
 	{
 		$resolved = [];
 		foreach ($group->getClasses() as $class) {
@@ -84,12 +86,16 @@ abstract class ReflectorMetaSource implements MetaSource
 				$definition = $this->checkDefinitionType($definition);
 
 				if ($definition instanceof RuleDefinition) {
-					throw InvalidArgument::create()
-						->withMessage(sprintf(
-							'Rule definition %s (subtype of %s) cannot be used on class, only properties are allowed',
+					$message = Message::create()
+						->withContext("Resolving metadata of mapped object '{$rootClass->getName()}'.")
+						->withProblem(sprintf(
+							"Rule definition '%s' (subtype of '%s') cannot be used on class, only properties are allowed.",
 							get_class($definition),
 							RuleDefinition::class,
 						));
+
+					throw InvalidArgument::create()
+						->withMessage($message);
 				}
 
 				if ($definition instanceof CallbackDefinition) {
@@ -121,9 +127,10 @@ abstract class ReflectorMetaSource implements MetaSource
 	}
 
 	/**
+	 * @param ReflectionClass<MappedObject> $rootClass
 	 * @return list<FieldCompileMeta>
 	 */
-	private function loadPropertiesMeta(StructureGroup $group): array
+	private function loadPropertiesMeta(ReflectionClass $rootClass, StructureGroup $group): array
 	{
 		$resolved = [];
 		foreach ($group->getGroupedProperties() as $groupedProperty) {
@@ -131,9 +138,6 @@ abstract class ReflectorMetaSource implements MetaSource
 			foreach ($groupedProperty as $propertyStructure) {
 				$reflector = $propertyStructure->getSource()->getReflector();
 				$definitions = $this->reader->readProperty($reflector, MetaDefinition::class);
-
-				$property = $propertyStructure->getContextReflector();
-				$class = $property->getDeclaringClass();
 
 				$callbacks = [];
 				$docs = [];
@@ -145,15 +149,18 @@ abstract class ReflectorMetaSource implements MetaSource
 
 					if ($definition instanceof RuleDefinition) {
 						if ($rule !== null) {
+							$message = Message::create()
+								->withContext("Resolving metadata of mapped object '{$rootClass->getName()}'.")
+								->withProblem(
+									"Property '{$propertyStructure->getSource()->toString()}' has"
+									. ' multiple rule definitions, but only one is allowed.',
+								)
+								->withSolution(
+									sprintf("Combine multiple with '%s' or '%s'.", AnyOf::class, AllOf::class),
+								);
+
 							throw InvalidArgument::create()
-								->withMessage(sprintf(
-									'Mapped property %s::$%s has multiple expectation definitions, while only one is allowed. ' .
-									'Combine multiple with %s or %s',
-									$class->getName(),
-									$property->getName(),
-									AnyOf::class,
-									AllOf::class,
-								));
+								->withMessage($message);
 						}
 
 						$rule = new RuleCompileMeta(
@@ -183,11 +190,15 @@ abstract class ReflectorMetaSource implements MetaSource
 				}
 
 				if ($rule === null) {
-					throw InvalidArgument::create()
-						->withMessage(
-							"Property {$class->getName()}::\${$property->getName()} has mapped object definition, " .
-							'but no rule definition.',
+					$message = Message::create()
+						->withContext("Resolving metadata of mapped object '{$rootClass->getName()}'.")
+						->withProblem(
+							"Property '{$propertyStructure->getSource()->toString()}' has"
+							. ' mapped object definition, but no rule definition.',
 						);
+
+					throw InvalidArgument::create()
+						->withMessage($message);
 				}
 
 				$resolvedGroup[] = new FieldCompileMeta(
@@ -203,7 +214,7 @@ abstract class ReflectorMetaSource implements MetaSource
 				continue;
 			}
 
-			$this->checkFieldInvariance($resolvedGroup);
+			$this->checkFieldInvariance($rootClass, $resolvedGroup);
 			$resolved[] = $resolvedGroup[array_key_first($resolvedGroup)];
 		}
 
@@ -223,7 +234,7 @@ abstract class ReflectorMetaSource implements MetaSource
 		) {
 			throw InvalidArgument::create()
 				->withMessage(sprintf(
-					'Definition %s (subtype of %s) should implement %s, %s %s or %s',
+					"Definition '%s' (subtype of '%s') should implement '%s', '%s', '%s' or '%s'.",
 					get_class($definition),
 					MetaDefinition::class,
 					CallbackDefinition::class,
@@ -237,19 +248,23 @@ abstract class ReflectorMetaSource implements MetaSource
 	}
 
 	/**
+	 * @param ReflectionClass<MappedObject> $rootClass
 	 * @param list<FieldCompileMeta> $resolvedGroup
 	 */
-	private function checkFieldInvariance(array $resolvedGroup): void
+	private function checkFieldInvariance(ReflectionClass $rootClass, array $resolvedGroup): void
 	{
 		$previousFieldMeta = null;
 		foreach ($resolvedGroup as $fieldMeta) {
 			if ($previousFieldMeta !== null && !$fieldMeta->hasEqualMeta($previousFieldMeta)) {
-				throw InvalidArgument::create()
-					->withMessage(
-						"Definition of property '{$fieldMeta->getClass()->getContextReflector()->getName()}"
-						. "::\${$fieldMeta->getProperty()->getContextReflector()->getName()}'"
-						. " can't be changed but it differs from definition in '{$previousFieldMeta->getClass()->getContextReflector()->getName()}'.",
+				$message = Message::create()
+					->withContext("Resolving metadata of mapped object '{$rootClass->getName()}'.")
+					->withProblem(
+						"Definition of property '{$fieldMeta->getProperty()->getSource()->toString()}'"
+						. " can't be changed but it differs from definition '{$previousFieldMeta->getProperty()->getSource()->toString()}'.",
 					);
+
+				throw InvalidArgument::create()
+					->withMessage($message);
 			}
 
 			$previousFieldMeta = $fieldMeta;

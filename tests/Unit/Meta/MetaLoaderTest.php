@@ -112,7 +112,13 @@ TXT,
 		$excludes[] = __DIR__ . '/../../Doubles/Meta/EnumVO.php';
 		$excludes[] = __DIR__ . '/../../Doubles/Meta/FieldMetaInvalidScopeRootVO.php';
 		$excludes[] = __DIR__ . '/../../Doubles/Meta/FieldTraitMetaInvalidScopeRootVO.php';
+		$excludes[] = __DIR__ . '/../../Doubles/Meta/FieldWithMultipleRulesVO.php';
+		$excludes[] = __DIR__ . '/../../Doubles/Meta/FieldWithNoRuleVO.php';
+		$excludes[] = __DIR__ . '/../../Doubles/Meta/RuleAboveClassVO.php';
 		$excludes[] = __DIR__ . '/../../Doubles/Meta/StaticMappedPropertyVO.php';
+		$excludes[] = __DIR__ . '/../../Doubles/Meta/UnsupportedClassDefinitionVO.php';
+		$excludes[] = __DIR__ . '/../../Doubles/Meta/UnsupportedPropertyDefinitionVO.php';
+		$excludes[] = __DIR__ . '/../../Doubles/Meta/VariantFieldVO.php';
 		$excludes[] = __DIR__ . '/../../Doubles/Meta/WrongArgsTypeVO.php';
 
 		if (PHP_VERSION_ID < 8_00_00) {
