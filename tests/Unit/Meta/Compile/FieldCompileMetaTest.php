@@ -15,6 +15,7 @@ use Orisai\ObjectMapper\Modifiers\DefaultValueModifier;
 use Orisai\ObjectMapper\Modifiers\FieldNameModifier;
 use Orisai\ObjectMapper\Rules\MixedRule;
 use Orisai\ObjectMapper\Rules\StringRule;
+use Orisai\ReflectionMeta\Structure\ClassStructure;
 use Orisai\ReflectionMeta\Structure\PropertyStructure;
 use Orisai\SourceMap\PropertySource;
 use PHPUnit\Framework\TestCase;
@@ -60,6 +61,13 @@ final class FieldCompileMetaTest extends TestCase
 		self::assertSame(
 			$rule,
 			$meta->getRule(),
+		);
+		self::assertEquals(
+			new ClassStructure(
+				$property->getContextReflector()->getDeclaringClass(),
+				$property->getSource()->getClass(),
+			),
+			$meta->getClass(),
 		);
 		self::assertSame(
 			$property,
