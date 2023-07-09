@@ -36,7 +36,6 @@ use ReflectionProperty;
 use Reflector;
 use function array_key_exists;
 use function array_merge;
-use function get_class;
 use const PHP_VERSION_ID;
 
 /**
@@ -401,16 +400,6 @@ final class MetaResolver
 		$type = $meta->getType();
 		$rule = $this->ruleManager->getRule($type);
 		$args = $rule->resolveArgs($meta->getArgs(), $context);
-
-		$argsType = $rule->getArgsType();
-		$argsRef = new ReflectionClass($argsType);
-
-		if ($argsRef->isAbstract() || $argsRef->isInterface() || $argsRef->isTrait()) {
-			$ruleClass = get_class($rule);
-
-			throw InvalidArgument::create()
-				->withMessage("Class $argsType returned by $ruleClass::getArgsType() must be instantiable.");
-		}
 
 		return new RuleRuntimeMeta($type, $args);
 	}
