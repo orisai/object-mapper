@@ -53,6 +53,7 @@ use Tests\Orisai\ObjectMapper\Doubles\Inheritance\TraitCallback\TraitCallbackVO;
 use Tests\Orisai\ObjectMapper\Doubles\Inheritance\TraitInsideTrait\TraitInsideTraitVO;
 use Tests\Orisai\ObjectMapper\Doubles\Inheritance\TraitInsteadOf1\TraitInstead1OfVO;
 use Tests\Orisai\ObjectMapper\Doubles\InitializingVO;
+use Tests\Orisai\ObjectMapper\Doubles\InternalClassExtendingVO;
 use Tests\Orisai\ObjectMapper\Doubles\NoDefaultsVO;
 use Tests\Orisai\ObjectMapper\Doubles\PhpVersionSpecific\AttributesVO;
 use Tests\Orisai\ObjectMapper\Doubles\PhpVersionSpecific\ConstructorPromotedVO;
@@ -1480,6 +1481,20 @@ arrayOfMixed: array<mixed>',
 				new DefaultsVO(),
 				null,
 			),
+		);
+	}
+
+	public function testChildOfInternalClass(): void
+	{
+		$data = [
+			'field' => 'foo',
+		];
+
+		$vo = $this->processor->process($data, InternalClassExtendingVO::class);
+
+		self::assertEquals(
+			$vo,
+			new InternalClassExtendingVO('foo'),
 		);
 	}
 
