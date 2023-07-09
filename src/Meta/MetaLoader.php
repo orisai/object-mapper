@@ -85,7 +85,7 @@ final class MetaLoader
 		}
 
 		// Intentionally not calling isInstantiable() - we are able to skip (private) ctor
-		if ($classRef->isAbstract() || $classRef->isInterface() || $classRef->isTrait()) {
+		if ($classRef->isAbstract() || $classRef->isInterface()) {
 			throw InvalidArgument::create()
 				->withMessage("Class '$class' must be instantiable.");
 		}
