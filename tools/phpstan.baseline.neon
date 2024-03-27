@@ -1,6 +1,11 @@
 parameters:
 	ignoreErrors:
 		-
+			message: "#^Only numeric types are allowed in \\+, \\(int\\|string\\) given on the left side\\.$#"
+			count: 1
+			path: ../src/Printers/Dumper.php
+
+		-
 			message: "#^Unreachable statement \\- code above always terminates\\.$#"
 			count: 3
 			path: ../tests/Unit/Processing/DefaultProcessorTest.php
