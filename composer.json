@@ -26,7 +26,7 @@
 		}
 	],
 	"require": {
-		"php": ">=7.4.0 <8.3.0",
+		"php": "7.4 - 8.3",
 		"ext-mbstring": "*",
 		"benmorel/weakmap-polyfill": "^0.3.0|^0.4.0",
 		"nette/robot-loader": "^3.4.0|^4.0.0",

@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ### Added
 
+- Allow PHP 8.3
 - Ensure metadata are defined in scope of `MappedObject`
 - Conflicting field name exception reports error in source property instead of context property
 - Conflicting field name exception reports in which class did the conflict occur
