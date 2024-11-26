@@ -30,6 +30,9 @@ use function array_key_first;
 use function get_class;
 use function sprintf;
 
+/**
+ * @internal
+ */
 abstract class ReflectorMetaSource implements MetaSource
 {
 
