@@ -9,16 +9,16 @@ use Orisai\ObjectMapper\Meta\Source\AnnotationsMetaSource;
 use Orisai\ObjectMapper\Meta\Source\ReflectorMetaSource;
 use PHPUnit\Framework\TestCase;
 use ReflectionClass;
-use Tests\Orisai\ObjectMapper\Doubles\Meta\FieldWithMultipleRulesChildVO;
-use Tests\Orisai\ObjectMapper\Doubles\Meta\FieldWithMultipleRulesVO;
-use Tests\Orisai\ObjectMapper\Doubles\Meta\FieldWithNoRuleChildVO;
-use Tests\Orisai\ObjectMapper\Doubles\Meta\FieldWithNoRuleVO;
-use Tests\Orisai\ObjectMapper\Doubles\Meta\RuleAboveClassChildVO;
-use Tests\Orisai\ObjectMapper\Doubles\Meta\RuleAboveClassVO;
-use Tests\Orisai\ObjectMapper\Doubles\Meta\UnsupportedClassDefinitionVO;
-use Tests\Orisai\ObjectMapper\Doubles\Meta\UnsupportedPropertyDefinitionVO;
-use Tests\Orisai\ObjectMapper\Doubles\Meta\VariantFieldChildVO;
-use Tests\Orisai\ObjectMapper\Doubles\Meta\VariantFieldVO;
+use Tests\Orisai\ObjectMapper\Doubles\Invalid\FieldWithMultipleRulesChildVO;
+use Tests\Orisai\ObjectMapper\Doubles\Invalid\FieldWithMultipleRulesVO;
+use Tests\Orisai\ObjectMapper\Doubles\Invalid\FieldWithNoRuleChildVO;
+use Tests\Orisai\ObjectMapper\Doubles\Invalid\FieldWithNoRuleVO;
+use Tests\Orisai\ObjectMapper\Doubles\Invalid\RuleAboveClassChildVO;
+use Tests\Orisai\ObjectMapper\Doubles\Invalid\RuleAboveClassVO;
+use Tests\Orisai\ObjectMapper\Doubles\Invalid\UnsupportedClassDefinitionVO;
+use Tests\Orisai\ObjectMapper\Doubles\Invalid\UnsupportedPropertyDefinitionVO;
+use Tests\Orisai\ObjectMapper\Doubles\Invalid\VariantFieldChildVO;
+use Tests\Orisai\ObjectMapper\Doubles\Invalid\VariantFieldVO;
 
 final class ReflectorMetaSourceTest extends TestCase
 {
@@ -68,10 +68,10 @@ final class ReflectorMetaSourceTest extends TestCase
 		$this->expectExceptionMessage(
 			<<<'MSG'
 Context: Resolving metadata of mapped object
-         'Tests\Orisai\ObjectMapper\Doubles\Meta\VariantFieldVO'.
+         'Tests\Orisai\ObjectMapper\Doubles\Invalid\VariantFieldVO'.
 Problem: Definition in annotation of property '$field' differs from definition
          in annotation of property
-         'Tests\Orisai\ObjectMapper\Doubles\Meta\VariantFieldParentVO->$field'.
+         'Tests\Orisai\ObjectMapper\Doubles\Invalid\VariantFieldParentVO->$field'.
 Solution: Don't override metadata of properties in child classes.
 MSG,
 		);
@@ -85,11 +85,11 @@ MSG,
 		$this->expectExceptionMessage(
 			<<<'MSG'
 Context: Resolving metadata of mapped object
-         'Tests\Orisai\ObjectMapper\Doubles\Meta\VariantFieldChildVO'.
+         'Tests\Orisai\ObjectMapper\Doubles\Invalid\VariantFieldChildVO'.
 Problem: Definition in annotation of property
-         'Tests\Orisai\ObjectMapper\Doubles\Meta\VariantFieldVO->$field' differs
-         from definition in annotation of property
-         'Tests\Orisai\ObjectMapper\Doubles\Meta\VariantFieldParentVO->$field'.
+         'Tests\Orisai\ObjectMapper\Doubles\Invalid\VariantFieldVO->$field'
+         differs from definition in annotation of property
+         'Tests\Orisai\ObjectMapper\Doubles\Invalid\VariantFieldParentVO->$field'.
 Solution: Don't override metadata of properties in child classes.
 MSG,
 		);
@@ -103,7 +103,7 @@ MSG,
 		$this->expectExceptionMessage(
 			<<<'MSG'
 Context: Resolving metadata of mapped object
-         'Tests\Orisai\ObjectMapper\Doubles\Meta\RuleAboveClassVO'.
+         'Tests\Orisai\ObjectMapper\Doubles\Invalid\RuleAboveClassVO'.
 Problem: Rule definition
          'Tests\Orisai\ObjectMapper\Doubles\Definition\TargetLessRuleDefinition'
          cannot be used on class, it is only allowed on properties.
@@ -119,11 +119,11 @@ MSG,
 		$this->expectExceptionMessage(
 			<<<'MSG'
 Context: Resolving metadata of mapped object
-         'Tests\Orisai\ObjectMapper\Doubles\Meta\RuleAboveClassChildVO'.
+         'Tests\Orisai\ObjectMapper\Doubles\Invalid\RuleAboveClassChildVO'.
 Problem: Rule definition
          'Tests\Orisai\ObjectMapper\Doubles\Definition\TargetLessRuleDefinition'
          (used above class
-         'Tests\Orisai\ObjectMapper\Doubles\Meta\RuleAboveClassVO') cannot be
+         'Tests\Orisai\ObjectMapper\Doubles\Invalid\RuleAboveClassVO') cannot be
          used on class, it is only allowed on properties.
 MSG,
 		);
@@ -137,7 +137,7 @@ MSG,
 		$this->expectExceptionMessage(
 			<<<'MSG'
 Context: Resolving metadata of mapped object
-         'Tests\Orisai\ObjectMapper\Doubles\Meta\FieldWithMultipleRulesVO'.
+         'Tests\Orisai\ObjectMapper\Doubles\Invalid\FieldWithMultipleRulesVO'.
 Problem: Property '$field' has multiple rule definitions (in annotation), but
          only one is allowed.
 Solution: Combine multiple with 'Orisai\ObjectMapper\Rules\AnyOf' or
@@ -154,9 +154,9 @@ MSG,
 		$this->expectExceptionMessage(
 			<<<'MSG'
 Context: Resolving metadata of mapped object
-         'Tests\Orisai\ObjectMapper\Doubles\Meta\FieldWithMultipleRulesChildVO'.
+         'Tests\Orisai\ObjectMapper\Doubles\Invalid\FieldWithMultipleRulesChildVO'.
 Problem: Property
-         'Tests\Orisai\ObjectMapper\Doubles\Meta\FieldWithMultipleRulesVO->$field'
+         'Tests\Orisai\ObjectMapper\Doubles\Invalid\FieldWithMultipleRulesVO->$field'
          has multiple rule definitions (in annotation), but only one is allowed.
 Solution: Combine multiple with 'Orisai\ObjectMapper\Rules\AnyOf' or
           'Orisai\ObjectMapper\Rules\AllOf'.
@@ -172,7 +172,7 @@ MSG,
 		$this->expectExceptionMessage(
 			<<<'MSG'
 Context: Resolving metadata of mapped object
-         'Tests\Orisai\ObjectMapper\Doubles\Meta\FieldWithNoRuleVO'.
+         'Tests\Orisai\ObjectMapper\Doubles\Invalid\FieldWithNoRuleVO'.
 Problem: Property '$field' has some mapped object definition (in annotation),
          but no rule definition.
 Solution: Either remove the definition or add a rule definition.
@@ -188,10 +188,11 @@ MSG,
 		$this->expectExceptionMessage(
 			<<<'MSG'
 Context: Resolving metadata of mapped object
-         'Tests\Orisai\ObjectMapper\Doubles\Meta\FieldWithNoRuleChildVO'.
+         'Tests\Orisai\ObjectMapper\Doubles\Invalid\FieldWithNoRuleChildVO'.
 Problem: Property
-         'Tests\Orisai\ObjectMapper\Doubles\Meta\FieldWithNoRuleVO->$field' has
-         some mapped object definition (in annotation), but no rule definition.
+         'Tests\Orisai\ObjectMapper\Doubles\Invalid\FieldWithNoRuleVO->$field'
+         has some mapped object definition (in annotation), but no rule
+         definition.
 Solution: Either remove the definition or add a rule definition.
 MSG,
 		);
