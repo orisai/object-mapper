@@ -29,6 +29,7 @@ use Orisai\ObjectMapper\Modifiers\Modifier;
 use Orisai\ObjectMapper\Modifiers\RequiresDependenciesModifier;
 use Orisai\ObjectMapper\Processing\ObjectCreator;
 use Orisai\ObjectMapper\Rules\RuleManager;
+use Orisai\ReflectionMeta\Structure\PropertyStructure;
 use Orisai\SourceMap\ClassSource;
 use Orisai\SourceMap\PropertySource;
 use ReflectionClass;
@@ -480,10 +481,12 @@ final class MetaResolver
 
 			$collidingPropertyStructure = $map[$fieldName] ?? null;
 			if ($collidingPropertyStructure !== null) {
+				$propertyName = $this->getRelativePropertyName($propertyStructure, $rootClass);
+				$collidingPropertyName = $this->getRelativePropertyName($collidingPropertyStructure, $rootClass);
+
 				$message = Message::create()
 					->withContext("Resolving metadata of mapped object '{$rootClass->getName()}'.")
-					->withProblem("Properties '{$propertyStructure->getSource()->toString()}'"
-						. " and '{$collidingPropertyStructure->getSource()->toString()}'"
+					->withProblem("Properties '$propertyName' and '$collidingPropertyName'"
 						. " have conflicting field name '$fieldName'.")
 					->withSolution('Define unique field name for each mapped property.');
 
@@ -493,6 +496,21 @@ final class MetaResolver
 
 			$map[$fieldName] = $propertyStructure;
 		}
+	}
+
+	/**
+	 * @param ReflectionClass<MappedObject> $rootClass
+	 */
+	private function getRelativePropertyName(PropertyStructure $propertyStructure, ReflectionClass $rootClass): string
+	{
+		$property = $propertyStructure->getSource()->getReflector();
+		$class = $property->getDeclaringClass();
+
+		if ($class->getName() === $rootClass->getName()) {
+			return '$' . $property->getName();
+		}
+
+		return $class->getName() . '->$' . $property->getName();
 	}
 
 }

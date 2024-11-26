@@ -130,11 +130,8 @@ MSG,
 			<<<'TXT'
 Context: Resolving metadata of mapped object
          'Tests\Orisai\ObjectMapper\Doubles\Invalid\MultipleIdenticalFieldNamesVO'.
-Problem: Properties
-         'Tests\Orisai\ObjectMapper\Doubles\Invalid\MultipleIdenticalFieldNamesVO->$property2'
-         and
-         'Tests\Orisai\ObjectMapper\Doubles\Invalid\MultipleIdenticalFieldNamesVO->$property1'
-         have conflicting field name 'field'.
+Problem: Properties '$property2' and '$property1' have conflicting field name
+         'field'.
 Solution: Define unique field name for each mapped property.
 TXT,
 		);
@@ -149,11 +146,8 @@ TXT,
 			<<<'TXT'
 Context: Resolving metadata of mapped object
          'Tests\Orisai\ObjectMapper\Doubles\Invalid\FieldNameIdenticalWithAnotherPropertyNameVO'.
-Problem: Properties
-         'Tests\Orisai\ObjectMapper\Doubles\Invalid\FieldNameIdenticalWithAnotherPropertyNameVO->$property'
-         and
-         'Tests\Orisai\ObjectMapper\Doubles\Invalid\FieldNameIdenticalWithAnotherPropertyNameVO->$field'
-         have conflicting field name 'field'.
+Problem: Properties '$property' and '$field' have conflicting field name
+         'field'.
 Solution: Define unique field name for each mapped property.
 TXT,
 		);
@@ -171,9 +165,7 @@ TXT,
 			<<<'TXT'
 Context: Resolving metadata of mapped object
          'Tests\Orisai\ObjectMapper\Doubles\Invalid\ChildCollidingFieldVO'.
-Problem: Properties
-         'Tests\Orisai\ObjectMapper\Doubles\Invalid\ChildCollidingFieldVO->$property'
-         and
+Problem: Properties '$property' and
          'Tests\Orisai\ObjectMapper\Doubles\FieldNames\ParentFieldVO->$property'
          have conflicting field name 'property'.
 Solution: Define unique field name for each mapped property.
