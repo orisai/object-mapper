@@ -4,7 +4,7 @@ namespace Tests\Orisai\ObjectMapper\Doubles\Meta;
 
 use Orisai\ObjectMapper\Rules\StringValue;
 
-final class VariantFieldVO extends VariantFieldParentVO
+class VariantFieldVO extends VariantFieldParentVO
 {
 
 	/** @StringValue() */

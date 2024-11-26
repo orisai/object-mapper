@@ -8,7 +8,7 @@ use Tests\Orisai\ObjectMapper\Doubles\Definition\TargetLessRuleDefinition;
 /**
  * @TargetLessRuleDefinition()
  */
-final class RuleAboveClassVO implements MappedObject
+class RuleAboveClassVO implements MappedObject
 {
 
 }

@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased](https://github.com/orisai/object-mapper/compare/0.2.0...v1.x)
 
+### Changed
+
+- Improved accuracy of metadata-related error messages
+
 ## [0.2.0](https://github.com/orisai/object-mapper/compare/0.1.0...0.2.0) - 2024-06-22
 
 ### Added

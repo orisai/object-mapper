@@ -16,14 +16,15 @@ use Orisai\ObjectMapper\Meta\Compile\RuleCompileMeta;
 use Orisai\ObjectMapper\Meta\MetaDefinition;
 use Orisai\ObjectMapper\Meta\Shared\DocMeta;
 use Orisai\ObjectMapper\Modifiers\ModifierDefinition;
-use Orisai\ObjectMapper\Rules\AllOf;
-use Orisai\ObjectMapper\Rules\AnyOf;
 use Orisai\ObjectMapper\Rules\RuleDefinition;
 use Orisai\ReflectionMeta\Reader\MetaReader;
+use Orisai\ReflectionMeta\Structure\PropertyStructure;
 use Orisai\ReflectionMeta\Structure\StructureBuilder;
 use Orisai\ReflectionMeta\Structure\StructureFlattener;
 use Orisai\ReflectionMeta\Structure\StructureGroup;
 use Orisai\ReflectionMeta\Structure\StructureGrouper;
+use Orisai\SourceMap\AboveReflectorSource;
+use Orisai\SourceMap\ReflectorSource;
 use ReflectionClass;
 use function array_key_first;
 use function get_class;
@@ -41,16 +42,16 @@ abstract class ReflectorMetaSource implements MetaSource
 
 	public function load(ReflectionClass $class): CompileMeta
 	{
-		$structures = $this->getStructureGroup($class);
+		$group = $this->getStructureGroup($class);
 
 		$sources = [];
-		foreach ($structures->getClasses() as $structure) {
+		foreach ($group->getClasses() as $structure) {
 			$sources[] = $structure->getSource();
 		}
 
 		return new CompileMeta(
-			$this->loadClassMeta($class, $structures),
-			$this->loadPropertiesMeta($class, $structures),
+			$this->loadClassMeta($class, $group),
+			$this->loadPropertiesMeta($class, $group),
 			$sources,
 		);
 	}
@@ -86,12 +87,15 @@ abstract class ReflectorMetaSource implements MetaSource
 				$definition = $this->checkDefinitionType($definition);
 
 				if ($definition instanceof RuleDefinition) {
+					$className = $reflector->getName();
+					$isRootClass = $rootClass->getName() === $className;
+
 					$message = Message::create()
 						->withContext("Resolving metadata of mapped object '{$rootClass->getName()}'.")
 						->withProblem(sprintf(
-							"Rule definition '%s' (subtype of '%s') cannot be used on class, only properties are allowed.",
+							"Rule definition '%s'%s cannot be used on class, it is only allowed on properties.",
 							get_class($definition),
-							RuleDefinition::class,
+							$isRootClass ? '' : " (used above class '$className')",
 						));
 
 					throw InvalidArgument::create()
@@ -149,15 +153,19 @@ abstract class ReflectorMetaSource implements MetaSource
 
 					if ($definition instanceof RuleDefinition) {
 						if ($rule !== null) {
+							$propertyName = $this->getRelativePropertyName($propertyStructure, $rootClass);
+
 							$message = Message::create()
 								->withContext("Resolving metadata of mapped object '{$rootClass->getName()}'.")
 								->withProblem(
-									"Property '{$propertyStructure->getSource()->toString()}' has"
-									. ' multiple rule definitions, but only one is allowed.',
+									"Property '$propertyName' has multiple rule definitions"
+									. " (in {$this->getSourceName()}), but only one is allowed.",
 								)
-								->withSolution(
-									sprintf("Combine multiple with '%s' or '%s'.", AnyOf::class, AllOf::class),
-								);
+								->withSolution(sprintf(
+									"Combine multiple with '%s' or '%s'.",
+									$this->getAnyOfSourceKey(),
+									$this->getAllOfSourceKey(),
+								));
 
 							throw InvalidArgument::create()
 								->withMessage($message);
@@ -190,12 +198,15 @@ abstract class ReflectorMetaSource implements MetaSource
 				}
 
 				if ($rule === null) {
+					$propertyName = $this->getRelativePropertyName($propertyStructure, $rootClass);
+
 					$message = Message::create()
 						->withContext("Resolving metadata of mapped object '{$rootClass->getName()}'.")
 						->withProblem(
-							"Property '{$propertyStructure->getSource()->toString()}' has"
-							. ' mapped object definition, but no rule definition.',
-						);
+							"Property '$propertyName' has some mapped object definition"
+							. " (in {$this->getSourceName()}), but no rule definition.",
+						)
+						->withSolution('Either remove the definition or add a rule definition.');
 
 					throw InvalidArgument::create()
 						->withMessage($message);
@@ -253,15 +264,20 @@ abstract class ReflectorMetaSource implements MetaSource
 	 */
 	private function checkFieldInvariance(ReflectionClass $rootClass, array $resolvedGroup): void
 	{
+		$sourceName = $this->getSourceName();
 		$previousFieldMeta = null;
 		foreach ($resolvedGroup as $fieldMeta) {
 			if ($previousFieldMeta !== null && !$fieldMeta->hasEqualMeta($previousFieldMeta)) {
+				$name = $this->getRelativePropertyName($fieldMeta->getProperty(), $rootClass);
+				$previousName = $this->getRelativePropertyName($previousFieldMeta->getProperty(), $rootClass);
+
 				$message = Message::create()
 					->withContext("Resolving metadata of mapped object '{$rootClass->getName()}'.")
 					->withProblem(
-						"Definition of property '{$fieldMeta->getProperty()->getSource()->toString()}'"
-						. " can't be changed but it differs from definition '{$previousFieldMeta->getProperty()->getSource()->toString()}'.",
-					);
+						"Definition in $sourceName of property '$name' differs from definition in $sourceName"
+						. " of property '$previousName'.",
+					)
+					->withSolution("Don't override metadata of properties in child classes.");
 
 				throw InvalidArgument::create()
 					->withMessage($message);
@@ -270,5 +286,33 @@ abstract class ReflectorMetaSource implements MetaSource
 			$previousFieldMeta = $fieldMeta;
 		}
 	}
+
+	/**
+	 * @param ReflectionClass<MappedObject> $rootClass
+	 */
+	private function getRelativePropertyName(PropertyStructure $propertyStructure, ReflectionClass $rootClass): string
+	{
+		$property = $propertyStructure->getSource()->getReflector();
+		$class = $property->getDeclaringClass();
+
+		if ($class->getName() === $rootClass->getName()) {
+			return '$' . $property->getName();
+		}
+
+		return $class->getName() . '->$' . $property->getName();
+	}
+
+	/**
+	 * @template T of ReflectorSource
+	 * @param T $source
+	 * @return AboveReflectorSource<T>
+	 */
+	abstract protected function wrapSource(ReflectorSource $source): AboveReflectorSource;
+
+	abstract protected function getSourceName(): string;
+
+	abstract protected function getAnyOfSourceKey(): string;
+
+	abstract protected function getAllOfSourceKey(): string;
 
 }

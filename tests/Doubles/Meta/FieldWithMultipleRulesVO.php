@@ -6,7 +6,7 @@ use Orisai\ObjectMapper\MappedObject;
 use Orisai\ObjectMapper\Rules\IntValue;
 use Orisai\ObjectMapper\Rules\StringValue;
 
-final class FieldWithMultipleRulesVO implements MappedObject
+class FieldWithMultipleRulesVO implements MappedObject
 {
 
 	/**

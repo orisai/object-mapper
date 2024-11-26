@@ -9,11 +9,15 @@ use Orisai\ObjectMapper\Meta\Source\AnnotationsMetaSource;
 use Orisai\ObjectMapper\Meta\Source\ReflectorMetaSource;
 use PHPUnit\Framework\TestCase;
 use ReflectionClass;
+use Tests\Orisai\ObjectMapper\Doubles\Meta\FieldWithMultipleRulesChildVO;
 use Tests\Orisai\ObjectMapper\Doubles\Meta\FieldWithMultipleRulesVO;
+use Tests\Orisai\ObjectMapper\Doubles\Meta\FieldWithNoRuleChildVO;
 use Tests\Orisai\ObjectMapper\Doubles\Meta\FieldWithNoRuleVO;
+use Tests\Orisai\ObjectMapper\Doubles\Meta\RuleAboveClassChildVO;
 use Tests\Orisai\ObjectMapper\Doubles\Meta\RuleAboveClassVO;
 use Tests\Orisai\ObjectMapper\Doubles\Meta\UnsupportedClassDefinitionVO;
 use Tests\Orisai\ObjectMapper\Doubles\Meta\UnsupportedPropertyDefinitionVO;
+use Tests\Orisai\ObjectMapper\Doubles\Meta\VariantFieldChildVO;
 use Tests\Orisai\ObjectMapper\Doubles\Meta\VariantFieldVO;
 
 final class ReflectorMetaSourceTest extends TestCase
@@ -57,24 +61,43 @@ final class ReflectorMetaSourceTest extends TestCase
 		];
 	}
 
-	public function testFieldInvariance(): void
+	public function testFieldInvarianceRelativeName(): void
 	{
 		$this->expectException(InvalidArgument::class);
+
 		$this->expectExceptionMessage(
 			<<<'MSG'
 Context: Resolving metadata of mapped object
          'Tests\Orisai\ObjectMapper\Doubles\Meta\VariantFieldVO'.
-Problem: Definition of property
-         'Tests\Orisai\ObjectMapper\Doubles\Meta\VariantFieldVO->$field' can't
-         be changed but it differs from definition
+Problem: Definition in annotation of property '$field' differs from definition
+         in annotation of property
          'Tests\Orisai\ObjectMapper\Doubles\Meta\VariantFieldParentVO->$field'.
+Solution: Don't override metadata of properties in child classes.
 MSG,
 		);
 
 		$this->source->load(new ReflectionClass(VariantFieldVO::class));
 	}
 
-	public function testRuleAboveClass(): void
+	public function testFieldInvarianceFullName(): void
+	{
+		$this->expectException(InvalidArgument::class);
+		$this->expectExceptionMessage(
+			<<<'MSG'
+Context: Resolving metadata of mapped object
+         'Tests\Orisai\ObjectMapper\Doubles\Meta\VariantFieldChildVO'.
+Problem: Definition in annotation of property
+         'Tests\Orisai\ObjectMapper\Doubles\Meta\VariantFieldVO->$field' differs
+         from definition in annotation of property
+         'Tests\Orisai\ObjectMapper\Doubles\Meta\VariantFieldParentVO->$field'.
+Solution: Don't override metadata of properties in child classes.
+MSG,
+		);
+
+		$this->source->load(new ReflectionClass(VariantFieldChildVO::class));
+	}
+
+	public function testRuleAboveClassRelativeName(): void
 	{
 		$this->expectException(InvalidArgument::class);
 		$this->expectExceptionMessage(
@@ -83,24 +106,40 @@ Context: Resolving metadata of mapped object
          'Tests\Orisai\ObjectMapper\Doubles\Meta\RuleAboveClassVO'.
 Problem: Rule definition
          'Tests\Orisai\ObjectMapper\Doubles\Definition\TargetLessRuleDefinition'
-         (subtype of 'Orisai\ObjectMapper\Rules\RuleDefinition') cannot be used
-         on class, only properties are allowed.
+         cannot be used on class, it is only allowed on properties.
 MSG,
 		);
 
 		$this->source->load(new ReflectionClass(RuleAboveClassVO::class));
 	}
 
-	public function testFieldWithMultipleRules(): void
+	public function testRuleAboveClassFullName(): void
+	{
+		$this->expectException(InvalidArgument::class);
+		$this->expectExceptionMessage(
+			<<<'MSG'
+Context: Resolving metadata of mapped object
+         'Tests\Orisai\ObjectMapper\Doubles\Meta\RuleAboveClassChildVO'.
+Problem: Rule definition
+         'Tests\Orisai\ObjectMapper\Doubles\Definition\TargetLessRuleDefinition'
+         (used above class
+         'Tests\Orisai\ObjectMapper\Doubles\Meta\RuleAboveClassVO') cannot be
+         used on class, it is only allowed on properties.
+MSG,
+		);
+
+		$this->source->load(new ReflectionClass(RuleAboveClassChildVO::class));
+	}
+
+	public function testFieldWithMultipleRulesRelativeName(): void
 	{
 		$this->expectException(InvalidArgument::class);
 		$this->expectExceptionMessage(
 			<<<'MSG'
 Context: Resolving metadata of mapped object
          'Tests\Orisai\ObjectMapper\Doubles\Meta\FieldWithMultipleRulesVO'.
-Problem: Property
-         'Tests\Orisai\ObjectMapper\Doubles\Meta\FieldWithMultipleRulesVO->$field'
-         has multiple rule definitions, but only one is allowed.
+Problem: Property '$field' has multiple rule definitions (in annotation), but
+         only one is allowed.
 Solution: Combine multiple with 'Orisai\ObjectMapper\Rules\AnyOf' or
           'Orisai\ObjectMapper\Rules\AllOf'.
 MSG,
@@ -109,20 +148,55 @@ MSG,
 		$this->source->load(new ReflectionClass(FieldWithMultipleRulesVO::class));
 	}
 
-	public function testFieldWithNoRule(): void
+	public function testFieldWithMultipleRulesAbsoluteName(): void
+	{
+		$this->expectException(InvalidArgument::class);
+		$this->expectExceptionMessage(
+			<<<'MSG'
+Context: Resolving metadata of mapped object
+         'Tests\Orisai\ObjectMapper\Doubles\Meta\FieldWithMultipleRulesChildVO'.
+Problem: Property
+         'Tests\Orisai\ObjectMapper\Doubles\Meta\FieldWithMultipleRulesVO->$field'
+         has multiple rule definitions (in annotation), but only one is allowed.
+Solution: Combine multiple with 'Orisai\ObjectMapper\Rules\AnyOf' or
+          'Orisai\ObjectMapper\Rules\AllOf'.
+MSG,
+		);
+
+		$this->source->load(new ReflectionClass(FieldWithMultipleRulesChildVO::class));
+	}
+
+	public function testFieldWithNoRuleRelativeName(): void
 	{
 		$this->expectException(InvalidArgument::class);
 		$this->expectExceptionMessage(
 			<<<'MSG'
 Context: Resolving metadata of mapped object
          'Tests\Orisai\ObjectMapper\Doubles\Meta\FieldWithNoRuleVO'.
-Problem: Property
-         'Tests\Orisai\ObjectMapper\Doubles\Meta\FieldWithNoRuleVO->$field' has
-         mapped object definition, but no rule definition.
+Problem: Property '$field' has some mapped object definition (in annotation),
+         but no rule definition.
+Solution: Either remove the definition or add a rule definition.
 MSG,
 		);
 
 		$this->source->load(new ReflectionClass(FieldWithNoRuleVO::class));
+	}
+
+	public function testFieldWithNoRuleAbsoluteName(): void
+	{
+		$this->expectException(InvalidArgument::class);
+		$this->expectExceptionMessage(
+			<<<'MSG'
+Context: Resolving metadata of mapped object
+         'Tests\Orisai\ObjectMapper\Doubles\Meta\FieldWithNoRuleChildVO'.
+Problem: Property
+         'Tests\Orisai\ObjectMapper\Doubles\Meta\FieldWithNoRuleVO->$field' has
+         some mapped object definition (in annotation), but no rule definition.
+Solution: Either remove the definition or add a rule definition.
+MSG,
+		);
+
+		$this->source->load(new ReflectionClass(FieldWithNoRuleChildVO::class));
 	}
 
 }
