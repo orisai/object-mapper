@@ -104,7 +104,8 @@ final class Dumper
 		$outWrapped = sprintf("\n%s", $space);
 		$parents[] = $var;
 		$counter = 0;
-		$hideKeys = is_int(($tmp = array_keys($var))[0]) && $tmp === range($tmp[0], $tmp[0] + count($var) - 1);
+		$tmp = array_keys($var);
+		$hideKeys = is_int($tmp[0]) && $tmp === range($tmp[0], $tmp[0] + count($var) - 1);
 
 		foreach ($var as $k => &$v) {
 			$keyPart = $hideKeys && $k === $counter ? '' : self::dumpValue($k) . ': ';
