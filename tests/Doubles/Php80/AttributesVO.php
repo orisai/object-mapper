@@ -1,6 +1,6 @@
 <?php declare(strict_types = 1);
 
-namespace Tests\Orisai\ObjectMapper\Doubles\PhpVersionSpecific;
+namespace Tests\Orisai\ObjectMapper\Doubles\Php80;
 
 use Orisai\ObjectMapper\MappedObject;
 use Orisai\ObjectMapper\Rules\StringValue;

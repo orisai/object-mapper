@@ -4,8 +4,8 @@ namespace Tests\Orisai\ObjectMapper\Unit\Rules;
 
 use Orisai\ObjectMapper\Rules\BackedEnumArgs;
 use PHPUnit\Framework\TestCase;
-use Tests\Orisai\ObjectMapper\Doubles\Enums\ExampleIntEnum;
-use Tests\Orisai\ObjectMapper\Doubles\Enums\ExampleStringEnum;
+use Tests\Orisai\ObjectMapper\Doubles\Php81\ExampleIntEnum;
+use Tests\Orisai\ObjectMapper\Doubles\Php81\ExampleStringEnum;
 use function serialize;
 use function unserialize;
 

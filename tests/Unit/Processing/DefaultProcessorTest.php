@@ -25,7 +25,6 @@ use Tests\Orisai\ObjectMapper\Doubles\Callbacks\CallbacksVO;
 use Tests\Orisai\ObjectMapper\Doubles\Callbacks\CallbacksVoContext;
 use Tests\Orisai\ObjectMapper\Doubles\Callbacks\InvalidateFieldBeforeClassVO;
 use Tests\Orisai\ObjectMapper\Doubles\Callbacks\ObjectInitializingVO;
-use Tests\Orisai\ObjectMapper\Doubles\Callbacks\ObjectInitializingVoPhp81;
 use Tests\Orisai\ObjectMapper\Doubles\Callbacks\PropertyCallbacksFailureVO;
 use Tests\Orisai\ObjectMapper\Doubles\Circular\CircularAVO;
 use Tests\Orisai\ObjectMapper\Doubles\Circular\CircularBVO;
@@ -54,18 +53,19 @@ use Tests\Orisai\ObjectMapper\Doubles\Inheritance\TraitInsteadOf1\TraitInstead1O
 use Tests\Orisai\ObjectMapper\Doubles\InitializingVO;
 use Tests\Orisai\ObjectMapper\Doubles\InternalClassExtendingVO;
 use Tests\Orisai\ObjectMapper\Doubles\NoDefaultsVO;
-use Tests\Orisai\ObjectMapper\Doubles\PhpVersionSpecific\AttributesVO;
-use Tests\Orisai\ObjectMapper\Doubles\PhpVersionSpecific\ConstructorPromotedVO;
-use Tests\Orisai\ObjectMapper\Doubles\PhpVersionSpecific\DefaultsOverrideVO;
-use Tests\Orisai\ObjectMapper\Doubles\PhpVersionSpecific\NewInInitializersVO;
-use Tests\Orisai\ObjectMapper\Doubles\PhpVersionSpecific\ObjectDefaultVO;
-use Tests\Orisai\ObjectMapper\Doubles\PhpVersionSpecific\ReadonlyClassVO;
-use Tests\Orisai\ObjectMapper\Doubles\PhpVersionSpecific\ReadonlyPropertiesVO;
-use Tests\Orisai\ObjectMapper\Doubles\PhpVersionSpecific\UntypedVO;
+use Tests\Orisai\ObjectMapper\Doubles\Php80\AttributesVO;
+use Tests\Orisai\ObjectMapper\Doubles\Php80\ConstructorPromotedVO;
+use Tests\Orisai\ObjectMapper\Doubles\Php80\DefaultsOverrideVO;
+use Tests\Orisai\ObjectMapper\Doubles\Php81\NewInInitializersVO;
+use Tests\Orisai\ObjectMapper\Doubles\Php81\ObjectDefaultVO;
+use Tests\Orisai\ObjectMapper\Doubles\Php81\ObjectInitializingInAttributeVo;
+use Tests\Orisai\ObjectMapper\Doubles\Php81\ReadonlyPropertiesVO;
+use Tests\Orisai\ObjectMapper\Doubles\Php82\ReadonlyClassVO;
 use Tests\Orisai\ObjectMapper\Doubles\PropertiesInitVO;
 use Tests\Orisai\ObjectMapper\Doubles\Skipped\SkippedFieldsVO;
 use Tests\Orisai\ObjectMapper\Doubles\StructuresVO;
 use Tests\Orisai\ObjectMapper\Doubles\TransformingVO;
+use Tests\Orisai\ObjectMapper\Doubles\UntypedVO;
 use Tests\Orisai\ObjectMapper\Toolkit\ProcessingTestCase;
 use const PHP_VERSION_ID;
 
@@ -946,11 +946,11 @@ MSG,
 			self::markTestSkipped('New in initializers is supported since PHP 8.1');
 		}
 
-		$vo = $this->processor->process([], ObjectInitializingVoPhp81::class);
+		$vo = $this->processor->process([], ObjectInitializingInAttributeVo::class);
 
 		self::assertEquals(
 			$vo,
-			new ObjectInitializingVoPhp81(new DefaultsVO()),
+			new ObjectInitializingInAttributeVo(new DefaultsVO()),
 		);
 	}
 

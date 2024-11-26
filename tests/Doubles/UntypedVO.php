@@ -1,6 +1,6 @@
 <?php declare(strict_types = 1);
 
-namespace Tests\Orisai\ObjectMapper\Doubles\PhpVersionSpecific;
+namespace Tests\Orisai\ObjectMapper\Doubles;
 
 use Orisai\ObjectMapper\MappedObject;
 use Orisai\ObjectMapper\Modifiers\DefaultValue;
@@ -8,6 +8,11 @@ use Orisai\ObjectMapper\Rules\AnyOf;
 use Orisai\ObjectMapper\Rules\NullValue;
 use Orisai\ObjectMapper\Rules\StringValue;
 
+/**
+ * This object must stay untyped to test untyped values behavior
+ *
+ * phpcs:ignoreFile SlevomatCodingStandard.TypeHints.PropertyTypeHint.MissingNativeTypeHint
+ */
 final class UntypedVO implements MappedObject
 {
 

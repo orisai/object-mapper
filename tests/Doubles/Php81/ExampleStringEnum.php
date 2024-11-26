@@ -1,6 +1,6 @@
 <?php declare(strict_types = 1);
 
-namespace Tests\Orisai\ObjectMapper\Doubles\Enums;
+namespace Tests\Orisai\ObjectMapper\Doubles\Php81;
 
 enum ExampleStringEnum: string
 {

@@ -126,21 +126,15 @@ TXT,
 		$excludes[] = __DIR__ . '/../../Doubles/Meta/WrongArgsTypeVO.php';
 
 		if (PHP_VERSION_ID < 8_00_00) {
-			$excludes[] = __DIR__ . '/../../Doubles/PhpVersionSpecific/AttributesVO.php';
-			$excludes[] = __DIR__ . '/../../Doubles/PhpVersionSpecific/ConstructorPromotedVO.php';
-			$excludes[] = __DIR__ . '/../../Doubles/PhpVersionSpecific/DefaultsOverrideVO.php';
+			$excludes[] = __DIR__ . '/../../Doubles/Php80';
 		}
 
 		if (PHP_VERSION_ID < 8_01_00) {
-			$excludes[] = __DIR__ . '/../../Doubles/Callbacks/ObjectInitializingVoPhp81.php';
-			$excludes[] = __DIR__ . '/../../Doubles/Enums';
-			$excludes[] = __DIR__ . '/../../Doubles/PhpVersionSpecific/NewInInitializersVO.php';
-			$excludes[] = __DIR__ . '/../../Doubles/PhpVersionSpecific/ObjectDefaultVO.php';
-			$excludes[] = __DIR__ . '/../../Doubles/PhpVersionSpecific/ReadonlyPropertiesVO.php';
+			$excludes[] = __DIR__ . '/../../Doubles/Php81';
 		}
 
 		if (PHP_VERSION_ID < 8_02_00) {
-			$excludes[] = __DIR__ . '/../../Doubles/PhpVersionSpecific/ReadonlyClassVO.php';
+			$excludes[] = __DIR__ . '/../../Doubles/Php82';
 		}
 
 		$this->metaLoader->preloadFromPaths(

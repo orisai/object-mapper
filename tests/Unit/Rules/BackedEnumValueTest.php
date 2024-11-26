@@ -8,8 +8,8 @@ use Orisai\ObjectMapper\Rules\BackedEnumRule;
 use Orisai\ObjectMapper\Rules\BackedEnumValue;
 use Orisai\ObjectMapper\Tester\DefinitionTester;
 use PHPUnit\Framework\TestCase;
-use Tests\Orisai\ObjectMapper\Doubles\Enums\ExampleIntEnum;
-use Tests\Orisai\ObjectMapper\Doubles\Enums\ExampleStringEnum;
+use Tests\Orisai\ObjectMapper\Doubles\Php81\ExampleIntEnum;
+use Tests\Orisai\ObjectMapper\Doubles\Php81\ExampleStringEnum;
 use function get_class;
 use const PHP_VERSION_ID;
 

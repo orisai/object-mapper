@@ -35,9 +35,6 @@
 	</rule>
 
 	<!-- Test-specific config -->
-	<rule ref="SlevomatCodingStandard.TypeHints.PropertyTypeHint.MissingNativeTypeHint">
-		<exclude-pattern>tests/Doubles/PhpVersionSpecific/UntypedVO.php</exclude-pattern>
-	</rule>
 	<rule ref="SlevomatCodingStandard.Classes.SuperfluousInterfaceNaming">
 		<exclude-pattern>tests/Doubles/Inheritance</exclude-pattern>
 	</rule>

@@ -1,13 +1,13 @@
 <?php declare(strict_types = 1);
 
-namespace Tests\Orisai\ObjectMapper\Doubles\Callbacks;
+namespace Tests\Orisai\ObjectMapper\Doubles\Php81;
 
 use Orisai\ObjectMapper\MappedObject;
 use Orisai\ObjectMapper\Modifiers\DefaultValue;
 use Orisai\ObjectMapper\Rules\MappedObjectValue;
 use Tests\Orisai\ObjectMapper\Doubles\DefaultsVO;
 
-final class ObjectInitializingVoPhp81 implements MappedObject
+final class ObjectInitializingInAttributeVo implements MappedObject
 {
 
 	#[DefaultValue(new DefaultsVO())]
