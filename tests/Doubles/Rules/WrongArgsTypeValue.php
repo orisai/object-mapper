@@ -1,6 +1,6 @@
 <?php declare(strict_types = 1);
 
-namespace Tests\Orisai\ObjectMapper\Doubles\Meta;
+namespace Tests\Orisai\ObjectMapper\Doubles\Rules;
 
 use Attribute;
 use Doctrine\Common\Annotations\Annotation\NamedArgumentConstructor;

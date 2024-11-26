@@ -18,7 +18,7 @@ use Tests\Orisai\ObjectMapper\Doubles\Invalid\FieldTraitMetaInvalidScopeRootVO;
 use Tests\Orisai\ObjectMapper\Doubles\Invalid\MultipleIdenticalFieldNamesVO;
 use Tests\Orisai\ObjectMapper\Doubles\Invalid\StaticMappedPropertyVO;
 use Tests\Orisai\ObjectMapper\Doubles\Invalid\WrongArgsTypeVO;
-use Tests\Orisai\ObjectMapper\Doubles\Meta\WrongArgsTypeRule;
+use Tests\Orisai\ObjectMapper\Doubles\Rules\WrongArgsTypeRule;
 use Tests\Orisai\ObjectMapper\Toolkit\ProcessingTestCase;
 
 final class MetaResolverTest extends ProcessingTestCase
@@ -208,7 +208,7 @@ TXT,
 
 		$this->expectException(InvalidArgument::class);
 		$this->expectExceptionMessage(
-			"'Tests\Orisai\ObjectMapper\Doubles\Meta\WrongArgsTypeRule->resolveArgs()' should return 'nonsense'"
+			"'Tests\Orisai\ObjectMapper\Doubles\Rules\WrongArgsTypeRule->resolveArgs()' should return 'nonsense'"
 			. " (as defined in 'getArgsType()' method), but returns 'Orisai\ObjectMapper\Args\EmptyArgs'.",
 		);
 

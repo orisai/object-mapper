@@ -3,7 +3,7 @@
 namespace Tests\Orisai\ObjectMapper\Doubles\Invalid;
 
 use Orisai\ObjectMapper\MappedObject;
-use Tests\Orisai\ObjectMapper\Doubles\Meta\WrongArgsTypeValue;
+use Tests\Orisai\ObjectMapper\Doubles\Rules\WrongArgsTypeValue;
 
 final class WrongArgsTypeVO implements MappedObject
 {
