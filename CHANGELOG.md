@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ### Changed
 
+- Allow PHP 8.4
 - Metadata
 	- Improved accuracy of metadata-related error messages
 	- `ReflectorMetaSource` is marked as `@internal`
