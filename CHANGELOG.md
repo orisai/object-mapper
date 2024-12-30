@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased](https://github.com/orisai/object-mapper/compare/0.2.0...v1.x)
 
+### Added
+
+- `ArgsFieldContext` - args validation context which adds access to the property's default value
+
 ### Changed
 
 - Composer
@@ -15,6 +19,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - Metadata
 	- Improved accuracy of metadata-related error messages
 	- `ReflectorMetaSource` is marked as `@internal`
+- `Rule`
+	- `resolveArgs()` accepts `ArgsFieldContext` instead of `ArgsContext`
 
 ## [0.2.0](https://github.com/orisai/object-mapper/compare/0.1.0...0.2.0) - 2024-06-22
 

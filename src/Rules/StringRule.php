@@ -4,7 +4,7 @@ namespace Orisai\ObjectMapper\Rules;
 
 use Orisai\ObjectMapper\Args\Args;
 use Orisai\ObjectMapper\Args\ArgsChecker;
-use Orisai\ObjectMapper\Context\ArgsContext;
+use Orisai\ObjectMapper\Context\ArgsFieldContext;
 use Orisai\ObjectMapper\Context\FieldContext;
 use Orisai\ObjectMapper\Context\TypeContext;
 use Orisai\ObjectMapper\Exception\ValueDoesNotMatch;
@@ -27,7 +27,7 @@ final class StringRule implements Rule
 		MaxLength = 'maxLength',
 		NotEmpty = 'notEmpty';
 
-	public function resolveArgs(array $args, ArgsContext $context): StringArgs
+	public function resolveArgs(array $args, ArgsFieldContext $context): StringArgs
 	{
 		$checker = new ArgsChecker($args, self::class);
 

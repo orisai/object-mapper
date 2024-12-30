@@ -4,7 +4,7 @@ namespace Orisai\ObjectMapper\Rules;
 
 use Orisai\ObjectMapper\Args\Args;
 use Orisai\ObjectMapper\Args\ArgsChecker;
-use Orisai\ObjectMapper\Context\ArgsContext;
+use Orisai\ObjectMapper\Context\ArgsFieldContext;
 use Orisai\ObjectMapper\Context\FieldContext;
 use Orisai\ObjectMapper\Context\TypeContext;
 use Orisai\ObjectMapper\Exception\InvalidData;
@@ -26,7 +26,7 @@ final class ArrayOfRule extends MultiValueRule
 	/** @internal */
 	public const KeyRule = 'key';
 
-	public function resolveArgs(array $args, ArgsContext $context): ArrayOfArgs
+	public function resolveArgs(array $args, ArgsFieldContext $context): ArrayOfArgs
 	{
 		$checker = new ArgsChecker($args, self::class);
 		$checker->checkAllowedArgs(

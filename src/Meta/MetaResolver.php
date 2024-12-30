@@ -7,6 +7,7 @@ use Orisai\Exceptions\Logic\InvalidState;
 use Orisai\Exceptions\Message;
 use Orisai\ObjectMapper\Args\Args;
 use Orisai\ObjectMapper\Context\ArgsContext;
+use Orisai\ObjectMapper\Context\ArgsFieldContext;
 use Orisai\ObjectMapper\MappedObject;
 use Orisai\ObjectMapper\Meta\Compile\CallbackCompileMeta;
 use Orisai\ObjectMapper\Meta\Compile\ClassCompileMeta;
@@ -244,7 +245,7 @@ final class MetaResolver
 			$this->throwFieldMetaOutsideOfMappedObject($rootClass, $classReflector, $fieldStructure->getSource());
 		}
 
-		$context = new ArgsContext($this->loader, $this);
+		$context = new ArgsFieldContext($this->loader, $this, $defaultValue);
 
 		return new FieldRuntimeMeta(
 			$this->resolveCallbacksMeta($meta, $context, $reflector, $classReflector),
@@ -398,7 +399,7 @@ final class MetaResolver
 	/**
 	 * @return RuleRuntimeMeta<Args>
 	 */
-	public function resolveRuleMeta(RuleCompileMeta $meta, ArgsContext $context): RuleRuntimeMeta
+	public function resolveRuleMeta(RuleCompileMeta $meta, ArgsFieldContext $context): RuleRuntimeMeta
 	{
 		$type = $meta->getType();
 		$rule = $this->ruleManager->getRule($type);

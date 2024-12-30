@@ -3,7 +3,7 @@
 namespace Orisai\ObjectMapper\Rules;
 
 use Orisai\ObjectMapper\Args\Args;
-use Orisai\ObjectMapper\Context\ArgsContext;
+use Orisai\ObjectMapper\Context\ArgsFieldContext;
 use Orisai\ObjectMapper\Context\FieldContext;
 use Orisai\ObjectMapper\Context\TypeContext;
 use Orisai\ObjectMapper\Exception\InvalidData;
@@ -20,7 +20,7 @@ interface Rule
 	 * @param array<int|string, mixed> $args
 	 * @return T_ARGS
 	 */
-	public function resolveArgs(array $args, ArgsContext $context): Args;
+	public function resolveArgs(array $args, ArgsFieldContext $context): Args;
 
 	/**
 	 * @return class-string<T_ARGS>

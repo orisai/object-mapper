@@ -3,6 +3,7 @@
 namespace Orisai\ObjectMapper\Tester;
 
 use Orisai\ObjectMapper\Context\ArgsContext;
+use Orisai\ObjectMapper\Context\ArgsFieldContext;
 use Orisai\ObjectMapper\Context\FieldContext;
 use Orisai\ObjectMapper\Context\TypeContext;
 use Orisai\ObjectMapper\Meta\MetaLoader;
@@ -45,6 +46,15 @@ final class TesterDependencies
 		$this->ruleManager = $ruleManager;
 		$this->processor = $processor;
 		$this->dependencyInjectorManager = $dependencyInjectorManager;
+	}
+
+	public function createArgsFieldContext(?DefaultValueMeta $default = null): ArgsFieldContext
+	{
+		return new ArgsFieldContext(
+			$this->metaLoader,
+			$this->metaResolver,
+			$default ?? DefaultValueMeta::fromNothing(),
+		);
 	}
 
 	public function createArgsContext(): ArgsContext

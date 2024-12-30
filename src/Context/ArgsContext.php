@@ -5,7 +5,7 @@ namespace Orisai\ObjectMapper\Context;
 use Orisai\ObjectMapper\Meta\MetaLoader;
 use Orisai\ObjectMapper\Meta\MetaResolver;
 
-final class ArgsContext
+class ArgsContext
 {
 
 	private MetaLoader $metaLoader;

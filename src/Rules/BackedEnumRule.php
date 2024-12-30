@@ -7,7 +7,7 @@ use Orisai\Exceptions\Logic\InvalidArgument;
 use Orisai\Exceptions\Logic\InvalidState;
 use Orisai\ObjectMapper\Args\Args;
 use Orisai\ObjectMapper\Args\ArgsChecker;
-use Orisai\ObjectMapper\Context\ArgsContext;
+use Orisai\ObjectMapper\Context\ArgsFieldContext;
 use Orisai\ObjectMapper\Context\FieldContext;
 use Orisai\ObjectMapper\Context\TypeContext;
 use Orisai\ObjectMapper\Exception\ValueDoesNotMatch;
@@ -36,7 +36,7 @@ final class BackedEnumRule implements Rule
 		}
 	}
 
-	public function resolveArgs(array $args, ArgsContext $context): BackedEnumArgs
+	public function resolveArgs(array $args, ArgsFieldContext $context): BackedEnumArgs
 	{
 		$checker = new ArgsChecker($args, self::class);
 		$checker->checkAllowedArgs([self::ClassName, self::AllowUnknown]);
