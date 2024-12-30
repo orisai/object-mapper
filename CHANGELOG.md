@@ -21,6 +21,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 	- `ReflectorMetaSource` is marked as `@internal`
 - `Rule`
 	- `resolveArgs()` accepts `ArgsFieldContext` instead of `ArgsContext`
+- `ArrayOfRule`
+	- check during metadata parsing that default value is an array when `mergeDefaults` is enabled
 
 ## [0.2.0](https://github.com/orisai/object-mapper/compare/0.1.0...0.2.0) - 2024-06-22
 
