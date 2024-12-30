@@ -2,9 +2,7 @@
 
 namespace Orisai\ObjectMapper\Rules;
 
-use Orisai\Exceptions\Logic\InvalidArgument;
 use Orisai\ObjectMapper\Meta\Compile\RuleCompileMeta;
-use function get_debug_type;
 
 abstract class CompoundDefinition implements RuleDefinition
 {
@@ -13,34 +11,25 @@ abstract class CompoundDefinition implements RuleDefinition
 	private array $rules;
 
 	/**
-	 * @param array<RuleDefinition> $definitions
+	 * @param list<RuleDefinition> $definitions
 	 */
 	public function __construct(array $definitions)
 	{
-		$this->rules = $this->resolveRules($definitions);
+		$this->rules = $this->definitionsToRules($definitions);
 	}
 
 	/**
-	 * @param array<mixed> $definitions
+	 * @param list<RuleDefinition> $definitions
 	 * @return array<RuleCompileMeta>
 	 */
-	private function resolveRules(array $definitions): array
+	private function definitionsToRules(array $definitions): array
 	{
+		$rules = [];
 		foreach ($definitions as $key => $definition) {
-			if (!$definition instanceof RuleDefinition) {
-				$selfClass = static::class;
-				$definitionClass = RuleDefinition::class;
-				$givenType = get_debug_type($definition);
-
-				throw InvalidArgument::create()
-					->withMessage("'$selfClass(definitions)' expects all values to be subtype"
-						. " of '$definitionClass', '$givenType' given.");
-			}
-
-			$definitions[$key] = new RuleCompileMeta($definition->getType(), $definition->getArgs());
+			$rules[$key] = new RuleCompileMeta($definition->getType(), $definition->getArgs());
 		}
 
-		return $definitions;
+		return $rules;
 	}
 
 	public function getArgs(): array
