@@ -33,9 +33,6 @@ final class ObjectRule implements Rule
 		return $value;
 	}
 
-	/**
-	 * @param EmptyArgs $args
-	 */
 	public function createType(Args $args, TypeContext $context): SimpleValueType
 	{
 		return new SimpleValueType('object');

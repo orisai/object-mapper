@@ -62,9 +62,6 @@ final class InstanceOfRule implements Rule
 		throw ValueDoesNotMatch::create($this->createType($args, $context), Value::of($value));
 	}
 
-	/**
-	 * @param InstanceOfArgs $args
-	 */
 	public function createType(Args $args, TypeContext $context): SimpleValueType
 	{
 		return new SimpleValueType($args->type);

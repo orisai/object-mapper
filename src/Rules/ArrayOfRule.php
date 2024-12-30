@@ -189,9 +189,6 @@ final class ArrayOfRule extends MultiValueRule
 		return $value;
 	}
 
-	/**
-	 * @param ArrayOfArgs $args
-	 */
 	public function createType(Args $args, TypeContext $context): GenericArrayType
 	{
 		$itemMeta = $args->itemRuleMeta;

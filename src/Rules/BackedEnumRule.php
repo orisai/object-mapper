@@ -92,9 +92,6 @@ final class BackedEnumRule implements Rule
 		throw ValueDoesNotMatch::create($this->createType($args, $context), Value::of($value));
 	}
 
-	/**
-	 * @param BackedEnumArgs $args
-	 */
 	public function createType(Args $args, TypeContext $context): EnumType
 	{
 		return new EnumType($this->getEnumCases($args));

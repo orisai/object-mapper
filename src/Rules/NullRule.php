@@ -58,9 +58,6 @@ final class NullRule implements Rule
 		return $value;
 	}
 
-	/**
-	 * @param NullArgs $args
-	 */
 	public function createType(Args $args, TypeContext $context): SimpleValueType
 	{
 		$type = new SimpleValueType('null');

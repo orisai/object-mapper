@@ -26,9 +26,6 @@ final class MixedRule implements Rule
 		return $value;
 	}
 
-	/**
-	 * @param EmptyArgs $args
-	 */
 	public function createType(Args $args, TypeContext $context): SimpleValueType
 	{
 		return new SimpleValueType('mixed');

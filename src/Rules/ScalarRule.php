@@ -44,9 +44,6 @@ final class ScalarRule implements Rule
 		throw ValueDoesNotMatch::create($type, Value::of($value));
 	}
 
-	/**
-	 * @param EmptyArgs $args
-	 */
 	public function createType(Args $args, TypeContext $context): CompoundType
 	{
 		$type = new CompoundType(CompoundTypeOperator::or());

@@ -79,9 +79,6 @@ final class MappedObjectRule implements Rule
 			: $processor->processWithoutMapping($value, $args->class, $options);
 	}
 
-	/**
-	 * @param MappedObjectArgs $args
-	 */
 	public function createType(Args $args, TypeContext $context): MappedObjectType
 	{
 		if (in_array($args->class, $context->getProcessedClasses(), true)) {

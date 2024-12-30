@@ -68,9 +68,6 @@ final class BoolRule implements Rule
 		throw ValueDoesNotMatch::create($this->createType($args, $context), Value::of($initValue));
 	}
 
-	/**
-	 * @param BoolArgs $args
-	 */
 	public function createType(Args $args, TypeContext $context): SimpleValueType
 	{
 		$type = new SimpleValueType('bool');

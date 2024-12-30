@@ -100,9 +100,6 @@ final class StringRule implements Rule
 		return $value;
 	}
 
-	/**
-	 * @param StringArgs $args
-	 */
 	public function createType(Args $args, TypeContext $context): SimpleValueType
 	{
 		$type = new SimpleValueType('string');

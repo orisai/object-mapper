@@ -142,9 +142,6 @@ final class FloatRule implements Rule
 		return $value;
 	}
 
-	/**
-	 * @param FloatArgs $args
-	 */
 	public function createType(Args $args, TypeContext $context): SimpleValueType
 	{
 		$type = new SimpleValueType('float');

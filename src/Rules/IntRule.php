@@ -139,9 +139,6 @@ final class IntRule implements Rule
 		return $value;
 	}
 
-	/**
-	 * @param IntArgs $args
-	 */
 	public function createType(Args $args, TypeContext $context): SimpleValueType
 	{
 		$type = new SimpleValueType('int');

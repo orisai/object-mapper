@@ -56,9 +56,6 @@ abstract class CompoundRule implements Rule
 		return CompoundArgs::class;
 	}
 
-	/**
-	 * @param CompoundArgs $args
-	 */
 	public function createType(Args $args, TypeContext $context): CompoundType
 	{
 		$type = $this->createCompoundType();

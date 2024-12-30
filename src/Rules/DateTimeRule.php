@@ -166,9 +166,6 @@ final class DateTimeRule implements Rule
 			: $value;
 	}
 
-	/**
-	 * @param DateTimeArgs $args
-	 */
 	public function createType(Args $args, TypeContext $context): SimpleValueType
 	{
 		if ($args->format === self::FormatTimestamp) {
