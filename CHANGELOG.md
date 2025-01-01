@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ### Added
 
+- `ArrayShapeRule` - allows processing of arrays with predefined keys
 - `ArgsFieldContext` - args validation context which adds access to the property's default value
 
 ### Changed

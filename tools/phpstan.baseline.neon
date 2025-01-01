@@ -1,6 +1,19 @@
 parameters:
 	ignoreErrors:
 		-
-			message: "#^Unreachable statement \\- code above always terminates\\.$#"
+			message: '#^Unreachable statement \- code above always terminates\.$#'
+			identifier: deadCode.unreachable
 			count: 3
 			path: ../tests/Unit/Processing/DefaultProcessorTest.php
+
+		-
+			message: '#^Call to an undefined method Orisai\\ObjectMapper\\Types\\Type\:\:getMessage\(\)\.$#'
+			identifier: method.notFound
+			count: 4
+			path: ../tests/Unit/Rules/ArrayShapeRuleTest.php
+
+		-
+			message: '#^Call to an undefined method Orisai\\ObjectMapper\\Types\\Type\:\:getName\(\)\.$#'
+			identifier: method.notFound
+			count: 3
+			path: ../tests/Unit/Rules/ArrayShapeRuleTest.php

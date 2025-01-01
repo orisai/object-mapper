@@ -28,6 +28,7 @@ of them to type-safe objects.
 		- [Any of rules - ||](#any-of-rules---)
 		- [Array of keys and items](#array-of-keys-and-items-rule)
 		- [List of items](#list-of-items-rule)
+		- [Array shape](#array-shape)
 	- [Value objects](#value-objects)
 		- [BackedEnum](#backedenum-rule)
 		- [DateTime](#datetime-rule)
@@ -885,6 +886,42 @@ Parameters:
 - `mergeDefaults`
 	- merge default value into array after it is validated
 	- default `false` - default is not merged
+
+### Array shape
+
+Expects an array with predefined keys
+
+```php
+use Orisai\ObjectMapper\MappedObject;
+use Orisai\ObjectMapper\Rules\ArrayShape;
+use Orisai\ObjectMapper\Rules\IntValue;
+use Orisai\ObjectMapper\Rules\StringValue;
+
+final class ArrayShapeInput implements MappedObject
+{
+
+	/**
+	 * @var array{key: string, 123: int}
+	 * @ArrayShape({
+	 *     key: @StringValue(),
+	 *     123: @IntValue(),
+	 * })
+	 */
+	public array $field;
+
+}
+```
+
+```php
+$data = [
+	'field' => [
+		'key' => 'test',
+		123 => 456,
+	],
+];
+$input = $processor->process($data, ArrayShapeInput::class);
+// $input == ArrayShapeInput(field: ['key' => 'test', 123 => 456])
+```
 
 ### Value objects
 

@@ -10,6 +10,7 @@ interface RuleManager
 		AnyOfRule::class,
 		ArrayEnumRule::class,
 		ArrayOfRule::class,
+		ArrayShapeRule::class,
 		BackedEnumRule::class,
 		BoolRule::class,
 		DateTimeRule::class,
