@@ -3,6 +3,7 @@
 namespace Orisai\ObjectMapper\Types;
 
 use Closure;
+use Orisai\Exceptions\Logic\InvalidState;
 use Orisai\ObjectMapper\Exception\WithTypeAndValue;
 
 class ArrayShapeType implements Type
@@ -38,6 +39,28 @@ class ArrayShapeType implements Type
 	}
 
 	/**
+	 * @param int|string $field
+	 *
+	 * @internal
+	 */
+	public function getField($field): Type
+	{
+		$type = $this->fields[$field] ?? null;
+
+		if ($type === null) {
+			throw InvalidState::create()
+				->withMessage("Cannot get field '$field' because it was never set.");
+		}
+
+		if ($type instanceof Closure) {
+			$type = $type();
+			$this->fields[$field] = $type;
+		}
+
+		return $type;
+	}
+
+	/**
 	 * @return array<int|string, Type>
 	 */
 	public function getFields(): array
@@ -46,6 +69,7 @@ class ArrayShapeType implements Type
 		foreach ($this->fields as $field => $type) {
 			if ($type instanceof Closure) {
 				$type = $type();
+				$this->fields[$field] = $type;
 			}
 
 			$fields[$field] = $type;

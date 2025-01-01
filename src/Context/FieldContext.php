@@ -2,6 +2,7 @@
 
 namespace Orisai\ObjectMapper\Context;
 
+use Closure;
 use Orisai\ObjectMapper\Meta\MetaLoader;
 use Orisai\ObjectMapper\Meta\Shared\DefaultValueMeta;
 use Orisai\ObjectMapper\Processing\Options;
@@ -13,7 +14,10 @@ use ReflectionProperty;
 final class FieldContext extends BaseFieldContext
 {
 
-	private Type $type;
+	/** @var Closure(): Type */
+	private Closure $typeCreator;
+
+	private ?Type $type = null;
 
 	private DefaultValueMeta $default;
 
@@ -23,6 +27,7 @@ final class FieldContext extends BaseFieldContext
 	private ReflectionProperty $property;
 
 	/**
+	 * @param Closure(): Type $typeCreator
 	 * @param int|string $fieldName
 	 */
 	public function __construct(
@@ -30,7 +35,7 @@ final class FieldContext extends BaseFieldContext
 		RuleManager $ruleManager,
 		Processor $processor,
 		Options $options,
-		Type $type,
+		Closure $typeCreator,
 		DefaultValueMeta $default,
 		bool $initializeObjects,
 		$fieldName,
@@ -38,7 +43,7 @@ final class FieldContext extends BaseFieldContext
 	)
 	{
 		parent::__construct($metaLoader, $ruleManager, $processor, $options, $initializeObjects);
-		$this->type = $type;
+		$this->typeCreator = $typeCreator;
 		$this->default = $default;
 		$this->fieldName = $fieldName;
 		$this->property = $property;
@@ -46,7 +51,14 @@ final class FieldContext extends BaseFieldContext
 
 	public function getType(): Type
 	{
-		return $this->type;
+		if ($this->type !== null) {
+			return $this->type;
+		}
+
+		$type = ($this->typeCreator)();
+		unset($this->typeCreator);
+
+		return $this->type = $type;
 	}
 
 	public function hasDefaultValue(): bool

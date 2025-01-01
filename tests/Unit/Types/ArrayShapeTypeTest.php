@@ -2,10 +2,13 @@
 
 namespace Tests\Orisai\ObjectMapper\Unit\Types;
 
+use Orisai\Exceptions\Logic\InvalidState;
 use Orisai\ObjectMapper\Exception\ValueDoesNotMatch;
 use Orisai\ObjectMapper\Processing\Value;
 use Orisai\ObjectMapper\Types\ArrayShapeType;
 use Orisai\ObjectMapper\Types\MessageType;
+use Orisai\ObjectMapper\Types\SimpleValueType;
+use Orisai\ObjectMapper\Types\Type;
 use PHPUnit\Framework\TestCase;
 
 final class ArrayShapeTypeTest extends TestCase
@@ -103,11 +106,16 @@ final class ArrayShapeTypeTest extends TestCase
 	public function testFieldFromClosure(): void
 	{
 		$type = new ArrayShapeType();
-		$type->addField('field', static fn (): MessageType => new MessageType('test'));
+		$type->addField('field', static fn (): Type => new MessageType('test'));
+		$type->addField('field2', static fn (): Type => new SimpleValueType('string'));
 
 		$expectedFields = [
-			'field' => new MessageType('test'),
+			'field' => $t1 = new MessageType('test'),
+			'field2' => $t2 = new SimpleValueType('string'),
 		];
+
+		self::assertEquals($t1, $type->getField('field'));
+		self::assertSame($type->getField('field'), $type->getField('field'));
 
 		$fields = $type->getFields();
 		self::assertEquals($expectedFields, $fields);
@@ -115,7 +123,19 @@ final class ArrayShapeTypeTest extends TestCase
 
 		$fields2 = $type->getFields();
 		self::assertEquals($fields, $fields2);
-		self::assertNotSame($fields, $fields2);
+		self::assertSame($fields, $fields2);
+
+		self::assertEquals($t2, $type->getField('field2'));
+	}
+
+	public function testGetUnknownField(): void
+	{
+		$type = new ArrayShapeType();
+
+		$this->expectException(InvalidState::class);
+		$this->expectExceptionMessage("Cannot get field 'unknown' because it was never set.");
+
+		$type->getField('unknown');
 	}
 
 }

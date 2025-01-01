@@ -14,6 +14,7 @@ use Orisai\ObjectMapper\Processing\Options;
 use Orisai\ObjectMapper\Processing\Processor;
 use Orisai\ObjectMapper\Rules\DefaultRuleManager;
 use Orisai\ObjectMapper\Types\MessageType;
+use Orisai\ObjectMapper\Types\Type;
 use ReflectionProperty;
 
 final class TesterDependencies
@@ -82,7 +83,7 @@ final class TesterDependencies
 			$this->ruleManager,
 			$this->processor,
 			$options !== null ? $options->createClone() : new Options(),
-			new MessageType('test'),
+			static fn (): Type => new MessageType('test'),
 			$defaultValueMeta ?? DefaultValueMeta::fromNothing(),
 			$initializeObjects,
 			'test',

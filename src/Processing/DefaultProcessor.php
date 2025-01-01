@@ -2,6 +2,7 @@
 
 namespace Orisai\ObjectMapper\Processing;
 
+use Closure;
 use Nette\Utils\Helpers;
 use Orisai\Exceptions\Logic\InvalidState;
 use Orisai\ObjectMapper\Args\Args;
@@ -29,6 +30,7 @@ use Orisai\ObjectMapper\Rules\MappedObjectRule;
 use Orisai\ObjectMapper\Rules\RuleManager;
 use Orisai\ObjectMapper\Types\MappedObjectType;
 use Orisai\ObjectMapper\Types\MessageType;
+use Orisai\ObjectMapper\Types\Type;
 use ReflectionProperty;
 use function array_diff;
 use function array_key_exists;
@@ -109,11 +111,11 @@ final class DefaultProcessor implements Processor
 	{
 		$options ??= new Options();
 		$options = $options->withProcessedClass($class);
-		$type = $this->createMappedObjectType($class, $options);
+		$typeCreator = fn (): MappedObjectType => $this->createMappedObjectType($class, $options);
 		$meta = $this->metaCache[$class] ??= $this->metaLoader->load($class);
 		$holder = $this->createHolder($class, $meta->getClass());
 
-		$mappedObjectContext = $this->createMappedObjectContext($options, $type, $initializeObjects);
+		$mappedObjectContext = $this->createMappedObjectContext($options, $typeCreator, $initializeObjects);
 		$callContext = $this->createProcessorRunContext($class, $meta, $holder);
 
 		$processedData = $this->processData($data, $mappedObjectContext, $callContext);
@@ -181,9 +183,12 @@ final class DefaultProcessor implements Processor
 		);
 	}
 
+	/**
+	 * @param Closure(): MappedObjectType $typeCreator
+	 */
 	private function createMappedObjectContext(
 		Options $options,
-		MappedObjectType $type,
+		Closure $typeCreator,
 		bool $initializeObjects
 	): MappedObjectContext
 	{
@@ -192,7 +197,7 @@ final class DefaultProcessor implements Processor
 			$this->ruleManager,
 			$this,
 			$options,
-			$type,
+			$typeCreator,
 			$initializeObjects,
 		);
 	}
@@ -466,13 +471,14 @@ final class DefaultProcessor implements Processor
 	): FieldContext
 	{
 		$parentType = $mappedObjectContext->getType();
+		$typeCreator = static fn (): Type => $parentType->getField($fieldName);
 
 		return new FieldContext(
 			$this->metaLoader,
 			$this->ruleManager,
 			$this,
 			$mappedObjectContext->getOptions()->createClone(),
-			$parentType->getFields()[$fieldName],
+			$typeCreator,
 			$meta->getDefault(),
 			$mappedObjectContext->shouldInitializeObjects(),
 			$fieldName,
@@ -710,8 +716,9 @@ final class DefaultProcessor implements Processor
 		$skippedFieldsContext = $this->skippedMap->getSkippedFieldsContext($object);
 
 		$type = $skippedFieldsContext->getType();
+		$typeCreator = static fn (): MappedObjectType => $type;
 		$options ??= $skippedFieldsContext->getOptions();
-		$mappedObjectContext = $this->createMappedObjectContext($options, $type, true);
+		$mappedObjectContext = $this->createMappedObjectContext($options, $typeCreator, true);
 		$skippedFields = $skippedFieldsContext->getSkippedFields();
 
 		$meta = $this->metaLoader->load($class);
