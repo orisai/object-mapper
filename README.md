@@ -29,6 +29,47 @@
 
 ##
 
+<details open>
+	<summary>Attributes definition</summary>
+
+```php
+use Orisai\ObjectMapper\MappedObject;
+use Orisai\ObjectMapper\Rules\MappedObjectValue;
+use Orisai\ObjectMapper\Rules\StringValue;
+
+final class UserInput implements MappedObject
+{
+
+	#[StringValue(notEmpty: true)]
+	public string $firstName;
+
+	#[StringValue(notEmpty: true)]
+	public string $lastName;
+
+	#[MappedObjectValue(UserAddressInput::class)]
+	public UserAddressInput $address;
+
+}
+```
+
+```php
+use Orisai\ObjectMapper\MappedObject;
+use Orisai\ObjectMapper\Rules\StringValue;
+
+final class UserAddressInput implements MappedObject
+{
+
+	#[StringValue(notEmpty: true)]
+	public string $street;
+
+	// ...
+}
+```
+</details>
+
+<details>
+	<summary>Annotations definition</summary>
+
 ```php
 use Orisai\ObjectMapper\MappedObject;
 use Orisai\ObjectMapper\Rules\MappedObjectValue;
@@ -62,6 +103,10 @@ final class UserAddressInput implements MappedObject
 	// ...
 }
 ```
+</details>
+
+<details open>
+	<summary>Processing</summary>
 
 ```php
 use Orisai\ObjectMapper\Exception\InvalidData;
@@ -90,3 +135,4 @@ try {
 
 echo "User name is: {$user->firstName} {$user->lastName}";
 ```
+</details>

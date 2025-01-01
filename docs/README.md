@@ -111,6 +111,29 @@ installation.
 
 After you have finished [setup](#setup), define a mapped object:
 
+<details open>
+	<summary>Either with attributes</summary>
+
+```php
+use Orisai\ObjectMapper\MappedObject;
+use Orisai\ObjectMapper\Rules\StringValue;
+
+final class UserInput implements MappedObject
+{
+
+	#[StringValue(notEmpty=true)]
+	public string $firstName;
+
+	#[StringValue(notEmpty=true)]
+	public string $lastName;
+
+}
+```
+</details>
+
+<details>
+	<summary>Or doctrine/annotations</summary>
+
 ```php
 use Orisai\ObjectMapper\MappedObject;
 use Orisai\ObjectMapper\Rules\StringValue;
@@ -124,7 +147,9 @@ final class UserInput implements MappedObject
 	/** @StringValue(notEmpty=true) */
 	public string $lastName;
 
+}
 ```
+</details>
 
 Map data to the object:
 
@@ -184,11 +209,11 @@ use Orisai\ObjectMapper\Rules\MixedValue;
 final class WithAnnotationsAndAttributesInput implements MappedObject
 {
 
-    /** @MixedValue() */
-    public mixed $usesAnnotation;
+	/** @MixedValue() */
+	public mixed $usesAnnotation;
 
-    #[MixedValue()]
-    public mixed $usesAttribute;
+	#[MixedValue()]
+	public mixed $usesAttribute;
 
 }
 ```
@@ -209,6 +234,9 @@ $input = $processor->process($data, WithAnnotationsAndAttributesInput::class); /
 
 Expects bool
 
+<details open>
+	<summary><code>#[Attributes()]</code></summary>
+
 ```php
 use Orisai\ObjectMapper\MappedObject;
 use Orisai\ObjectMapper\Rules\BoolValue;
@@ -216,14 +244,35 @@ use Orisai\ObjectMapper\Rules\BoolValue;
 final class BoolInput implements MappedObject
 {
 
-    /** @BoolValue() */
-    public bool $field;
+	#[BoolValue()]
+	public bool $field;
 
-    /** @BoolValue(castBoolLike=true) */
-    public bool $anotherField;
+	#[BoolValue(castBoolLike: true)]
+	public bool $anotherField;
 
 }
 ```
+</details>
+
+<details>
+	<summary><code>@Annotations()</code></summary>
+
+```php
+use Orisai\ObjectMapper\MappedObject;
+use Orisai\ObjectMapper\Rules\BoolValue;
+
+final class BoolInput implements MappedObject
+{
+
+	/** @BoolValue() */
+	public bool $field;
+
+	/** @BoolValue(castBoolLike=true) */
+	public bool $anotherField;
+
+}
+```
+</details>
 
 ```php
 $data = [
@@ -247,6 +296,9 @@ Parameters:
 
 Expects any of cases from given list
 
+<details open>
+	<summary><code>#[Attributes()]</code></summary>
+
 ```php
 use Orisai\ObjectMapper\MappedObject;
 use Orisai\ObjectMapper\Rules\ArrayEnumValue;
@@ -254,34 +306,59 @@ use Orisai\ObjectMapper\Rules\ArrayEnumValue;
 final class ArrayEnumInput implements MappedObject
 {
 
-    public const Cases = [
-        'first' => 1,
-        'second' => 2,
-        'third' => 3,
-    ];
+	public const Cases = [
+		'first' => 1,
+		'second' => 2,
+		'third' => 3,
+	];
 
-    /**
-     * @ArrayEnumValue(ArrayEnumInput::Cases)
-     */
-    public int $field;
+	#[ArrayEnumValue(self::Cases)]
+	public int $field;
 
-    /**
-     * @ArrayEnumValue(cases=ArrayEnumInput::Cases, useKeys=true)
-     */
-    public string $usesKeysField;
+	#[ArrayEnumValue(cases: self::Cases, useKeys: true)]
+	public string $usesKeysField;
 
-    /**
-     * @ArrayEnumValue(cases={1, 2, 3})
-     */
-    public string $inlineField;
+	#[ArrayEnumValue(cases: [1, 2, 3])]
+	public string $inlineField;
 
-    /**
-     * @ArrayEnumValue(cases=ArrayEnumInput::Cases, allowUnknown=true)
-     */
-    public string $allowsUnknownField;
+	#[ArrayEnumValue(cases: self::Cases, allowUnknown: true)]
+	public string $allowsUnknownField;
 
 }
 ```
+</details>
+
+<details>
+	<summary><code>@Annotations()</code></summary>
+
+```php
+use Orisai\ObjectMapper\MappedObject;
+use Orisai\ObjectMapper\Rules\ArrayEnumValue;
+
+final class ArrayEnumInput implements MappedObject
+{
+
+	public const Cases = [
+		'first' => 1,
+		'second' => 2,
+		'third' => 3,
+	];
+
+	/** @ArrayEnumValue(ArrayEnumInput::Cases) */
+	public int $field;
+
+	/** @ArrayEnumValue(cases=ArrayEnumInput::Cases, useKeys=true) */
+	public string $usesKeysField;
+
+	/** @ArrayEnumValue(cases={1, 2, 3}) */
+	public string $inlineField;
+
+	/** @ArrayEnumValue(cases=ArrayEnumInput::Cases, allowUnknown=true) */
+	public string $allowsUnknownField;
+
+}
+```
+</details>
 
 ```php
 $data = [
@@ -312,6 +389,9 @@ Expects float or int
 
 - int is cast to float
 
+<details open>
+	<summary><code>#[Attributes()]</code></summary>
+
 ```php
 use Orisai\ObjectMapper\MappedObject;
 use Orisai\ObjectMapper\Rules\FloatValue;
@@ -319,17 +399,39 @@ use Orisai\ObjectMapper\Rules\FloatValue;
 final class FloatInput implements MappedObject
 {
 
-    /** @FloatValue() */
-    public float $field;
+	#[FloatValue()]
+	public float $field;
 
-    /**
-     * @var float<1.1, 100.1>
-     * @FloatValue(min=1.1, max=100.1, unsigned=false, castNumericString=true)
-     */
-    public float $anotherField;
+	/** @var float<1.1, 100.1> */
+	#[FloatValue(min: 1.1, max: 100.1, unsigned: false, castNumericString: true)]
+	public float $anotherField;
 
 }
 ```
+</details>
+
+<details>
+	<summary><code>@Annotations()</code></summary>
+
+```php
+use Orisai\ObjectMapper\MappedObject;
+use Orisai\ObjectMapper\Rules\FloatValue;
+
+final class FloatInput implements MappedObject
+{
+
+	/** @FloatValue() */
+	public float $field;
+
+	/**
+	 * @var float<1.1, 100.1>
+	 * @FloatValue(min=1.1, max=100.1, unsigned=false, castNumericString=true)
+	 */
+	public float $anotherField;
+
+}
+```
+</details>
 
 ```php
 $data = [
@@ -366,6 +468,9 @@ Expects an instance of specified class or interface
 
 - Use [object rule](#object-rule) to accept any object
 
+<details open>
+	<summary><code>#[Attributes()]</code></summary>
+
 ```php
 use Orisai\ObjectMapper\MappedObject;
 use Orisai\ObjectMapper\Rules\InstanceOfValue;
@@ -374,11 +479,30 @@ use stdClass;
 final class InstanceofInput implements MappedObject
 {
 
-    /** @InstanceOfValue(stdClass::class) */
-    public stdClass $field;
+	#[InstanceOfValue(stdClass::class)]
+	public stdClass $field;
 
 }
 ```
+</details>
+
+<details>
+	<summary><code>@Annotations()</code></summary>
+
+```php
+use Orisai\ObjectMapper\MappedObject;
+use Orisai\ObjectMapper\Rules\InstanceOfValue;
+use stdClass;
+
+final class InstanceofInput implements MappedObject
+{
+
+	/** @InstanceOfValue(stdClass::class) */
+	public stdClass $field;
+
+}
+```
+</details>
 
 ```php
 $data = [
@@ -399,6 +523,9 @@ Parameters:
 
 Expects int
 
+<details open>
+	<summary><code>#[Attributes()]</code></summary>
+
 ```php
 use Orisai\ObjectMapper\MappedObject;
 use Orisai\ObjectMapper\Rules\IntValue;
@@ -406,17 +533,39 @@ use Orisai\ObjectMapper\Rules\IntValue;
 final class IntInput implements MappedObject
 {
 
-    /** @IntValue() */
-    public int $field;
+ 	#[IntValue()]
+ 	public int $field;
 
-    /**
-     * @var int<1, 100>
-     * @IntValue(min=1, max=100, unsigned=false, castNumericString=true)
-     */
-    public int $anotherField;
+	/** @var int<1, 100> */
+	#[IntValue(min: 1, max: 100, unsigned: false, castNumericString: true)]
+	public int $anotherField;
 
 }
 ```
+</details>
+
+<details>
+	<summary><code>@Annotations()</code></summary>
+
+```php
+use Orisai\ObjectMapper\MappedObject;
+use Orisai\ObjectMapper\Rules\IntValue;
+
+final class IntInput implements MappedObject
+{
+
+	/** @IntValue() */
+	public int $field;
+
+	/**
+	 * @var int<1, 100>
+	 * @IntValue(min=1, max=100, unsigned=false, castNumericString=true)
+	 */
+	public int $anotherField;
+
+}
+```
+</details>
 
 ```php
 $data = [
@@ -451,6 +600,9 @@ Parameters:
 
 Expects any value
 
+<details open>
+	<summary><code>#[Attributes()]</code></summary>
+
 ```php
 use Orisai\ObjectMapper\MappedObject;
 use Orisai\ObjectMapper\Rules\MixedValue;
@@ -458,14 +610,32 @@ use Orisai\ObjectMapper\Rules\MixedValue;
 final class MixedInput implements MappedObject
 {
 
-    /**
-     * @var mixed
-     * @MixedValue()
-     */
-    public $field;
+	#[MixedValue()]
+	public mixed $field;
 
 }
 ```
+</details>
+
+<details>
+	<summary><code>@Annotations()</code></summary>
+
+```php
+use Orisai\ObjectMapper\MappedObject;
+use Orisai\ObjectMapper\Rules\MixedValue;
+
+final class MixedInput implements MappedObject
+{
+
+	/**
+	 * @var mixed
+	 * @MixedValue()
+	 */
+	public $field;
+
+}
+```
+</details>
 
 ```php
 $data = [
@@ -483,6 +653,9 @@ Parameters:
 
 Expects null
 
+<details open>
+	<summary><code>#[Attributes()]</code></summary>
+
 ```php
 use Orisai\ObjectMapper\MappedObject;
 use Orisai\ObjectMapper\Rules\NullValue;
@@ -490,20 +663,41 @@ use Orisai\ObjectMapper\Rules\NullValue;
 final class NullInput implements MappedObject
 {
 
-    /**
-     * @var null
-     * @NullValue()
-     */
-    public $field;
+	#[NullValue()]
+	public null $field;
 
-    /**
-     * @var null
-     * @NullValue(castEmptyString=true)
-     */
-    public $anotherField;
+	#[NullValue(castEmptyString: true)]
+	public null $anotherField;
 
 }
 ```
+</details>
+
+<details>
+	<summary><code>@Annotations()</code></summary>
+
+```php
+use Orisai\ObjectMapper\MappedObject;
+use Orisai\ObjectMapper\Rules\NullValue;
+
+final class NullInput implements MappedObject
+{
+
+	/**
+	 * @var null
+	 * @NullValue()
+	 */
+	public $field;
+
+	/**
+	 * @var null
+	 * @NullValue(castEmptyString=true)
+	 */
+	public $anotherField;
+
+}
+```
+</details>
 
 ```php
 $data = [
@@ -524,6 +718,31 @@ Parameters:
 
 When we use `string|null` it may be useful to typecast empty string to null:
 
+<details open>
+	<summary><code>#[Attributes()]</code></summary>
+
+```php
+use Orisai\ObjectMapper\Rules\AnyOf;
+use Orisai\ObjectMapper\Rules\NullValue;
+use Orisai\ObjectMapper\Rules\StringValue;
+use Orisai\ObjectMapper\MappedObject;
+
+final class NullInput implements MappedObject
+{
+
+    #[AnyOf([
+        new StringValue(notEmpty: true),
+        new NullValue(castEmptyString: true),
+    ])]
+    public string|null $field;
+
+}
+```
+</details>
+
+<details>
+	<summary><code>@Annotations()</code></summary>
+
 ```php
 use Orisai\ObjectMapper\Rules\AnyOf;
 use Orisai\ObjectMapper\Rules\NullValue;
@@ -543,6 +762,7 @@ final class NullInput implements MappedObject
 
 }
 ```
+</details>
 
 ```php
 $data = [
@@ -558,6 +778,9 @@ Expects any object
 
 - Use [instanceof rule](#instanceof-rule) to accept instance of specific type
 
+<details open>
+	<summary><code>#[Attributes()]</code></summary>
+
 ```php
 use Orisai\ObjectMapper\MappedObject;
 use Orisai\ObjectMapper\Rules\ObjectValue;
@@ -565,11 +788,29 @@ use Orisai\ObjectMapper\Rules\ObjectValue;
 final class ObjectInput implements MappedObject
 {
 
-    /** @ObjectValue() */
-    public object $field;
+	#[ObjectValue()]
+	public object $field;
 
 }
 ```
+</details>
+
+<details>
+	<summary><code>@Annotations()</code></summary>
+
+```php
+use Orisai\ObjectMapper\MappedObject;
+use Orisai\ObjectMapper\Rules\ObjectValue;
+
+final class ObjectInput implements MappedObject
+{
+
+	/** @ObjectValue() */
+	public object $field;
+
+}
+```
+</details>
 
 ```php
 $data = [
@@ -587,6 +828,9 @@ Parameters:
 
 Expects any scalar value - int|float|string|bool
 
+<details open>
+	<summary><code>#[Attributes()]</code></summary>
+
 ```php
 use Orisai\ObjectMapper\MappedObject;
 use Orisai\ObjectMapper\Rules\ScalarValue;
@@ -594,14 +838,32 @@ use Orisai\ObjectMapper\Rules\ScalarValue;
 final class ScalarInput implements MappedObject
 {
 
-    /**
-     * @var int|float|string|bool
-     * @ScalarValue()
-     */
-    public $field;
+	#[ScalarValue()]
+	public int|float|string|bool $field;
 
 }
 ```
+</details>
+
+<details>
+	<summary><code>@Annotations()</code></summary>
+
+```php
+use Orisai\ObjectMapper\MappedObject;
+use Orisai\ObjectMapper\Rules\ScalarValue;
+
+final class ScalarInput implements MappedObject
+{
+
+	/**
+	 * @var int|float|string|bool
+	 * @ScalarValue()
+	 */
+	public $field;
+
+}
+```
+</details>
 
 ```php
 $data = [
@@ -619,6 +881,9 @@ Parameters:
 
 Expects string
 
+<details open>
+	<summary><code>#[Attributes()]</code></summary>
+
 ```php
 use Orisai\ObjectMapper\MappedObject;
 use Orisai\ObjectMapper\Rules\StringValue;
@@ -626,17 +891,39 @@ use Orisai\ObjectMapper\Rules\StringValue;
 final class StringInput implements MappedObject
 {
 
-    /** @StringValue() */
-    public string $field;
+	#[StringValue()]
+	public string $field;
 
-    /**
-     * @var non-empty-string
-     * @StringValue(minLength=1, maxLength=100, notEmpty=true, pattern="/^abc/")
-     */
-    public string $anotherField;
+	/** @var non-empty-string */
+	#[StringValue(minLength: 1, maxLength: 100, notEmpty: true, pattern: '/^abc/')]
+	public string $anotherField;
 
 }
 ```
+</details>
+
+<details>
+	<summary><code>@Annotations()</code></summary>
+
+```php
+use Orisai\ObjectMapper\MappedObject;
+use Orisai\ObjectMapper\Rules\StringValue;
+
+final class StringInput implements MappedObject
+{
+
+	/** @StringValue() */
+	public string $field;
+
+	/**
+	 * @var non-empty-string
+	 * @StringValue(minLength=1, maxLength=100, notEmpty=true, pattern="/^abc/")
+	 */
+	public string $anotherField;
+
+}
+```
+</details>
 
 ```php
 $data = [
@@ -677,6 +964,9 @@ Expects all rules to match
 - Output value of each rule is input value of the next rule
 - Acts as `&&` operator
 
+<details open>
+	<summary><code>#[Attributes()]</code></summary>
+
 ```php
 use Orisai\ObjectMapper\MappedObject;
 use Orisai\ObjectMapper\Rules\AllOf;
@@ -686,16 +976,39 @@ use Orisai\ObjectMapper\Rules\UrlValue;
 final class AllOfInput implements MappedObject
 {
 
-    /**
-     * @AllOf({
-     *      @Url(),
-     *      @StringValue(maxLength=20),
-     * })
-     */
-    public string $field;
+	#[AllOf([
+		new UrlValue(),
+		new StringValue(maxLength: 20),
+	])]
+	public string $field;
 
 }
 ```
+</details>
+
+<details>
+	<summary><code>@Annotations()</code></summary>
+
+```php
+use Orisai\ObjectMapper\MappedObject;
+use Orisai\ObjectMapper\Rules\AllOf;
+use Orisai\ObjectMapper\Rules\StringValue;
+use Orisai\ObjectMapper\Rules\UrlValue;
+
+final class AllOfInput implements MappedObject
+{
+
+	/**
+	 * @AllOf({
+	 *     @UrlValue(),
+	 *     @StringValue(maxLength=20),
+	 * })
+	 */
+	public string $field;
+
+}
+```
+</details>
 
 ```php
 $input = $processor->process(['field' => 'https://example.com'], AllOfInput::class);
@@ -716,6 +1029,9 @@ Expects any of rules to match
 - Result of first rule which match is used, other rules are skipped
 - Acts as `||` operator
 
+<details open>
+	<summary><code>#[Attributes()]</code></summary>
+
 ```php
 use Orisai\ObjectMapper\MappedObject;
 use Orisai\ObjectMapper\Rules\AnyOf;
@@ -726,18 +1042,43 @@ use Orisai\ObjectMapper\Rules\StringValue;
 final class AnyOfInput implements MappedObject
 {
 
-    /**
-     * @var string|int|null
-     * @AnyOf({
-     *      @StringValue(),
-     *      @IntValue(),
-     *      @NullValue(),
-     * })
-     */
-    public $field;
+	#[AnyOf([
+			new StringValue(),
+		new IntValue(),
+		new NullValue(),
+	])]
+	public string|int|null $field;
 
 }
 ```
+</details>
+
+<details>
+	<summary><code>@Annotations()</code></summary>
+
+```php
+use Orisai\ObjectMapper\MappedObject;
+use Orisai\ObjectMapper\Rules\AnyOf;
+use Orisai\ObjectMapper\Rules\IntValue;
+use Orisai\ObjectMapper\Rules\NullValue;
+use Orisai\ObjectMapper\Rules\StringValue;
+
+final class AnyOfInput implements MappedObject
+{
+
+	/**
+	 * @var string|int|null
+	 * @AnyOf({
+	 *     @StringValue(),
+	 *     @IntValue(),
+	 *     @NullValue(),
+	 * })
+	 */
+	public $field;
+
+}
+```
+</details>
 
 ```php
 $input = $processor->process(['field' => 'string'], AnyOfInput::class);
@@ -758,6 +1099,9 @@ Parameters:
 
 Expects array
 
+<details open>
+	<summary><code>#[Attributes()]</code></summary>
+
 ```php
 use Orisai\ObjectMapper\MappedObject;
 use Orisai\ObjectMapper\Rules\ArrayOf;
@@ -768,28 +1112,60 @@ use Orisai\ObjectMapper\Rules\StringValue;
 final class ArrayOfInput implements MappedObject
 {
 
-    /**
-     * @var array<mixed>
-     * @ArrayOf(
-     *      @MixedValue()
-     * )
-     */
-    public array $field;
+	/** @var array<mixed> */
+	#[ArrayOf(new MixedValue())]
+	public array $field;
 
-    /**
-     * @var non-empty-array<string, int>
-     * @ArrayOf(
-     *      item=@IntValue(),
-     *      key=@StringValue(),
-     *      minItems=1,
-     *      maxItems=100,
-     *      mergeDefaults=true,
-     * )
-     */
-    public array $anotherField = ['key1' => 1, 'key2' => 999];
+	/** @var non-empty-array<string, int> */
+	#[ArrayOf(
+		item: new IntValue(),
+		key: new StringValue(),
+		minItems: 1,
+		maxItems: 100,
+		mergeDefaults: true,
+	)]
+	public array $anotherField = ['key1' => 1, 'key2' => 999];
 
 }
 ```
+</details>
+
+<details>
+	<summary><code>@Annotations()</code></summary>
+
+```php
+use Orisai\ObjectMapper\MappedObject;
+use Orisai\ObjectMapper\Rules\ArrayOf;
+use Orisai\ObjectMapper\Rules\IntValue;
+use Orisai\ObjectMapper\Rules\MixedValue;
+use Orisai\ObjectMapper\Rules\StringValue;
+
+final class ArrayOfInput implements MappedObject
+{
+
+	/**
+	 * @var array<mixed>
+	 * @ArrayOf(
+	 *     @MixedValue()
+	 * )
+	 */
+	public array $field;
+
+	/**
+	 * @var non-empty-array<string, int>
+	 * @ArrayOf(
+	 *     item=@IntValue(),
+	 *     key=@StringValue(),
+	 *     minItems=1,
+	 *     maxItems=100,
+	 *     mergeDefaults=true,
+	 * )
+	 */
+	public array $anotherField = ['key1' => 1, 'key2' => 999];
+
+}
+```
+</details>
 
 ```php
 $data = [
@@ -828,6 +1204,9 @@ Expects list
 
 - All keys must be incremental integers
 
+<details open>
+	<summary><code>#[Attributes()]</code></summary>
+
 ```php
 use Orisai\ObjectMapper\MappedObject;
 use Orisai\ObjectMapper\Rules\ListOf;
@@ -837,27 +1216,57 @@ use Orisai\ObjectMapper\Rules\MixedValue;
 final class ListOfInput implements MappedObject
 {
 
-    /**
-     * @var list<int, mixed>
-     * @ListOf(
-     *      @MixedValue(),
-     * )
-     */
-    public array $field;
+	/** @var list<int, mixed> */
+	#[ListOf(new MixedValue())]
+	public array $field;
 
-    /**
-     * @var non-empty-list<string>
-     * @ListOf(
-     *      item=@StringValue(),
-     *      minItems=1,
-     *      maxItems=100,
-     *      mergeDefaults=true,
-     * )
-     */
-    public array $anotherField = ['default'];
+	/** @var non-empty-list<string> */
+	#[ListOf(
+		item: new StringValue(),
+		minItems: 1,
+		maxItems: 100,
+		mergeDefaults: true,
+	)]
+	public array $anotherField = ['default'];
 
 }
 ```
+</details>
+
+<details>
+	<summary><code>@Annotations()</code></summary>
+
+```php
+use Orisai\ObjectMapper\MappedObject;
+use Orisai\ObjectMapper\Rules\ListOf;
+use Orisai\ObjectMapper\Rules\StringValue;
+use Orisai\ObjectMapper\Rules\MixedValue;
+
+final class ListOfInput implements MappedObject
+{
+
+	/**
+	 * @var list<int, mixed>
+	 * @ListOf(
+	 *     @MixedValue(),
+	 * )
+	 */
+	public array $field;
+
+	/**
+	 * @var non-empty-list<string>
+	 * @ListOf(
+	 *     item=@StringValue(),
+	 *     minItems=1,
+	 *     maxItems=100,
+	 *     mergeDefaults=true,
+	 * )
+	 */
+	public array $anotherField = ['default'];
+
+}
+```
+</details>
 
 ```php
 $data = [
@@ -891,6 +1300,32 @@ Parameters:
 
 Expects an array with predefined keys
 
+<details open>
+	<summary><code>#[Attributes()]</code></summary>
+
+```php
+use Orisai\ObjectMapper\MappedObject;
+use Orisai\ObjectMapper\Rules\ArrayShape;
+use Orisai\ObjectMapper\Rules\IntValue;
+use Orisai\ObjectMapper\Rules\StringValue;
+
+final class ArrayShapeInput implements MappedObject
+{
+
+	/** @var array{key: string, 123: int} */
+	#[ArrayShape([
+		'key' => new StringValue(),
+		123 => new IntValue(),
+	])]
+	public array $field;
+
+}
+```
+</details>
+
+<details>
+	<summary><code>@Annotations()</code></summary>
+
 ```php
 use Orisai\ObjectMapper\MappedObject;
 use Orisai\ObjectMapper\Rules\ArrayShape;
@@ -911,6 +1346,7 @@ final class ArrayShapeInput implements MappedObject
 
 }
 ```
+</details>
 
 ```php
 $data = [
@@ -1006,6 +1442,9 @@ Expects datetime as a string or int
 
 - Returns instance of `DateTimeInterface`
 
+<details open>
+	<summary><code>#[Attributes()]</code></summary>
+
 ```php
 use DateTime;
 use DateTimeImmutable;
@@ -1015,14 +1454,37 @@ use Orisai\ObjectMapper\Rules\DateTimeValue;
 final class DateTimeInput implements MappedObject
 {
 
-    /** @DateTimeValue() */
-    public DateTimeImmutable $field;
+	#[DateTimeValue()]
+	public DateTimeImmutable $field;
 
-    /** @DateTimeValue(class=DateTime::class, format="timestamp") */
-    public DateTime $anotherField;
+	#[DateTimeValue(class: DateTime::class, format: 'timestamp')]
+	public DateTime $anotherField;
 
 }
 ```
+</details>
+
+<details>
+	<summary><code>@Annotations()</code></summary>
+
+```php
+use DateTime;
+use DateTimeImmutable;
+use Orisai\ObjectMapper\MappedObject;
+use Orisai\ObjectMapper\Rules\DateTimeValue;
+
+final class DateTimeInput implements MappedObject
+{
+
+	/** @DateTimeValue() */
+	public DateTimeImmutable $field;
+
+	/** @DateTimeValue(class=DateTime::class, format="timestamp") */
+	public DateTime $anotherField;
+
+}
+```
+</details>
 
 ```php
 $data = [
@@ -1057,6 +1519,9 @@ Expects `array` with structure defined by a mapped object
 - Objects with all fields being optional are initialized even when no value is sent
   (check [default values](#optional-fields-and-default-values) for further explanation)
 
+<details open>
+	<summary><code>#[Attributes()]</code></summary>
+
 ```php
 use Orisai\ObjectMapper\MappedObject;
 use Orisai\ObjectMapper\Rules\MappedObjectValue;
@@ -1065,21 +1530,46 @@ use Orisai\ObjectMapper\Rules\StringValue;
 final class MappedObjectInput implements MappedObject
 {
 
-    /** @MappedObjectValue(InnerInput::class) */
-    public InnerInput $field;
+	#[MappedObjectValue(InnerInput::class)]
+	public InnerInput $field;
 
 }
 
 class InnerInput implements MappedObject
 {
 
-    /**
-     * @StringValue()
-     */
-    public string $innerField;
+	#[StringValue()]
+	public string $innerField;
 
 }
 ```
+</details>
+
+<details>
+	<summary><code>@Annotations()</code></summary>
+
+```php
+use Orisai\ObjectMapper\MappedObject;
+use Orisai\ObjectMapper\Rules\MappedObjectValue;
+use Orisai\ObjectMapper\Rules\StringValue;
+
+final class MappedObjectInput implements MappedObject
+{
+
+	/** @MappedObjectValue(InnerInput::class) */
+	public InnerInput $field;
+
+}
+
+class InnerInput implements MappedObject
+{
+
+	/** @StringValue() */
+	public string $innerField;
+
+}
+```
+</details>
 
 ```php
 $data = [
@@ -1113,6 +1603,9 @@ $ruleManager->addRule(new CustomRule());
 
 Each field can be made optional by assigning default value to property:
 
+<details open>
+	<summary><code>#[Attributes()]</code></summary>
+
 ```php
 use Orisai\ObjectMapper\MappedObject;
 use Orisai\ObjectMapper\Rules\StringValue;
@@ -1120,14 +1613,35 @@ use Orisai\ObjectMapper\Rules\StringValue;
 final class OptionalInput implements MappedObject
 {
 
-    /** @StringValue() */
-    public string $field = 'default value';
+	#[StringValue()]
+	public string $field = 'default value';
 
 }
 ```
+</details>
+
+<details>
+	<summary><code>@Annotations()</code></summary>
+
+```php
+use Orisai\ObjectMapper\MappedObject;
+use Orisai\ObjectMapper\Rules\StringValue;
+
+final class OptionalInput implements MappedObject
+{
+
+	/** @StringValue() */
+	public string $field = 'default value';
+
+}
+```
+</details>
 
 Default values are *never validated by rules* and will not appear in validation errors. We may then assign defaults
 which are impossible to send:
+
+<details open>
+	<summary><code>#[Attributes()]</code></summary>
 
 ```php
 use Orisai\ObjectMapper\MappedObject;
@@ -1136,14 +1650,35 @@ use Orisai\ObjectMapper\Rules\StringValue;
 final class AnotherOptionalInput implements MappedObject
 {
 
-    /** @StringValue() */
-    public ?string $field = null;
+	#[StringValue()]
+	public ?string $field = null;
 
 }
 ```
+</details>
+
+<details>
+	<summary><code>@Annotations()</code></summary>
+
+```php
+use Orisai\ObjectMapper\MappedObject;
+use Orisai\ObjectMapper\Rules\StringValue;
+
+final class AnotherOptionalInput implements MappedObject
+{
+
+	/** @StringValue() */
+	public ?string $field = null;
+
+}
+```
+</details>
 
 Properties without type are null by default in PHP and object mapper can't make difference between implicit and explicit
 null on untyped property. To assign null default value to untyped property, use `@DefaultValue()` annotation.
+
+While this is possible with attributes, it is completely unnecessary, since both attributes and `mixed` keyword are
+available since PHP 8.0.
 
 ```php
 use Orisai\ObjectMapper\MappedObject;
@@ -1177,8 +1712,8 @@ final class NullableVariantsInput implements MappedObject
      * OPTIONAL - typed with null default value
      *
      * @AnyOf({
-     *      @StringValue(),
-     *      @NullValue(),
+     *     @StringValue(),
+     *     @NullValue(),
      * })
      */
     public ?string $optionalTypedWithNullDefault = null;
@@ -1193,7 +1728,7 @@ final class NullableVariantsInput implements MappedObject
 
     /**
      * REQUIRED - untyped with null default value
-     *          - Identical with $requiredWithImplicitNullDefault - we can't check difference
+     *         - Identical with $requiredWithImplicitNullDefault - we can't check difference
      *
      * @var mixed
      * @MixedValue()
@@ -1203,8 +1738,8 @@ final class NullableVariantsInput implements MappedObject
 }
 ```
 
-Read-only properties may use `#[DefaultValue]` modifier to make field optional (PHP does not allow default value for
-read-only properties)
+Read-only properties and properties inside read-only classes may use `#[DefaultValue]` modifier to make field optional
+(PHP does not allow default value for read-only properties)
 
 ```php
 use Orisai\ObjectMapper\MappedObject;
@@ -1217,6 +1752,35 @@ final class ReadonlyOptionalInput implements MappedObject
 	#[DefaultValue('default value')]
 	#[StringValue]
 	public readonly string $field;
+
+}
+```
+
+Attribute `#[DefaultValue]` is also useful for defining optional inner [mapped object](#mappedobject-rule) instead of
+making all fields of the inner mapped object optional.
+
+Note that if you want to map inner object from the data, you still have to send all fields that are not defined as
+optional by the object.
+
+```php
+use Orisai\ObjectMapper\MappedObject;
+use Orisai\ObjectMapper\Rules\MappedObjectValue;
+use Orisai\ObjectMapper\Rules\StringValue;
+
+final class InnerObjectWithDefaultInput implements MappedObject
+{
+
+	#[DefaultValue(new ExampleInput(field: 'default'))]
+	#[MappedObjectValue(ExampleInput::class)]
+	public ExampleInput $inner;
+
+}
+
+final class ExampleInput implements MappedObject
+{
+
+	#[StringValue()]
+	public string $field;
 
 }
 ```
@@ -1277,6 +1841,54 @@ and `name` and second requires only `id`, then the one with more fields (`id`, `
 If the object with `id` only was defined first, and we send `id` and `name`, when unknown fields are allowed,
 then `name` would be treated as an unknown field and object with `id` only would be created.
 
+<details open>
+	<summary><code>#[Attributes()]</code></summary>
+
+```php
+use Orisai\ObjectMapper\Rules\AnyOf;
+use Orisai\ObjectMapper\Rules\IntValue;
+use Orisai\ObjectMapper\Rules\MappedObjectValue;
+use Orisai\ObjectMapper\Rules\StringValue;
+use Orisai\ObjectMapper\MappedObject;
+
+final class MainInput implements MappedObject
+{
+
+	#[AnyOf([
+		new MappedObjectValue(FullInput::class),
+		new MappedObjectValue(IdOnlyInput::class),
+	])]
+	public FullInput|IdOnlyInput $ambiguous;
+
+}
+
+final class FullInput implements MappedObject
+{
+
+	/** @var int<0, max> */
+	#[IntValue(min: 0)]
+	public int $id;
+
+	/** @var non-empty-string */
+	#[StringValue(notEmpty: true)]
+	public string $name;
+
+}
+
+final class IdOnlyInput implements MappedObject
+{
+
+	/** @var int<0, max> */
+	#[IntValue(min: 0)]
+	public int $id;
+
+}
+```
+</details>
+
+<details>
+	<summary><code>@Annotations()</code></summary>
+
 ```php
 use Orisai\ObjectMapper\Rules\AnyOf;
 use Orisai\ObjectMapper\Rules\IntValue;
@@ -1301,7 +1913,10 @@ final class MainInput implements MappedObject
 final class FullInput implements MappedObject
 {
 
-	/** @IntValue(min=0) */
+	/**
+	 * @var int<0, max>
+	 * @IntValue(min=0)
+	 */
 	public int $id;
 
 	/**
@@ -1315,11 +1930,15 @@ final class FullInput implements MappedObject
 final class IdOnlyInput implements MappedObject
 {
 
-	/** @IntValue(min=0) */
+	/**
+	 * @var int<0, max>
+	 * @IntValue(min=0)
+	 */
 	public int $id;
 
 }
 ```
+</details>
 
 ## Mapped properties
 
@@ -1334,6 +1953,9 @@ Any visibility (public/protected/private) is allowed
 
 Keys from input data (fields) are mapped to object properties of the same name, like shown in following example:
 
+<details open>
+	<summary><code>#[Attributes()]</code></summary>
+
 ```php
 use Orisai\ObjectMapper\MappedObject;
 use Orisai\ObjectMapper\Rules\MixedValue;
@@ -1341,14 +1963,32 @@ use Orisai\ObjectMapper\Rules\MixedValue;
 final class DefaultMappingInput implements MappedObject
 {
 
-    /**
-     * @var mixed
-     * @MixedValue()
-     */
-    public $field;
+	#[MixedValue()]
+	public mixed $field;
 
 }
 ```
+</details>
+
+<details>
+	<summary><code>@Annotations()</code></summary>
+
+```php
+use Orisai\ObjectMapper\MappedObject;
+use Orisai\ObjectMapper\Rules\MixedValue;
+
+final class DefaultMappingInput implements MappedObject
+{
+
+	/**
+	 * @var mixed
+	 * @MixedValue()
+	 */
+	public $field;
+
+}
+```
+</details>
 
 ```php
 $data = [
@@ -1360,6 +2000,9 @@ $input = $processor->process($data, DefaultMappingInput::class);
 
 We may change that by defining field name for property:
 
+<details open>
+	<summary><code>#[Attributes()]</code></summary>
+
 ```php
 use Orisai\ObjectMapper\MappedObject;
 use Orisai\ObjectMapper\Modifiers\FieldName;
@@ -1368,15 +2011,35 @@ use Orisai\ObjectMapper\Rules\MixedValue;
 final class CustomMappingInput implements MappedObject
 {
 
-    /**
-     * @var mixed
-     * @MixedValue()
-     * @FieldName("customFieldName")
-     */
-    public $property;
+	#[FieldName('customFieldName')]
+	#[MixedValue()]
+	public mixed $property;
 
 }
 ```
+</details>
+
+<details>
+	<summary><code>@Annotations()</code></summary>
+
+```php
+use Orisai\ObjectMapper\MappedObject;
+use Orisai\ObjectMapper\Modifiers\FieldName;
+use Orisai\ObjectMapper\Rules\MixedValue;
+
+final class CustomMappingInput implements MappedObject
+{
+
+	/**
+	 * @var mixed
+	 * @MixedValue()
+	 * @FieldName("customFieldName")
+	 */
+	public $property;
+
+}
+```
+</details>
 
 We then have to send key from `@FieldName` instead of property name:
 
@@ -1396,6 +2059,9 @@ require no fields at all.
 Following mapped object has one required and one optional field (
 see [default values](#optional-fields-and-default-values)). By default, you have to send only required field:
 
+<details open>
+	<summary><code>#[Attributes()]</code></summary>
+
 ```php
 use Orisai\ObjectMapper\MappedObject;
 use Orisai\ObjectMapper\Rules\BoolValue;
@@ -1403,14 +2069,35 @@ use Orisai\ObjectMapper\Rules\BoolValue;
 final class ModesExampleInput implements MappedObject
 {
 
-    /** @BoolValue() */
-    public bool $required;
+	#[BoolValue()]
+	public bool $required;
 
-    /** @BoolValue() */
-    public bool $optional = true;
+	#[BoolValue()]
+	public bool $optional = true;
 
 }
 ```
+</details>
+
+<details>
+	<summary><code>@Annotations()</code></summary>
+
+```php
+use Orisai\ObjectMapper\MappedObject;
+use Orisai\ObjectMapper\Rules\BoolValue;
+
+final class ModesExampleInput implements MappedObject
+{
+
+	/** @BoolValue() */
+	public bool $required;
+
+	/** @BoolValue() */
+	public bool $optional = true;
+
+}
+```
+</details>
 
 ```php
 $data = [
@@ -1474,6 +2161,34 @@ $input->optional; // Error, property is not set
 
 Define callbacks before and after mapped objects and their fields:
 
+<details open>
+	<summary><code>#[Attributes()]</code></summary>
+
+```php
+use Orisai\ObjectMapper\Callbacks\After;
+use Orisai\ObjectMapper\Context\FieldContext;
+use Orisai\ObjectMapper\MappedObject;
+use Orisai\ObjectMapper\Rules\StringValue;
+
+final class WithCallbackInput implements MappedObject
+{
+
+	#[After('afterField')]
+	#[StringValue()]
+	public string $field;
+
+	private static function afterField(string $value, FieldContext $context): string
+	{
+		return $value;
+	}
+
+}
+```
+</details>
+
+<details>
+	<summary><code>@Annotations()</code></summary>
+
 ```php
 use Orisai\ObjectMapper\Callbacks\After;
 use Orisai\ObjectMapper\Context\FieldContext;
@@ -1484,7 +2199,7 @@ final class WithCallbackInput implements MappedObject
 {
 
 	/**
-     * @StringValue()
+	 * @StringValue()
 	 * @After("afterField")
 	 */
 	public string $field;
@@ -1496,6 +2211,7 @@ final class WithCallbackInput implements MappedObject
 
 }
 ```
+</details>
 
 **Never** write to mapped object properties directly in callbacks. Object mapper writes to all properties after all
 callbacks are called and overwrites any of set values.
@@ -1526,6 +2242,41 @@ After mapped object
 - allowed return types - `array`, `void`, `never`
 - [default values](#optional-fields-and-default-values) of fields are available
 
+<details open>
+	<summary><code>#[Attributes()]</code></summary>
+
+```php
+use Orisai\ObjectMapper\Callbacks\Before;
+use Orisai\ObjectMapper\Callbacks\After;
+use Orisai\ObjectMapper\Context\MappedObjectContext;
+use Orisai\ObjectMapper\MappedObject;
+
+#[Before('beforeObject')]
+#[After('afterObject')]
+final class WithMappedObjectCallbacksInput implements MappedObject
+{
+
+	private static function beforeObject(mixed $value, MappedObjectContext $context): myInterface
+	{
+		return $value;
+	}
+
+	/**
+	 * @param array<int|string, mixed> $value
+	 * @return array<int|string, mixed>
+	 */
+	private static function afterObject(array $value, MappedObjectContext $context): array
+	{
+		return $value;
+	}
+
+}
+```
+</details>
+
+<details>
+	<summary><code>@Annotations()</code></summary>
+
 ```php
 use Orisai\ObjectMapper\Callbacks\Before;
 use Orisai\ObjectMapper\Callbacks\After;
@@ -1540,18 +2291,18 @@ final class WithMappedObjectCallbacksInput implements MappedObject
 {
 
 	/**
-     * @param mixed $value
-     * @return mixed
-     */
+	 * @param mixed $value
+	 * @return mixed
+	 */
 	private static function beforeObject($value, MappedObjectContext $context)
 	{
 		return $value;
 	}
 
 	/**
-     * @param array<int|string, mixed> $value
-     * @return array<int|string, mixed>
-     */
+	 * @param array<int|string, mixed> $value
+	 * @return array<int|string, mixed>
+	 */
 	private static function afterObject(array $value, MappedObjectContext $context): array
 	{
 		return $value;
@@ -1559,6 +2310,7 @@ final class WithMappedObjectCallbacksInput implements MappedObject
 
 }
 ```
+</details>
 
 ### Field callbacks
 
@@ -1578,6 +2330,41 @@ After field
 - allowed value types - any - should be compatible with value returned by rule
 - allowed return types - any - should be compatible with property type
 
+<details open>
+	<summary><code>#[Attributes()]</code></summary>
+
+```php
+use Orisai\ObjectMapper\Callbacks\Before;
+use Orisai\ObjectMapper\Callbacks\After;
+use Orisai\ObjectMapper\Context\FieldContext;
+use Orisai\ObjectMapper\MappedObject;
+use Orisai\ObjectMapper\Rules\StringValue;
+
+final class WithFieldCallbacksInput implements MappedObject
+{
+
+	#[Before('beforeField')]
+	#[After('afterField')]
+	#[StringValue()]
+	public string $field;
+
+	private static function beforeField(mixed $value, FieldContext $context): mixed
+	{
+		return $value;
+	}
+
+	private static function afterField(string $value, FieldContext $context): string
+	{
+		return $value;
+	}
+
+}
+```
+</details>
+
+<details>
+	<summary><code>@Annotations()</code></summary>
+
 ```php
 use Orisai\ObjectMapper\Callbacks\Before;
 use Orisai\ObjectMapper\Callbacks\After;
@@ -1590,15 +2377,15 @@ final class WithFieldCallbacksInput implements MappedObject
 
 	/**
 	 * @Before("beforeField")
-     * @StringValue()
 	 * @After("afterField")
+	 * @StringValue()
 	 */
 	public string $field;
 
 	/**
-     * @param mixed $value
-     * @return mixed
-     */
+	 * @param mixed $value
+	 * @return mixed
+	 */
 	private static function beforeField($value, FieldContext $context)
 	{
 		return $value;
@@ -1611,6 +2398,7 @@ final class WithFieldCallbacksInput implements MappedObject
 
 }
 ```
+</details>
 
 Field callbacks are called only when field is sent. Callback is not invoked for default value.
 
@@ -1648,6 +2436,33 @@ $input = $processor->process(['field' => 'new value'], WithNotInvokedCallbackInp
 
 Callbacks are by default expected to return a value:
 
+<details open>
+	<summary><code>#[Attributes()]</code></summary>
+
+```php
+use Orisai\ObjectMapper\Callbacks\After;
+use Orisai\ObjectMapper\MappedObject;
+use Orisai\ObjectMapper\Rules\MixedValue;
+
+final class WithReturningCallbackInput implements MappedObject
+{
+
+	#[After('afterField')]
+	#[MixedValue()]
+	public mixed $field;
+
+	private static function afterField(mixed $value): mixed
+	{
+		return $value;
+	}
+
+}
+```
+</details>
+
+<details>
+	<summary><code>@Annotations()</code></summary>
+
 ```php
 use Orisai\ObjectMapper\Callbacks\After;
 use Orisai\ObjectMapper\MappedObject;
@@ -1657,16 +2472,16 @@ final class WithReturningCallbackInput implements MappedObject
 {
 
 	/**
-     * @var mixed
-     * @MixedValue()
-     * @After("afterField")
-     */
+	 * @var mixed
+	 * @MixedValue()
+	 * @After("afterField")
+	 */
 	public $field;
 
 	/**
-     * @param mixed $value
-     * @return mixed
-     */
+	 * @param mixed $value
+	 * @return mixed
+	 */
 	private static function afterField($value)
 	{
 		return $value;
@@ -1674,8 +2489,38 @@ final class WithReturningCallbackInput implements MappedObject
 
 }
 ```
+</details>
 
 We may change that by defining `void` or `never` return type:
+
+<details open>
+	<summary><code>#[Attributes()]</code></summary>
+
+```php
+use Orisai\ObjectMapper\Callbacks\After;
+use Orisai\ObjectMapper\Exception\ValueDoesNotMatch;
+use Orisai\ObjectMapper\MappedObject;
+use Orisai\ObjectMapper\Processing\Value;
+use Orisai\ObjectMapper\Rules\StringValue;
+
+final class WithNotReturningCallbackInput implements MappedObject
+{
+
+	#[After('afterRemoved')]
+	#[StringValue()]
+	public string $removed;
+
+	private static function afterRemoved(string $value): void
+	{
+		throw ValueDoesNotMatch::createFromString('Field is removed', Value::of($value));
+	}
+
+}
+```
+</details>
+
+<details>
+	<summary><code>@Annotations()</code></summary>
 
 ```php
 use Orisai\ObjectMapper\Callbacks\After;
@@ -1688,9 +2533,9 @@ final class WithNotReturningCallbackInput implements MappedObject
 {
 
 	/**
-     * @StringValue()
-     * @After("afterRemoved")
-     */
+	 * @StringValue()
+	 * @After("afterRemoved")
+	 */
 	public string $removed;
 
 	private static function afterRemoved(string $value): void
@@ -1700,6 +2545,7 @@ final class WithNotReturningCallbackInput implements MappedObject
 
 }
 ```
+</details>
 
 ### Callback context
 
@@ -1778,6 +2624,43 @@ $dependencyInjectorManager->add(new WithDependenciesInputInjector(new ExampleSer
 
 Create mapped object that requires dependencies via `RequiresDependencies`, specifying a `DependencyInjector`
 
+<details open>
+	<summary><code>#[Attributes()]</code></summary>
+
+```php
+use Orisai\ObjectMapper\Callbacks\After;
+use Orisai\ObjectMapper\Exception\ValueDoesNotMatch;
+use Orisai\ObjectMapper\MappedObject;
+use Orisai\ObjectMapper\Modifiers\RequiresDependencies;
+use Orisai\ObjectMapper\Processing\Value;
+use Orisai\ObjectMapper\Rules\MixedValue;
+
+#[RequiresDependencies(injector: WithDependenciesInputInjector::class)]
+final class WithDependenciesInput implements MappedObject
+{
+
+	public ExampleService $service;
+
+	#[After('afterField')]
+	#[MixedValue()]
+	public mixed $field;
+
+	private function afterField(mixed $value): mixed
+	{
+		if (!$this->service->valueMatchesCriteria($value)) {
+			throw ValueDoesNotMatch::createFromString('Value does not match criteria ABC.', Value::of($value))
+		}
+
+		return $value;
+	}
+
+}
+```
+</details>
+
+<details>
+	<summary><code>@Annotations()</code></summary>
+
 ```php
 use Orisai\ObjectMapper\Callbacks\After;
 use Orisai\ObjectMapper\Exception\ValueDoesNotMatch;
@@ -1795,15 +2678,15 @@ final class WithDependenciesInput implements MappedObject
 	public ExampleService $service;
 
 	/**
-     * @MixedValue()
-     * @After("afterField")
-     */
+	 * @MixedValue()
+	 * @After("afterField")
+	 */
 	public $field;
 
 	/**
-     * @param mixed $value
-     * @return mixed
-     */
+	 * @param mixed $value
+	 * @return mixed
+	 */
 	private function afterField($value)
 	{
 		if (!$this->service->valueMatchesCriteria($value)) {
@@ -1815,6 +2698,7 @@ final class WithDependenciesInput implements MappedObject
 
 }
 ```
+</details>
 
 Create an instance of mapped object
 
