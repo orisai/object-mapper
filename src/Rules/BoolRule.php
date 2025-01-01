@@ -21,7 +21,7 @@ use function strtolower;
 final class BoolRule implements Rule
 {
 
-	private const CastBoolLike = 'castBoolLike';
+	public const CastBoolLike = 'castBoolLike';
 
 	private const CastMap = [
 		'true' => true,

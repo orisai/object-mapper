@@ -30,7 +30,7 @@ final class NullValue implements RuleDefinition
 	public function getArgs(): array
 	{
 		return [
-			'castEmptyString' => $this->castEmptyString,
+			NullRule::CastEmptyString => $this->castEmptyString,
 		];
 	}
 

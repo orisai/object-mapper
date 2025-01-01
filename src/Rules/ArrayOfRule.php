@@ -26,7 +26,6 @@ use function sprintf;
 final class ArrayOfRule extends MultiValueRule
 {
 
-	/** @internal */
 	public const KeyRule = 'key';
 
 	public function resolveArgs(array $args, ArgsFieldContext $context): ArrayOfArgs

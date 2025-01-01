@@ -38,7 +38,7 @@ final class ArrayOf extends MultiValueDefinition
 	public function getArgs(): array
 	{
 		$args = parent::getArgs();
-		$args['key'] = $this->key;
+		$args[ArrayOfRule::KeyRule] = $this->key;
 
 		return $args;
 	}

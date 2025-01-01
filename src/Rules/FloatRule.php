@@ -23,7 +23,6 @@ use function sprintf;
 final class FloatRule implements Rule
 {
 
-	/** @internal */
 	public const
 		Min = 'min',
 		Max = 'max',

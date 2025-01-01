@@ -11,7 +11,6 @@ use Orisai\ObjectMapper\Context\ArgsContext;
 final class DefaultValueModifier implements Modifier
 {
 
-	/** @internal */
 	public const Value = 'value';
 
 	public static function resolveArgs(array $args, ArgsContext $context): DefaultValueArgs

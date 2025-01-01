@@ -34,7 +34,7 @@ final class InstanceOfValue implements RuleDefinition
 	public function getArgs(): array
 	{
 		return [
-			'type' => $this->type,
+			InstanceOfRule::Type => $this->type,
 		];
 	}
 

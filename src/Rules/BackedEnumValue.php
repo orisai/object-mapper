@@ -31,8 +31,8 @@ final class BackedEnumValue implements RuleDefinition
 	public function getArgs(): array
 	{
 		return [
-			'class' => $this->class,
-			'allowUnknown' => $this->allowUnknown,
+			BackedEnumRule::ClassName => $this->class,
+			BackedEnumRule::AllowUnknown => $this->allowUnknown,
 		];
 	}
 

@@ -42,8 +42,8 @@ final class DateTimeValue implements RuleDefinition
 	public function getArgs(): array
 	{
 		return [
-			'class' => $this->class,
-			'format' => $this->format,
+			DateTimeRule::ClassName => $this->class,
+			DateTimeRule::Format => $this->format,
 		];
 	}
 

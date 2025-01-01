@@ -31,10 +31,10 @@ abstract class MultiValueDefinition implements RuleDefinition
 	public function getArgs(): array
 	{
 		return [
-			'item' => $this->item,
-			'minItems' => $this->minItems,
-			'maxItems' => $this->maxItems,
-			'mergeDefaults' => $this->mergeDefaults,
+			MultiValueRule::ItemRule => $this->item,
+			MultiValueRule::MinItems => $this->minItems,
+			MultiValueRule::MaxItems => $this->maxItems,
+			MultiValueRule::MergeDefaults => $this->mergeDefaults,
 		];
 	}
 

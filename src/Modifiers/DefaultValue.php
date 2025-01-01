@@ -34,7 +34,7 @@ final class DefaultValue implements ModifierDefinition
 	public function getArgs(): array
 	{
 		return [
-			'value' => $this->value,
+			DefaultValueModifier::Value => $this->value,
 		];
 	}
 

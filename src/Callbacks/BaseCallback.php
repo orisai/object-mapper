@@ -32,7 +32,7 @@ use function sprintf;
 abstract class BaseCallback implements Callback
 {
 
-	private const
+	public const
 		Method = 'method',
 		Runtime = 'runtime';
 

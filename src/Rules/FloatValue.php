@@ -44,10 +44,10 @@ final class FloatValue implements RuleDefinition
 	public function getArgs(): array
 	{
 		return [
-			'min' => $this->min,
-			'max' => $this->max,
-			'unsigned' => $this->unsigned,
-			'castNumericString' => $this->castNumericString,
+			FloatRule::Min => $this->min,
+			FloatRule::Max => $this->max,
+			FloatRule::Unsigned => $this->unsigned,
+			FloatRule::CastNumericString => $this->castNumericString,
 		];
 	}
 

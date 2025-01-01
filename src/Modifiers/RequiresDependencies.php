@@ -38,7 +38,7 @@ final class RequiresDependencies implements ModifierDefinition
 	public function getArgs(): array
 	{
 		return [
-			'injector' => $this->injector,
+			RequiresDependenciesModifier::Injector => $this->injector,
 		];
 	}
 

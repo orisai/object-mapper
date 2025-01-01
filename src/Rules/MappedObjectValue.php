@@ -35,7 +35,7 @@ final class MappedObjectValue implements RuleDefinition
 	public function getArgs(): array
 	{
 		return [
-			'class' => $this->class,
+			MappedObjectRule::ClassName => $this->class,
 		];
 	}
 

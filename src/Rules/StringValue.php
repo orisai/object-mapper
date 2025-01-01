@@ -44,10 +44,10 @@ final class StringValue implements RuleDefinition
 	public function getArgs(): array
 	{
 		return [
-			'pattern' => $this->pattern,
-			'minLength' => $this->minLength,
-			'maxLength' => $this->maxLength,
-			'notEmpty' => $this->notEmpty,
+			StringRule::Pattern => $this->pattern,
+			StringRule::MinLength => $this->minLength,
+			StringRule::MaxLength => $this->maxLength,
+			StringRule::NotEmpty => $this->notEmpty,
 		];
 	}
 

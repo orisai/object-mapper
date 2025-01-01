@@ -30,7 +30,7 @@ final class BoolValue implements RuleDefinition
 	public function getArgs(): array
 	{
 		return [
-			'castBoolLike' => $this->castBoolLike,
+			BoolRule::CastBoolLike => $this->castBoolLike,
 		];
 	}
 

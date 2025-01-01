@@ -35,7 +35,7 @@ final class ArrayShape implements RuleDefinition
 	public function getArgs(): array
 	{
 		return [
-			'fields' => $this->fields,
+			ArrayShapeRule::Fields => $this->fields,
 		];
 	}
 

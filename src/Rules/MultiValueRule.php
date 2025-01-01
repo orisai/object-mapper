@@ -9,7 +9,6 @@ namespace Orisai\ObjectMapper\Rules;
 abstract class MultiValueRule implements Rule
 {
 
-	/** @internal */
 	public const
 		ItemRule = 'item',
 		MinItems = 'minItems',

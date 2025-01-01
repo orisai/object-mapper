@@ -37,8 +37,8 @@ final class Before implements CallbackDefinition
 	public function getArgs(): array
 	{
 		return [
-			'method' => $this->method,
-			'runtime' => $this->runtime,
+			BaseCallback::Method => $this->method,
+			BaseCallback::Runtime => $this->runtime,
 		];
 	}
 

@@ -26,7 +26,6 @@ use function is_array;
 final class ArrayShapeRule implements Rule
 {
 
-	/** @internal */
 	public const Fields = 'fields';
 
 	public function resolveArgs(array $args, ArgsFieldContext $context): ArrayShapeArgs

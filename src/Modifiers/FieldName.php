@@ -34,7 +34,7 @@ final class FieldName implements ModifierDefinition
 	public function getArgs(): array
 	{
 		return [
-			'name' => $this->name,
+			FieldNameModifier::Name => $this->name,
 		];
 	}
 

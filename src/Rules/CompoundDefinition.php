@@ -35,7 +35,7 @@ abstract class CompoundDefinition implements RuleDefinition
 	public function getArgs(): array
 	{
 		return [
-			'rules' => $this->rules,
+			CompoundRule::Rules => $this->rules,
 		];
 	}
 

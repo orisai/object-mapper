@@ -25,7 +25,7 @@ use function is_a;
 final class MappedObjectRule implements Rule
 {
 
-	private const ClassName = 'class';
+	public const ClassName = 'class';
 
 	/** @var array<string, null> */
 	private array $alreadyResolved = [];

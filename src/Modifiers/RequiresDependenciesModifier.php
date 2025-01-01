@@ -17,7 +17,7 @@ use function sprintf;
 final class RequiresDependenciesModifier implements Modifier
 {
 
-	private const Injector = 'injector';
+	public const Injector = 'injector';
 
 	/**
 	 * @return RequiresDependenciesArgs<MappedObject>

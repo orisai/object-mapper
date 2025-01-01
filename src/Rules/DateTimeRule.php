@@ -33,7 +33,6 @@ use const PHP_VERSION_ID;
 final class DateTimeRule implements Rule
 {
 
-	/** @internal */
 	public const
 		Format = 'format',
 		ClassName = 'class';

@@ -40,9 +40,9 @@ final class ArrayEnumValue implements RuleDefinition
 	public function getArgs(): array
 	{
 		return [
-			'cases' => $this->cases,
-			'useKeys' => $this->useKeys,
-			'allowUnknown' => $this->allowUnknown,
+			ArrayEnumRule::Cases => $this->cases,
+			ArrayEnumRule::UseKeys => $this->useKeys,
+			ArrayEnumRule::AllowUnknown => $this->allowUnknown,
 		];
 	}
 

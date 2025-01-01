@@ -24,7 +24,7 @@ use function sprintf;
 final class ArrayEnumRule implements Rule
 {
 
-	private const
+	public const
 		Cases = 'cases',
 		UseKeys = 'useKeys',
 		AllowUnknown = 'allowUnknown';

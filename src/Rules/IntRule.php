@@ -22,7 +22,6 @@ use function sprintf;
 final class IntRule implements Rule
 {
 
-	/** @internal */
 	public const
 		Min = 'min',
 		Max = 'max',

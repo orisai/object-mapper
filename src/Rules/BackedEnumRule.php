@@ -24,7 +24,7 @@ use const PHP_VERSION_ID;
 final class BackedEnumRule implements Rule
 {
 
-	private const
+	public const
 		ClassName = 'class',
 		AllowUnknown = 'allowUnknown';
 

@@ -44,10 +44,10 @@ final class IntValue implements RuleDefinition
 	public function getArgs(): array
 	{
 		return [
-			'min' => $this->min,
-			'max' => $this->max,
-			'unsigned' => $this->unsigned,
-			'castNumericString' => $this->castNumericString,
+			IntRule::Min => $this->min,
+			IntRule::Max => $this->max,
+			IntRule::Unsigned => $this->unsigned,
+			IntRule::CastNumericString => $this->castNumericString,
 		];
 	}
 
