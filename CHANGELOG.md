@@ -22,6 +22,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 	- `ReflectorMetaSource` is marked as `@internal`
 - `Rule`
 	- `resolveArgs()` accepts `ArgsFieldContext` instead of `ArgsContext`
+	- all rules initialize `Type` lazily (performance optimization)
 - `ArrayOfRule`
 	- check during metadata parsing that default value is an array when `mergeDefaults` is enabled
 

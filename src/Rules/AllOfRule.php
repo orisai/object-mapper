@@ -22,11 +22,12 @@ final class AllOfRule extends CompoundRule
 	public function processValue($value, Args $args, FieldContext $context)
 	{
 		$initValue = $value;
-		$type = $this->createType($args, $context);
+		$type = null;
 		$anyValidationFailed = false;
 
 		foreach ($args->rules as $key => $nestedRuleMeta) {
 			if ($anyValidationFailed) {
+				$type ??= $this->createType($args, $context);
 				$type->setSubtypeSkipped($key);
 
 				continue;
@@ -43,12 +44,13 @@ final class AllOfRule extends CompoundRule
 				);
 			} catch (ValueDoesNotMatch | InvalidData $exception) {
 				$exception->dropValue(); // May be mutated by rules
+				$type ??= $this->createType($args, $context);
 				$type->overwriteInvalidSubtype($key, $exception);
 				$anyValidationFailed = true;
 			}
 		}
 
-		if ($anyValidationFailed) {
+		if ($type !== null && $anyValidationFailed) {
 			throw ValueDoesNotMatch::create($type, Value::of($initValue));
 		}
 

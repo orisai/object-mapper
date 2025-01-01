@@ -29,19 +29,19 @@ final class ScalarRule implements Rule
 	 */
 	public function processValue($value, Args $args, FieldContext $context)
 	{
-		if (is_scalar($value)) {
-			return $value;
+		if (!is_scalar($value)) {
+			$type = $this->createType($args, $context);
+			foreach ($this->getSubtypes() as $key => $subtype) {
+				$type->overwriteInvalidSubtype(
+					$key,
+					ValueDoesNotMatch::create($subtype, Value::none()),
+				);
+			}
+
+			throw ValueDoesNotMatch::create($type, Value::of($value));
 		}
 
-		$type = $this->createType($args, $context);
-		foreach ($this->getSubtypes() as $key => $subtype) {
-			$type->overwriteInvalidSubtype(
-				$key,
-				ValueDoesNotMatch::create($subtype, Value::none()),
-			);
-		}
-
-		throw ValueDoesNotMatch::create($type, Value::of($value));
+		return $value;
 	}
 
 	public function createType(Args $args, TypeContext $context): CompoundType

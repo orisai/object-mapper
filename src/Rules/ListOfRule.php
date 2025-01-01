@@ -76,19 +76,22 @@ final class ListOfRule extends MultiValueRule
 	public function processValue($value, Args $args, FieldContext $context): array
 	{
 		$initValue = $value;
-		$type = $this->createType($args, $context);
+		$type = null;
 
 		if (!is_array($value)) {
+			$type = $this->createType($args, $context);
 			$type->markInvalid();
 
 			throw ValueDoesNotMatch::create($type, Value::of($initValue));
 		}
 
 		if ($args->minItems !== null && count($value) < $args->minItems) {
+			$type = $this->createType($args, $context);
 			$type->markParameterInvalid(self::MinItems);
 		}
 
 		if ($args->maxItems !== null && count($value) > $args->maxItems) {
+			$type ??= $this->createType($args, $context);
 			$type->markParameterInvalid(self::MaxItems);
 
 			throw ValueDoesNotMatch::create($type, Value::of($initValue));
@@ -107,6 +110,7 @@ final class ListOfRule extends MultiValueRule
 				$keyType = $this->createKeyType();
 				$keyType->markParameterInvalid(self::Continuous);
 
+				$type ??= $this->createType($args, $context);
 				$type->addInvalidKey(
 					$key,
 					ValueDoesNotMatch::create($keyType, Value::of($key)),
@@ -124,6 +128,7 @@ final class ListOfRule extends MultiValueRule
 					$context->createClone(),
 				);
 			} catch (ValueDoesNotMatch | InvalidData $exception) {
+				$type ??= $this->createType($args, $context);
 				$type->addInvalidValue($key, $exception);
 				// Remove invalid value because only valid values are expected beyond this point
 				// Invalid keys are fine because we don't work them beyond
@@ -141,12 +146,18 @@ final class ListOfRule extends MultiValueRule
 					$context->createClone(),
 				);
 			} catch (ValueDoesNotMatch | InvalidData $exception) {
+				$type ??= $this->createType($args, $context);
 				$type->addInvalidValue($key, $exception);
 			}
 		}
 
-		$hasInvalidParameters = $type->hasInvalidParameters();
-		if ($hasInvalidParameters || $type->hasInvalidPairs()) {
+		if (
+			$type !== null
+			&& (
+				($hasInvalidParameters = $type->hasInvalidParameters())
+				|| $type->hasInvalidPairs()
+			)
+		) {
 			throw ValueDoesNotMatch::create(
 				$type,
 				$hasInvalidParameters ? Value::of($initValue) : Value::none(),
