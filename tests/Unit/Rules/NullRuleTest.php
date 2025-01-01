@@ -21,6 +21,32 @@ final class NullRuleTest extends ProcessingTestCase
 		$this->rule = new NullRule();
 	}
 
+	/**
+	 * @param array<mixed> $args
+	 *
+	 * @dataProvider provideResolveValid
+	 */
+	public function testResolveValid(array $args, NullArgs $expectedArgs): void
+	{
+		$resolvedArgs = $this->rule->resolveArgs($args, $this->argsFieldContext());
+		self::assertEquals($expectedArgs, $resolvedArgs);
+	}
+
+	public static function provideResolveValid(): Generator
+	{
+		yield [
+			[],
+			new NullArgs(false),
+		];
+
+		yield [
+			[
+				NullRule::CastEmptyString => true,
+			],
+			new NullArgs(true),
+		];
+	}
+
 	public function testProcessValid(): void
 	{
 		$processed = $this->rule->processValue(

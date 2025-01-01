@@ -20,6 +20,25 @@ final class MixedRuleTest extends ProcessingTestCase
 	}
 
 	/**
+	 * @param array<mixed> $args
+	 *
+	 * @dataProvider provideResolveValid
+	 */
+	public function testResolveValid(array $args, EmptyArgs $expectedArgs): void
+	{
+		$resolvedArgs = $this->rule->resolveArgs($args, $this->argsFieldContext());
+		self::assertEquals($expectedArgs, $resolvedArgs);
+	}
+
+	public static function provideResolveValid(): Generator
+	{
+		yield [
+			[],
+			new EmptyArgs(),
+		];
+	}
+
+	/**
 	 * @param mixed $value
 	 *
 	 * @dataProvider provideValidValues

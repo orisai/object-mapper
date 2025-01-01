@@ -27,6 +27,35 @@ final class BackedEnumRuleTest extends ProcessingTestCase
 	}
 
 	/**
+	 * @param array<mixed> $args
+	 *
+	 * @dataProvider provideResolveValid
+	 */
+	public function testResolveValid(array $args, BackedEnumArgs $expectedArgs): void
+	{
+		$resolvedArgs = $this->rule->resolveArgs($args, $this->argsFieldContext());
+		self::assertEquals($expectedArgs, $resolvedArgs);
+	}
+
+	public static function provideResolveValid(): Generator
+	{
+		yield [
+			[
+				BackedEnumRule::ClassName => ExampleIntEnum::class,
+			],
+			new BackedEnumArgs(ExampleIntEnum::class, false),
+		];
+
+		yield [
+			[
+				BackedEnumRule::ClassName => ExampleStringEnum::class,
+				BackedEnumRule::AllowUnknown => true,
+			],
+			new BackedEnumArgs(ExampleStringEnum::class, true),
+		];
+	}
+
+	/**
 	 * @param mixed $value
 	 *
 	 * @dataProvider provideValidValues

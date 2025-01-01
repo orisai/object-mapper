@@ -2,15 +2,19 @@
 
 namespace Tests\Orisai\ObjectMapper\Unit\Rules;
 
+use Generator;
 use Orisai\ObjectMapper\Args\EmptyArgs;
 use Orisai\ObjectMapper\Exception\ValueDoesNotMatch;
 use Orisai\ObjectMapper\Exception\WithTypeAndValue;
+use Orisai\ObjectMapper\Meta\Compile\RuleCompileMeta;
 use Orisai\ObjectMapper\Meta\Runtime\RuleRuntimeMeta;
 use Orisai\ObjectMapper\Meta\Shared\DefaultValueMeta;
 use Orisai\ObjectMapper\Rules\ArrayOfArgs;
 use Orisai\ObjectMapper\Rules\ArrayOfRule;
 use Orisai\ObjectMapper\Rules\IntRule;
 use Orisai\ObjectMapper\Rules\MixedRule;
+use Orisai\ObjectMapper\Rules\ScalarRule;
+use Orisai\ObjectMapper\Rules\StringArgs;
 use Orisai\ObjectMapper\Rules\StringRule;
 use Orisai\ObjectMapper\Types\GenericArrayType;
 use Orisai\ObjectMapper\Types\SimpleValueType;
@@ -28,6 +32,50 @@ final class ArrayOfRuleTest extends ProcessingTestCase
 		parent::setUp();
 		$this->rule = new ArrayOfRule();
 		$this->ruleManager->addRule(new AlwaysInvalidRule());
+	}
+
+	/**
+	 * @param array<mixed> $args
+	 *
+	 * @dataProvider provideResolveValid
+	 */
+	public function testResolveValid(array $args, ArrayOfArgs $expectedArgs): void
+	{
+		$resolvedArgs = $this->rule->resolveArgs($args, $this->argsFieldContext());
+		self::assertEquals($expectedArgs, $resolvedArgs);
+	}
+
+	public static function provideResolveValid(): Generator
+	{
+		yield [
+			[
+				ArrayOfRule::ItemRule => new RuleCompileMeta(MixedRule::class),
+			],
+			new ArrayOfArgs(
+				new RuleRuntimeMeta(MixedRule::class, new EmptyArgs()),
+				null,
+				null,
+				null,
+				false,
+			),
+		];
+
+		yield [
+			[
+				ArrayOfRule::ItemRule => new RuleCompileMeta(ScalarRule::class),
+				ArrayOfRule::KeyRule => new RuleCompileMeta(StringRule::class),
+				ArrayOfRule::MinItems => 1,
+				ArrayOfRule::MaxItems => 10,
+				ArrayOfRule::MergeDefaults => true,
+			],
+			new ArrayOfArgs(
+				new RuleRuntimeMeta(ScalarRule::class, new EmptyArgs()),
+				new RuleRuntimeMeta(StringRule::class, new StringArgs(null, false, null, null)),
+				1,
+				10,
+				true,
+			),
+		];
 	}
 
 	public function testProcessValid(): void

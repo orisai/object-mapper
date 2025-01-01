@@ -2,16 +2,20 @@
 
 namespace Tests\Orisai\ObjectMapper\Unit\Rules;
 
-use Orisai\Exceptions\Logic\InvalidArgument;
+use Generator;
 use Orisai\ObjectMapper\Args\EmptyArgs;
 use Orisai\ObjectMapper\Exception\ValueDoesNotMatch;
 use Orisai\ObjectMapper\Meta\Compile\RuleCompileMeta;
 use Orisai\ObjectMapper\Meta\Runtime\RuleRuntimeMeta;
 use Orisai\ObjectMapper\Rules\AllOfRule;
 use Orisai\ObjectMapper\Rules\CompoundArgs;
+use Orisai\ObjectMapper\Rules\IntArgs;
+use Orisai\ObjectMapper\Rules\IntRule;
 use Orisai\ObjectMapper\Rules\MappedObjectArgs;
 use Orisai\ObjectMapper\Rules\MappedObjectRule;
 use Orisai\ObjectMapper\Rules\MixedRule;
+use Orisai\ObjectMapper\Rules\NullArgs;
+use Orisai\ObjectMapper\Rules\NullRule;
 use Orisai\ObjectMapper\Types\CompoundType;
 use Orisai\ObjectMapper\Types\CompoundTypeOperator;
 use Orisai\ObjectMapper\Types\MessageType;
@@ -19,7 +23,6 @@ use Orisai\ObjectMapper\Types\SimpleValueType;
 use Tests\Orisai\ObjectMapper\Doubles\DefaultsVO;
 use Tests\Orisai\ObjectMapper\Doubles\Rules\AlwaysInvalidRule;
 use Tests\Orisai\ObjectMapper\Toolkit\ProcessingTestCase;
-use function sprintf;
 
 final class AllOfRuleTest extends ProcessingTestCase
 {
@@ -31,6 +34,46 @@ final class AllOfRuleTest extends ProcessingTestCase
 		parent::setUp();
 		$this->rule = new AllOfRule();
 		$this->ruleManager->addRule(new AlwaysInvalidRule());
+	}
+
+	/**
+	 * @param array<mixed> $args
+	 *
+	 * @dataProvider provideResolveValid
+	 */
+	public function testResolveValid(array $args, CompoundArgs $expectedArgs): void
+	{
+		$resolvedArgs = $this->rule->resolveArgs($args, $this->argsFieldContext());
+		self::assertEquals($expectedArgs, $resolvedArgs);
+	}
+
+	public static function provideResolveValid(): Generator
+	{
+		yield [
+			[
+				AllOfRule::Rules => [
+					new RuleCompileMeta(MixedRule::class),
+					new RuleCompileMeta(MixedRule::class),
+				],
+			],
+			new CompoundArgs([
+				new RuleRuntimeMeta(MixedRule::class, new EmptyArgs()),
+				new RuleRuntimeMeta(MixedRule::class, new EmptyArgs()),
+			]),
+		];
+
+		yield [
+			[
+				AllOfRule::Rules => [
+					new RuleCompileMeta(IntRule::class),
+					new RuleCompileMeta(NullRule::class),
+				],
+			],
+			new CompoundArgs([
+				new RuleRuntimeMeta(IntRule::class, new IntArgs(0, 0, false, false)),
+				new RuleRuntimeMeta(NullRule::class, new NullArgs(false)),
+			]),
+		];
 	}
 
 	public function testProcessValid(): void
@@ -145,29 +188,6 @@ final class AllOfRuleTest extends ProcessingTestCase
 		self::assertInstanceOf(SimpleValueType::class, $subtypes[0]);
 		self::assertInstanceOf(SimpleValueType::class, $subtypes[1]);
 		self::assertInstanceOf(MessageType::class, $subtypes[2]);
-	}
-
-	public function testInnerRuleResolved(): void
-	{
-		$this->expectException(InvalidArgument::class);
-		$this->expectExceptionMessage(
-			sprintf(
-				'"%s" does not accept any arguments, "foo" given',
-				MixedRule::class,
-			),
-		);
-
-		$this->rule->resolveArgs(
-			[
-				AllOfRule::Rules => [
-					new RuleCompileMeta(MixedRule::class),
-					new RuleCompileMeta(MixedRule::class, [
-						'foo' => 'bar',
-					]),
-				],
-			],
-			$this->argsFieldContext(),
-		);
 	}
 
 }

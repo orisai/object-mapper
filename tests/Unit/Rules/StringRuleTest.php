@@ -22,6 +22,45 @@ final class StringRuleTest extends ProcessingTestCase
 	}
 
 	/**
+	 * @param array<mixed> $args
+	 *
+	 * @dataProvider provideResolveValid
+	 */
+	public function testResolveValid(array $args, StringArgs $expectedArgs): void
+	{
+		$resolvedArgs = $this->rule->resolveArgs($args, $this->argsFieldContext());
+		self::assertEquals($expectedArgs, $resolvedArgs);
+	}
+
+	public static function provideResolveValid(): Generator
+	{
+		yield [
+			[],
+			new StringArgs(null, false, null, null),
+		];
+
+		yield [
+			[
+				StringRule::Pattern => 'foo',
+				StringRule::NotEmpty => false,
+				StringRule::MinLength => 1,
+				StringRule::MaxLength => 10,
+			],
+			new StringArgs('foo', false, 1, 10),
+		];
+
+		yield [
+			[
+				StringRule::Pattern => 'bar',
+				StringRule::NotEmpty => true,
+				StringRule::MinLength => 5,
+				StringRule::MaxLength => 20,
+			],
+			new StringArgs('bar', true, 5, 20),
+		];
+	}
+
+	/**
 	 * @param mixed $value
 	 *
 	 * @dataProvider provideValidValues

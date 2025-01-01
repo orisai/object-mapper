@@ -21,6 +21,45 @@ final class IntRuleTest extends ProcessingTestCase
 	}
 
 	/**
+	 * @param array<mixed> $args
+	 *
+	 * @dataProvider provideResolveValid
+	 */
+	public function testResolveValid(array $args, IntArgs $expectedArgs): void
+	{
+		$resolvedArgs = $this->rule->resolveArgs($args, $this->argsFieldContext());
+		self::assertEquals($expectedArgs, $resolvedArgs);
+	}
+
+	public static function provideResolveValid(): Generator
+	{
+		yield [
+			[],
+			new IntArgs(null, null, false, false),
+		];
+
+		yield [
+			[
+				IntRule::Min => 1,
+				IntRule::Max => 10,
+				IntRule::Unsigned => false,
+				IntRule::CastNumericString => true,
+			],
+			new IntArgs(1, 10, false, true),
+		];
+
+		yield [
+			[
+				IntRule::Min => 5,
+				IntRule::Max => 20,
+				IntRule::Unsigned => true,
+				IntRule::CastNumericString => false,
+			],
+			new IntArgs(5, 20, true, false),
+		];
+	}
+
+	/**
 	 * @param mixed $value
 	 *
 	 * @dataProvider provideValidValues

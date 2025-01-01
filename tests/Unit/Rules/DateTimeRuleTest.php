@@ -25,6 +25,41 @@ final class DateTimeRuleTest extends ProcessingTestCase
 	}
 
 	/**
+	 * @param array<mixed> $args
+	 *
+	 * @dataProvider provideResolveValid
+	 */
+	public function testResolveValid(array $args, DateTimeArgs $expectedArgs): void
+	{
+		$resolvedArgs = $this->rule->resolveArgs($args, $this->argsFieldContext());
+		self::assertEquals($expectedArgs, $resolvedArgs);
+	}
+
+	public static function provideResolveValid(): Generator
+	{
+		yield [
+			[],
+			new DateTimeArgs(DateTimeImmutable::class, DateTimeRule::FormatIsoCompat),
+		];
+
+		yield [
+			[
+				DateTimeRule::ClassName => DateTime::class,
+				DateTimeRule::Format => DateTimeRule::FormatAny,
+			],
+			new DateTimeArgs(DateTime::class, DateTimeRule::FormatAny),
+		];
+
+		yield [
+			[
+				DateTimeRule::ClassName => \Nette\Utils\DateTime::class,
+				DateTimeRule::Format => 'Y-m-d\TH:i:s.v\Z',
+			],
+			new DateTimeArgs(\Nette\Utils\DateTime::class, 'Y-m-d\TH:i:s.v\Z'),
+		];
+	}
+
+	/**
 	 * @param mixed $value
 	 *
 	 * @dataProvider provideValidValues

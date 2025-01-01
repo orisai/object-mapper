@@ -21,6 +21,45 @@ final class ArrayEnumRuleTest extends ProcessingTestCase
 	}
 
 	/**
+	 * @param array<mixed> $args
+	 *
+	 * @dataProvider provideResolveValid
+	 */
+	public function testResolveValid(array $args, ArrayEnumArgs $expectedArgs): void
+	{
+		$resolvedArgs = $this->rule->resolveArgs($args, $this->argsFieldContext());
+		self::assertEquals($expectedArgs, $resolvedArgs);
+	}
+
+	public static function provideResolveValid(): Generator
+	{
+		yield [
+			[
+				ArrayEnumRule::Cases => ['foo'],
+				ArrayEnumRule::UseKeys => false,
+				ArrayEnumRule::AllowUnknown => true,
+			],
+			new ArrayEnumArgs(['foo'], false, true),
+		];
+
+		yield [
+			[
+				ArrayEnumRule::Cases => [123, 456],
+				ArrayEnumRule::UseKeys => true,
+				ArrayEnumRule::AllowUnknown => false,
+			],
+			new ArrayEnumArgs([123, 456], true, false),
+		];
+
+		yield [
+			[
+				ArrayEnumRule::Cases => ['foo', 456],
+			],
+			new ArrayEnumArgs(['foo', 456], false, false),
+		];
+	}
+
+	/**
 	 * @param mixed $given
 	 * @param mixed $expected
 	 *

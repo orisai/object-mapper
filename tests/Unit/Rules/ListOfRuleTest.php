@@ -2,13 +2,16 @@
 
 namespace Tests\Orisai\ObjectMapper\Unit\Rules;
 
+use Generator;
 use Orisai\ObjectMapper\Args\EmptyArgs;
 use Orisai\ObjectMapper\Exception\ValueDoesNotMatch;
+use Orisai\ObjectMapper\Meta\Compile\RuleCompileMeta;
 use Orisai\ObjectMapper\Meta\Runtime\RuleRuntimeMeta;
 use Orisai\ObjectMapper\Meta\Shared\DefaultValueMeta;
 use Orisai\ObjectMapper\Rules\ListOfRule;
 use Orisai\ObjectMapper\Rules\MixedRule;
 use Orisai\ObjectMapper\Rules\MultiValueArgs;
+use Orisai\ObjectMapper\Rules\ScalarRule;
 use Orisai\ObjectMapper\Rules\StringRule;
 use Orisai\ObjectMapper\Types\GenericArrayType;
 use Orisai\ObjectMapper\Types\SimpleValueType;
@@ -26,6 +29,47 @@ final class ListOfRuleTest extends ProcessingTestCase
 		parent::setUp();
 		$this->rule = new ListOfRule();
 		$this->ruleManager->addRule(new AlwaysInvalidRule());
+	}
+
+	/**
+	 * @param array<mixed> $args
+	 *
+	 * @dataProvider provideResolveValid
+	 */
+	public function testResolveValid(array $args, MultiValueArgs $expectedArgs): void
+	{
+		$resolvedArgs = $this->rule->resolveArgs($args, $this->argsFieldContext());
+		self::assertEquals($expectedArgs, $resolvedArgs);
+	}
+
+	public static function provideResolveValid(): Generator
+	{
+		yield [
+			[
+				ListOfRule::ItemRule => new RuleCompileMeta(MixedRule::class),
+			],
+			new MultiValueArgs(
+				new RuleRuntimeMeta(MixedRule::class, new EmptyArgs()),
+				null,
+				null,
+				false,
+			),
+		];
+
+		yield [
+			[
+				ListOfRule::ItemRule => new RuleCompileMeta(ScalarRule::class),
+				ListOfRule::MinItems => 1,
+				ListOfRule::MaxItems => 10,
+				ListOfRule::MergeDefaults => true,
+			],
+			new MultiValueArgs(
+				new RuleRuntimeMeta(ScalarRule::class, new EmptyArgs()),
+				1,
+				10,
+				true,
+			),
+		];
 	}
 
 	public function testProcessValid(): void

@@ -2,8 +2,10 @@
 
 namespace Tests\Orisai\ObjectMapper\Unit\Rules;
 
+use Generator;
 use Orisai\ObjectMapper\Args\EmptyArgs;
 use Orisai\ObjectMapper\Exception\ValueDoesNotMatch;
+use Orisai\ObjectMapper\Meta\Compile\RuleCompileMeta;
 use Orisai\ObjectMapper\Meta\Runtime\RuleRuntimeMeta;
 use Orisai\ObjectMapper\Meta\Shared\DefaultValueMeta;
 use Orisai\ObjectMapper\Rules\ArrayShapeArgs;
@@ -13,6 +15,8 @@ use Orisai\ObjectMapper\Rules\MappedObjectRule;
 use Orisai\ObjectMapper\Rules\MixedRule;
 use Orisai\ObjectMapper\Rules\NullArgs;
 use Orisai\ObjectMapper\Rules\NullRule;
+use Orisai\ObjectMapper\Rules\ScalarRule;
+use Orisai\ObjectMapper\Rules\StringArgs;
 use Orisai\ObjectMapper\Rules\StringRule;
 use Orisai\ObjectMapper\Types\ArrayShapeType;
 use Orisai\ObjectMapper\Types\SimpleValueType;
@@ -30,6 +34,44 @@ final class ArrayShapeRuleTest extends ProcessingTestCase
 		parent::setUp();
 		$this->rule = new ArrayShapeRule();
 		$this->ruleManager->addRule(new AlwaysInvalidRule());
+	}
+
+	/**
+	 * @param array<mixed> $args
+	 *
+	 * @dataProvider provideResolveValid
+	 */
+	public function testResolveValid(array $args, ArrayShapeArgs $expectedArgs): void
+	{
+		$resolvedArgs = $this->rule->resolveArgs($args, $this->argsFieldContext());
+		self::assertEquals($expectedArgs, $resolvedArgs);
+	}
+
+	public static function provideResolveValid(): Generator
+	{
+		yield [
+			[
+				ArrayShapeRule::Fields => [
+					'foo' => new RuleCompileMeta(MixedRule::class),
+				],
+			],
+			new ArrayShapeArgs([
+				'foo' => new RuleRuntimeMeta(MixedRule::class, new EmptyArgs()),
+			]),
+		];
+
+		yield [
+			[
+				ArrayShapeRule::Fields => [
+					1 => new RuleCompileMeta(ScalarRule::class),
+					'foo' => new RuleCompileMeta(StringRule::class),
+				],
+			],
+			new ArrayShapeArgs([
+				1 => new RuleRuntimeMeta(ScalarRule::class, new EmptyArgs()),
+				'foo' => new RuleRuntimeMeta(StringRule::class, new StringArgs(null, false, null, null)),
+			]),
+		];
 	}
 
 	public function testProcessValid(): void

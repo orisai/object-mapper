@@ -6,6 +6,7 @@ use Generator;
 use Orisai\ObjectMapper\Exception\ValueDoesNotMatch;
 use Orisai\ObjectMapper\Rules\FloatArgs;
 use Orisai\ObjectMapper\Rules\FloatRule;
+use Orisai\ObjectMapper\Rules\IntRule;
 use Orisai\ObjectMapper\Types\SimpleValueType;
 use Tests\Orisai\ObjectMapper\Toolkit\ProcessingTestCase;
 
@@ -18,6 +19,45 @@ final class FloatRuleTest extends ProcessingTestCase
 	{
 		parent::setUp();
 		$this->rule = new FloatRule();
+	}
+
+	/**
+	 * @param array<mixed> $args
+	 *
+	 * @dataProvider provideResolveValid
+	 */
+	public function testResolveValid(array $args, FloatArgs $expectedArgs): void
+	{
+		$resolvedArgs = $this->rule->resolveArgs($args, $this->argsFieldContext());
+		self::assertEquals($expectedArgs, $resolvedArgs);
+	}
+
+	public static function provideResolveValid(): Generator
+	{
+		yield [
+			[],
+			new FloatArgs(null, null, false, false),
+		];
+
+		yield [
+			[
+				IntRule::Min => 1,
+				IntRule::Max => 10,
+				IntRule::Unsigned => false,
+				IntRule::CastNumericString => true,
+			],
+			new FloatArgs(1, 10, false, true),
+		];
+
+		yield [
+			[
+				FloatRule::Min => 5.2,
+				FloatRule::Max => 20.9,
+				FloatRule::Unsigned => true,
+				FloatRule::CastNumericString => false,
+			],
+			new FloatArgs(5.2, 20.9, true, false),
+		];
 	}
 
 	/**
@@ -199,7 +239,7 @@ final class FloatRuleTest extends ProcessingTestCase
 
 	public function testType(): void
 	{
-		$args = $this->rule->resolveArgs([], $this->argsFieldContext());
+		$args = new FloatArgs(null, null, false, false);
 
 		$type = $this->rule->createType($args, $this->createTypeContext());
 

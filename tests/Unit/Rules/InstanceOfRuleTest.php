@@ -6,6 +6,7 @@ use Generator;
 use Orisai\ObjectMapper\Exception\ValueDoesNotMatch;
 use Orisai\ObjectMapper\Rules\InstanceOfArgs;
 use Orisai\ObjectMapper\Rules\InstanceOfRule;
+use Orisai\ObjectMapper\Rules\Rule;
 use Orisai\ObjectMapper\Types\SimpleValueType;
 use stdClass;
 use Tests\Orisai\ObjectMapper\Toolkit\ProcessingTestCase;
@@ -19,6 +20,41 @@ final class InstanceOfRuleTest extends ProcessingTestCase
 	{
 		parent::setUp();
 		$this->rule = new InstanceOfRule();
+	}
+
+	/**
+	 * @param array<mixed> $args
+	 *
+	 * @dataProvider provideResolveValid
+	 */
+	public function testResolveValid(array $args, InstanceOfArgs $expectedArgs): void
+	{
+		$resolvedArgs = $this->rule->resolveArgs($args, $this->argsFieldContext());
+		self::assertEquals($expectedArgs, $resolvedArgs);
+	}
+
+	public static function provideResolveValid(): Generator
+	{
+		yield [
+			[
+				InstanceOfRule::Type => stdClass::class,
+			],
+			new InstanceOfArgs(stdClass::class),
+		];
+
+		yield [
+			[
+				InstanceOfRule::Type => Rule::class,
+			],
+			new InstanceOfArgs(Rule::class),
+		];
+
+		yield [
+			[
+				InstanceOfRule::Type => InstanceOfRule::class,
+			],
+			new InstanceOfArgs(InstanceOfRule::class),
+		];
 	}
 
 	/**
