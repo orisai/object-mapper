@@ -1,23 +1,23 @@
 <?php declare(strict_types = 1);
 
-namespace Tests\Orisai\ObjectMapper\Doubles\Rules;
+namespace Tests\Orisai\ObjectMapper\Doubles\Callbacks;
 
 use Attribute;
 use Doctrine\Common\Annotations\Annotation\NamedArgumentConstructor;
-use Orisai\ObjectMapper\Rules\RuleDefinition;
+use Orisai\ObjectMapper\Callbacks\CallbackDefinition;
 
 /**
  * @Annotation
  * @NamedArgumentConstructor()
- * @Target({"PROPERTY", "ANNOTATION"})
+ * @Target({"PROPERTY"})
  */
 #[Attribute(Attribute::TARGET_PROPERTY)]
-final class WrongArgsTypeValue implements RuleDefinition
+final class WrongArgsTypeCallbackValue implements CallbackDefinition
 {
 
 	public function getType(): string
 	{
-		return WrongArgsTypeRule::class;
+		return WrongArgsTypeCallback::class;
 	}
 
 	public function getArgs(): array

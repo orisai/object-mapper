@@ -17,7 +17,8 @@ use Tests\Orisai\ObjectMapper\Doubles\Invalid\FieldNamesFromTraitVO;
 use Tests\Orisai\ObjectMapper\Doubles\Invalid\FieldTraitMetaInvalidScopeRootVO;
 use Tests\Orisai\ObjectMapper\Doubles\Invalid\MultipleIdenticalFieldNamesVO;
 use Tests\Orisai\ObjectMapper\Doubles\Invalid\StaticMappedPropertyVO;
-use Tests\Orisai\ObjectMapper\Doubles\Invalid\WrongArgsTypeVO;
+use Tests\Orisai\ObjectMapper\Doubles\Invalid\WrongCallbackArgsTypeVO;
+use Tests\Orisai\ObjectMapper\Doubles\Invalid\WrongRuleArgsTypeVO;
 use Tests\Orisai\ObjectMapper\Doubles\Rules\WrongArgsTypeRule;
 use Tests\Orisai\ObjectMapper\Toolkit\ProcessingTestCase;
 
@@ -194,17 +195,32 @@ TXT,
 		$this->metaLoader->load(FieldNamesFromTraitVO::class);
 	}
 
-	public function testNotMatchingArgsType(): void
+	public function testWrongRuleArgsType(): void
 	{
 		$this->ruleManager->addRule(new WrongArgsTypeRule());
 
 		$this->expectException(InvalidArgument::class);
 		$this->expectExceptionMessage(
-			"'Tests\Orisai\ObjectMapper\Doubles\Rules\WrongArgsTypeRule->resolveArgs()' should return 'nonsense'"
-			. " (as defined in 'getArgsType()' method), but returns 'Orisai\ObjectMapper\Args\EmptyArgs'.",
+			"'Tests\Orisai\ObjectMapper\Doubles\Rules\WrongArgsTypeRule->resolveArgs()'"
+			. " should return 'Orisai\ObjectMapper\Args\EmptyArgs'"
+			. " (as defined in 'getArgsType()' method),"
+			. " but returns 'Orisai\ObjectMapper\Rules\NullArgs'.",
 		);
 
-		$this->metaLoader->load(WrongArgsTypeVO::class);
+		$this->metaLoader->load(WrongRuleArgsTypeVO::class);
+	}
+
+	public function testWrongCallbackArgsType(): void
+	{
+		$this->expectException(InvalidArgument::class);
+		$this->expectExceptionMessage(
+			"'Tests\Orisai\ObjectMapper\Doubles\Callbacks\WrongArgsTypeCallback::resolveArgs()'"
+			. " should return 'Orisai\ObjectMapper\Args\EmptyArgs'"
+			. " (as defined in 'getArgsType()' method),"
+			. " but returns 'Orisai\ObjectMapper\Rules\NullArgs'.",
+		);
+
+		$this->metaLoader->load(WrongCallbackArgsTypeVO::class);
 	}
 
 }

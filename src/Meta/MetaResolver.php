@@ -330,12 +330,20 @@ final class MetaResolver
 	): CallbackRuntimeMeta
 	{
 		$type = $meta->getType();
+		$args = $type::resolveArgs($meta->getArgs(), $context, $reflector);
 
-		return new CallbackRuntimeMeta(
-			$type,
-			$type::resolveArgs($meta->getArgs(), $context, $reflector),
-			$declaringClass,
-		);
+		$argsType = $type::getArgsType();
+		if (!is_a($args, $argsType)) {
+			$realArgsType = get_class($args);
+
+			throw InvalidArgument::create()
+				->withMessage(
+					"'{$type}::resolveArgs()' should return '$argsType' (as defined in 'getArgsType()' method)"
+					. ", but returns '$realArgsType'.",
+				);
+		}
+
+		return new CallbackRuntimeMeta($type, $args, $declaringClass);
 	}
 
 	/**
@@ -405,13 +413,14 @@ final class MetaResolver
 		$rule = $this->ruleManager->getRule($type);
 		$args = $rule->resolveArgs($meta->getArgs(), $context);
 
-		if (!is_a($args, $rule->getArgsType())) {
+		$argsType = $rule->getArgsType();
+		if (!is_a($args, $argsType)) {
 			$ruleClass = get_class($rule);
 			$realArgsType = get_class($args);
 
 			throw InvalidArgument::create()
 				->withMessage(
-					"'{$ruleClass}->resolveArgs()' should return '{$rule->getArgsType()}' (as defined in 'getArgsType()' method)"
+					"'{$ruleClass}->resolveArgs()' should return '$argsType' (as defined in 'getArgsType()' method)"
 					. ", but returns '$realArgsType'.",
 				);
 		}

@@ -7,25 +7,26 @@ use Orisai\ObjectMapper\Args\EmptyArgs;
 use Orisai\ObjectMapper\Context\ArgsContext;
 use Orisai\ObjectMapper\Context\FieldContext;
 use Orisai\ObjectMapper\Context\TypeContext;
+use Orisai\ObjectMapper\Rules\NullArgs;
 use Orisai\ObjectMapper\Rules\Rule;
 use Orisai\ObjectMapper\Types\SimpleValueType;
 use Orisai\ObjectMapper\Types\Type;
 
 /**
- * @implements Rule<EmptyArgs>
+ * @implements Rule<NullArgs>
  */
 final class WrongArgsTypeRule implements Rule
 {
 
 	public function resolveArgs(array $args, ArgsContext $context): Args
 	{
-		return new EmptyArgs();
+		return new NullArgs(false);
 	}
 
 	public function getArgsType(): string
 	{
 		/** @phpstan-ignore-next-line */
-		return 'nonsense';
+		return EmptyArgs::class;
 	}
 
 	public function processValue($value, Args $args, FieldContext $context)
