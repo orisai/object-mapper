@@ -23,9 +23,8 @@ final class ProcessorCallContextTest extends TestCase
 			null,
 		);
 
-		$context = new ProcessorCallContext(DefaultsVO::class, $holder, $meta);
+		$context = new ProcessorCallContext($holder, $meta);
 
-		self::assertSame(DefaultsVO::class, $context->getClass());
 		self::assertSame($holder, $context->getObjectHolder());
 		self::assertSame($meta, $context->getMeta());
 	}

@@ -17,29 +17,16 @@ final class ProcessorCallContext
 
 	private RuntimeMeta $meta;
 
-	/** @var class-string<T> */
-	private string $class;
-
 	/** @var array<int|string, SkippedFieldContext> */
 	private array $skippedFields = [];
 
 	/**
-	 * @param class-string<T> $class
 	 * @param ObjectHolder<T> $objectHolder
 	 */
-	public function __construct(string $class, ObjectHolder $objectHolder, RuntimeMeta $meta)
+	public function __construct(ObjectHolder $objectHolder, RuntimeMeta $meta)
 	{
-		$this->class = $class;
 		$this->objectHolder = $objectHolder;
 		$this->meta = $meta;
-	}
-
-	/**
-	 * @return class-string<T>
-	 */
-	public function getClass(): string
-	{
-		return $this->class;
 	}
 
 	/**

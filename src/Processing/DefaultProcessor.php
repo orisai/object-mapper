@@ -116,7 +116,7 @@ final class DefaultProcessor implements Processor
 		$holder = $this->createHolder($class, $meta->getClass());
 
 		$mappedObjectContext = $this->createMappedObjectContext($options, $typeCreator, $initializeObjects);
-		$callContext = $this->createProcessorRunContext($class, $meta, $holder);
+		$callContext = $this->createProcessorRunContext($meta, $holder);
 
 		$processedData = $this->processData($data, $mappedObjectContext, $callContext);
 
@@ -204,17 +204,15 @@ final class DefaultProcessor implements Processor
 
 	/**
 	 * @template T of MappedObject
-	 * @param class-string<T> $class
 	 * @param ObjectHolder<T> $holder
 	 * @return ProcessorCallContext<T>
 	 */
 	private function createProcessorRunContext(
-		string $class,
 		RuntimeMeta $meta,
 		ObjectHolder $holder
 	): ProcessorCallContext
 	{
-		return new ProcessorCallContext($class, $holder, $meta);
+		return new ProcessorCallContext($holder, $meta);
 	}
 
 	/**
@@ -723,7 +721,7 @@ final class DefaultProcessor implements Processor
 
 		$meta = $this->metaLoader->load($class);
 		$holder = $this->createHolder($class, $meta->getClass(), $object);
-		$callContext = $this->createProcessorRunContext($class, $meta, $holder);
+		$callContext = $this->createProcessorRunContext($meta, $holder);
 		$fieldsMeta = $meta->getFields();
 
 		foreach ($fields as $fieldName) {
