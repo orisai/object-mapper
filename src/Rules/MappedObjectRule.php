@@ -28,7 +28,7 @@ final class MappedObjectRule implements Rule
 	public const ClassName = 'class';
 
 	/** @var array<string, null> */
-	private array $alreadyResolved = [];
+	private array $resolvedClasses = [];
 
 	public function resolveArgs(array $args, ArgsFieldContext $context): MappedObjectArgs
 	{
@@ -40,13 +40,13 @@ final class MappedObjectRule implements Rule
 		$type = $checker->checkString(self::ClassName);
 
 		// Load object to ensure whole hierarchy is valid even if not used
-		if (!array_key_exists($type, $this->alreadyResolved)) {
-			$this->alreadyResolved[$type] = null;
+		if (!array_key_exists($type, $this->resolvedClasses)) {
+			$this->resolvedClasses[$type] = null;
 			try {
 				/** @phpstan-ignore-next-line Meta loader validates type */
 				$context->getMetaLoader()->load($type);
 			} catch (Throwable $e) {
-				unset($this->alreadyResolved[$type]);
+				unset($this->resolvedClasses[$type]);
 
 				throw $e;
 			}
@@ -63,7 +63,7 @@ final class MappedObjectRule implements Rule
 	}
 
 	/**
-	 * @param mixed            $value
+	 * @param mixed $value
 	 * @param MappedObjectArgs $args
 	 * @return MappedObject|array<mixed>
 	 * @throws InvalidData
@@ -81,11 +81,12 @@ final class MappedObjectRule implements Rule
 
 	public function createType(Args $args, TypeContext $context): MappedObjectType
 	{
+		$type = new MappedObjectType($args->class);
+
 		if (in_array($args->class, $context->getProcessedClasses(), true)) {
-			return new MappedObjectType($args->class);
+			return $type;
 		}
 
-		$type = new MappedObjectType($args->class);
 		foreach ($context->getMeta($args->class)->getFields() as $fieldName => $fieldMeta) {
 			$type->addField(
 				$fieldName,
