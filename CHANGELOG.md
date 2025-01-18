@@ -11,6 +11,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 - `ArrayShapeRule` - allows processing of arrays with predefined keys
 - `ArgsFieldContext` - args validation context which adds access to the property's default value
+- `Processor` - `reset()` method for resetting to initial state (clearing meta cache)
 
 ### Changed
 
@@ -30,6 +31,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 	- initializes `Type` lazily (performance optimization)
 - `ArrayShapeType`
 	- `getFields()` always returns the same instances
+
+### Removed
+
+- `DefaultProcessor` - automatic meta cache reset after main `process()` call (performance optimization)
 
 ## [0.2.0](https://github.com/orisai/object-mapper/compare/0.1.0...0.2.0) - 2024-06-22
 

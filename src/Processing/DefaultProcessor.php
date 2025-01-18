@@ -68,6 +68,11 @@ final class DefaultProcessor implements Processor
 		$this->rawValuesMap = new RawValuesMap();
 	}
 
+	public function reset(): void
+	{
+		$this->metaCache = [];
+	}
+
 	/**
 	 * @param mixed $data
 	 * @throws InvalidData
@@ -119,10 +124,6 @@ final class DefaultProcessor implements Processor
 		$callContext = $this->createProcessorRunContext($meta, $holder);
 
 		$processedData = $this->processData($data, $mappedObjectContext, $callContext);
-
-		if ($options->getProcessedClasses() === [$class]) {
-			$this->metaCache = [];
-		}
 
 		return [$processedData, $holder, $mappedObjectContext, $callContext];
 	}

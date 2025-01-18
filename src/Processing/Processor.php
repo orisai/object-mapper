@@ -46,4 +46,9 @@ interface Processor
 		?Options $options = null
 	): void;
 
+	/**
+	 * Reset object to its initial state
+	 */
+	public function reset(): void;
+
 }
