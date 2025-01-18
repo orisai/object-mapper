@@ -31,9 +31,13 @@ final class MappedObjectContextTest extends TestCase
 		self::assertSame($deps->processor, $context->getProcessor());
 		self::assertTrue($context->shouldInitializeObjects());
 
+		self::assertNull($context->getTypeIfInitialized());
+
 		self::assertEquals($typeCreator(), $context->getType());
 		self::assertNotSame($typeCreator(), $context->getType());
 		self::assertSame($context->getType(), $context->getType());
+
+		self::assertSame($context->getType(), $context->getTypeIfInitialized());
 	}
 
 }

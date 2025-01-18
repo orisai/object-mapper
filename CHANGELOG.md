@@ -31,6 +31,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 	- initializes `Type` lazily (performance optimization)
 - `ArrayShapeType`
 	- `getFields()` always returns the same instances
+- `DefaultProcessor`
+	- creates `MappedObjectType` only when necessary (performance optimization)
 
 ### Removed
 

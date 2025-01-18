@@ -2,33 +2,22 @@
 
 namespace Orisai\ObjectMapper\Context;
 
-use Orisai\ObjectMapper\Processing\Options;
-use Orisai\ObjectMapper\Types\MappedObjectType;
-
 final class SkippedFieldsContext
 {
 
-	private MappedObjectType $type;
-
-	private Options $options;
+	private MappedObjectContext $mappedObjectContext;
 
 	/** @var array<int|string, SkippedFieldContext> */
 	private array $skippedFields = [];
 
-	public function __construct(MappedObjectType $type, Options $options)
+	public function __construct(MappedObjectContext $mappedObjectContext)
 	{
-		$this->type = $type;
-		$this->options = $options;
+		$this->mappedObjectContext = $mappedObjectContext;
 	}
 
-	public function getType(): MappedObjectType
+	public function getMappedObjectContext(): MappedObjectContext
 	{
-		return $this->type;
-	}
-
-	public function getOptions(): Options
-	{
-		return $this->options;
+		return $this->mappedObjectContext;
 	}
 
 	/**

@@ -45,4 +45,9 @@ final class MappedObjectContext extends BaseFieldContext
 		return $this->type = $type;
 	}
 
+	public function getTypeIfInitialized(): ?MappedObjectType
+	{
+		return $this->type;
+	}
+
 }

@@ -252,9 +252,9 @@ final class DefaultProcessor implements Processor
 		$data = $this->handleSentFields($data, $mappedObjectContext, $callContext);
 		$data = $this->handleMissingFields($data, $mappedObjectContext, $callContext);
 
-		$type = $mappedObjectContext->getType();
+		$type = $mappedObjectContext->getTypeIfInitialized();
 
-		if ($type->hasInvalidFields()) {
+		if ($type !== null && $type->hasInvalidFields()) {
 			throw InvalidData::create($type, Value::none());
 		}
 
@@ -272,7 +272,7 @@ final class DefaultProcessor implements Processor
 		ProcessorCallContext $callContext
 	): array
 	{
-		$type = $mappedObjectContext->getType();
+		$type = null;
 		$options = $mappedObjectContext->getOptions();
 
 		$meta = $callContext->getMeta();
@@ -281,7 +281,7 @@ final class DefaultProcessor implements Processor
 
 		foreach ($data as $fieldName => $value) {
 			// Skip invalid field
-			if ($type->isFieldInvalid($fieldName)) {
+			if ($type !== null && $type->isFieldInvalid($fieldName)) {
 				continue;
 			}
 
@@ -305,6 +305,7 @@ final class DefaultProcessor implements Processor
 					: '.';
 
 				// Add error to type
+				$type ??= $mappedObjectContext->getType();
 				$type->overwriteInvalidField(
 					$fieldName,
 					ValueDoesNotMatch::create(
@@ -346,6 +347,7 @@ final class DefaultProcessor implements Processor
 					$fieldMeta,
 				);
 			} catch (ValueDoesNotMatch | InvalidData $exception) {
+				$type ??= $mappedObjectContext->getType();
 				$type->overwriteInvalidField($fieldName, $exception);
 			}
 		}
@@ -388,7 +390,7 @@ final class DefaultProcessor implements Processor
 		ProcessorCallContext $callContext
 	): array
 	{
-		$type = $mappedObjectContext->getType();
+		$type = null;
 		$options = $mappedObjectContext->getOptions();
 		$initializeObjects = $mappedObjectContext->shouldInitializeObjects();
 
@@ -416,10 +418,14 @@ final class DefaultProcessor implements Processor
 				if ($fillDefaultValues) {
 					$data[$missingField] = $defaultMeta->getValue();
 				}
-			} elseif ($requiredFields !== RequiredFields::none() && !$type->isFieldInvalid($missingField)) {
+			} elseif (
+				$requiredFields !== RequiredFields::none()
+				&& ($type === null || !$type->isFieldInvalid($missingField))
+			) {
 				// Field is missing and have no default value, mark as invalid
 				$fieldRuleMeta = $fieldMeta->getRule();
 				$fieldRule = $this->ruleManager->getRule($fieldRuleMeta->getType());
+				$type ??= $mappedObjectContext->getType();
 				$type->overwriteInvalidField(
 					$missingField,
 					ValueDoesNotMatch::create(
@@ -469,8 +475,7 @@ final class DefaultProcessor implements Processor
 		ReflectionProperty $property
 	): FieldContext
 	{
-		$parentType = $mappedObjectContext->getType();
-		$typeCreator = static fn (): Type => $parentType->getField($fieldName);
+		$typeCreator = static fn (): Type => $mappedObjectContext->getType()->getField($fieldName);
 
 		return new FieldContext(
 			$this->metaLoader,
@@ -543,11 +548,10 @@ final class DefaultProcessor implements Processor
 		string $callbackType
 	)
 	{
-		$type = $mappedObjectContext->getType();
-
 		try {
 			$data = $this->applyCallbacks($data, $mappedObjectContext, $callContext, $meta, $callbackType);
 		} catch (ValueDoesNotMatch | InvalidData $exception) {
+			$type = $mappedObjectContext->getType();
 			$caughtType = $exception->getType();
 
 			// User thrown type is not the actual type from MappedObjectContext
@@ -616,7 +620,6 @@ final class DefaultProcessor implements Processor
 		ProcessorCallContext $callContext
 	): void
 	{
-		$type = $mappedObjectContext->getType();
 		$options = $mappedObjectContext->getOptions();
 		$meta = $callContext->getMeta();
 
@@ -639,7 +642,7 @@ final class DefaultProcessor implements Processor
 		// Set skipped properties
 		$skippedFields = $callContext->getSkippedFields();
 		if ($skippedFields !== []) {
-			$skippedContext = new SkippedFieldsContext($type, $options);
+			$skippedContext = new SkippedFieldsContext($mappedObjectContext);
 			$this->skippedMap->setSkippedFieldsContext($object, $skippedContext);
 
 			foreach ($skippedFields as $fieldName => $skippedFieldContext) {
@@ -713,11 +716,13 @@ final class DefaultProcessor implements Processor
 		}
 
 		$skippedFieldsContext = $this->skippedMap->getSkippedFieldsContext($object);
+		$mappedObjectContext = $skippedFieldsContext->getMappedObjectContext();
 
-		$type = $skippedFieldsContext->getType();
-		$typeCreator = static fn (): MappedObjectType => $type;
-		$options ??= $skippedFieldsContext->getOptions();
-		$mappedObjectContext = $this->createMappedObjectContext($options, $typeCreator, true);
+		if ($options !== null) {
+			$mappedObjectContext = $mappedObjectContext->createCloneWithOptions($options);
+		}
+
+		$type = null;
 		$skippedFields = $skippedFieldsContext->getSkippedFields();
 
 		$meta = $this->metaLoader->load($class);
@@ -757,6 +762,7 @@ final class DefaultProcessor implements Processor
 						$fieldMeta,
 					);
 				} catch (ValueDoesNotMatch | InvalidData $exception) {
+					$type ??= $mappedObjectContext->getType();
 					$type->overwriteInvalidField($fieldName, $exception);
 
 					continue;
@@ -768,7 +774,7 @@ final class DefaultProcessor implements Processor
 		}
 
 		// If any of fields is invalid, throw error
-		if ($type->hasInvalidFields()) {
+		if ($type !== null && $type->hasInvalidFields()) {
 			throw InvalidData::create($type, Value::none());
 		}
 

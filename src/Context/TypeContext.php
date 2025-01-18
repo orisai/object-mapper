@@ -83,4 +83,17 @@ class TypeContext
 		return $clone;
 	}
 
+	/**
+	 * @return static
+	 *
+	 * @internal
+	 */
+	public function createCloneWithOptions(Options $options): self
+	{
+		$clone = clone $this;
+		$clone->options = $options;
+
+		return $clone;
+	}
+
 }
