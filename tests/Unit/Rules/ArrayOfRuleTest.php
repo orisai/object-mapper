@@ -166,7 +166,7 @@ final class ArrayOfRuleTest extends ProcessingTestCase
 		$rule = new PhasedTestRule();
 		$this->ruleManager->addRule($rule);
 
-		$value = [$rule::Fail1, 'string' => $rule::Fail3, 'baz', 123];
+		$value = [0 => $rule::Fail1, 'string' => $rule::Fail3, 1 => 'baz', 2 => 123];
 		$exception = null;
 
 		try {
@@ -216,7 +216,7 @@ final class ArrayOfRuleTest extends ProcessingTestCase
 				],
 				[
 					'phase' => 2,
-					'value' => [$rule::Fail3, 'baz', 123],
+					'value' => ['string' => $rule::Fail3, 1 => 'baz', 2 => 123],
 				],
 				[
 					'phase' => 3,

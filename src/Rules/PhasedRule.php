@@ -24,7 +24,7 @@ interface PhasedRule extends Rule
 	public function processValuePhase1($value, Args $args, FieldContext $context);
 
 	/**
-	 * @param list<mixed> $values
+	 * @param array<int|string, mixed> $values
 	 * @param T_ARGS      $args
 	 */
 	public function processValuePhase2(array $values, Args $args, FieldContext $context): void;

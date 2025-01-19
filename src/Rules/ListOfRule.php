@@ -14,7 +14,6 @@ use Orisai\ObjectMapper\Processing\Value;
 use Orisai\ObjectMapper\Types\GenericArrayType;
 use Orisai\ObjectMapper\Types\SimpleValueType;
 use Orisai\Utils\Arrays\ArrayMerger;
-use function array_values;
 use function count;
 use function is_array;
 use function is_int;
@@ -140,7 +139,7 @@ final class ListOfRule extends MultiValueRule
 		}
 
 		if ($phasedRule) {
-			$itemRule->processValuePhase2(array_values($value), $args, $context->createClone());
+			$itemRule->processValuePhase2($value, $args, $context->createClone());
 
 			foreach ($value as $key => $item) {
 				try {

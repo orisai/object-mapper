@@ -207,7 +207,7 @@ final class ListOfRuleTest extends ProcessingTestCase
 				],
 				[
 					'phase' => 2,
-					'value' => [$rule::Fail3, 'baz', 123],
+					'value' => [42 => $rule::Fail3, 'baz', 123],
 				],
 				[
 					'phase' => 3,
