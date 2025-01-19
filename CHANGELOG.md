@@ -39,6 +39,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 	- renamed to `PhasedRule`
 - `MultiValueEfficientRuleAdapter`
 	- renamed to `PhasedRuleAdapter`
+	- marked as internal
 
 ### Removed
 

@@ -11,6 +11,8 @@ use Orisai\ObjectMapper\Types\Type;
 
 /**
  * @implements PhasedRule<Args>
+ *
+ * @internal
  */
 final class PhasedRuleAdapter implements PhasedRule
 {
