@@ -129,6 +129,9 @@ final class ArrayOfRule extends MultiValueRule
 		$itemArgs = $itemMeta->getArgs();
 		if (!$itemRule instanceof MultiValueEfficientRule) {
 			$itemRule = new MultiValueEfficientRuleAdapter($itemRule);
+			$phasedRule = false;
+		} else {
+			$phasedRule = true;
 		}
 
 		$keyMeta = $args->keyRuleMeta;
@@ -165,18 +168,20 @@ final class ArrayOfRule extends MultiValueRule
 			}
 		}
 
-		$itemRule->processValuePhase2(array_values($value), $args, $context->createClone());
+		if ($phasedRule) {
+			$itemRule->processValuePhase2(array_values($value), $args, $context->createClone());
 
-		foreach ($value as $key => $item) {
-			try {
-				$value[$key] = $itemRule->processValuePhase3(
-					$item,
-					$itemArgs,
-					$context->createClone(),
-				);
-			} catch (ValueDoesNotMatch | InvalidData $exception) {
-				$type ??= $this->createType($args, $context);
-				$type->addInvalidValue($key, $exception);
+			foreach ($value as $key => $item) {
+				try {
+					$value[$key] = $itemRule->processValuePhase3(
+						$item,
+						$itemArgs,
+						$context->createClone(),
+					);
+				} catch (ValueDoesNotMatch | InvalidData $exception) {
+					$type ??= $this->createType($args, $context);
+					$type->addInvalidValue($key, $exception);
+				}
 			}
 		}
 

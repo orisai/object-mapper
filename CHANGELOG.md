@@ -27,6 +27,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 	- all rules initialize `Type` lazily (performance optimization)
 - `ArrayOfRule`
 	- check during metadata parsing that default value is an array when `mergeDefaults` is enabled
+- `ArrayOfRule`, `ListOfRule`
+	- skip 2nd and 3rd validation phase for item rules that don't require it
 - `FieldContext`, `MappedObjectContext`
 	- initializes `Type` lazily (performance optimization)
 - `ArrayShapeType`
