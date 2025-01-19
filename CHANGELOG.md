@@ -22,6 +22,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 	- Improved accuracy of metadata-related error messages
 	- `ReflectorMetaSource` is marked as `@internal`
 	- Check that `Callback` returns correct `Args` class type
+	- Callbacks in `NodeRuntimeMeta` are grouped by type (performance optimization)
 - `Rule`
 	- `resolveArgs()` accepts `ArgsFieldContext` instead of `ArgsContext`
 	- all rules initialize `Type` lazily (performance optimization)

@@ -2,6 +2,7 @@
 
 namespace Tests\Orisai\ObjectMapper\Unit\Meta\Runtime;
 
+use Orisai\ObjectMapper\Callbacks\AfterCallback;
 use Orisai\ObjectMapper\Callbacks\BaseCallbackArgs;
 use Orisai\ObjectMapper\Callbacks\BeforeCallback;
 use Orisai\ObjectMapper\Callbacks\CallbackRuntime;
@@ -24,12 +25,15 @@ final class ClassRuntimeMetaTest extends TestCase
 
 	public function test(): void
 	{
-		$callbacks = [
+		$beforeCallbacks = [
 			new CallbackRuntimeMeta(
 				BeforeCallback::class,
 				new BaseCallbackArgs('method', false, false, CallbackRuntime::process()),
 				new ReflectionClass(DefaultsVO::class),
 			),
+		];
+		$callbacks = [
+			BeforeCallback::class => $beforeCallbacks,
 		];
 		$docs = [
 			DescriptionDoc::getUniqueName() => new DocMeta(DescriptionDoc::class, []),
@@ -48,6 +52,14 @@ final class ClassRuntimeMetaTest extends TestCase
 		self::assertSame(
 			$callbacks,
 			$meta->getCallbacks(),
+		);
+		self::assertSame(
+			$beforeCallbacks,
+			$meta->getCallbacksByType(BeforeCallback::class),
+		);
+		self::assertSame(
+			[],
+			$meta->getCallbacksByType(AfterCallback::class),
 		);
 		self::assertSame(
 			$docs,

@@ -527,16 +527,14 @@ final class DefaultProcessor implements Processor
 	{
 		$holder = $callContext->getObjectHolder();
 
-		foreach ($meta->getCallbacks() as $callback) {
-			if ($callback->getType() === $callbackType) {
-				$data = $callbackType::invoke(
-					$data,
-					$callback->getArgs(),
-					$holder,
-					$baseFieldContext,
-					$callback->getDeclaringClass(),
-				);
-			}
+		foreach ($meta->getCallbacksByType($callbackType) as $callback) {
+			$data = $callbackType::invoke(
+				$data,
+				$callback->getArgs(),
+				$holder,
+				$baseFieldContext,
+				$callback->getDeclaringClass(),
+			);
 		}
 
 		return $data;

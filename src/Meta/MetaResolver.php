@@ -6,6 +6,7 @@ use Orisai\Exceptions\Logic\InvalidArgument;
 use Orisai\Exceptions\Logic\InvalidState;
 use Orisai\Exceptions\Message;
 use Orisai\ObjectMapper\Args\Args;
+use Orisai\ObjectMapper\Callbacks\Callback;
 use Orisai\ObjectMapper\Context\ArgsContext;
 use Orisai\ObjectMapper\Context\ArgsFieldContext;
 use Orisai\ObjectMapper\MappedObject;
@@ -295,7 +296,7 @@ final class MetaResolver
 	/**
 	 * @param ReflectionClass<MappedObject>|ReflectionProperty $reflector
 	 * @param ReflectionClass<MappedObject>                    $classReflector
-	 * @return array<int, CallbackRuntimeMeta<Args>>
+	 * @return array<class-string<Callback<Args>>, array<int, CallbackRuntimeMeta<Args>>>
 	 */
 	private function resolveCallbacksMeta(
 		NodeCompileMeta $meta,
@@ -306,12 +307,14 @@ final class MetaResolver
 	{
 		$array = [];
 		foreach ($meta->getCallbacks() as $key => $callback) {
-			$array[$key] = $this->resolveCallbackMeta(
+			$callbackMeta = $this->resolveCallbackMeta(
 				$callback,
 				$context,
 				$reflector,
 				$classReflector,
 			);
+
+			$array[$callbackMeta->getType()][$key] = $callbackMeta;
 		}
 
 		return $array;

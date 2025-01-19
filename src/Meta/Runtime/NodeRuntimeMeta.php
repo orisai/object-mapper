@@ -3,6 +3,7 @@
 namespace Orisai\ObjectMapper\Meta\Runtime;
 
 use Orisai\ObjectMapper\Args\Args;
+use Orisai\ObjectMapper\Callbacks\Callback;
 use Orisai\ObjectMapper\Meta\Shared\DocMeta;
 
 /**
@@ -11,15 +12,16 @@ use Orisai\ObjectMapper\Meta\Shared\DocMeta;
 abstract class NodeRuntimeMeta
 {
 
-	/** @var array<int, CallbackRuntimeMeta<Args>> */
+	/** @var array<class-string<Callback<Args>>, array<int, CallbackRuntimeMeta<Args>>> */
 	private array $callbacks;
 
 	/** @var array<string, DocMeta> */
 	private array $docs;
 
 	/**
-	 * @param array<int, CallbackRuntimeMeta<Args>> $callbacks
-	 * @param array<string, DocMeta>                $docs
+	 * @template T_ARGS of Args
+	 * @param array<class-string<Callback<T_ARGS>>, array<int, CallbackRuntimeMeta<T_ARGS>>> $callbacks
+	 * @param array<string, DocMeta> $docs
 	 */
 	public function __construct(array $callbacks, array $docs)
 	{
@@ -28,11 +30,19 @@ abstract class NodeRuntimeMeta
 	}
 
 	/**
-	 * @return array<int, CallbackRuntimeMeta<Args>>
+	 * @return array<class-string<Callback<Args>>, array<int, CallbackRuntimeMeta<Args>>>
 	 */
 	public function getCallbacks(): array
 	{
 		return $this->callbacks;
+	}
+
+	/**
+	 * @return array<int, CallbackRuntimeMeta<Args>>
+	 */
+	public function getCallbacksByType(string $type): array
+	{
+		return $this->callbacks[$type] ?? [];
 	}
 
 	/**
