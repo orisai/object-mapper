@@ -4,7 +4,6 @@ namespace Tests\Orisai\ObjectMapper\Unit\Processing;
 
 use DateTimeImmutable;
 use DateTimeInterface;
-use Orisai\Exceptions\Logic\InvalidState;
 use Orisai\ObjectMapper\Exception\InvalidData;
 use Orisai\ObjectMapper\MappedObject;
 use Orisai\ObjectMapper\Printers\ErrorPrinter;
@@ -62,7 +61,6 @@ use Tests\Orisai\ObjectMapper\Doubles\Php81\ObjectInitializingInAttributeVo;
 use Tests\Orisai\ObjectMapper\Doubles\Php81\ReadonlyPropertiesVO;
 use Tests\Orisai\ObjectMapper\Doubles\Php82\ReadonlyClassVO;
 use Tests\Orisai\ObjectMapper\Doubles\PropertiesInitVO;
-use Tests\Orisai\ObjectMapper\Doubles\Skipped\SkippedFieldsVO;
 use Tests\Orisai\ObjectMapper\Doubles\StructuresVO;
 use Tests\Orisai\ObjectMapper\Doubles\TransformingVO;
 use Tests\Orisai\ObjectMapper\Doubles\UntypedVO;
@@ -1214,109 +1212,6 @@ arrayOfMixed: array<mixed>',
 		], TraitCallbackVO::class);
 
 		self::assertSame('A::before-value-A::after', $vo->string);
-	}
-
-	public function testSkipped(): void
-	{
-		$vo = $this->processor->process([
-			'required' => 'required',
-			'requiredSkipped' => 'requiredSkipped',
-		], SkippedFieldsVO::class);
-
-		self::assertSame('required', $vo->required);
-		self::assertSame('optional', $vo->optional);
-		self::assertFalse($this->isInitialized($vo, 'requiredSkipped'));
-		self::assertFalse($this->isInitialized($vo, 'optionalSkipped'));
-
-		$this->processor->processSkippedFields([
-			'requiredSkipped',
-			'optionalSkipped',
-		], $vo);
-
-		self::assertSame('requiredSkipped', $vo->requiredSkipped);
-		self::assertSame('optionalSkipped', $vo->optionalSkipped);
-	}
-
-	public function testSkippedNotSent(): void
-	{
-		$vo = null;
-		$exception = null;
-
-		try {
-			$vo = $this->processor->process([
-				'required' => 'required',
-			], SkippedFieldsVO::class);
-		} catch (InvalidData $exception) {
-			// Checked bellow
-		}
-
-		self::assertNull($vo);
-		self::assertInstanceOf(InvalidData::class, $exception);
-
-		self::assertSame(
-			'requiredSkipped: string',
-			$this->printer->printError($exception),
-		);
-	}
-
-	public function testSkippedInvalidField(): void
-	{
-		$vo = $this->processor->process([
-			'required' => 'required',
-			'requiredSkipped' => null,
-		], SkippedFieldsVO::class);
-		$exception = null;
-
-		try {
-			$this->processor->processSkippedFields([
-				'requiredSkipped',
-			], $vo);
-		} catch (InvalidData $exception) {
-			// Checked bellow
-		}
-
-		self::assertInstanceOf(InvalidData::class, $exception);
-		self::assertSame(
-			'requiredSkipped: string',
-			$this->printer->printError($exception),
-		);
-	}
-
-	public function testSkippedObjectAlreadyFullyInitialized(): void
-	{
-		$vo = $this->processor->process([
-			'required' => 'required',
-			'requiredSkipped' => 'requiredSkipped',
-		], SkippedFieldsVO::class);
-
-		$this->processor->processSkippedFields([
-			'requiredSkipped',
-			'optionalSkipped',
-		], $vo);
-
-		$this->expectException(InvalidState::class);
-		$this->expectExceptionMessage(
-			'Cannot initialize fields "whatever" of "Tests\Orisai\ObjectMapper\Doubles\Skipped\SkippedFieldsVO"'
-			. ' instance because it has no skipped fields.',
-		);
-
-		$this->processor->processSkippedFields(['whatever'], $vo);
-	}
-
-	public function testSkippedFieldAlreadyInitialized(): void
-	{
-		$vo = $this->processor->process([
-			'required' => 'required',
-			'requiredSkipped' => 'requiredSkipped',
-		], SkippedFieldsVO::class);
-
-		$this->expectException(InvalidState::class);
-		$this->expectExceptionMessage(
-			'Cannot initialize field "whatever" of "Tests\Orisai\ObjectMapper\Doubles\Skipped\SkippedFieldsVO"'
-			. ' instance because it is already initialized or does not exist.',
-		);
-
-		$this->processor->processSkippedFields(['whatever'], $vo);
 	}
 
 	public function testAttributes(): void

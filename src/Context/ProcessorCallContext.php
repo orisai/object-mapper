@@ -17,9 +17,6 @@ final class ProcessorCallContext
 
 	private RuntimeMeta $meta;
 
-	/** @var array<int|string, SkippedFieldContext> */
-	private array $skippedFields = [];
-
 	/**
 	 * @param ObjectHolder<T> $objectHolder
 	 */
@@ -40,25 +37,6 @@ final class ProcessorCallContext
 	public function getMeta(): RuntimeMeta
 	{
 		return $this->meta;
-	}
-
-	/**
-	 * @param int|string $fieldName
-	 */
-	public function addSkippedField(
-		$fieldName,
-		SkippedFieldContext $skippedFieldContext
-	): void
-	{
-		$this->skippedFields[$fieldName] = $skippedFieldContext;
-	}
-
-	/**
-	 * @return array<int|string, SkippedFieldContext>
-	 */
-	public function getSkippedFields(): array
-	{
-		return $this->skippedFields;
 	}
 
 }

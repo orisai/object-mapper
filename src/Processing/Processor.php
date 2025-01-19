@@ -35,18 +35,6 @@ interface Processor
 	public function getRawValues(MappedObject $object);
 
 	/**
-	 * Validate and initialize MappedObject fields which were skipped due to Skipped modifier
-	 *
-	 * @param list<string> $fields
-	 * @throws InvalidData
-	 */
-	public function processSkippedFields(
-		array $fields,
-		MappedObject $object,
-		?Options $options = null
-	): void;
-
-	/**
 	 * Reset object to its initial state
 	 */
 	public function reset(): void;

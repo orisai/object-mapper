@@ -37,6 +37,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ### Removed
 
 - `DefaultProcessor` - automatic meta cache reset after main `process()` call (performance optimization)
+- `Skipped` modifier and the related code - it was an undocumented feature that is no longer necessary
 
 ## [0.2.0](https://github.com/orisai/object-mapper/compare/0.1.0...0.2.0) - 2024-06-22
 
