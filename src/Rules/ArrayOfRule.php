@@ -127,8 +127,8 @@ final class ArrayOfRule extends MultiValueRule
 		$itemMeta = $args->itemRuleMeta;
 		$itemRule = $context->getRule($itemMeta->getType());
 		$itemArgs = $itemMeta->getArgs();
-		if (!$itemRule instanceof MultiValueEfficientRule) {
-			$itemRule = new MultiValueEfficientRuleAdapter($itemRule);
+		if (!$itemRule instanceof PhasedRule) {
+			$itemRule = new PhasedRuleAdapter($itemRule);
 			$phasedRule = false;
 		} else {
 			$phasedRule = true;

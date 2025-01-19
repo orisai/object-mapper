@@ -35,6 +35,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 	- `getFields()` always returns the same instances
 - `DefaultProcessor`
 	- creates `MappedObjectType` only when necessary (performance optimization)
+- `MultiValueEfficientRule`
+	- renamed to `PhasedRule`
+- `MultiValueEfficientRuleAdapter`
+	- renamed to `PhasedRuleAdapter`
 
 ### Removed
 

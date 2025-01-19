@@ -19,7 +19,7 @@ use Orisai\ObjectMapper\Rules\StringRule;
 use Orisai\ObjectMapper\Types\GenericArrayType;
 use Orisai\ObjectMapper\Types\SimpleValueType;
 use Tests\Orisai\ObjectMapper\Doubles\Rules\AlwaysInvalidRule;
-use Tests\Orisai\ObjectMapper\Doubles\Rules\EfficientTestRule;
+use Tests\Orisai\ObjectMapper\Doubles\Rules\PhasedTestRule;
 use Tests\Orisai\ObjectMapper\Toolkit\ProcessingTestCase;
 
 final class ArrayOfRuleTest extends ProcessingTestCase
@@ -100,7 +100,7 @@ final class ArrayOfRuleTest extends ProcessingTestCase
 
 	public function testProcessMultiStepCallOrder(): void
 	{
-		$rule = new EfficientTestRule();
+		$rule = new PhasedTestRule();
 		$this->ruleManager->addRule($rule);
 
 		$value = ['foo', 'bar', 'baz', 123];
@@ -108,7 +108,7 @@ final class ArrayOfRuleTest extends ProcessingTestCase
 		$processed = $this->rule->processValue(
 			$value,
 			new ArrayOfArgs(
-				$this->ruleRuntimeMeta(EfficientTestRule::class),
+				$this->ruleRuntimeMeta(PhasedTestRule::class),
 				null,
 				null,
 				null,
@@ -163,7 +163,7 @@ final class ArrayOfRuleTest extends ProcessingTestCase
 
 	public function testProcessMultiStepCallOrderWithErrors(): void
 	{
-		$rule = new EfficientTestRule();
+		$rule = new PhasedTestRule();
 		$this->ruleManager->addRule($rule);
 
 		$value = [$rule::Fail1, 'string' => $rule::Fail3, 'baz', 123];
@@ -173,7 +173,7 @@ final class ArrayOfRuleTest extends ProcessingTestCase
 			$this->rule->processValue(
 				$value,
 				new ArrayOfArgs(
-					$this->ruleRuntimeMeta(EfficientTestRule::class),
+					$this->ruleRuntimeMeta(PhasedTestRule::class),
 					$this->ruleRuntimeMeta(IntRule::class),
 					null,
 					null,

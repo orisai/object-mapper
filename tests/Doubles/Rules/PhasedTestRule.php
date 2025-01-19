@@ -8,14 +8,14 @@ use Orisai\ObjectMapper\Context\FieldContext;
 use Orisai\ObjectMapper\Context\TypeContext;
 use Orisai\ObjectMapper\Exception\ValueDoesNotMatch;
 use Orisai\ObjectMapper\Processing\Value;
-use Orisai\ObjectMapper\Rules\MultiValueEfficientRule;
 use Orisai\ObjectMapper\Rules\NoArgsRule;
+use Orisai\ObjectMapper\Rules\PhasedRule;
 use Orisai\ObjectMapper\Types\SimpleValueType;
 
 /**
- * @implements MultiValueEfficientRule<EmptyArgs>
+ * @implements PhasedRule<EmptyArgs>
  */
-final class EfficientTestRule implements MultiValueEfficientRule
+final class PhasedTestRule implements PhasedRule
 {
 
 	use NoArgsRule;
@@ -80,7 +80,7 @@ final class EfficientTestRule implements MultiValueEfficientRule
 
 	public function createType(Args $args, TypeContext $context): SimpleValueType
 	{
-		return new SimpleValueType('efficient');
+		return new SimpleValueType('phased');
 	}
 
 }

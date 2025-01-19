@@ -10,9 +10,9 @@ use Orisai\ObjectMapper\Context\TypeContext;
 use Orisai\ObjectMapper\Types\Type;
 
 /**
- * @implements MultiValueEfficientRule<Args>
+ * @implements PhasedRule<Args>
  */
-final class MultiValueEfficientRuleAdapter implements MultiValueEfficientRule
+final class PhasedRuleAdapter implements PhasedRule
 {
 
 	/** @var Rule<Args> */

@@ -11,7 +11,7 @@ use Orisai\ObjectMapper\Exception\ValueDoesNotMatch;
  * @template T_ARGS of Args
  * @extends Rule<T_ARGS>
  */
-interface MultiValueEfficientRule extends Rule
+interface PhasedRule extends Rule
 {
 
 	/**

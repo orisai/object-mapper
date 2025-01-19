@@ -5,19 +5,19 @@ namespace Tests\Orisai\ObjectMapper\Unit\Rules;
 use Orisai\Exceptions\Logic\NotImplemented;
 use Orisai\ObjectMapper\Args\EmptyArgs;
 use Orisai\ObjectMapper\Rules\MixedRule;
-use Orisai\ObjectMapper\Rules\MultiValueEfficientRuleAdapter;
+use Orisai\ObjectMapper\Rules\PhasedRuleAdapter;
 use Orisai\ObjectMapper\Types\SimpleValueType;
 use Tests\Orisai\ObjectMapper\Toolkit\ProcessingTestCase;
 
-final class MultiValueEfficientRuleAdapterTest extends ProcessingTestCase
+final class PhasedRuleAdapterTest extends ProcessingTestCase
 {
 
-	private MultiValueEfficientRuleAdapter $rule;
+	private PhasedRuleAdapter $rule;
 
 	protected function setUp(): void
 	{
 		parent::setUp();
-		$this->rule = new MultiValueEfficientRuleAdapter(new MixedRule());
+		$this->rule = new PhasedRuleAdapter(new MixedRule());
 	}
 
 	public function testResolveArgs(): void
