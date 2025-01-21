@@ -4,12 +4,12 @@ namespace Orisai\ObjectMapper\Rules;
 
 use Orisai\ObjectMapper\Args\ArgsChecker;
 use Orisai\ObjectMapper\Args\EmptyArgs;
-use Orisai\ObjectMapper\Context\ArgsFieldContext;
+use Orisai\ObjectMapper\Meta\Context\MetaFieldContext;
 
 trait NoArgsRule
 {
 
-	public function resolveArgs(array $args, ArgsFieldContext $context): EmptyArgs
+	public function resolveArgs(array $args, MetaFieldContext $context): EmptyArgs
 	{
 		$checker = new ArgsChecker($args, static::class);
 		$checker->checkNoArgs();

@@ -4,9 +4,10 @@ namespace Orisai\ObjectMapper\Rules;
 
 use Orisai\Exceptions\Logic\NotImplemented;
 use Orisai\ObjectMapper\Args\Args;
-use Orisai\ObjectMapper\Context\ArgsFieldContext;
-use Orisai\ObjectMapper\Context\FieldContext;
-use Orisai\ObjectMapper\Context\TypeContext;
+use Orisai\ObjectMapper\Meta\Context\MetaFieldContext;
+use Orisai\ObjectMapper\Processing\Context\DynamicContext;
+use Orisai\ObjectMapper\Processing\Context\PropertyContext;
+use Orisai\ObjectMapper\Processing\Context\ServicesContext;
 use Orisai\ObjectMapper\Types\Type;
 
 /**
@@ -28,7 +29,7 @@ final class PhasedRuleAdapter implements PhasedRule
 		$this->rule = $rule;
 	}
 
-	public function resolveArgs(array $args, ArgsFieldContext $context): Args
+	public function resolveArgs(array $args, MetaFieldContext $context): Args
 	{
 		$this->throwNotImplemented(__FUNCTION__);
 	}
@@ -38,29 +39,57 @@ final class PhasedRuleAdapter implements PhasedRule
 		$this->throwNotImplemented(__FUNCTION__);
 	}
 
-	public function processValuePhase1($value, Args $args, FieldContext $context)
+	public function processValuePhase1(
+		$value,
+		Args $args,
+		ServicesContext $services,
+		PropertyContext $property,
+		DynamicContext $dynamic
+	)
 	{
-		return $this->rule->processValue($value, $args, $context);
+		return $this->rule->processValue($value, $args, $services, $property, $dynamic);
 	}
 
-	public function processValuePhase2(array $values, Args $args, FieldContext $context): void
+	public function processValuePhase2(
+		array $values,
+		Args $args,
+		ServicesContext $services,
+		PropertyContext $property,
+		DynamicContext $dynamic
+	): void
 	{
 		// Noop
 	}
 
-	public function processValuePhase3($value, Args $args, FieldContext $context)
+	public function processValuePhase3(
+		$value,
+		Args $args,
+		ServicesContext $services,
+		PropertyContext $property,
+		DynamicContext $dynamic
+	)
 	{
 		return $value;
 	}
 
-	public function processValue($value, Args $args, FieldContext $context): void
+	public function processValue(
+		$value,
+		Args $args,
+		ServicesContext $services,
+		PropertyContext $property,
+		DynamicContext $dynamic
+	): void
 	{
 		$this->throwNotImplemented(__FUNCTION__);
 	}
 
-	public function createType(Args $args, TypeContext $context): Type
+	public function createType(
+		Args $args,
+		ServicesContext $services,
+		DynamicContext $dynamic
+	): Type
 	{
-		return $this->rule->createType($args, $context);
+		return $this->rule->createType($args, $services, $dynamic);
 	}
 
 	/**

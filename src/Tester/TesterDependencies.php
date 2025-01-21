@@ -2,19 +2,18 @@
 
 namespace Orisai\ObjectMapper\Tester;
 
-use Orisai\ObjectMapper\Context\ArgsContext;
-use Orisai\ObjectMapper\Context\ArgsFieldContext;
-use Orisai\ObjectMapper\Context\FieldContext;
-use Orisai\ObjectMapper\Context\TypeContext;
+use Orisai\ObjectMapper\Meta\Context\MetaContext;
+use Orisai\ObjectMapper\Meta\Context\MetaFieldContext;
 use Orisai\ObjectMapper\Meta\MetaLoader;
 use Orisai\ObjectMapper\Meta\MetaResolver;
 use Orisai\ObjectMapper\Meta\Shared\DefaultValueMeta;
+use Orisai\ObjectMapper\Processing\Context\DynamicContext;
+use Orisai\ObjectMapper\Processing\Context\PropertyContext;
+use Orisai\ObjectMapper\Processing\Context\ServicesContext;
 use Orisai\ObjectMapper\Processing\DefaultDependencyInjectorManager;
 use Orisai\ObjectMapper\Processing\Options;
 use Orisai\ObjectMapper\Processing\Processor;
 use Orisai\ObjectMapper\Rules\DefaultRuleManager;
-use Orisai\ObjectMapper\Types\MessageType;
-use Orisai\ObjectMapper\Types\Type;
 use ReflectionProperty;
 
 final class TesterDependencies
@@ -29,6 +28,8 @@ final class TesterDependencies
 	public Processor $processor;
 
 	public DefaultDependencyInjectorManager $dependencyInjectorManager;
+
+	public ServicesContext $servicesContext;
 
 	/**
 	 * @internal
@@ -47,48 +48,35 @@ final class TesterDependencies
 		$this->ruleManager = $ruleManager;
 		$this->processor = $processor;
 		$this->dependencyInjectorManager = $dependencyInjectorManager;
+		$this->servicesContext = new ServicesContext($metaLoader, $ruleManager, $processor);
 	}
 
-	public function createArgsFieldContext(?DefaultValueMeta $default = null): ArgsFieldContext
+	public function createArgsFieldContext(?DefaultValueMeta $default = null): MetaFieldContext
 	{
-		return new ArgsFieldContext(
+		return new MetaFieldContext(
 			$this->metaLoader,
 			$this->metaResolver,
 			$default ?? DefaultValueMeta::fromNothing(),
 		);
 	}
 
-	public function createArgsContext(): ArgsContext
+	public function createArgsContext(): MetaContext
 	{
-		return new ArgsContext($this->metaLoader, $this->metaResolver);
+		return new MetaContext($this->metaLoader, $this->metaResolver);
 	}
 
-	public function createTypeContext(?Options $options = null): TypeContext
+	public function createPropertyContext(?DefaultValueMeta $default = null): PropertyContext
 	{
-		return new TypeContext(
-			$this->metaLoader,
-			$this->ruleManager,
-			$options !== null ? $options->createClone() : new Options(),
-		);
-	}
-
-	public function createFieldContext(
-		?DefaultValueMeta $defaultValueMeta = null,
-		?Options $options = null,
-		bool $initializeObjects = false
-	): FieldContext
-	{
-		return new FieldContext(
-			$this->metaLoader,
-			$this->ruleManager,
-			$this->processor,
-			$options !== null ? $options->createClone() : new Options(),
-			static fn (): Type => new MessageType('test'),
-			$defaultValueMeta ?? DefaultValueMeta::fromNothing(),
-			$initializeObjects,
-			'test',
+		return new PropertyContext(
+			$default ?? DefaultValueMeta::fromNothing(),
 			new ReflectionProperty(self::class, 'processor'),
+			'test',
 		);
+	}
+
+	public function createDynamicContext(?Options $options = null, bool $initializeObjects = false): DynamicContext
+	{
+		return new DynamicContext($options ?? new Options(), $initializeObjects);
 	}
 
 }

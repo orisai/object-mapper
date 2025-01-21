@@ -2,7 +2,7 @@
 
 namespace Tests\Orisai\ObjectMapper\Unit\Context;
 
-use Orisai\ObjectMapper\Context\ArgsFieldContext;
+use Orisai\ObjectMapper\Meta\Context\MetaFieldContext;
 use Orisai\ObjectMapper\Meta\Shared\DefaultValueMeta;
 use Orisai\ObjectMapper\Tester\ObjectMapperTester;
 use PHPUnit\Framework\TestCase;
@@ -15,7 +15,7 @@ final class ArgsFieldContextTest extends TestCase
 		$deps = (new ObjectMapperTester())->buildDependencies();
 		$default = DefaultValueMeta::fromNothing();
 
-		$context = new ArgsFieldContext($deps->metaLoader, $deps->metaResolver, $default);
+		$context = new MetaFieldContext($deps->metaLoader, $deps->metaResolver, $default);
 
 		self::assertSame($deps->metaLoader, $context->getMetaLoader());
 		self::assertSame($deps->metaResolver, $context->getMetaResolver());
@@ -27,7 +27,7 @@ final class ArgsFieldContextTest extends TestCase
 		$deps = (new ObjectMapperTester())->buildDependencies();
 		$default = DefaultValueMeta::fromValue('foo');
 
-		$context = new ArgsFieldContext($deps->metaLoader, $deps->metaResolver, $default);
+		$context = new MetaFieldContext($deps->metaLoader, $deps->metaResolver, $default);
 
 		self::assertSame($deps->metaLoader, $context->getMetaLoader());
 		self::assertSame($deps->metaResolver, $context->getMetaResolver());

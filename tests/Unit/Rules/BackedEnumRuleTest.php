@@ -65,7 +65,9 @@ final class BackedEnumRuleTest extends ProcessingTestCase
 		$processed = $this->rule->processValue(
 			$value,
 			$args,
-			$this->fieldContext(),
+			$this->dependencies->servicesContext,
+			$this->dependencies->createPropertyContext(),
+			$this->dependencies->createDynamicContext(),
 		);
 
 		self::assertSame($expected, $processed);
@@ -109,7 +111,9 @@ final class BackedEnumRuleTest extends ProcessingTestCase
 			$this->rule->processValue(
 				$value,
 				$args,
-				$this->fieldContext(),
+				$this->dependencies->servicesContext,
+				$this->dependencies->createPropertyContext(),
+				$this->dependencies->createDynamicContext(),
 			);
 		} catch (ValueDoesNotMatch $exception) {
 			$type = $exception->getType();
@@ -150,10 +154,18 @@ final class BackedEnumRuleTest extends ProcessingTestCase
 	{
 		$args = new BackedEnumArgs(ExampleStringEnum::class, false);
 
-		$type = $this->rule->createType($args, $this->createTypeContext());
+		$type = $this->rule->createType(
+			$args,
+			$this->dependencies->servicesContext,
+			$this->dependencies->createDynamicContext(),
+		);
 
 		self::assertEquals(
-			$this->rule->createType($args, $this->fieldContext()),
+			$this->rule->createType(
+				$args,
+				$this->dependencies->servicesContext,
+				$this->dependencies->createDynamicContext(),
+			),
 			$type,
 		);
 

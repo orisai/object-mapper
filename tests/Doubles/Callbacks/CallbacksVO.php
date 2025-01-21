@@ -6,8 +6,8 @@ use Orisai\Exceptions\Logic\InvalidState;
 use Orisai\ObjectMapper\Callbacks\After;
 use Orisai\ObjectMapper\Callbacks\Before;
 use Orisai\ObjectMapper\Callbacks\CallbackRuntime;
-use Orisai\ObjectMapper\Context\FieldContext;
-use Orisai\ObjectMapper\Context\MappedObjectContext;
+use Orisai\ObjectMapper\Callbacks\Context\FieldContext;
+use Orisai\ObjectMapper\Callbacks\Context\ObjectContext;
 use Orisai\ObjectMapper\Exception\InvalidData;
 use Orisai\ObjectMapper\MappedObject;
 use Orisai\ObjectMapper\Rules\ArrayOf;
@@ -69,7 +69,7 @@ final class CallbacksVO implements MappedObject
 	 * @param mixed $data
 	 * @return mixed
 	 */
-	public static function beforeClass($data, MappedObjectContext $context)
+	public static function beforeClass($data, ObjectContext $context)
 	{
 		if (!is_array($data)) {
 			return $data;
@@ -95,7 +95,7 @@ final class CallbacksVO implements MappedObject
 	 * @param array<mixed> $data
 	 * @return array<mixed>
 	 */
-	public static function afterClass(array $data, MappedObjectContext $context): array
+	public static function afterClass(array $data, ObjectContext $context): array
 	{
 		$data['array']['afterClassCallback'][] = $context->shouldInitializeObjects();
 

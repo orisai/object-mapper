@@ -52,7 +52,9 @@ final class NullRuleTest extends ProcessingTestCase
 		$processed = $this->rule->processValue(
 			null,
 			new NullArgs(false),
-			$this->fieldContext(),
+			$this->dependencies->servicesContext,
+			$this->dependencies->createPropertyContext(),
+			$this->dependencies->createDynamicContext(),
 		);
 
 		/** @phpstan-ignore-next-line  */
@@ -67,7 +69,9 @@ final class NullRuleTest extends ProcessingTestCase
 		$processed = $this->rule->processValue(
 			$value,
 			new NullArgs(true),
-			$this->fieldContext(),
+			$this->dependencies->servicesContext,
+			$this->dependencies->createPropertyContext(),
+			$this->dependencies->createDynamicContext(),
 		);
 
 		/** @phpstan-ignore-next-line  */
@@ -97,7 +101,9 @@ final class NullRuleTest extends ProcessingTestCase
 			$this->rule->processValue(
 				$value,
 				new NullArgs(false),
-				$this->fieldContext(),
+				$this->dependencies->servicesContext,
+				$this->dependencies->createPropertyContext(),
+				$this->dependencies->createDynamicContext(),
 			);
 		} catch (ValueDoesNotMatch $exception) {
 			$type = $exception->getType();
@@ -133,10 +139,18 @@ final class NullRuleTest extends ProcessingTestCase
 	{
 		$args = $this->ruleArgs(NullRule::class);
 
-		$type = $this->rule->createType($args, $this->createTypeContext());
+		$type = $this->rule->createType(
+			$args,
+			$this->dependencies->servicesContext,
+			$this->dependencies->createDynamicContext(),
+		);
 
 		self::assertEquals(
-			$this->rule->createType($args, $this->fieldContext()),
+			$this->rule->createType(
+				$args,
+				$this->dependencies->servicesContext,
+				$this->dependencies->createDynamicContext(),
+			),
 			$type,
 		);
 
@@ -148,10 +162,18 @@ final class NullRuleTest extends ProcessingTestCase
 	{
 		$args = new NullArgs(true);
 
-		$type = $this->rule->createType($args, $this->createTypeContext());
+		$type = $this->rule->createType(
+			$args,
+			$this->dependencies->servicesContext,
+			$this->dependencies->createDynamicContext(),
+		);
 
 		self::assertEquals(
-			$this->rule->createType($args, $this->fieldContext()),
+			$this->rule->createType(
+				$args,
+				$this->dependencies->servicesContext,
+				$this->dependencies->createDynamicContext(),
+			),
 			$type,
 		);
 

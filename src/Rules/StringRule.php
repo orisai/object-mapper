@@ -4,10 +4,11 @@ namespace Orisai\ObjectMapper\Rules;
 
 use Orisai\ObjectMapper\Args\Args;
 use Orisai\ObjectMapper\Args\ArgsChecker;
-use Orisai\ObjectMapper\Context\ArgsFieldContext;
-use Orisai\ObjectMapper\Context\FieldContext;
-use Orisai\ObjectMapper\Context\TypeContext;
 use Orisai\ObjectMapper\Exception\ValueDoesNotMatch;
+use Orisai\ObjectMapper\Meta\Context\MetaFieldContext;
+use Orisai\ObjectMapper\Processing\Context\DynamicContext;
+use Orisai\ObjectMapper\Processing\Context\PropertyContext;
+use Orisai\ObjectMapper\Processing\Context\ServicesContext;
 use Orisai\ObjectMapper\Processing\Value;
 use Orisai\ObjectMapper\Types\SimpleValueType;
 use function is_string;
@@ -26,7 +27,7 @@ final class StringRule implements Rule
 		MaxLength = 'maxLength',
 		NotEmpty = 'notEmpty';
 
-	public function resolveArgs(array $args, ArgsFieldContext $context): StringArgs
+	public function resolveArgs(array $args, MetaFieldContext $context): StringArgs
 	{
 		$checker = new ArgsChecker($args, self::class);
 
@@ -65,10 +66,16 @@ final class StringRule implements Rule
 	 * @param StringArgs $args
 	 * @throws ValueDoesNotMatch
 	 */
-	public function processValue($value, Args $args, FieldContext $context): string
+	public function processValue(
+		$value,
+		Args $args,
+		ServicesContext $services,
+		PropertyContext $property,
+		DynamicContext $dynamic
+	): string
 	{
 		if (!is_string($value)) {
-			throw ValueDoesNotMatch::create($this->createType($args, $context), Value::of($value));
+			throw ValueDoesNotMatch::create($this->createType($args, $services, $dynamic), Value::of($value));
 		}
 
 		$invalidParameters = [];
@@ -90,7 +97,7 @@ final class StringRule implements Rule
 		}
 
 		if ($invalidParameters !== []) {
-			$type = $this->createType($args, $context);
+			$type = $this->createType($args, $services, $dynamic);
 			$type->markParametersInvalid($invalidParameters);
 
 			throw ValueDoesNotMatch::create($type, Value::of($value));
@@ -99,7 +106,11 @@ final class StringRule implements Rule
 		return $value;
 	}
 
-	public function createType(Args $args, TypeContext $context): SimpleValueType
+	public function createType(
+		Args $args,
+		ServicesContext $services,
+		DynamicContext $dynamic
+	): SimpleValueType
 	{
 		$type = new SimpleValueType('string');
 

@@ -10,10 +10,11 @@ use Nette\Utils\Validators;
 use Orisai\Exceptions\Logic\InvalidArgument;
 use Orisai\ObjectMapper\Args\Args;
 use Orisai\ObjectMapper\Args\ArgsChecker;
-use Orisai\ObjectMapper\Context\ArgsFieldContext;
-use Orisai\ObjectMapper\Context\FieldContext;
-use Orisai\ObjectMapper\Context\TypeContext;
 use Orisai\ObjectMapper\Exception\ValueDoesNotMatch;
+use Orisai\ObjectMapper\Meta\Context\MetaFieldContext;
+use Orisai\ObjectMapper\Processing\Context\DynamicContext;
+use Orisai\ObjectMapper\Processing\Context\PropertyContext;
+use Orisai\ObjectMapper\Processing\Context\ServicesContext;
 use Orisai\ObjectMapper\Processing\Value;
 use Orisai\ObjectMapper\Types\SimpleValueType;
 use ReflectionClass;
@@ -43,7 +44,7 @@ final class DateTimeRule implements Rule
 
 	private const JsIsoFormat = 'Y-m-d\TH:i:s.v\Z';
 
-	public function resolveArgs(array $args, ArgsFieldContext $context): DateTimeArgs
+	public function resolveArgs(array $args, MetaFieldContext $context): DateTimeArgs
 	{
 		$checker = new ArgsChecker($args, self::class);
 		$checker->checkAllowedArgs([self::Format, self::ClassName]);
@@ -89,10 +90,16 @@ final class DateTimeRule implements Rule
 	 * @return DateTimeImmutable|DateTime|string|int
 	 * @throws ValueDoesNotMatch
 	 */
-	public function processValue($value, Args $args, FieldContext $context)
+	public function processValue(
+		$value,
+		Args $args,
+		ServicesContext $services,
+		PropertyContext $property,
+		DynamicContext $dynamic
+	)
 	{
 		if (!is_string($value) && !is_int($value)) {
-			throw ValueDoesNotMatch::create($this->createType($args, $context), Value::of($value));
+			throw ValueDoesNotMatch::create($this->createType($args, $services, $dynamic), Value::of($value));
 		}
 
 		$format = $args->format;
@@ -111,7 +118,7 @@ final class DateTimeRule implements Rule
 			try {
 				$datetime = new $classType($stringValue);
 			} catch (Throwable $exception) {
-				$type = $this->createType($args, $context);
+				$type = $this->createType($args, $services, $dynamic);
 				if ($type->hasParameter('format')) {
 					$type->markParameterInvalid('format');
 				}
@@ -147,7 +154,7 @@ final class DateTimeRule implements Rule
 				: DateTime::getLastErrors();
 			assert($errors !== false);
 
-			$type = $this->createType($args, $context);
+			$type = $this->createType($args, $services, $dynamic);
 			if ($type->hasParameter('format')) {
 				$type->markParameterInvalid('format');
 			}
@@ -160,12 +167,16 @@ final class DateTimeRule implements Rule
 			throw ValueDoesNotMatch::create($type, Value::of($value));
 		}
 
-		return $context->shouldInitializeObjects()
+		return $dynamic->shouldInitializeObjects()
 			? $datetime
 			: $value;
 	}
 
-	public function createType(Args $args, TypeContext $context): SimpleValueType
+	public function createType(
+		Args $args,
+		ServicesContext $services,
+		DynamicContext $dynamic
+	): SimpleValueType
 	{
 		if ($args->format === self::FormatTimestamp) {
 			return new SimpleValueType('timestamp');

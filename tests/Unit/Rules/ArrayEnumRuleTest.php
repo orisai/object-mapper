@@ -70,7 +70,9 @@ final class ArrayEnumRuleTest extends ProcessingTestCase
 		$processed = $this->rule->processValue(
 			$given,
 			$args,
-			$this->fieldContext(),
+			$this->dependencies->servicesContext,
+			$this->dependencies->createPropertyContext(),
+			$this->dependencies->createDynamicContext(),
 		);
 
 		self::assertSame($expected, $processed);
@@ -114,7 +116,9 @@ final class ArrayEnumRuleTest extends ProcessingTestCase
 			$this->rule->processValue(
 				$value,
 				$args,
-				$this->fieldContext(),
+				$this->dependencies->servicesContext,
+				$this->dependencies->createPropertyContext(),
+				$this->dependencies->createDynamicContext(),
 			);
 		} catch (ValueDoesNotMatch $exception) {
 			$type = $exception->getType();
@@ -149,10 +153,18 @@ final class ArrayEnumRuleTest extends ProcessingTestCase
 	{
 		$args = new ArrayEnumArgs(['foo', 'bar'], false, false);
 
-		$type = $this->rule->createType($args, $this->createTypeContext());
+		$type = $this->rule->createType(
+			$args,
+			$this->dependencies->servicesContext,
+			$this->dependencies->createDynamicContext(),
+		);
 
 		self::assertEquals(
-			$this->rule->createType($args, $this->fieldContext()),
+			$this->rule->createType(
+				$args,
+				$this->dependencies->servicesContext,
+				$this->dependencies->createDynamicContext(),
+			),
 			$type,
 		);
 

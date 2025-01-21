@@ -4,9 +4,10 @@ namespace Orisai\ObjectMapper\Rules;
 
 use Orisai\ObjectMapper\Args\Args;
 use Orisai\ObjectMapper\Args\EmptyArgs;
-use Orisai\ObjectMapper\Context\FieldContext;
-use Orisai\ObjectMapper\Context\TypeContext;
 use Orisai\ObjectMapper\Exception\ValueDoesNotMatch;
+use Orisai\ObjectMapper\Processing\Context\DynamicContext;
+use Orisai\ObjectMapper\Processing\Context\PropertyContext;
+use Orisai\ObjectMapper\Processing\Context\ServicesContext;
 use Orisai\ObjectMapper\Processing\Value;
 use Orisai\ObjectMapper\Types\CompoundType;
 use Orisai\ObjectMapper\Types\CompoundTypeOperator;
@@ -27,10 +28,16 @@ final class ScalarRule implements Rule
 	 * @return int|float|string|bool
 	 * @throws ValueDoesNotMatch
 	 */
-	public function processValue($value, Args $args, FieldContext $context)
+	public function processValue(
+		$value,
+		Args $args,
+		ServicesContext $services,
+		PropertyContext $property,
+		DynamicContext $dynamic
+	)
 	{
 		if (!is_scalar($value)) {
-			$type = $this->createType($args, $context);
+			$type = $this->createType($args, $services, $dynamic);
 			foreach ($this->getSubtypes() as $key => $subtype) {
 				$type->overwriteInvalidSubtype(
 					$key,
@@ -44,7 +51,11 @@ final class ScalarRule implements Rule
 		return $value;
 	}
 
-	public function createType(Args $args, TypeContext $context): CompoundType
+	public function createType(
+		Args $args,
+		ServicesContext $services,
+		DynamicContext $dynamic
+	): CompoundType
 	{
 		$type = new CompoundType(CompoundTypeOperator::or());
 

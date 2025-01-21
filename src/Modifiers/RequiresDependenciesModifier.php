@@ -4,8 +4,8 @@ namespace Orisai\ObjectMapper\Modifiers;
 
 use Orisai\Exceptions\Logic\InvalidArgument;
 use Orisai\ObjectMapper\Args\ArgsChecker;
-use Orisai\ObjectMapper\Context\ArgsContext;
 use Orisai\ObjectMapper\MappedObject;
+use Orisai\ObjectMapper\Meta\Context\MetaContext;
 use Orisai\ObjectMapper\Processing\DependencyInjector;
 use function is_string;
 use function is_subclass_of;
@@ -22,7 +22,7 @@ final class RequiresDependenciesModifier implements Modifier
 	/**
 	 * @return RequiresDependenciesArgs<MappedObject>
 	 */
-	public static function resolveArgs(array $args, ArgsContext $context): RequiresDependenciesArgs
+	public static function resolveArgs(array $args, MetaContext $context): RequiresDependenciesArgs
 	{
 		$checker = new ArgsChecker($args, self::class);
 

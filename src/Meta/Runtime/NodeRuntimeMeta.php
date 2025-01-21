@@ -29,6 +29,11 @@ abstract class NodeRuntimeMeta
 		$this->docs = $docs;
 	}
 
+	public function hasAnyCallbacks(): bool
+	{
+		return $this->callbacks !== [];
+	}
+
 	/**
 	 * @return array<class-string<Callback<Args>>, array<int, CallbackRuntimeMeta<Args>>>
 	 */

@@ -5,10 +5,11 @@ namespace Orisai\ObjectMapper\Rules;
 use Orisai\Exceptions\Logic\InvalidArgument;
 use Orisai\ObjectMapper\Args\Args;
 use Orisai\ObjectMapper\Args\ArgsChecker;
-use Orisai\ObjectMapper\Context\ArgsFieldContext;
-use Orisai\ObjectMapper\Context\FieldContext;
-use Orisai\ObjectMapper\Context\TypeContext;
 use Orisai\ObjectMapper\Exception\ValueDoesNotMatch;
+use Orisai\ObjectMapper\Meta\Context\MetaFieldContext;
+use Orisai\ObjectMapper\Processing\Context\DynamicContext;
+use Orisai\ObjectMapper\Processing\Context\PropertyContext;
+use Orisai\ObjectMapper\Processing\Context\ServicesContext;
 use Orisai\ObjectMapper\Processing\Value;
 use Orisai\ObjectMapper\Types\SimpleValueType;
 use function is_float;
@@ -29,7 +30,7 @@ final class FloatRule implements Rule
 		Unsigned = 'unsigned',
 		CastNumericString = 'castNumericString';
 
-	public function resolveArgs(array $args, ArgsFieldContext $context): FloatArgs
+	public function resolveArgs(array $args, MetaFieldContext $context): FloatArgs
 	{
 		$checker = new ArgsChecker($args, self::class);
 		$checker->checkAllowedArgs([self::Min, self::Max, self::Unsigned, self::CastNumericString]);
@@ -103,7 +104,13 @@ final class FloatRule implements Rule
 	 * @param FloatArgs $args
 	 * @throws ValueDoesNotMatch
 	 */
-	public function processValue($value, Args $args, FieldContext $context): float
+	public function processValue(
+		$value,
+		Args $args,
+		ServicesContext $services,
+		PropertyContext $property,
+		DynamicContext $dynamic
+	): float
 	{
 		$initValue = $value;
 
@@ -114,7 +121,7 @@ final class FloatRule implements Rule
 		}
 
 		if (!is_float($value)) {
-			throw ValueDoesNotMatch::create($this->createType($args, $context), Value::of($initValue));
+			throw ValueDoesNotMatch::create($this->createType($args, $services, $dynamic), Value::of($initValue));
 		}
 
 		$invalidParameters = [];
@@ -132,7 +139,7 @@ final class FloatRule implements Rule
 		}
 
 		if ($invalidParameters !== []) {
-			$type = $this->createType($args, $context);
+			$type = $this->createType($args, $services, $dynamic);
 			$type->markParametersInvalid($invalidParameters);
 
 			throw ValueDoesNotMatch::create($type, Value::of($initValue));
@@ -141,7 +148,11 @@ final class FloatRule implements Rule
 		return $value;
 	}
 
-	public function createType(Args $args, TypeContext $context): SimpleValueType
+	public function createType(
+		Args $args,
+		ServicesContext $services,
+		DynamicContext $dynamic
+	): SimpleValueType
 	{
 		$type = new SimpleValueType('float');
 

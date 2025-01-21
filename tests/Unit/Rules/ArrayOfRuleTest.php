@@ -92,7 +92,9 @@ final class ArrayOfRuleTest extends ProcessingTestCase
 				null,
 				false,
 			),
-			$this->fieldContext(DefaultValueMeta::fromValue($defaults)),
+			$this->dependencies->servicesContext,
+			$this->dependencies->createPropertyContext(DefaultValueMeta::fromValue($defaults)),
+			$this->dependencies->createDynamicContext(),
 		);
 
 		self::assertSame($value, $processed);
@@ -114,7 +116,9 @@ final class ArrayOfRuleTest extends ProcessingTestCase
 				null,
 				false,
 			),
-			$this->fieldContext(),
+			$this->dependencies->servicesContext,
+			$this->dependencies->createPropertyContext(),
+			$this->dependencies->createDynamicContext(),
 		);
 
 		self::assertSame($value, $processed);
@@ -179,7 +183,9 @@ final class ArrayOfRuleTest extends ProcessingTestCase
 					null,
 					false,
 				),
-				$this->fieldContext(),
+				$this->dependencies->servicesContext,
+				$this->dependencies->createPropertyContext(),
+				$this->dependencies->createDynamicContext(),
 			);
 		} catch (ValueDoesNotMatch $exception) {
 			$type = $exception->getType();
@@ -247,7 +253,9 @@ final class ArrayOfRuleTest extends ProcessingTestCase
 				null,
 				false,
 			),
-			$this->fieldContext(),
+			$this->dependencies->servicesContext,
+			$this->dependencies->createPropertyContext(),
+			$this->dependencies->createDynamicContext(),
 		);
 
 		self::assertSame($value, $processed);
@@ -267,7 +275,9 @@ final class ArrayOfRuleTest extends ProcessingTestCase
 				5,
 				true,
 			),
-			$this->fieldContext(DefaultValueMeta::fromValue($defaults)),
+			$this->dependencies->servicesContext,
+			$this->dependencies->createPropertyContext(DefaultValueMeta::fromValue($defaults)),
+			$this->dependencies->createDynamicContext(),
 		);
 
 		self::assertSame(
@@ -291,7 +301,9 @@ final class ArrayOfRuleTest extends ProcessingTestCase
 					null,
 					false,
 				),
-				$this->fieldContext(),
+				$this->dependencies->servicesContext,
+				$this->dependencies->createPropertyContext(),
+				$this->dependencies->createDynamicContext(),
 			);
 		} catch (ValueDoesNotMatch $exception) {
 			$type = $exception->getType();
@@ -319,7 +331,9 @@ final class ArrayOfRuleTest extends ProcessingTestCase
 					null,
 					false,
 				),
-				$this->fieldContext(),
+				$this->dependencies->servicesContext,
+				$this->dependencies->createPropertyContext(),
+				$this->dependencies->createDynamicContext(),
 			);
 		} catch (ValueDoesNotMatch $exception) {
 			$type = $exception->getType();
@@ -364,7 +378,9 @@ final class ArrayOfRuleTest extends ProcessingTestCase
 					2,
 					false,
 				),
-				$this->fieldContext(),
+				$this->dependencies->servicesContext,
+				$this->dependencies->createPropertyContext(),
+				$this->dependencies->createDynamicContext(),
 			);
 		} catch (ValueDoesNotMatch $exception) {
 			$type = $exception->getType();
@@ -395,7 +411,9 @@ final class ArrayOfRuleTest extends ProcessingTestCase
 					null,
 					false,
 				),
-				$this->fieldContext(),
+				$this->dependencies->servicesContext,
+				$this->dependencies->createPropertyContext(),
+				$this->dependencies->createDynamicContext(),
 			);
 		} catch (ValueDoesNotMatch $exception) {
 			$type = $exception->getType();
@@ -422,10 +440,18 @@ final class ArrayOfRuleTest extends ProcessingTestCase
 			false,
 		);
 
-		$type = $this->rule->createType($args, $this->createTypeContext());
+		$type = $this->rule->createType(
+			$args,
+			$this->dependencies->servicesContext,
+			$this->dependencies->createDynamicContext(),
+		);
 
 		self::assertEquals(
-			$this->rule->createType($args, $this->fieldContext()),
+			$this->rule->createType(
+				$args,
+				$this->dependencies->servicesContext,
+				$this->dependencies->createDynamicContext(),
+			),
 			$type,
 		);
 
@@ -444,10 +470,18 @@ final class ArrayOfRuleTest extends ProcessingTestCase
 			false,
 		);
 
-		$type = $this->rule->createType($args, $this->createTypeContext());
+		$type = $this->rule->createType(
+			$args,
+			$this->dependencies->servicesContext,
+			$this->dependencies->createDynamicContext(),
+		);
 
 		self::assertEquals(
-			$this->rule->createType($args, $this->fieldContext()),
+			$this->rule->createType(
+				$args,
+				$this->dependencies->servicesContext,
+				$this->dependencies->createDynamicContext(),
+			),
 			$type,
 		);
 

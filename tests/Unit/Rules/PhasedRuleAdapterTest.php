@@ -47,17 +47,31 @@ final class PhasedRuleAdapterTest extends ProcessingTestCase
 			"Method 'processValue()' should never be called, adapter is used internally at runtime for phased processing.",
 		);
 
-		$this->rule->processValue('value', new EmptyArgs(), $this->fieldContext());
+		$this->rule->processValue(
+			'value',
+			new EmptyArgs(),
+			$this->dependencies->servicesContext,
+			$this->dependencies->createPropertyContext(),
+			$this->dependencies->createDynamicContext(),
+		);
 	}
 
 	public function testType(): void
 	{
 		$args = new EmptyArgs();
 
-		$type = $this->rule->createType($args, $this->createTypeContext());
+		$type = $this->rule->createType(
+			$args,
+			$this->dependencies->servicesContext,
+			$this->dependencies->createDynamicContext(),
+		);
 
 		self::assertEquals(
-			$this->rule->createType($args, $this->fieldContext()),
+			$this->rule->createType(
+				$args,
+				$this->dependencies->servicesContext,
+				$this->dependencies->createDynamicContext(),
+			),
 			$type,
 		);
 		self::assertInstanceOf(SimpleValueType::class, $type);

@@ -6,11 +6,11 @@ use Nette\Utils\Helpers;
 use Orisai\Exceptions\Logic\InvalidArgument;
 use Orisai\ObjectMapper\Args\Args;
 use Orisai\ObjectMapper\Args\ArgsChecker;
-use Orisai\ObjectMapper\Context\ArgsContext;
-use Orisai\ObjectMapper\Context\BaseFieldContext;
-use Orisai\ObjectMapper\Context\FieldContext;
-use Orisai\ObjectMapper\Context\MappedObjectContext;
+use Orisai\ObjectMapper\Callbacks\Context\CallbackBaseContext;
+use Orisai\ObjectMapper\Callbacks\Context\FieldContext;
+use Orisai\ObjectMapper\Callbacks\Context\ObjectContext;
 use Orisai\ObjectMapper\MappedObject;
+use Orisai\ObjectMapper\Meta\Context\MetaContext;
 use Orisai\ObjectMapper\Processing\ObjectHolder;
 use ReflectionClass;
 use ReflectionMethod;
@@ -53,7 +53,7 @@ abstract class BaseCallback implements Callback
 
 	public static function resolveArgs(
 		array $args,
-		ArgsContext $context,
+		MetaContext $context,
 		Reflector $reflector
 	): BaseCallbackArgs
 	{
@@ -225,14 +225,14 @@ abstract class BaseCallback implements Callback
 	{
 		if (
 			($type = self::getTypeName($paramContext->getType())) === null
-			|| !is_a($type, MappedObjectContext::class, true)
+			|| !is_a($type, ObjectContext::class, true)
 		) {
 			throw InvalidArgument::create()
 				->withMessage(sprintf(
 					'Second parameter of class callback method %s::%s should have "%s" type instead of %s',
 					$class->getName(),
 					$method->getName(),
-					MappedObjectContext::class,
+					ObjectContext::class,
 					$type ?? 'none',
 				));
 		}
@@ -317,16 +317,14 @@ abstract class BaseCallback implements Callback
 	}
 
 	/**
-	 * @param mixed                            $data
-	 * @param BaseCallbackArgs                 $args
-	 * @param FieldContext|MappedObjectContext $context
+	 * @param BaseCallbackArgs $args
 	 * @return mixed
 	 */
 	public static function invoke(
 		$data,
 		Args $args,
 		ObjectHolder $holder,
-		BaseFieldContext $context,
+		CallbackBaseContext $context,
 		ReflectionClass $declaringClass
 	)
 	{

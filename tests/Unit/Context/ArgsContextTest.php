@@ -2,7 +2,7 @@
 
 namespace Tests\Orisai\ObjectMapper\Unit\Context;
 
-use Orisai\ObjectMapper\Context\ArgsContext;
+use Orisai\ObjectMapper\Meta\Context\MetaContext;
 use Orisai\ObjectMapper\Tester\ObjectMapperTester;
 use PHPUnit\Framework\TestCase;
 
@@ -13,7 +13,7 @@ final class ArgsContextTest extends TestCase
 	{
 		$deps = (new ObjectMapperTester())->buildDependencies();
 
-		$context = new ArgsContext($deps->metaLoader, $deps->metaResolver);
+		$context = new MetaContext($deps->metaLoader, $deps->metaResolver);
 
 		self::assertSame($deps->metaLoader, $context->getMetaLoader());
 		self::assertSame($deps->metaResolver, $context->getMetaResolver());

@@ -70,7 +70,9 @@ final class StringRuleTest extends ProcessingTestCase
 		$processed = $this->rule->processValue(
 			$value,
 			$this->ruleArgs(StringRule::class),
-			$this->fieldContext(),
+			$this->dependencies->servicesContext,
+			$this->dependencies->createPropertyContext(),
+			$this->dependencies->createDynamicContext(),
 		);
 
 		self::assertSame($value, $processed);
@@ -98,7 +100,9 @@ final class StringRuleTest extends ProcessingTestCase
 			$this->rule->processValue(
 				$value,
 				$this->ruleArgs(StringRule::class),
-				$this->fieldContext(),
+				$this->dependencies->servicesContext,
+				$this->dependencies->createPropertyContext(),
+				$this->dependencies->createDynamicContext(),
 			);
 		} catch (ValueDoesNotMatch $exception) {
 			$type = $exception->getType();
@@ -134,7 +138,9 @@ final class StringRuleTest extends ProcessingTestCase
 			$this->rule->processValue(
 				$value,
 				new StringArgs('/[\s\S]/', true, 1, 10),
-				$this->fieldContext(),
+				$this->dependencies->servicesContext,
+				$this->dependencies->createPropertyContext(),
+				$this->dependencies->createDynamicContext(),
 			);
 		} catch (ValueDoesNotMatch $exception) {
 			$type = $exception->getType();
@@ -161,7 +167,9 @@ final class StringRuleTest extends ProcessingTestCase
 			$this->rule->processValue(
 				$value,
 				new StringArgs('/[\s\S]/', true, 1, 10),
-				$this->fieldContext(),
+				$this->dependencies->servicesContext,
+				$this->dependencies->createPropertyContext(),
+				$this->dependencies->createDynamicContext(),
 			);
 		} catch (ValueDoesNotMatch $exception) {
 			$type = $exception->getType();
@@ -190,7 +198,9 @@ final class StringRuleTest extends ProcessingTestCase
 			$this->rule->processValue(
 				$value,
 				new StringArgs(null, true, null, null),
-				$this->fieldContext(),
+				$this->dependencies->servicesContext,
+				$this->dependencies->createPropertyContext(),
+				$this->dependencies->createDynamicContext(),
 			);
 		} catch (ValueDoesNotMatch $exception) {
 			$type = $exception->getType();
@@ -222,10 +232,18 @@ final class StringRuleTest extends ProcessingTestCase
 	{
 		$args = $this->ruleArgs(StringRule::class);
 
-		$type = $this->rule->createType($args, $this->createTypeContext());
+		$type = $this->rule->createType(
+			$args,
+			$this->dependencies->servicesContext,
+			$this->dependencies->createDynamicContext(),
+		);
 
 		self::assertEquals(
-			$this->rule->createType($args, $this->fieldContext()),
+			$this->rule->createType(
+				$args,
+				$this->dependencies->servicesContext,
+				$this->dependencies->createDynamicContext(),
+			),
 			$type,
 		);
 
@@ -237,10 +255,18 @@ final class StringRuleTest extends ProcessingTestCase
 	{
 		$args = new StringArgs('/[\s\S]/', true, 1, 10);
 
-		$type = $this->rule->createType($args, $this->createTypeContext());
+		$type = $this->rule->createType(
+			$args,
+			$this->dependencies->servicesContext,
+			$this->dependencies->createDynamicContext(),
+		);
 
 		self::assertEquals(
-			$this->rule->createType($args, $this->fieldContext()),
+			$this->rule->createType(
+				$args,
+				$this->dependencies->servicesContext,
+				$this->dependencies->createDynamicContext(),
+			),
 			$type,
 		);
 

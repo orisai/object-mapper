@@ -7,10 +7,11 @@ use Orisai\Exceptions\Logic\InvalidArgument;
 use Orisai\Exceptions\Logic\InvalidState;
 use Orisai\ObjectMapper\Args\Args;
 use Orisai\ObjectMapper\Args\ArgsChecker;
-use Orisai\ObjectMapper\Context\ArgsFieldContext;
-use Orisai\ObjectMapper\Context\FieldContext;
-use Orisai\ObjectMapper\Context\TypeContext;
 use Orisai\ObjectMapper\Exception\ValueDoesNotMatch;
+use Orisai\ObjectMapper\Meta\Context\MetaFieldContext;
+use Orisai\ObjectMapper\Processing\Context\DynamicContext;
+use Orisai\ObjectMapper\Processing\Context\PropertyContext;
+use Orisai\ObjectMapper\Processing\Context\ServicesContext;
 use Orisai\ObjectMapper\Processing\Value;
 use Orisai\ObjectMapper\Types\EnumType;
 use TypeError;
@@ -36,7 +37,7 @@ final class BackedEnumRule implements Rule
 		}
 	}
 
-	public function resolveArgs(array $args, ArgsFieldContext $context): BackedEnumArgs
+	public function resolveArgs(array $args, MetaFieldContext $context): BackedEnumArgs
 	{
 		$checker = new ArgsChecker($args, self::class);
 		$checker->checkAllowedArgs([self::ClassName, self::AllowUnknown]);
@@ -71,14 +72,20 @@ final class BackedEnumRule implements Rule
 	 * @param BackedEnumArgs $args
 	 * @throws ValueDoesNotMatch
 	 */
-	public function processValue($value, Args $args, FieldContext $context): ?BackedEnum
+	public function processValue(
+		$value,
+		Args $args,
+		ServicesContext $services,
+		PropertyContext $property,
+		DynamicContext $dynamic
+	): ?BackedEnum
 	{
 		$class = $args->class;
 
 		try {
 			$enum = $class::tryFrom($value);
 		} catch (TypeError $error) {
-			throw ValueDoesNotMatch::create($this->createType($args, $context), Value::of($value));
+			throw ValueDoesNotMatch::create($this->createType($args, $services, $dynamic), Value::of($value));
 		}
 
 		if ($enum !== null) {
@@ -89,10 +96,14 @@ final class BackedEnumRule implements Rule
 			return null;
 		}
 
-		throw ValueDoesNotMatch::create($this->createType($args, $context), Value::of($value));
+		throw ValueDoesNotMatch::create($this->createType($args, $services, $dynamic), Value::of($value));
 	}
 
-	public function createType(Args $args, TypeContext $context): EnumType
+	public function createType(
+		Args $args,
+		ServicesContext $services,
+		DynamicContext $dynamic
+	): EnumType
 	{
 		return new EnumType($this->getEnumCases($args));
 	}

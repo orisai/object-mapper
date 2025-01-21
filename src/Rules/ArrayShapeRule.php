@@ -6,12 +6,13 @@ use Nette\Utils\Helpers;
 use Orisai\Exceptions\Logic\InvalidArgument;
 use Orisai\ObjectMapper\Args\Args;
 use Orisai\ObjectMapper\Args\ArgsChecker;
-use Orisai\ObjectMapper\Context\ArgsFieldContext;
-use Orisai\ObjectMapper\Context\FieldContext;
-use Orisai\ObjectMapper\Context\TypeContext;
 use Orisai\ObjectMapper\Exception\InvalidData;
 use Orisai\ObjectMapper\Exception\ValueDoesNotMatch;
 use Orisai\ObjectMapper\Meta\Compile\RuleCompileMeta;
+use Orisai\ObjectMapper\Meta\Context\MetaFieldContext;
+use Orisai\ObjectMapper\Processing\Context\DynamicContext;
+use Orisai\ObjectMapper\Processing\Context\PropertyContext;
+use Orisai\ObjectMapper\Processing\Context\ServicesContext;
 use Orisai\ObjectMapper\Processing\Value;
 use Orisai\ObjectMapper\Types\ArrayShapeType;
 use Orisai\ObjectMapper\Types\MessageType;
@@ -28,7 +29,7 @@ final class ArrayShapeRule implements Rule
 
 	public const Fields = 'fields';
 
-	public function resolveArgs(array $args, ArgsFieldContext $context): ArrayShapeArgs
+	public function resolveArgs(array $args, MetaFieldContext $context): ArrayShapeArgs
 	{
 		$checker = new ArgsChecker($args, self::class);
 		$checker->checkAllowedArgs([self::Fields]);
@@ -57,10 +58,16 @@ final class ArrayShapeRule implements Rule
 	/**
 	 * @return array<int|string, mixed>
 	 */
-	public function processValue($value, Args $args, FieldContext $context): array
+	public function processValue(
+		$value,
+		Args $args,
+		ServicesContext $services,
+		PropertyContext $property,
+		DynamicContext $dynamic
+	): array
 	{
 		if (!is_array($value)) {
-			$type = $this->createType($args, $context);
+			$type = $this->createType($args, $services, $dynamic);
 			$type->markInvalid();
 
 			throw ValueDoesNotMatch::create($type, Value::of($value));
@@ -76,15 +83,16 @@ final class ArrayShapeRule implements Rule
 				continue;
 			}
 
-			$fieldRule = $context->getRule($fieldRuleMeta->getType());
+			$fieldRule = $services->getRule($fieldRuleMeta->getType());
 
-			$type ??= $this->createType($args, $context);
+			$type ??= $this->createType($args, $services, $dynamic);
 			$type->overwriteInvalidField(
 				$fieldName,
 				ValueDoesNotMatch::create(
 					$fieldRule->createType(
 						$fieldRuleMeta->getArgs(),
-						$context->createClone(),
+						$services,
+						$dynamic->createClone(),
 					),
 					Value::none(),
 				),
@@ -107,7 +115,7 @@ final class ArrayShapeRule implements Rule
 					? ", did you mean '$hintedFieldName'?"
 					: '.';
 
-				$type ??= $this->createType($args, $context);
+				$type ??= $this->createType($args, $services, $dynamic);
 				$type->overwriteInvalidField(
 					$fieldName,
 					ValueDoesNotMatch::create(
@@ -119,20 +127,22 @@ final class ArrayShapeRule implements Rule
 				continue;
 			}
 
-			$fieldRule = $context->getRule($fieldRuleMeta->getType());
+			$fieldRule = $services->getRule($fieldRuleMeta->getType());
 			$fieldArgs = $fieldRuleMeta->getArgs();
 
 			try {
 				$fieldValue = $fieldRule->processValue(
 					$fieldValue,
 					$fieldArgs,
-					$context->createClone(),
+					$services,
+					$property,
+					$dynamic->createClone(),
 				);
 				$value[$fieldName] = $fieldValue;
 			} catch (ValueDoesNotMatch | InvalidData $exception) {
 				unset($value[$fieldName]);
 
-				$type ??= $this->createType($args, $context);
+				$type ??= $this->createType($args, $services, $dynamic);
 				$type->overwriteInvalidField($fieldName, $exception);
 			}
 		}
@@ -144,14 +154,18 @@ final class ArrayShapeRule implements Rule
 		return $value;
 	}
 
-	public function createType(Args $args, TypeContext $context): ArrayShapeType
+	public function createType(
+		Args $args,
+		ServicesContext $services,
+		DynamicContext $dynamic
+	): ArrayShapeType
 	{
 		$type = new ArrayShapeType();
 		foreach ($args->fields as $fieldName => $fieldRuleMeta) {
-			$fieldRule = $context->getRule($fieldRuleMeta->getType());
+			$fieldRule = $services->getRule($fieldRuleMeta->getType());
 			$fieldArgs = $fieldRuleMeta->getArgs();
 
-			$fieldType = $fieldRule->createType($fieldArgs, $context);
+			$fieldType = $fieldRule->createType($fieldArgs, $services, $dynamic->createClone());
 
 			$type->addField($fieldName, $fieldType);
 		}

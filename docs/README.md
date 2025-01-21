@@ -2166,7 +2166,7 @@ Define callbacks before and after mapped objects and their fields:
 
 ```php
 use Orisai\ObjectMapper\Callbacks\After;
-use Orisai\ObjectMapper\Context\FieldContext;
+use Orisai\ObjectMapper\Callbacks\Context\FieldContext;
 use Orisai\ObjectMapper\MappedObject;
 use Orisai\ObjectMapper\Rules\StringValue;
 
@@ -2191,7 +2191,7 @@ final class WithCallbackInput implements MappedObject
 
 ```php
 use Orisai\ObjectMapper\Callbacks\After;
-use Orisai\ObjectMapper\Context\FieldContext;
+use Orisai\ObjectMapper\Callbacks\Context\FieldContext;
 use Orisai\ObjectMapper\MappedObject;
 use Orisai\ObjectMapper\Rules\StringValue;
 
@@ -2246,9 +2246,9 @@ After mapped object
 	<summary><code>#[Attributes()]</code></summary>
 
 ```php
-use Orisai\ObjectMapper\Callbacks\Before;
 use Orisai\ObjectMapper\Callbacks\After;
-use Orisai\ObjectMapper\Context\MappedObjectContext;
+use Orisai\ObjectMapper\Callbacks\Before;
+use Orisai\ObjectMapper\Callbacks\Context\ObjectContext;
 use Orisai\ObjectMapper\MappedObject;
 
 #[Before('beforeObject')]
@@ -2256,7 +2256,7 @@ use Orisai\ObjectMapper\MappedObject;
 final class WithMappedObjectCallbacksInput implements MappedObject
 {
 
-	private static function beforeObject(mixed $value, MappedObjectContext $context): myInterface
+	private static function beforeObject(mixed $value, ObjectContext $context): myInterface
 	{
 		return $value;
 	}
@@ -2265,7 +2265,7 @@ final class WithMappedObjectCallbacksInput implements MappedObject
 	 * @param array<int|string, mixed> $value
 	 * @return array<int|string, mixed>
 	 */
-	private static function afterObject(array $value, MappedObjectContext $context): array
+	private static function afterObject(array $value, ObjectContext $context): array
 	{
 		return $value;
 	}
@@ -2278,9 +2278,9 @@ final class WithMappedObjectCallbacksInput implements MappedObject
 	<summary><code>@Annotations()</code></summary>
 
 ```php
-use Orisai\ObjectMapper\Callbacks\Before;
 use Orisai\ObjectMapper\Callbacks\After;
-use Orisai\ObjectMapper\Context\MappedObjectContext;
+use Orisai\ObjectMapper\Callbacks\Before;
+use Orisai\ObjectMapper\Callbacks\Context\ObjectContext;
 use Orisai\ObjectMapper\MappedObject;
 
 /**
@@ -2294,7 +2294,7 @@ final class WithMappedObjectCallbacksInput implements MappedObject
 	 * @param mixed $value
 	 * @return mixed
 	 */
-	private static function beforeObject($value, MappedObjectContext $context)
+	private static function beforeObject($value, ObjectContext $context)
 	{
 		return $value;
 	}
@@ -2303,7 +2303,7 @@ final class WithMappedObjectCallbacksInput implements MappedObject
 	 * @param array<int|string, mixed> $value
 	 * @return array<int|string, mixed>
 	 */
-	private static function afterObject(array $value, MappedObjectContext $context): array
+	private static function afterObject(array $value, ObjectContext $context): array
 	{
 		return $value;
 	}
@@ -2334,9 +2334,9 @@ After field
 	<summary><code>#[Attributes()]</code></summary>
 
 ```php
-use Orisai\ObjectMapper\Callbacks\Before;
 use Orisai\ObjectMapper\Callbacks\After;
-use Orisai\ObjectMapper\Context\FieldContext;
+use Orisai\ObjectMapper\Callbacks\Before;
+use Orisai\ObjectMapper\Callbacks\Context\FieldContext;
 use Orisai\ObjectMapper\MappedObject;
 use Orisai\ObjectMapper\Rules\StringValue;
 
@@ -2366,9 +2366,9 @@ final class WithFieldCallbacksInput implements MappedObject
 	<summary><code>@Annotations()</code></summary>
 
 ```php
-use Orisai\ObjectMapper\Callbacks\Before;
 use Orisai\ObjectMapper\Callbacks\After;
-use Orisai\ObjectMapper\Context\FieldContext;
+use Orisai\ObjectMapper\Callbacks\Before;
+use Orisai\ObjectMapper\Callbacks\Context\FieldContext;
 use Orisai\ObjectMapper\MappedObject;
 use Orisai\ObjectMapper\Rules\StringValue;
 
@@ -2404,7 +2404,7 @@ Field callbacks are called only when field is sent. Callback is not invoked for 
 
 ```php
 use Orisai\ObjectMapper\Callbacks\After;
-use Orisai\ObjectMapper\Context\FieldContext;
+use Orisai\ObjectMapper\Callbacks\Context\FieldContext;
 use Orisai\ObjectMapper\MappedObject;
 use Orisai\ObjectMapper\Rules\StringValue;
 

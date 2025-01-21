@@ -84,7 +84,9 @@ final class AllOfRuleTest extends ProcessingTestCase
 				new RuleRuntimeMeta(MixedRule::class, new EmptyArgs()),
 				new RuleRuntimeMeta(MixedRule::class, new EmptyArgs()),
 			]),
-			$this->fieldContext(),
+			$this->dependencies->servicesContext,
+			$this->dependencies->createPropertyContext(),
+			$this->dependencies->createDynamicContext(),
 		);
 
 		self::assertSame('value', $processed);
@@ -102,7 +104,9 @@ final class AllOfRuleTest extends ProcessingTestCase
 					new RuleRuntimeMeta(AlwaysInvalidRule::class, new EmptyArgs()),
 					new RuleRuntimeMeta(MixedRule::class, new EmptyArgs()),
 				]),
-				$this->fieldContext(),
+				$this->dependencies->servicesContext,
+				$this->dependencies->createPropertyContext(),
+				$this->dependencies->createDynamicContext(),
 			);
 		} catch (ValueDoesNotMatch $exception) {
 			$type = $exception->getType();
@@ -142,7 +146,9 @@ final class AllOfRuleTest extends ProcessingTestCase
 					)),
 					new RuleRuntimeMeta(MixedRule::class, new EmptyArgs()),
 				]),
-				$this->fieldContext(),
+				$this->dependencies->servicesContext,
+				$this->dependencies->createPropertyContext(),
+				$this->dependencies->createDynamicContext(),
 			);
 		} catch (ValueDoesNotMatch $exception) {
 			$type = $exception->getType();
@@ -174,10 +180,18 @@ final class AllOfRuleTest extends ProcessingTestCase
 			new RuleRuntimeMeta(AlwaysInvalidRule::class, new EmptyArgs()),
 		]);
 
-		$type = $this->rule->createType($args, $this->createTypeContext());
+		$type = $this->rule->createType(
+			$args,
+			$this->dependencies->servicesContext,
+			$this->dependencies->createDynamicContext(),
+		);
 
 		self::assertEquals(
-			$this->rule->createType($args, $this->fieldContext()),
+			$this->rule->createType(
+				$args,
+				$this->dependencies->servicesContext,
+				$this->dependencies->createDynamicContext(),
+			),
 			$type,
 		);
 

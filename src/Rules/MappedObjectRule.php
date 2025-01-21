@@ -5,12 +5,13 @@ namespace Orisai\ObjectMapper\Rules;
 use Closure;
 use Orisai\ObjectMapper\Args\Args;
 use Orisai\ObjectMapper\Args\ArgsChecker;
-use Orisai\ObjectMapper\Context\ArgsFieldContext;
-use Orisai\ObjectMapper\Context\FieldContext;
-use Orisai\ObjectMapper\Context\TypeContext;
 use Orisai\ObjectMapper\Exception\InvalidData;
 use Orisai\ObjectMapper\MappedObject;
+use Orisai\ObjectMapper\Meta\Context\MetaFieldContext;
 use Orisai\ObjectMapper\Meta\Runtime\FieldRuntimeMeta;
+use Orisai\ObjectMapper\Processing\Context\DynamicContext;
+use Orisai\ObjectMapper\Processing\Context\PropertyContext;
+use Orisai\ObjectMapper\Processing\Context\ServicesContext;
 use Orisai\ObjectMapper\Types\MappedObjectType;
 use Orisai\ObjectMapper\Types\Type;
 use Throwable;
@@ -30,7 +31,7 @@ final class MappedObjectRule implements Rule
 	/** @var array<string, null> */
 	private array $resolvedClasses = [];
 
-	public function resolveArgs(array $args, ArgsFieldContext $context): MappedObjectArgs
+	public function resolveArgs(array $args, MetaFieldContext $context): MappedObjectArgs
 	{
 		$checker = new ArgsChecker($args, self::class);
 
@@ -68,29 +69,39 @@ final class MappedObjectRule implements Rule
 	 * @return MappedObject|array<mixed>
 	 * @throws InvalidData
 	 */
-	public function processValue($value, Args $args, FieldContext $context)
+	public function processValue(
+		$value,
+		Args $args,
+		ServicesContext $services,
+		PropertyContext $property,
+		DynamicContext $dynamic
+	)
 	{
-		$processor = $context->getProcessor();
+		$processor = $services->getProcessor();
 
-		$options = $context->getOptions()->createClone();
+		$options = $dynamic->getOptions()->createClone();
 
-		return $context->shouldInitializeObjects()
+		return $dynamic->shouldInitializeObjects()
 			? $processor->process($value, $args->class, $options)
 			: $processor->processWithoutMapping($value, $args->class, $options);
 	}
 
-	public function createType(Args $args, TypeContext $context): MappedObjectType
+	public function createType(
+		Args $args,
+		ServicesContext $services,
+		DynamicContext $dynamic
+	): MappedObjectType
 	{
 		$type = new MappedObjectType($args->class);
 
-		if (in_array($args->class, $context->getProcessedClasses(), true)) {
+		if (in_array($args->class, $dynamic->getProcessedClasses(), true)) {
 			return $type;
 		}
 
-		foreach ($context->getMeta($args->class)->getFields() as $fieldName => $fieldMeta) {
+		foreach ($services->getMeta($args->class)->getFields() as $fieldName => $fieldMeta) {
 			$type->addField(
 				$fieldName,
-				$this->getTypeCreator($fieldMeta, $context, $args),
+				$this->getTypeCreator($fieldMeta, $args, $services, $dynamic),
 			);
 		}
 
@@ -102,17 +113,19 @@ final class MappedObjectRule implements Rule
 	 */
 	private function getTypeCreator(
 		FieldRuntimeMeta $fieldMeta,
-		TypeContext $context,
-		MappedObjectArgs $args
+		MappedObjectArgs $args,
+		ServicesContext $services,
+		DynamicContext $dynamic
 	): Closure
 	{
 		$fieldRuleMeta = $fieldMeta->getRule();
-		$fieldRule = $context->getRule($fieldRuleMeta->getType());
+		$fieldRule = $services->getRule($fieldRuleMeta->getType());
 		$fieldArgs = $fieldRuleMeta->getArgs();
 
 		return static fn (): Type => $fieldRule->createType(
 			$fieldArgs,
-			$context->withProcessedClass($args->class),
+			$services,
+			$dynamic->withProcessedClass($args->class),
 		);
 	}
 

@@ -4,9 +4,10 @@ namespace Tests\Orisai\ObjectMapper\Doubles\Rules;
 
 use Orisai\ObjectMapper\Args\Args;
 use Orisai\ObjectMapper\Args\EmptyArgs;
-use Orisai\ObjectMapper\Context\FieldContext;
-use Orisai\ObjectMapper\Context\TypeContext;
 use Orisai\ObjectMapper\Exception\ValueDoesNotMatch;
+use Orisai\ObjectMapper\Processing\Context\DynamicContext;
+use Orisai\ObjectMapper\Processing\Context\PropertyContext;
+use Orisai\ObjectMapper\Processing\Context\ServicesContext;
 use Orisai\ObjectMapper\Processing\Value;
 use Orisai\ObjectMapper\Rules\NoArgsRule;
 use Orisai\ObjectMapper\Rules\PhasedRule;
@@ -26,21 +27,33 @@ final class PhasedTestRule implements PhasedRule
 	/** @var array<mixed> */
 	public array $calls = [];
 
-	public function processValue($value, Args $args, FieldContext $context)
+	public function processValue(
+		$value,
+		Args $args,
+		ServicesContext $services,
+		PropertyContext $property,
+		DynamicContext $dynamic
+	)
 	{
 		$this->addCall($value, 0);
-		$processed1 = $this->processValuePhase1($value, $args, $context);
+		$processed1 = $this->processValuePhase1($value, $args, $services, $property, $dynamic);
 
-		return $this->processValuePhase3($processed1, $args, $context);
+		return $this->processValuePhase3($processed1, $args, $services, $property, $dynamic);
 	}
 
-	public function processValuePhase1($value, Args $args, FieldContext $context)
+	public function processValuePhase1(
+		$value,
+		Args $args,
+		ServicesContext $services,
+		PropertyContext $property,
+		DynamicContext $dynamic
+	)
 	{
 		$this->addCall($value, 1);
 
 		if ($value === self::Fail1) {
 			throw ValueDoesNotMatch::create(
-				$this->createType($args, $context),
+				$this->createType($args, $services, $dynamic),
 				Value::of($value),
 			);
 		}
@@ -48,18 +61,30 @@ final class PhasedTestRule implements PhasedRule
 		return $value;
 	}
 
-	public function processValuePhase2(array $values, Args $args, FieldContext $context): void
+	public function processValuePhase2(
+		array $values,
+		Args $args,
+		ServicesContext $services,
+		PropertyContext $property,
+		DynamicContext $dynamic
+	): void
 	{
 		$this->addCall($values, 2);
 	}
 
-	public function processValuePhase3($value, Args $args, FieldContext $context)
+	public function processValuePhase3(
+		$value,
+		Args $args,
+		ServicesContext $services,
+		PropertyContext $property,
+		DynamicContext $dynamic
+	)
 	{
 		$this->addCall($value, 3);
 
 		if ($value === self::Fail3) {
 			throw ValueDoesNotMatch::create(
-				$this->createType($args, $context),
+				$this->createType($args, $services, $dynamic),
 				Value::of($value),
 			);
 		}
@@ -78,7 +103,11 @@ final class PhasedTestRule implements PhasedRule
 		];
 	}
 
-	public function createType(Args $args, TypeContext $context): SimpleValueType
+	public function createType(
+		Args $args,
+		ServicesContext $services,
+		DynamicContext $dynamic
+	): SimpleValueType
 	{
 		return new SimpleValueType('phased');
 	}

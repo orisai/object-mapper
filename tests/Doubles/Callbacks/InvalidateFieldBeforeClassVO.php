@@ -3,7 +3,7 @@
 namespace Tests\Orisai\ObjectMapper\Doubles\Callbacks;
 
 use Orisai\ObjectMapper\Callbacks\Before;
-use Orisai\ObjectMapper\Context\MappedObjectContext;
+use Orisai\ObjectMapper\Callbacks\Context\ObjectContext;
 use Orisai\ObjectMapper\Exception\ValueDoesNotMatch;
 use Orisai\ObjectMapper\MappedObject;
 use Orisai\ObjectMapper\Processing\Value;
@@ -25,7 +25,7 @@ final class InvalidateFieldBeforeClassVO implements MappedObject
 	/**
 	 * @param mixed $values
 	 */
-	public static function before($values, MappedObjectContext $context): void
+	public static function before($values, ObjectContext $context): void
 	{
 		$context->getType()->overwriteInvalidField(
 			'string',

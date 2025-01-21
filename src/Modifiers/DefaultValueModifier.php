@@ -3,7 +3,7 @@
 namespace Orisai\ObjectMapper\Modifiers;
 
 use Orisai\ObjectMapper\Args\ArgsChecker;
-use Orisai\ObjectMapper\Context\ArgsContext;
+use Orisai\ObjectMapper\Meta\Context\MetaContext;
 
 /**
  * @implements Modifier<DefaultValueArgs>
@@ -13,7 +13,7 @@ final class DefaultValueModifier implements Modifier
 
 	public const Value = 'value';
 
-	public static function resolveArgs(array $args, ArgsContext $context): DefaultValueArgs
+	public static function resolveArgs(array $args, MetaContext $context): DefaultValueArgs
 	{
 		$checker = new ArgsChecker($args, self::class);
 		$checker->checkAllowedArgs([self::Value]);

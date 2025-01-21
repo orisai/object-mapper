@@ -59,7 +59,9 @@ final class MappedObjectRuleTest extends ProcessingTestCase
 		$processed = $this->rule->processValue(
 			[],
 			new MappedObjectArgs(DefaultsVO::class),
-			$this->fieldContext(null, $options),
+			$this->dependencies->servicesContext,
+			$this->dependencies->createPropertyContext(),
+			$this->dependencies->createDynamicContext($options),
 		);
 
 		self::assertNotEmpty($processed);
@@ -70,7 +72,9 @@ final class MappedObjectRuleTest extends ProcessingTestCase
 		$processed = $this->rule->processValue(
 			[],
 			new MappedObjectArgs(DefaultsVO::class),
-			$this->fieldContext(null, null, true),
+			$this->dependencies->servicesContext,
+			$this->dependencies->createPropertyContext(),
+			$this->dependencies->createDynamicContext(null, true),
 		);
 
 		self::assertInstanceOf(DefaultsVO::class, $processed);
@@ -85,7 +89,9 @@ final class MappedObjectRuleTest extends ProcessingTestCase
 			$this->rule->processValue(
 				$value,
 				new MappedObjectArgs(DefaultsVO::class),
-				$this->fieldContext(),
+				$this->dependencies->servicesContext,
+				$this->dependencies->createPropertyContext(),
+				$this->dependencies->createDynamicContext(),
 			);
 		} catch (InvalidData $exception) {
 			$type = $exception->getType();
@@ -101,10 +107,18 @@ final class MappedObjectRuleTest extends ProcessingTestCase
 	{
 		$args = new MappedObjectArgs(DefaultsVO::class);
 
-		$type = $this->rule->createType($args, $this->createTypeContext());
+		$type = $this->rule->createType(
+			$args,
+			$this->dependencies->servicesContext,
+			$this->dependencies->createDynamicContext(),
+		);
 
 		self::assertEquals(
-			$this->rule->createType($args, $this->fieldContext()),
+			$this->rule->createType(
+				$args,
+				$this->dependencies->servicesContext,
+				$this->dependencies->createDynamicContext(),
+			),
 			$type,
 		);
 

@@ -20,23 +20,20 @@ final class ObjectHolder
 	private ClassRuntimeMeta $meta;
 
 	/** @var T|null */
-	private ?MappedObject $instance;
+	private ?MappedObject $instance = null;
 
 	/**
 	 * @param class-string<T> $class
-	 * @param T|null          $instance
 	 */
 	public function __construct(
 		ObjectCreator $creator,
 		string $class,
-		ClassRuntimeMeta $meta,
-		?MappedObject $instance = null
+		ClassRuntimeMeta $meta
 	)
 	{
 		$this->creator = $creator;
 		$this->class = $class;
 		$this->meta = $meta;
-		$this->instance = $instance;
 	}
 
 	/**

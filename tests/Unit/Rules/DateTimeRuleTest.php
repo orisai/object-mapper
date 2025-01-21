@@ -69,7 +69,9 @@ final class DateTimeRuleTest extends ProcessingTestCase
 		$processed = $this->rule->processValue(
 			$value,
 			new DateTimeArgs(DateTimeImmutable::class, $format),
-			$this->fieldContext(),
+			$this->dependencies->servicesContext,
+			$this->dependencies->createPropertyContext(),
+			$this->dependencies->createDynamicContext(),
 		);
 
 		self::assertSame($value, $processed);
@@ -77,7 +79,9 @@ final class DateTimeRuleTest extends ProcessingTestCase
 		$instantiated = $this->rule->processValue(
 			$value,
 			new DateTimeArgs(DateTimeImmutable::class, $format),
-			$this->fieldContext(null, null, true),
+			$this->dependencies->servicesContext,
+			$this->dependencies->createPropertyContext(),
+			$this->dependencies->createDynamicContext(null, true),
 		);
 
 		self::assertInstanceOf(DateTimeImmutable::class, $instantiated);
@@ -85,7 +89,9 @@ final class DateTimeRuleTest extends ProcessingTestCase
 		$instantiatedType = $this->rule->processValue(
 			$value,
 			new DateTimeArgs(DateTime::class, $format),
-			$this->fieldContext(null, null, true),
+			$this->dependencies->servicesContext,
+			$this->dependencies->createPropertyContext(),
+			$this->dependencies->createDynamicContext(null, true),
 		);
 
 		self::assertInstanceOf(DateTime::class, $instantiatedType);
@@ -128,7 +134,9 @@ final class DateTimeRuleTest extends ProcessingTestCase
 			$this->rule->processValue(
 				$value,
 				new DateTimeArgs(DateTimeImmutable::class, $format),
-				$this->fieldContext(),
+				$this->dependencies->servicesContext,
+				$this->dependencies->createPropertyContext(),
+				$this->dependencies->createDynamicContext(),
 			);
 		} catch (ValueDoesNotMatch $exception) {
 			$type = $exception->getType();
@@ -190,10 +198,18 @@ final class DateTimeRuleTest extends ProcessingTestCase
 	{
 		$args = $this->ruleArgs(DateTimeRule::class);
 
-		$type = $this->rule->createType($args, $this->createTypeContext());
+		$type = $this->rule->createType(
+			$args,
+			$this->dependencies->servicesContext,
+			$this->dependencies->createDynamicContext(),
+		);
 
 		self::assertEquals(
-			$this->rule->createType($args, $this->fieldContext()),
+			$this->rule->createType(
+				$args,
+				$this->dependencies->servicesContext,
+				$this->dependencies->createDynamicContext(),
+			),
 			$type,
 		);
 
@@ -207,10 +223,18 @@ final class DateTimeRuleTest extends ProcessingTestCase
 	{
 		$args = new DateTimeArgs(DateTimeImmutable::class, DateTimeRule::FormatTimestamp);
 
-		$type = $this->rule->createType($args, $this->createTypeContext());
+		$type = $this->rule->createType(
+			$args,
+			$this->dependencies->servicesContext,
+			$this->dependencies->createDynamicContext(),
+		);
 
 		self::assertEquals(
-			$this->rule->createType($args, $this->fieldContext()),
+			$this->rule->createType(
+				$args,
+				$this->dependencies->servicesContext,
+				$this->dependencies->createDynamicContext(),
+			),
 			$type,
 		);
 
@@ -222,10 +246,18 @@ final class DateTimeRuleTest extends ProcessingTestCase
 	{
 		$args = new DateTimeArgs(DateTimeImmutable::class, DateTimeInterface::COOKIE);
 
-		$type = $this->rule->createType($args, $this->createTypeContext());
+		$type = $this->rule->createType(
+			$args,
+			$this->dependencies->servicesContext,
+			$this->dependencies->createDynamicContext(),
+		);
 
 		self::assertEquals(
-			$this->rule->createType($args, $this->fieldContext()),
+			$this->rule->createType(
+				$args,
+				$this->dependencies->servicesContext,
+				$this->dependencies->createDynamicContext(),
+			),
 			$type,
 		);
 

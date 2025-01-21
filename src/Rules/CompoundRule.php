@@ -5,9 +5,10 @@ namespace Orisai\ObjectMapper\Rules;
 use Orisai\Exceptions\Logic\InvalidArgument;
 use Orisai\ObjectMapper\Args\Args;
 use Orisai\ObjectMapper\Args\ArgsChecker;
-use Orisai\ObjectMapper\Context\ArgsFieldContext;
-use Orisai\ObjectMapper\Context\TypeContext;
 use Orisai\ObjectMapper\Meta\Compile\RuleCompileMeta;
+use Orisai\ObjectMapper\Meta\Context\MetaFieldContext;
+use Orisai\ObjectMapper\Processing\Context\DynamicContext;
+use Orisai\ObjectMapper\Processing\Context\ServicesContext;
 use Orisai\ObjectMapper\Types\CompoundType;
 use function count;
 use function sprintf;
@@ -20,7 +21,7 @@ abstract class CompoundRule implements Rule
 
 	public const Rules = 'rules';
 
-	public function resolveArgs(array $args, ArgsFieldContext $context): CompoundArgs
+	public function resolveArgs(array $args, MetaFieldContext $context): CompoundArgs
 	{
 		$checker = new ArgsChecker($args, static::class);
 		$checker->checkAllowedArgs([self::Rules]);
@@ -55,14 +56,21 @@ abstract class CompoundRule implements Rule
 		return CompoundArgs::class;
 	}
 
-	public function createType(Args $args, TypeContext $context): CompoundType
+	public function createType(
+		Args $args,
+		ServicesContext $services,
+		DynamicContext $dynamic
+	): CompoundType
 	{
 		$type = $this->createCompoundType();
 
 		foreach ($args->rules as $key => $nestedRuleMeta) {
-			$nestedRule = $context->getRule($nestedRuleMeta->getType());
+			$nestedRule = $services->getRule($nestedRuleMeta->getType());
 			$nestedRuleArgs = $nestedRuleMeta->getArgs();
-			$type->addSubtype($key, $nestedRule->createType($nestedRuleArgs, $context->createClone()));
+			$type->addSubtype(
+				$key,
+				$nestedRule->createType($nestedRuleArgs, $services, $dynamic->createClone()),
+			);
 		}
 
 		return $type;

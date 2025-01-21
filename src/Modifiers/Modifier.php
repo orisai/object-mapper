@@ -3,7 +3,7 @@
 namespace Orisai\ObjectMapper\Modifiers;
 
 use Orisai\ObjectMapper\Args\Args;
-use Orisai\ObjectMapper\Context\ArgsContext;
+use Orisai\ObjectMapper\Meta\Context\MetaContext;
 
 /**
  * @template-covariant T of Args
@@ -15,6 +15,6 @@ interface Modifier
 	 * @param array<int|string, mixed> $args
 	 * @return T
 	 */
-	public static function resolveArgs(array $args, ArgsContext $context): Args;
+	public static function resolveArgs(array $args, MetaContext $context): Args;
 
 }

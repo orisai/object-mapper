@@ -6,8 +6,8 @@ use Orisai\Exceptions\Logic\NotImplemented;
 use Orisai\ObjectMapper\Args\Args;
 use Orisai\ObjectMapper\Args\EmptyArgs;
 use Orisai\ObjectMapper\Callbacks\Callback;
-use Orisai\ObjectMapper\Context\ArgsContext;
-use Orisai\ObjectMapper\Context\BaseFieldContext;
+use Orisai\ObjectMapper\Callbacks\Context\CallbackBaseContext;
+use Orisai\ObjectMapper\Meta\Context\MetaContext;
 use Orisai\ObjectMapper\Processing\ObjectHolder;
 use Orisai\ObjectMapper\Rules\NullArgs;
 use ReflectionClass;
@@ -19,7 +19,7 @@ use Reflector;
 final class WrongArgsTypeCallback implements Callback
 {
 
-	public static function resolveArgs(array $args, ArgsContext $context, Reflector $reflector): Args
+	public static function resolveArgs(array $args, MetaContext $context, Reflector $reflector): Args
 	{
 		return new NullArgs(false);
 	}
@@ -34,7 +34,7 @@ final class WrongArgsTypeCallback implements Callback
 		$data,
 		Args $args,
 		ObjectHolder $holder,
-		BaseFieldContext $context,
+		CallbackBaseContext $context,
 		ReflectionClass $declaringClass
 	): void
 	{

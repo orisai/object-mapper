@@ -85,7 +85,9 @@ final class ListOfRuleTest extends ProcessingTestCase
 				null,
 				false,
 			),
-			$this->fieldContext(DefaultValueMeta::fromValue($defaults)),
+			$this->dependencies->servicesContext,
+			$this->dependencies->createPropertyContext(DefaultValueMeta::fromValue($defaults)),
+			$this->dependencies->createDynamicContext(),
 		);
 
 		self::assertSame($value, $processed);
@@ -106,7 +108,9 @@ final class ListOfRuleTest extends ProcessingTestCase
 				null,
 				false,
 			),
-			$this->fieldContext(),
+			$this->dependencies->servicesContext,
+			$this->dependencies->createPropertyContext(),
+			$this->dependencies->createDynamicContext(),
 		);
 
 		self::assertSame($value, $processed);
@@ -170,7 +174,9 @@ final class ListOfRuleTest extends ProcessingTestCase
 					null,
 					false,
 				),
-				$this->fieldContext(),
+				$this->dependencies->servicesContext,
+				$this->dependencies->createPropertyContext(),
+				$this->dependencies->createDynamicContext(),
 			);
 		} catch (ValueDoesNotMatch $exception) {
 			$type = $exception->getType();
@@ -238,7 +244,9 @@ final class ListOfRuleTest extends ProcessingTestCase
 				5,
 				true,
 			),
-			$this->fieldContext(DefaultValueMeta::fromValue($defaults)),
+			$this->dependencies->servicesContext,
+			$this->dependencies->createPropertyContext(DefaultValueMeta::fromValue($defaults)),
+			$this->dependencies->createDynamicContext(),
 		);
 
 		self::assertSame([456, 789, 'lorem', 'ipsum', 'foo', 'bar', 'baz', 123], $processed);
@@ -258,7 +266,9 @@ final class ListOfRuleTest extends ProcessingTestCase
 					null,
 					false,
 				),
-				$this->fieldContext(),
+				$this->dependencies->servicesContext,
+				$this->dependencies->createPropertyContext(),
+				$this->dependencies->createDynamicContext(),
 			);
 		} catch (ValueDoesNotMatch $exception) {
 			$type = $exception->getType();
@@ -285,7 +295,9 @@ final class ListOfRuleTest extends ProcessingTestCase
 					null,
 					false,
 				),
-				$this->fieldContext(),
+				$this->dependencies->servicesContext,
+				$this->dependencies->createPropertyContext(),
+				$this->dependencies->createDynamicContext(),
 			);
 		} catch (ValueDoesNotMatch $exception) {
 			$type = $exception->getType();
@@ -330,7 +342,9 @@ final class ListOfRuleTest extends ProcessingTestCase
 					2,
 					false,
 				),
-				$this->fieldContext(),
+				$this->dependencies->servicesContext,
+				$this->dependencies->createPropertyContext(),
+				$this->dependencies->createDynamicContext(),
 			);
 		} catch (ValueDoesNotMatch $exception) {
 			$type = $exception->getType();
@@ -360,7 +374,9 @@ final class ListOfRuleTest extends ProcessingTestCase
 					null,
 					false,
 				),
-				$this->fieldContext(),
+				$this->dependencies->servicesContext,
+				$this->dependencies->createPropertyContext(),
+				$this->dependencies->createDynamicContext(),
 			);
 		} catch (ValueDoesNotMatch $exception) {
 			$type = $exception->getType();
@@ -386,10 +402,18 @@ final class ListOfRuleTest extends ProcessingTestCase
 			false,
 		);
 
-		$type = $this->rule->createType($args, $this->createTypeContext());
+		$type = $this->rule->createType(
+			$args,
+			$this->dependencies->servicesContext,
+			$this->dependencies->createDynamicContext(),
+		);
 
 		self::assertEquals(
-			$this->rule->createType($args, $this->fieldContext()),
+			$this->rule->createType(
+				$args,
+				$this->dependencies->servicesContext,
+				$this->dependencies->createDynamicContext(),
+			),
 			$type,
 		);
 
@@ -406,10 +430,18 @@ final class ListOfRuleTest extends ProcessingTestCase
 			false,
 		);
 
-		$type = $this->rule->createType($args, $this->createTypeContext());
+		$type = $this->rule->createType(
+			$args,
+			$this->dependencies->servicesContext,
+			$this->dependencies->createDynamicContext(),
+		);
 
 		self::assertEquals(
-			$this->rule->createType($args, $this->fieldContext()),
+			$this->rule->createType(
+				$args,
+				$this->dependencies->servicesContext,
+				$this->dependencies->createDynamicContext(),
+			),
 			$type,
 		);
 

@@ -2,7 +2,6 @@
 
 namespace Tests\Orisai\ObjectMapper\Unit\Printers;
 
-use Orisai\ObjectMapper\Context\TypeContext;
 use Orisai\ObjectMapper\MappedObject;
 use Orisai\ObjectMapper\Meta\Cache\ArrayMetaCache;
 use Orisai\ObjectMapper\Meta\MetaLoader;
@@ -10,9 +9,13 @@ use Orisai\ObjectMapper\Meta\MetaResolverFactory;
 use Orisai\ObjectMapper\Meta\Source\AnnotationsMetaSource;
 use Orisai\ObjectMapper\Meta\Source\DefaultMetaSourceManager;
 use Orisai\ObjectMapper\Printers\DefaultValuesArrayPrinter;
+use Orisai\ObjectMapper\Processing\Context\DynamicContext;
+use Orisai\ObjectMapper\Processing\Context\ServicesContext;
 use Orisai\ObjectMapper\Processing\DefaultDependencyInjectorManager;
+use Orisai\ObjectMapper\Processing\DefaultProcessor;
 use Orisai\ObjectMapper\Processing\ObjectCreator;
 use Orisai\ObjectMapper\Processing\Options;
+use Orisai\ObjectMapper\Processing\Processor;
 use Orisai\ObjectMapper\Rules\DefaultRuleManager;
 use Orisai\ObjectMapper\Rules\MappedObjectArgs;
 use Orisai\ObjectMapper\Rules\MappedObjectRule;
@@ -32,6 +35,8 @@ final class DefaultValuesArrayPrinterTest extends TestCase
 
 	private MetaLoader $metaLoader;
 
+	private Processor $processor;
+
 	protected function setUp(): void
 	{
 		$this->ruleManager = new DefaultRuleManager();
@@ -43,6 +48,7 @@ final class DefaultValuesArrayPrinterTest extends TestCase
 		$cache = new ArrayMetaCache();
 		$resolverFactory = new MetaResolverFactory($this->ruleManager, $objectCreator);
 		$this->metaLoader = new MetaLoader($cache, $sourceManager, $resolverFactory);
+		$this->processor = new DefaultProcessor($this->metaLoader, $this->ruleManager, $objectCreator);
 		$this->printer = new DefaultValuesArrayPrinter($this->metaLoader);
 	}
 
@@ -53,7 +59,8 @@ final class DefaultValuesArrayPrinterTest extends TestCase
 	{
 		return $this->ruleManager->getRule(MappedObjectRule::class)->createType(
 			new MappedObjectArgs($class),
-			new TypeContext($this->metaLoader, $this->ruleManager, new Options()),
+			new ServicesContext($this->metaLoader, $this->ruleManager, $this->processor),
+			new DynamicContext(new Options(), true),
 		);
 	}
 

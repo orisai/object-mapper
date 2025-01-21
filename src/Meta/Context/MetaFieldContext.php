@@ -1,12 +1,12 @@
 <?php declare(strict_types = 1);
 
-namespace Orisai\ObjectMapper\Context;
+namespace Orisai\ObjectMapper\Meta\Context;
 
 use Orisai\ObjectMapper\Meta\MetaLoader;
 use Orisai\ObjectMapper\Meta\MetaResolver;
 use Orisai\ObjectMapper\Meta\Shared\DefaultValueMeta;
 
-final class ArgsFieldContext extends ArgsContext
+final class MetaFieldContext extends MetaContext
 {
 
 	private DefaultValueMeta $default;

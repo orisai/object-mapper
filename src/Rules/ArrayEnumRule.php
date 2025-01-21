@@ -5,10 +5,11 @@ namespace Orisai\ObjectMapper\Rules;
 use Orisai\Exceptions\Logic\InvalidArgument;
 use Orisai\ObjectMapper\Args\Args;
 use Orisai\ObjectMapper\Args\ArgsChecker;
-use Orisai\ObjectMapper\Context\ArgsFieldContext;
-use Orisai\ObjectMapper\Context\FieldContext;
-use Orisai\ObjectMapper\Context\TypeContext;
 use Orisai\ObjectMapper\Exception\ValueDoesNotMatch;
+use Orisai\ObjectMapper\Meta\Context\MetaFieldContext;
+use Orisai\ObjectMapper\Processing\Context\DynamicContext;
+use Orisai\ObjectMapper\Processing\Context\PropertyContext;
+use Orisai\ObjectMapper\Processing\Context\ServicesContext;
 use Orisai\ObjectMapper\Processing\Value;
 use Orisai\ObjectMapper\Types\EnumType;
 use function array_keys;
@@ -29,7 +30,7 @@ final class ArrayEnumRule implements Rule
 		UseKeys = 'useKeys',
 		AllowUnknown = 'allowUnknown';
 
-	public function resolveArgs(array $args, ArgsFieldContext $context): ArrayEnumArgs
+	public function resolveArgs(array $args, MetaFieldContext $context): ArrayEnumArgs
 	{
 		$checker = new ArgsChecker($args, self::class);
 		$checker->checkAllowedArgs([self::Cases, self::UseKeys, self::AllowUnknown]);
@@ -74,7 +75,13 @@ final class ArrayEnumRule implements Rule
 	 * @return mixed
 	 * @throws ValueDoesNotMatch
 	 */
-	public function processValue($value, Args $args, FieldContext $context)
+	public function processValue(
+		$value,
+		Args $args,
+		ServicesContext $services,
+		PropertyContext $property,
+		DynamicContext $dynamic
+	)
 	{
 		if (in_array($value, $this->getEnumCases($args), true)) {
 			return $value;
@@ -84,10 +91,14 @@ final class ArrayEnumRule implements Rule
 			return null;
 		}
 
-		throw ValueDoesNotMatch::create($this->createType($args, $context), Value::of($value));
+		throw ValueDoesNotMatch::create($this->createType($args, $services, $dynamic), Value::of($value));
 	}
 
-	public function createType(Args $args, TypeContext $context): EnumType
+	public function createType(
+		Args $args,
+		ServicesContext $services,
+		DynamicContext $dynamic
+	): EnumType
 	{
 		return new EnumType($this->getEnumCases($args));
 	}

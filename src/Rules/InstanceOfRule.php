@@ -5,10 +5,11 @@ namespace Orisai\ObjectMapper\Rules;
 use Orisai\Exceptions\Logic\InvalidArgument;
 use Orisai\ObjectMapper\Args\Args;
 use Orisai\ObjectMapper\Args\ArgsChecker;
-use Orisai\ObjectMapper\Context\ArgsFieldContext;
-use Orisai\ObjectMapper\Context\FieldContext;
-use Orisai\ObjectMapper\Context\TypeContext;
 use Orisai\ObjectMapper\Exception\ValueDoesNotMatch;
+use Orisai\ObjectMapper\Meta\Context\MetaFieldContext;
+use Orisai\ObjectMapper\Processing\Context\DynamicContext;
+use Orisai\ObjectMapper\Processing\Context\PropertyContext;
+use Orisai\ObjectMapper\Processing\Context\ServicesContext;
 use Orisai\ObjectMapper\Processing\Value;
 use Orisai\ObjectMapper\Types\SimpleValueType;
 use function class_exists;
@@ -23,7 +24,7 @@ final class InstanceOfRule implements Rule
 
 	public const Type = 'type';
 
-	public function resolveArgs(array $args, ArgsFieldContext $context): InstanceOfArgs
+	public function resolveArgs(array $args, MetaFieldContext $context): InstanceOfArgs
 	{
 		$checker = new ArgsChecker($args, self::class);
 		$checker->checkAllowedArgs([self::Type]);
@@ -53,16 +54,26 @@ final class InstanceOfRule implements Rule
 	 * @param InstanceOfArgs $args
 	 * @throws ValueDoesNotMatch
 	 */
-	public function processValue($value, Args $args, FieldContext $context): object
+	public function processValue(
+		$value,
+		Args $args,
+		ServicesContext $services,
+		PropertyContext $property,
+		DynamicContext $dynamic
+	): object
 	{
 		if ($value instanceof $args->type) {
 			return $value;
 		}
 
-		throw ValueDoesNotMatch::create($this->createType($args, $context), Value::of($value));
+		throw ValueDoesNotMatch::create($this->createType($args, $services, $dynamic), Value::of($value));
 	}
 
-	public function createType(Args $args, TypeContext $context): SimpleValueType
+	public function createType(
+		Args $args,
+		ServicesContext $services,
+		DynamicContext $dynamic
+	): SimpleValueType
 	{
 		return new SimpleValueType($args->type);
 	}

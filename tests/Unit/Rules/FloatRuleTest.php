@@ -70,7 +70,9 @@ final class FloatRuleTest extends ProcessingTestCase
 		$processed = $this->rule->processValue(
 			$value,
 			$args ?? $this->ruleArgs(FloatRule::class),
-			$this->fieldContext(),
+			$this->dependencies->servicesContext,
+			$this->dependencies->createPropertyContext(),
+			$this->dependencies->createDynamicContext(),
 		);
 
 		self::assertSame($expected, $processed);
@@ -120,7 +122,9 @@ final class FloatRuleTest extends ProcessingTestCase
 		$processed = $this->rule->processValue(
 			$value,
 			new FloatArgs(null, null, false, true),
-			$this->fieldContext(),
+			$this->dependencies->servicesContext,
+			$this->dependencies->createPropertyContext(),
+			$this->dependencies->createDynamicContext(),
 		);
 
 		self::assertSame($expected, $processed);
@@ -155,7 +159,9 @@ final class FloatRuleTest extends ProcessingTestCase
 			$this->rule->processValue(
 				$value,
 				$args ?? $this->ruleArgs(FloatRule::class),
-				$this->fieldContext(),
+				$this->dependencies->servicesContext,
+				$this->dependencies->createPropertyContext(),
+				$this->dependencies->createDynamicContext(),
 			);
 		} catch (ValueDoesNotMatch $exception) {
 			$type = $exception->getType();
@@ -197,7 +203,9 @@ final class FloatRuleTest extends ProcessingTestCase
 			$this->rule->processValue(
 				$value,
 				new FloatArgs(null, 10, true, true),
-				$this->fieldContext(),
+				$this->dependencies->servicesContext,
+				$this->dependencies->createPropertyContext(),
+				$this->dependencies->createDynamicContext(),
 			);
 		} catch (ValueDoesNotMatch $exception) {
 			$type = $exception->getType();
@@ -221,7 +229,9 @@ final class FloatRuleTest extends ProcessingTestCase
 			$this->rule->processValue(
 				$value,
 				new FloatArgs(10, null, true, true),
-				$this->fieldContext(),
+				$this->dependencies->servicesContext,
+				$this->dependencies->createPropertyContext(),
+				$this->dependencies->createDynamicContext(),
 			);
 		} catch (ValueDoesNotMatch $exception) {
 			$type = $exception->getType();
@@ -241,10 +251,18 @@ final class FloatRuleTest extends ProcessingTestCase
 	{
 		$args = new FloatArgs(null, null, false, false);
 
-		$type = $this->rule->createType($args, $this->createTypeContext());
+		$type = $this->rule->createType(
+			$args,
+			$this->dependencies->servicesContext,
+			$this->dependencies->createDynamicContext(),
+		);
 
 		self::assertEquals(
-			$this->rule->createType($args, $this->fieldContext()),
+			$this->rule->createType(
+				$args,
+				$this->dependencies->servicesContext,
+				$this->dependencies->createDynamicContext(),
+			),
 			$type,
 		);
 
@@ -256,10 +274,18 @@ final class FloatRuleTest extends ProcessingTestCase
 	{
 		$args = new FloatArgs(10, 100, true, true);
 
-		$type = $this->rule->createType($args, $this->createTypeContext());
+		$type = $this->rule->createType(
+			$args,
+			$this->dependencies->servicesContext,
+			$this->dependencies->createDynamicContext(),
+		);
 
 		self::assertEquals(
-			$this->rule->createType($args, $this->fieldContext()),
+			$this->rule->createType(
+				$args,
+				$this->dependencies->servicesContext,
+				$this->dependencies->createDynamicContext(),
+			),
 			$type,
 		);
 

@@ -3,11 +3,12 @@
 namespace Orisai\ObjectMapper\Rules;
 
 use Orisai\ObjectMapper\Args\Args;
-use Orisai\ObjectMapper\Context\ArgsFieldContext;
-use Orisai\ObjectMapper\Context\FieldContext;
-use Orisai\ObjectMapper\Context\TypeContext;
 use Orisai\ObjectMapper\Exception\InvalidData;
 use Orisai\ObjectMapper\Exception\ValueDoesNotMatch;
+use Orisai\ObjectMapper\Meta\Context\MetaFieldContext;
+use Orisai\ObjectMapper\Processing\Context\DynamicContext;
+use Orisai\ObjectMapper\Processing\Context\PropertyContext;
+use Orisai\ObjectMapper\Processing\Context\ServicesContext;
 use Orisai\ObjectMapper\Types\Type;
 
 /**
@@ -20,7 +21,7 @@ interface Rule
 	 * @param array<int|string, mixed> $args
 	 * @return T_ARGS
 	 */
-	public function resolveArgs(array $args, ArgsFieldContext $context): Args;
+	public function resolveArgs(array $args, MetaFieldContext $context): Args;
 
 	/**
 	 * @return class-string<T_ARGS>
@@ -34,11 +35,21 @@ interface Rule
 	 * @throws ValueDoesNotMatch Value does not match rule or rule args
 	 * @throws InvalidData Error bubbled from inner processor call
 	 */
-	public function processValue($value, Args $args, FieldContext $context);
+	public function processValue(
+		$value,
+		Args $args,
+		ServicesContext $services,
+		PropertyContext $property,
+		DynamicContext $dynamic
+	);
 
 	/**
 	 * @param T_ARGS $args
 	 */
-	public function createType(Args $args, TypeContext $context): Type;
+	public function createType(
+		Args $args,
+		ServicesContext $services,
+		DynamicContext $dynamic
+	): Type;
 
 }

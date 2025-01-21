@@ -2,17 +2,14 @@
 
 namespace Orisai\ObjectMapper\Processing;
 
-use Closure;
 use Nette\Utils\Helpers;
 use Orisai\ObjectMapper\Args\Args;
 use Orisai\ObjectMapper\Callbacks\AfterCallback;
 use Orisai\ObjectMapper\Callbacks\BeforeCallback;
 use Orisai\ObjectMapper\Callbacks\Callback;
-use Orisai\ObjectMapper\Context\BaseFieldContext;
-use Orisai\ObjectMapper\Context\FieldContext;
-use Orisai\ObjectMapper\Context\MappedObjectContext;
-use Orisai\ObjectMapper\Context\ProcessorCallContext;
-use Orisai\ObjectMapper\Context\TypeContext;
+use Orisai\ObjectMapper\Callbacks\Context\CallbackBaseContext;
+use Orisai\ObjectMapper\Callbacks\Context\FieldContext;
+use Orisai\ObjectMapper\Callbacks\Context\ObjectContext;
 use Orisai\ObjectMapper\Exception\InvalidData;
 use Orisai\ObjectMapper\Exception\ValueDoesNotMatch;
 use Orisai\ObjectMapper\MappedObject;
@@ -21,6 +18,10 @@ use Orisai\ObjectMapper\Meta\Runtime\ClassRuntimeMeta;
 use Orisai\ObjectMapper\Meta\Runtime\FieldRuntimeMeta;
 use Orisai\ObjectMapper\Meta\Runtime\NodeRuntimeMeta;
 use Orisai\ObjectMapper\Meta\Runtime\RuntimeMeta;
+use Orisai\ObjectMapper\Processing\Context\DynamicContext;
+use Orisai\ObjectMapper\Processing\Context\ProcessorCallContext;
+use Orisai\ObjectMapper\Processing\Context\PropertyContext;
+use Orisai\ObjectMapper\Processing\Context\ServicesContext;
 use Orisai\ObjectMapper\Rules\MappedObjectArgs;
 use Orisai\ObjectMapper\Rules\MappedObjectRule;
 use Orisai\ObjectMapper\Rules\RuleManager;
@@ -46,8 +47,13 @@ final class DefaultProcessor implements Processor
 
 	private RawValuesMap $rawValuesMap;
 
+	private ServicesContext $services;
+
 	/** @var array<class-string<MappedObject>, RuntimeMeta> */
 	private array $metaCache = [];
+
+	/** @var array<class-string, array<string, PropertyContext>> */
+	private array $propertyContextCache = [];
 
 	public function __construct(MetaLoader $metaLoader, RuleManager $ruleManager, ObjectCreator $objectCreator)
 	{
@@ -55,11 +61,13 @@ final class DefaultProcessor implements Processor
 		$this->ruleManager = $ruleManager;
 		$this->objectCreator = $objectCreator;
 		$this->rawValuesMap = new RawValuesMap();
+		$this->services = new ServicesContext($metaLoader, $ruleManager, $this);
 	}
 
 	public function reset(): void
 	{
 		$this->metaCache = [];
+		$this->propertyContextCache = [];
 	}
 
 	/**
@@ -70,13 +78,12 @@ final class DefaultProcessor implements Processor
 	{
 		[
 			$processedData,
-			$holder,
-			$mappedObjectContext,
-			$callContext,
+			$call,
+			$dynamic,
 		] = $this->processBase($data, $class, $options, true);
 
-		$object = $holder->getInstance();
-		$this->fillObject($object, $processedData, $data, $mappedObjectContext, $callContext);
+		$object = $call->getObjectHolder()->getInstance();
+		$this->fillObject($object, $processedData, $data, $call, $dynamic);
 
 		return $object;
 	}
@@ -98,28 +105,26 @@ final class DefaultProcessor implements Processor
 	 * @template T of MappedObject
 	 * @param mixed           $data
 	 * @param class-string<T> $class
-	 * @return array{array<mixed>, ObjectHolder<T>, MappedObjectContext, ProcessorCallContext<T>}
+	 * @return array{array<mixed>, ProcessorCallContext<T>, DynamicContext}
 	 * @throws InvalidData
 	 */
 	private function processBase($data, string $class, ?Options $options, bool $initializeObjects): array
 	{
+		$meta = $this->metaCache[$class] ??= $this->metaLoader->load($class);
+
 		$options ??= new Options();
 		$options = $options->withProcessedClass($class);
-		$typeCreator = fn (): MappedObjectType => $this->createMappedObjectType($class, $options);
-		$meta = $this->metaCache[$class] ??= $this->metaLoader->load($class);
-		$holder = $this->createHolder($class, $meta->getClass());
 
-		$mappedObjectContext = $this->createMappedObjectContext($options, $typeCreator, $initializeObjects);
-		$callContext = $this->createProcessorRunContext($meta, $holder);
+		$dynamic = new DynamicContext($options, $initializeObjects);
+		$call = new ProcessorCallContext(
+			new ObjectHolder($this->objectCreator, $class, $meta->getClass()),
+			$meta,
+			fn (): MappedObjectType => $this->createMappedObjectType($class, $dynamic),
+		);
 
-		$processedData = $this->processData($data, $mappedObjectContext, $callContext);
+		$processedData = $this->processData($data, $call, $dynamic);
 
-		return [$processedData, $holder, $mappedObjectContext, $callContext];
-	}
-
-	private function createTypeContext(Options $options): TypeContext
-	{
-		return new TypeContext($this->metaLoader, $this->ruleManager, $options);
+		return [$processedData, $call, $dynamic];
 	}
 
 	// /////////////// //
@@ -128,36 +133,44 @@ final class DefaultProcessor implements Processor
 
 	/**
 	 * @param mixed                              $data
-	 * @param ProcessorCallContext<MappedObject> $callContext
+	 * @param ProcessorCallContext<MappedObject> $call
 	 * @return array<int|string, mixed>
 	 * @throws InvalidData
 	 */
 	private function processData(
 		$data,
-		MappedObjectContext $mappedObjectContext,
-		ProcessorCallContext $callContext
+		ProcessorCallContext $call,
+		DynamicContext $dynamic
 	): array
 	{
-		$meta = $callContext->getMeta();
+		$meta = $call->getMeta();
 		$classMeta = $meta->getClass();
 
-		$data = $this->handleClassCallbacks(
-			$data,
-			$mappedObjectContext,
-			$callContext,
-			$classMeta,
-			BeforeCallback::class,
-		);
-		$data = $this->ensureDataProcessable($data, $mappedObjectContext);
-		$data = $this->handleFields($data, $mappedObjectContext, $callContext);
-		$data = $this->handleClassCallbacks(
-			$data,
-			$mappedObjectContext,
-			$callContext,
-			$classMeta,
-			AfterCallback::class,
-		);
-		assert(is_array($data)); // After class callbacks are forced to return array
+		if ($classMeta->hasAnyCallbacks()) {
+			$callbackContext = new ObjectContext($this->services, $dynamic, $call);
+
+			$data = $this->handleClassCallbacks(
+				$data,
+				$call,
+				$callbackContext,
+				$classMeta,
+				BeforeCallback::class,
+			);
+		}
+
+		$data = $this->ensureDataProcessable($data, $call);
+		$data = $this->handleFields($data, $call, $dynamic);
+
+		if (isset($callbackContext)) {
+			$data = $this->handleClassCallbacks(
+				$data,
+				$call,
+				$callbackContext,
+				$classMeta,
+				AfterCallback::class,
+			);
+			assert(is_array($data)); // After class callbacks are forced to return array
+		}
 
 		return $data;
 	}
@@ -165,52 +178,22 @@ final class DefaultProcessor implements Processor
 	/**
 	 * @param class-string<MappedObject> $class
 	 */
-	private function createMappedObjectType(string $class, Options $options): MappedObjectType
+	private function createMappedObjectType(string $class, DynamicContext $dynamic): MappedObjectType
 	{
 		return $this->ruleManager->getRule(MappedObjectRule::class)->createType(
 			new MappedObjectArgs($class),
-			$this->createTypeContext($options),
+			$this->services,
+			$dynamic,
 		);
-	}
-
-	/**
-	 * @param Closure(): MappedObjectType $typeCreator
-	 */
-	private function createMappedObjectContext(
-		Options $options,
-		Closure $typeCreator,
-		bool $initializeObjects
-	): MappedObjectContext
-	{
-		return new MappedObjectContext(
-			$this->metaLoader,
-			$this->ruleManager,
-			$this,
-			$options,
-			$typeCreator,
-			$initializeObjects,
-		);
-	}
-
-	/**
-	 * @template T of MappedObject
-	 * @param ObjectHolder<T> $holder
-	 * @return ProcessorCallContext<T>
-	 */
-	private function createProcessorRunContext(
-		RuntimeMeta $meta,
-		ObjectHolder $holder
-	): ProcessorCallContext
-	{
-		return new ProcessorCallContext($holder, $meta);
 	}
 
 	/**
 	 * @param mixed $data
+	 * @param ProcessorCallContext<MappedObject> $context
 	 * @return array<mixed>
 	 * @throws InvalidData
 	 */
-	private function ensureDataProcessable($data, MappedObjectContext $context): array
+	private function ensureDataProcessable($data, ProcessorCallContext $context): array
 	{
 		if (!is_array($data)) {
 			$type = $context->getType();
@@ -228,20 +211,20 @@ final class DefaultProcessor implements Processor
 
 	/**
 	 * @param array<int|string, mixed>           $data
-	 * @param ProcessorCallContext<MappedObject> $callContext
+	 * @param ProcessorCallContext<MappedObject> $call
 	 * @return array<int|string, mixed>
 	 * @throws InvalidData
 	 */
 	private function handleFields(
 		array $data,
-		MappedObjectContext $mappedObjectContext,
-		ProcessorCallContext $callContext
+		ProcessorCallContext $call,
+		DynamicContext $dynamic
 	): array
 	{
-		$data = $this->handleSentFields($data, $mappedObjectContext, $callContext);
-		$data = $this->handleMissingFields($data, $mappedObjectContext, $callContext);
+		$data = $this->handleSentFields($data, $call, $dynamic);
+		$data = $this->handleMissingFields($data, $call, $dynamic);
 
-		$type = $mappedObjectContext->getTypeIfInitialized();
+		$type = $call->getTypeIfInitialized();
 
 		if ($type !== null && $type->hasInvalidFields()) {
 			throw InvalidData::create($type, Value::none());
@@ -252,19 +235,19 @@ final class DefaultProcessor implements Processor
 
 	/**
 	 * @param array<int|string, mixed>           $data
-	 * @param ProcessorCallContext<MappedObject> $callContext
+	 * @param ProcessorCallContext<MappedObject> $call
 	 * @return array<int|string, mixed>
 	 */
 	private function handleSentFields(
 		array $data,
-		MappedObjectContext $mappedObjectContext,
-		ProcessorCallContext $callContext
+		ProcessorCallContext $call,
+		DynamicContext $dynamic
 	): array
 	{
 		$type = null;
-		$options = $mappedObjectContext->getOptions();
+		$options = $dynamic->getOptions();
 
-		$meta = $callContext->getMeta();
+		$meta = $call->getMeta();
 		$fieldsMeta = $meta->getFields();
 		$fieldNames = array_keys($fieldsMeta);
 
@@ -294,7 +277,7 @@ final class DefaultProcessor implements Processor
 					: '.';
 
 				// Add error to type
-				$type ??= $mappedObjectContext->getType();
+				$type ??= $call->getType();
 				$type->overwriteInvalidField(
 					$fieldName,
 					ValueDoesNotMatch::create(
@@ -306,23 +289,28 @@ final class DefaultProcessor implements Processor
 				continue;
 			}
 
-			$fieldContext = $this->createFieldContext(
-				$mappedObjectContext,
-				$fieldMeta,
-				$fieldName,
-				$fieldMeta->getProperty(),
-			);
+			$property = $fieldMeta->getProperty();
+			$className = $property->getDeclaringClass()->getName();
+			$propertyName = $property->getName();
+			$propertyContext = $this->propertyContextCache[$className][$propertyName]
+				?? (
+				$this->propertyContextCache[$className][$propertyName] = new PropertyContext(
+					$fieldMeta->getDefault(),
+					$fieldMeta->getProperty(),
+					$fieldName,
+				));
 
 			// Process field value with property rules
 			try {
 				$data[$fieldName] = $this->processProperty(
 					$value,
-					$fieldContext,
-					$callContext,
+					$propertyContext,
+					$dynamic,
+					$call,
 					$fieldMeta,
 				);
 			} catch (ValueDoesNotMatch | InvalidData $exception) {
-				$type ??= $mappedObjectContext->getType();
+				$type ??= $call->getType();
 				$type->overwriteInvalidField($fieldName, $exception);
 			}
 		}
@@ -332,12 +320,12 @@ final class DefaultProcessor implements Processor
 
 	/**
 	 * @param array<int|string, mixed>           $data
-	 * @param ProcessorCallContext<MappedObject> $callContext
+	 * @param ProcessorCallContext<MappedObject> $call
 	 * @return array<int|string>
 	 */
-	private function findMissingFields(array $data, ProcessorCallContext $callContext): array
+	private function findMissingFields(array $data, ProcessorCallContext $call): array
 	{
-		$meta = $callContext->getMeta();
+		$meta = $call->getMeta();
 
 		return array_diff(
 			array_keys($meta->getFields()),
@@ -347,26 +335,26 @@ final class DefaultProcessor implements Processor
 
 	/**
 	 * @param array<int|string, mixed>           $data
-	 * @param ProcessorCallContext<MappedObject> $callContext
+	 * @param ProcessorCallContext<MappedObject> $call
 	 * @return array<int|string, mixed>
 	 */
 	private function handleMissingFields(
 		array $data,
-		MappedObjectContext $mappedObjectContext,
-		ProcessorCallContext $callContext
+		ProcessorCallContext $call,
+		DynamicContext $dynamic
 	): array
 	{
 		$type = null;
-		$options = $mappedObjectContext->getOptions();
-		$initializeObjects = $mappedObjectContext->shouldInitializeObjects();
+		$options = $dynamic->getOptions();
+		$initializeObjects = $dynamic->shouldInitializeObjects();
 
-		$meta = $callContext->getMeta();
+		$meta = $call->getMeta();
 		$fieldsMeta = $meta->getFields();
 
 		$requiredFields = $options->getRequiredFields();
 		$fillDefaultValues = $initializeObjects || $options->isPrefillDefaultValues();
 
-		foreach ($this->findMissingFields($data, $callContext) as $missingField) {
+		foreach ($this->findMissingFields($data, $call) as $missingField) {
 			$fieldMeta = $fieldsMeta[$missingField];
 			$defaultMeta = $fieldMeta->getDefault();
 
@@ -384,13 +372,14 @@ final class DefaultProcessor implements Processor
 				// Field is missing and have no default value, mark as invalid
 				$fieldRuleMeta = $fieldMeta->getRule();
 				$fieldRule = $this->ruleManager->getRule($fieldRuleMeta->getType());
-				$type ??= $mappedObjectContext->getType();
+				$type ??= $call->getType();
 				$type->overwriteInvalidField(
 					$missingField,
 					ValueDoesNotMatch::create(
 						$fieldRule->createType(
 							$fieldRuleMeta->getArgs(),
-							$this->createTypeContext($options),
+							$this->services,
+							$dynamic,
 						),
 						Value::none(),
 					),
@@ -406,47 +395,36 @@ final class DefaultProcessor implements Processor
 	// //////////////// //
 
 	/**
-	 * @param int|string $fieldName
-	 */
-	private function createFieldContext(
-		MappedObjectContext $mappedObjectContext,
-		FieldRuntimeMeta $meta,
-		$fieldName,
-		ReflectionProperty $property
-	): FieldContext
-	{
-		$typeCreator = static fn (): Type => $mappedObjectContext->getType()->getField($fieldName);
-
-		return new FieldContext(
-			$this->metaLoader,
-			$this->ruleManager,
-			$this,
-			$mappedObjectContext->getOptions()->createClone(),
-			$typeCreator,
-			$meta->getDefault(),
-			$mappedObjectContext->shouldInitializeObjects(),
-			$fieldName,
-			$property,
-		);
-	}
-
-	/**
 	 * @param mixed                              $value
-	 * @param ProcessorCallContext<MappedObject> $callContext
+	 * @param ProcessorCallContext<MappedObject> $call
 	 * @return mixed
 	 * @throws ValueDoesNotMatch
 	 * @throws InvalidData
 	 */
 	private function processProperty(
 		$value,
-		FieldContext $fieldContext,
-		ProcessorCallContext $callContext,
+		PropertyContext $property,
+		DynamicContext $dynamic,
+		ProcessorCallContext $call,
 		FieldRuntimeMeta $meta
 	)
 	{
-		$value = $this->applyCallbacks($value, $fieldContext, $callContext, $meta, BeforeCallback::class);
-		$value = $this->processPropertyRules($value, $fieldContext, $meta);
-		$value = $this->applyCallbacks($value, $fieldContext, $callContext, $meta, AfterCallback::class);
+		if ($meta->hasAnyCallbacks()) {
+			$callbackContext = new FieldContext(
+				$this->services,
+				$dynamic,
+				$property,
+				static fn (): Type => $call->getType()->getField($property->getFieldName()),
+			);
+
+			$value = $this->applyCallbacks($value, $callbackContext, $call, $meta, BeforeCallback::class);
+		}
+
+		$value = $this->processPropertyRules($value, $property, $dynamic, $meta);
+
+		if (isset($callbackContext)) {
+			$value = $this->applyCallbacks($value, $callbackContext, $call, $meta, AfterCallback::class);
+		}
 
 		return $value;
 	}
@@ -457,7 +435,12 @@ final class DefaultProcessor implements Processor
 	 * @throws ValueDoesNotMatch
 	 * @throws InvalidData
 	 */
-	private function processPropertyRules($value, FieldContext $fieldContext, FieldRuntimeMeta $meta)
+	private function processPropertyRules(
+		$value,
+		PropertyContext $property,
+		DynamicContext $dynamic,
+		FieldRuntimeMeta $meta
+	)
 	{
 		$ruleMeta = $meta->getRule();
 		$rule = $this->ruleManager->getRule($ruleMeta->getType());
@@ -465,7 +448,9 @@ final class DefaultProcessor implements Processor
 		return $rule->processValue(
 			$value,
 			$ruleMeta->getArgs(),
-			$fieldContext,
+			$this->services,
+			$property,
+			$dynamic,
 		);
 	}
 
@@ -475,23 +460,23 @@ final class DefaultProcessor implements Processor
 
 	/**
 	 * @param mixed                              $data
-	 * @param ProcessorCallContext<MappedObject> $callContext
+	 * @param ProcessorCallContext<MappedObject> $call
 	 * @param class-string<Callback<Args>>       $callbackType
 	 * @return mixed
 	 * @throws InvalidData
 	 */
 	private function handleClassCallbacks(
 		$data,
-		MappedObjectContext $mappedObjectContext,
-		ProcessorCallContext $callContext,
+		ProcessorCallContext $call,
+		ObjectContext $callbackContext,
 		ClassRuntimeMeta $meta,
 		string $callbackType
 	)
 	{
 		try {
-			$data = $this->applyCallbacks($data, $mappedObjectContext, $callContext, $meta, $callbackType);
+			$data = $this->applyCallbacks($data, $callbackContext, $call, $meta, $callbackType);
 		} catch (ValueDoesNotMatch | InvalidData $exception) {
-			$type = $mappedObjectContext->getType();
+			$type = $callbackContext->getType();
 			$caughtType = $exception->getType();
 
 			// User thrown type is not the actual type from MappedObjectContext
@@ -508,31 +493,31 @@ final class DefaultProcessor implements Processor
 	}
 
 	/**
-	 * @param mixed                              $data
-	 * @param FieldContext|MappedObjectContext   $baseFieldContext
-	 * @param ProcessorCallContext<MappedObject> $callContext
-	 * @param ClassRuntimeMeta|FieldRuntimeMeta  $meta
-	 * @param class-string<Callback<Args>>       $callbackType
+	 * @param mixed $data
+	 * @param ObjectContext|FieldContext $callbackContext
+	 * @param ProcessorCallContext<MappedObject> $call
+	 * @param ClassRuntimeMeta|FieldRuntimeMeta $meta
+	 * @param class-string<Callback<Args>> $callbackType
 	 * @return mixed
 	 * @throws ValueDoesNotMatch
 	 * @throws InvalidData
 	 */
 	private function applyCallbacks(
 		$data,
-		BaseFieldContext $baseFieldContext,
-		ProcessorCallContext $callContext,
+		CallbackBaseContext $callbackContext,
+		ProcessorCallContext $call,
 		NodeRuntimeMeta $meta,
 		string $callbackType
 	)
 	{
-		$holder = $callContext->getObjectHolder();
+		$holder = $call->getObjectHolder();
 
 		foreach ($meta->getCallbacksByType($callbackType) as $callback) {
 			$data = $callbackType::invoke(
 				$data,
 				$callback->getArgs(),
 				$holder,
-				$baseFieldContext,
+				$callbackContext,
 				$callback->getDeclaringClass(),
 			);
 		}
@@ -548,18 +533,18 @@ final class DefaultProcessor implements Processor
 	/**
 	 * @param array<int|string, mixed>           $data
 	 * @param mixed                              $rawData
-	 * @param ProcessorCallContext<MappedObject> $callContext
+	 * @param ProcessorCallContext<MappedObject> $call
 	 */
 	private function fillObject(
 		MappedObject $object,
 		array $data,
 		$rawData,
-		MappedObjectContext $mappedObjectContext,
-		ProcessorCallContext $callContext
+		ProcessorCallContext $call,
+		DynamicContext $dynamic
 	): void
 	{
-		$options = $mappedObjectContext->getOptions();
-		$meta = $callContext->getMeta();
+		$options = $dynamic->getOptions();
+		$meta = $call->getMeta();
 
 		// Set raw data
 		if ($options->isTrackRawValues()) {
@@ -576,17 +561,6 @@ final class DefaultProcessor implements Processor
 		foreach ($data as $fieldName => $value) {
 			$this->objectSet($object, $fieldsMeta[$fieldName]->getProperty(), $value);
 		}
-	}
-
-	/**
-	 * @template T of MappedObject
-	 * @param class-string<T> $class
-	 * @param T|null          $object
-	 * @return ObjectHolder<T>
-	 */
-	private function createHolder(string $class, ClassRuntimeMeta $meta, ?MappedObject $object = null): ObjectHolder
-	{
-		return new ObjectHolder($this->objectCreator, $class, $meta, $object);
 	}
 
 	public function getRawValues(MappedObject $object)

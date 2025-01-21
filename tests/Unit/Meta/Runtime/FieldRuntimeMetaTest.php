@@ -56,6 +56,7 @@ final class FieldRuntimeMetaTest extends TestCase
 			$callbacks,
 			$meta->getCallbacks(),
 		);
+		self::assertTrue($meta->hasAnyCallbacks());
 		self::assertSame(
 			$beforeCallbacks,
 			$meta->getCallbacksByType(BeforeCallback::class),

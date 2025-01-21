@@ -97,11 +97,9 @@ final class ArrayShapeRuleTest extends ProcessingTestCase
 					123 => $this->ruleRuntimeMeta(IntRule::class),
 				],
 			),
-			$this->fieldContext(
-				DefaultValueMeta::fromValue($defaults),
-				null,
-				true,
-			),
+			$this->dependencies->servicesContext,
+			$this->dependencies->createPropertyContext(DefaultValueMeta::fromValue($defaults)),
+			$this->dependencies->createDynamicContext(null, true),
 		);
 
 		self::assertEquals(
@@ -127,7 +125,9 @@ final class ArrayShapeRuleTest extends ProcessingTestCase
 						'foo' => new RuleRuntimeMeta(MixedRule::class, new EmptyArgs()),
 					],
 				),
-				$this->fieldContext(),
+				$this->dependencies->servicesContext,
+				$this->dependencies->createPropertyContext(),
+				$this->dependencies->createDynamicContext(),
 			);
 		} catch (ValueDoesNotMatch $exception) {
 			$type = $exception->getType();
@@ -159,7 +159,9 @@ final class ArrayShapeRuleTest extends ProcessingTestCase
 						123 => $this->ruleRuntimeMeta(IntRule::class),
 					],
 				),
-				$this->fieldContext(),
+				$this->dependencies->servicesContext,
+				$this->dependencies->createPropertyContext(),
+				$this->dependencies->createDynamicContext(),
 			);
 		} catch (ValueDoesNotMatch $exception) {
 			$type = $exception->getType();
@@ -196,7 +198,9 @@ final class ArrayShapeRuleTest extends ProcessingTestCase
 						123 => $this->ruleRuntimeMeta(IntRule::class),
 					],
 				),
-				$this->fieldContext(),
+				$this->dependencies->servicesContext,
+				$this->dependencies->createPropertyContext(),
+				$this->dependencies->createDynamicContext(),
 			);
 		} catch (ValueDoesNotMatch $exception) {
 			$type = $exception->getType();
@@ -237,7 +241,9 @@ final class ArrayShapeRuleTest extends ProcessingTestCase
 						123 => $this->ruleRuntimeMeta(IntRule::class),
 					],
 				),
-				$this->fieldContext(),
+				$this->dependencies->servicesContext,
+				$this->dependencies->createPropertyContext(),
+				$this->dependencies->createDynamicContext(),
 			);
 		} catch (ValueDoesNotMatch $exception) {
 			$type = $exception->getType();
@@ -276,7 +282,9 @@ final class ArrayShapeRuleTest extends ProcessingTestCase
 						'form' => $this->ruleRuntimeMeta(NullRule::class),
 					],
 				),
-				$this->fieldContext(),
+				$this->dependencies->servicesContext,
+				$this->dependencies->createPropertyContext(),
+				$this->dependencies->createDynamicContext(),
 			);
 		} catch (ValueDoesNotMatch $exception) {
 			$type = $exception->getType();
@@ -316,7 +324,9 @@ final class ArrayShapeRuleTest extends ProcessingTestCase
 						'form' => $this->ruleRuntimeMeta(NullRule::class),
 					],
 				),
-				$this->fieldContext(),
+				$this->dependencies->servicesContext,
+				$this->dependencies->createPropertyContext(),
+				$this->dependencies->createDynamicContext(),
 			);
 		} catch (ValueDoesNotMatch $exception) {
 			$type = $exception->getType();
@@ -344,10 +354,18 @@ final class ArrayShapeRuleTest extends ProcessingTestCase
 			123 => new RuleRuntimeMeta(MixedRule::class, new EmptyArgs()),
 		]);
 
-		$type = $this->rule->createType($args, $this->createTypeContext());
+		$type = $this->rule->createType(
+			$args,
+			$this->dependencies->servicesContext,
+			$this->dependencies->createDynamicContext(),
+		);
 
 		self::assertEquals(
-			$this->rule->createType($args, $this->fieldContext()),
+			$this->rule->createType(
+				$args,
+				$this->dependencies->servicesContext,
+				$this->dependencies->createDynamicContext(),
+			),
 			$type,
 		);
 
@@ -366,10 +384,18 @@ final class ArrayShapeRuleTest extends ProcessingTestCase
 	{
 		$args = new ArrayShapeArgs([]);
 
-		$type = $this->rule->createType($args, $this->createTypeContext());
+		$type = $this->rule->createType(
+			$args,
+			$this->dependencies->servicesContext,
+			$this->dependencies->createDynamicContext(),
+		);
 
 		self::assertEquals(
-			$this->rule->createType($args, $this->fieldContext()),
+			$this->rule->createType(
+				$args,
+				$this->dependencies->servicesContext,
+				$this->dependencies->createDynamicContext(),
+			),
 			$type,
 		);
 

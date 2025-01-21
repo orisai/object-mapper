@@ -7,8 +7,6 @@ use Orisai\Exceptions\Logic\InvalidState;
 use Orisai\Exceptions\Message;
 use Orisai\ObjectMapper\Args\Args;
 use Orisai\ObjectMapper\Callbacks\Callback;
-use Orisai\ObjectMapper\Context\ArgsContext;
-use Orisai\ObjectMapper\Context\ArgsFieldContext;
 use Orisai\ObjectMapper\MappedObject;
 use Orisai\ObjectMapper\Meta\Compile\CallbackCompileMeta;
 use Orisai\ObjectMapper\Meta\Compile\ClassCompileMeta;
@@ -17,6 +15,8 @@ use Orisai\ObjectMapper\Meta\Compile\FieldCompileMeta;
 use Orisai\ObjectMapper\Meta\Compile\ModifierCompileMeta;
 use Orisai\ObjectMapper\Meta\Compile\NodeCompileMeta;
 use Orisai\ObjectMapper\Meta\Compile\RuleCompileMeta;
+use Orisai\ObjectMapper\Meta\Context\MetaContext;
+use Orisai\ObjectMapper\Meta\Context\MetaFieldContext;
 use Orisai\ObjectMapper\Meta\Runtime\CallbackRuntimeMeta;
 use Orisai\ObjectMapper\Meta\Runtime\ClassRuntimeMeta;
 use Orisai\ObjectMapper\Meta\Runtime\FieldRuntimeMeta;
@@ -105,7 +105,7 @@ final class MetaResolver
 				);
 			}
 
-			$context = new ArgsContext($this->loader, $this);
+			$context = new MetaContext($this->loader, $this);
 
 			$callbacksByMeta[] = $this->resolveCallbacksMeta($classMeta, $context, $reflector, $reflector);
 			$docsByMeta[] = $this->resolveDocsMeta($classMeta, $context);
@@ -246,7 +246,7 @@ final class MetaResolver
 			$this->throwFieldMetaOutsideOfMappedObject($rootClass, $classReflector, $fieldStructure->getSource());
 		}
 
-		$context = new ArgsFieldContext($this->loader, $this, $defaultValue);
+		$context = new MetaFieldContext($this->loader, $this, $defaultValue);
 
 		return new FieldRuntimeMeta(
 			$this->resolveCallbacksMeta($meta, $context, $reflector, $classReflector),
@@ -300,7 +300,7 @@ final class MetaResolver
 	 */
 	private function resolveCallbacksMeta(
 		NodeCompileMeta $meta,
-		ArgsContext $context,
+		MetaContext $context,
 		Reflector $reflector,
 		ReflectionClass $classReflector
 	): array
@@ -327,7 +327,7 @@ final class MetaResolver
 	 */
 	private function resolveCallbackMeta(
 		CallbackCompileMeta $meta,
-		ArgsContext $context,
+		MetaContext $context,
 		Reflector $reflector,
 		ReflectionClass $declaringClass
 	): CallbackRuntimeMeta
@@ -352,7 +352,7 @@ final class MetaResolver
 	/**
 	 * @return array<string, DocMeta>
 	 */
-	private function resolveDocsMeta(NodeCompileMeta $meta, ArgsContext $context): array
+	private function resolveDocsMeta(NodeCompileMeta $meta, MetaContext $context): array
 	{
 		$array = [];
 		foreach ($meta->getDocs() as $doc) {
@@ -362,7 +362,7 @@ final class MetaResolver
 		return $array;
 	}
 
-	public function resolveDocMeta(DocMeta $meta, ArgsContext $context): DocMeta
+	public function resolveDocMeta(DocMeta $meta, MetaContext $context): DocMeta
 	{
 		$type = $meta->getName();
 		$args = $type::resolveArgs($meta->getArgs(), $context);
@@ -373,7 +373,7 @@ final class MetaResolver
 	/**
 	 * @return array<class-string<Modifier<Args>>, list<ModifierRuntimeMeta<Args>>>
 	 */
-	private function resolveClassModifiersMeta(ClassCompileMeta $meta, ArgsContext $context): array
+	private function resolveClassModifiersMeta(ClassCompileMeta $meta, MetaContext $context): array
 	{
 		$array = [];
 		foreach ($meta->getModifiers() as $modifier) {
@@ -386,7 +386,7 @@ final class MetaResolver
 	/**
 	 * @return array<class-string<Modifier<Args>>, ModifierRuntimeMeta<Args>>
 	 */
-	private function resolveFieldModifiersMeta(FieldCompileMeta $meta, ArgsContext $context): array
+	private function resolveFieldModifiersMeta(FieldCompileMeta $meta, MetaContext $context): array
 	{
 		$array = [];
 		foreach ($meta->getModifiers() as $modifier) {
@@ -399,7 +399,7 @@ final class MetaResolver
 	/**
 	 * @return ModifierRuntimeMeta<Args>
 	 */
-	private function resolveModifierMeta(ModifierCompileMeta $meta, ArgsContext $context): ModifierRuntimeMeta
+	private function resolveModifierMeta(ModifierCompileMeta $meta, MetaContext $context): ModifierRuntimeMeta
 	{
 		$type = $meta->getType();
 		$args = $type::resolveArgs($meta->getArgs(), $context);
@@ -410,7 +410,7 @@ final class MetaResolver
 	/**
 	 * @return RuleRuntimeMeta<Args>
 	 */
-	public function resolveRuleMeta(RuleCompileMeta $meta, ArgsFieldContext $context): RuleRuntimeMeta
+	public function resolveRuleMeta(RuleCompileMeta $meta, MetaFieldContext $context): RuleRuntimeMeta
 	{
 		$type = $meta->getType();
 		$rule = $this->ruleManager->getRule($type);

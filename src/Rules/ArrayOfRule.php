@@ -5,12 +5,13 @@ namespace Orisai\ObjectMapper\Rules;
 use Orisai\Exceptions\Logic\InvalidArgument;
 use Orisai\ObjectMapper\Args\Args;
 use Orisai\ObjectMapper\Args\ArgsChecker;
-use Orisai\ObjectMapper\Context\ArgsFieldContext;
-use Orisai\ObjectMapper\Context\FieldContext;
-use Orisai\ObjectMapper\Context\TypeContext;
 use Orisai\ObjectMapper\Exception\InvalidData;
 use Orisai\ObjectMapper\Exception\ValueDoesNotMatch;
 use Orisai\ObjectMapper\Meta\Compile\RuleCompileMeta;
+use Orisai\ObjectMapper\Meta\Context\MetaFieldContext;
+use Orisai\ObjectMapper\Processing\Context\DynamicContext;
+use Orisai\ObjectMapper\Processing\Context\PropertyContext;
+use Orisai\ObjectMapper\Processing\Context\ServicesContext;
 use Orisai\ObjectMapper\Processing\Value;
 use Orisai\ObjectMapper\Types\GenericArrayType;
 use Orisai\Utils\Arrays\ArrayMerger;
@@ -27,7 +28,7 @@ final class ArrayOfRule extends MultiValueRule
 
 	public const KeyRule = 'key';
 
-	public function resolveArgs(array $args, ArgsFieldContext $context): ArrayOfArgs
+	public function resolveArgs(array $args, MetaFieldContext $context): ArrayOfArgs
 	{
 		$checker = new ArgsChecker($args, self::class);
 		$checker->checkAllowedArgs(
@@ -98,12 +99,18 @@ final class ArrayOfRule extends MultiValueRule
 	 * @return array<mixed>
 	 * @throws ValueDoesNotMatch
 	 */
-	public function processValue($value, Args $args, FieldContext $context): array
+	public function processValue(
+		$value,
+		Args $args,
+		ServicesContext $services,
+		PropertyContext $property,
+		DynamicContext $dynamic
+	): array
 	{
 		$initValue = $value;
 
 		if (!is_array($value)) {
-			$type = $this->createType($args, $context);
+			$type = $this->createType($args, $services, $dynamic);
 			$type->markInvalid();
 
 			throw ValueDoesNotMatch::create($type, Value::of($initValue));
@@ -112,19 +119,19 @@ final class ArrayOfRule extends MultiValueRule
 		$type = null;
 
 		if ($args->minItems !== null && count($value) < $args->minItems) {
-			$type = $this->createType($args, $context);
+			$type = $this->createType($args, $services, $dynamic);
 			$type->markParameterInvalid(self::MinItems);
 		}
 
 		if ($args->maxItems !== null && count($value) > $args->maxItems) {
-			$type ??= $this->createType($args, $context);
+			$type ??= $this->createType($args, $services, $dynamic);
 			$type->markParameterInvalid(self::MaxItems);
 
 			throw ValueDoesNotMatch::create($type, Value::of($initValue));
 		}
 
 		$itemMeta = $args->itemRuleMeta;
-		$itemRule = $context->getRule($itemMeta->getType());
+		$itemRule = $services->getRule($itemMeta->getType());
 		$itemArgs = $itemMeta->getArgs();
 		if (!$itemRule instanceof PhasedRule) {
 			$itemRule = new PhasedRuleAdapter($itemRule);
@@ -135,7 +142,7 @@ final class ArrayOfRule extends MultiValueRule
 
 		$keyMeta = $args->keyRuleMeta;
 		if ($keyMeta !== null) {
-			$keyRule = $context->getRule($keyMeta->getType());
+			$keyRule = $services->getRule($keyMeta->getType());
 			$keyArgs = $keyMeta->getArgs();
 		} else {
 			$keyRule = null;
@@ -145,9 +152,15 @@ final class ArrayOfRule extends MultiValueRule
 		foreach ($value as $key => $item) {
 			if ($keyRule !== null && $keyArgs !== null) {
 				try {
-					$key = $keyRule->processValue($key, $keyArgs, $context->createClone());
+					$key = $keyRule->processValue(
+						$key,
+						$keyArgs,
+						$services,
+						$property,
+						$dynamic->createClone(),
+					);
 				} catch (ValueDoesNotMatch | InvalidData $exception) {
-					$type ??= $this->createType($args, $context);
+					$type ??= $this->createType($args, $services, $dynamic);
 					$type->addInvalidKey($key, $exception);
 				}
 			}
@@ -156,10 +169,12 @@ final class ArrayOfRule extends MultiValueRule
 				$value[$key] = $itemRule->processValuePhase1(
 					$item,
 					$itemArgs,
-					$context->createClone(),
+					$services,
+					$property,
+					$dynamic->createClone(),
 				);
 			} catch (ValueDoesNotMatch | InvalidData $exception) {
-				$type ??= $this->createType($args, $context);
+				$type ??= $this->createType($args, $services, $dynamic);
 				$type->addInvalidValue($key, $exception);
 				// Remove invalid value because only valid values are expected beyond this point
 				// Invalid keys are fine because we don't work them beyond
@@ -168,17 +183,25 @@ final class ArrayOfRule extends MultiValueRule
 		}
 
 		if ($phasedRule) {
-			$itemRule->processValuePhase2($value, $args, $context->createClone());
+			$itemRule->processValuePhase2(
+				$value,
+				$args,
+				$services,
+				$property,
+				$dynamic->createClone(),
+			);
 
 			foreach ($value as $key => $item) {
 				try {
 					$value[$key] = $itemRule->processValuePhase3(
 						$item,
 						$itemArgs,
-						$context->createClone(),
+						$services,
+						$property,
+						$dynamic->createClone(),
 					);
 				} catch (ValueDoesNotMatch | InvalidData $exception) {
-					$type ??= $this->createType($args, $context);
+					$type ??= $this->createType($args, $services, $dynamic);
 					$type->addInvalidValue($key, $exception);
 				}
 			}
@@ -197,29 +220,33 @@ final class ArrayOfRule extends MultiValueRule
 			);
 		}
 
-		if ($args->mergeDefaults && $context->hasDefaultValue()) {
-			$value = ArrayMerger::merge($context->getDefaultValue(), $value);
+		if ($args->mergeDefaults && $property->hasDefaultValue()) {
+			$value = ArrayMerger::merge($property->getDefaultValue(), $value);
 		}
 
 		return $value;
 	}
 
-	public function createType(Args $args, TypeContext $context): GenericArrayType
+	public function createType(
+		Args $args,
+		ServicesContext $services,
+		DynamicContext $dynamic
+	): GenericArrayType
 	{
 		$itemMeta = $args->itemRuleMeta;
-		$itemRule = $context->getRule($itemMeta->getType());
+		$itemRule = $services->getRule($itemMeta->getType());
 		$itemArgs = $itemMeta->getArgs();
 
 		$keyMeta = $args->keyRuleMeta;
 		if ($keyMeta !== null) {
-			$keyRule = $context->getRule($keyMeta->getType());
+			$keyRule = $services->getRule($keyMeta->getType());
 			$keyArgs = $keyMeta->getArgs();
-			$keyType = $keyRule->createType($keyArgs, $context->createClone());
+			$keyType = $keyRule->createType($keyArgs, $services, $dynamic->createClone());
 		}
 
 		$type = GenericArrayType::forArray(
 			$keyType ?? null,
-			$itemRule->createType($itemArgs, $context->createClone()),
+			$itemRule->createType($itemArgs, $services, $dynamic->createClone()),
 		);
 
 		if ($args->minItems !== null) {

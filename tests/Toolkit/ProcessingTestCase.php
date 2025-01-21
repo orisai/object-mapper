@@ -3,14 +3,11 @@
 namespace Tests\Orisai\ObjectMapper\Toolkit;
 
 use Orisai\ObjectMapper\Args\Args;
-use Orisai\ObjectMapper\Context\ArgsContext;
-use Orisai\ObjectMapper\Context\ArgsFieldContext;
-use Orisai\ObjectMapper\Context\FieldContext;
-use Orisai\ObjectMapper\Context\TypeContext;
+use Orisai\ObjectMapper\Meta\Context\MetaContext;
+use Orisai\ObjectMapper\Meta\Context\MetaFieldContext;
 use Orisai\ObjectMapper\Meta\MetaLoader;
 use Orisai\ObjectMapper\Meta\Runtime\RuleRuntimeMeta;
 use Orisai\ObjectMapper\Meta\Shared\DefaultValueMeta;
-use Orisai\ObjectMapper\Processing\Options;
 use Orisai\ObjectMapper\Processing\Processor;
 use Orisai\ObjectMapper\Rules\DefaultRuleManager;
 use Orisai\ObjectMapper\Rules\Rule;
@@ -67,28 +64,14 @@ abstract class ProcessingTestCase extends TestCase
 		);
 	}
 
-	protected function argsFieldContext(?DefaultValueMeta $default = null): ArgsFieldContext
+	protected function argsFieldContext(?DefaultValueMeta $default = null): MetaFieldContext
 	{
 		return $this->dependencies->createArgsFieldContext($default);
 	}
 
-	protected function argsContext(): ArgsContext
+	protected function argsContext(): MetaContext
 	{
 		return $this->dependencies->createArgsContext();
-	}
-
-	protected function createTypeContext(?Options $options = null): TypeContext
-	{
-		return $this->dependencies->createTypeContext($options);
-	}
-
-	protected function fieldContext(
-		?DefaultValueMeta $defaultValueMeta = null,
-		?Options $options = null,
-		bool $initializeObjects = false
-	): FieldContext
-	{
-		return $this->dependencies->createFieldContext($defaultValueMeta, $options, $initializeObjects);
 	}
 
 }
