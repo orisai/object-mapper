@@ -5,25 +5,45 @@ namespace Tests\Orisai\ObjectMapper\Benchmark;
 use Generator;
 use Orisai\ObjectMapper\Exception\InvalidData;
 use PhpBench\Benchmark\Metadata\Annotations\Iterations;
+use PhpBench\Benchmark\Metadata\Annotations\OutputTimeUnit;
 use PhpBench\Benchmark\Metadata\Annotations\ParamProviders;
+use PhpBench\Benchmark\Metadata\Annotations\RetryThreshold;
+use PhpBench\Benchmark\Metadata\Annotations\Revs;
 use Tests\Orisai\ObjectMapper\Doubles\ArrayOfIntVO;
 use Tests\Orisai\ObjectMapper\Doubles\ArrayOfStringVO;
 use Tests\Orisai\ObjectMapper\Toolkit\ProcessingTestCase;
 use function array_fill;
 
+/**
+ * @Revs(3)
+ * @Iterations(3)
+ * @RetryThreshold(3.5)
+ * @OutputTimeUnit("milliseconds")
+ */
 final class ArrayOfBench extends ProcessingTestCase
 {
+
+	private bool $isSetUp = false;
+
+	private function setUpOnce(): void
+	{
+		if ($this->isSetUp) {
+			return;
+		}
+
+		$this->isSetUp = true;
+		$this->setUp();
+	}
 
 	/**
 	 * @param array<string> $items
 	 * @throws InvalidData
 	 *
-	 * @Iterations(3)
 	 * @ParamProviders("provideArrayOfString")
 	 */
 	public function benchArrayOfString(array $items): void
 	{
-		$this->setUp();
+		$this->setUpOnce();
 		$data = [
 			'items' => $items,
 		];
@@ -35,12 +55,11 @@ final class ArrayOfBench extends ProcessingTestCase
 	 * @param array<int> $items
 	 * @throws InvalidData
 	 *
-	 * @Iterations(3)
 	 * @ParamProviders("provideArrayOfInt")
 	 */
 	public function benchArrayOfInt(array $items): void
 	{
-		$this->setUp();
+		$this->setUpOnce();
 		$data = [
 			'items' => $items,
 		];
