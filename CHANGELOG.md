@@ -58,6 +58,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 		- automatic meta cache reset after main `process()` call (performance optimization) replaced with `reset()`
 		  method
 		- properties are not set/unset via closure binding when public
+		- call `unset()` for mapped object properties only in `RequiredFields::none()` mode (performance optimization)
 
 ### Removed
 

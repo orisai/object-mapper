@@ -552,10 +552,13 @@ final class DefaultProcessor implements Processor
 			$this->rawValuesMap->setRawValues($object, $rawData);
 		}
 
-		// Reset mapped properties state
 		$fieldsMeta = $meta->getFields();
-		foreach ($fieldsMeta as $fieldMeta) {
-			$this->objectUnset($object, $fieldMeta->getProperty());
+
+		if ($dynamic->getOptions()->getRequiredFields() === RequiredFields::none()) {
+			// Reset mapped properties state
+			foreach ($fieldsMeta as $fieldMeta) {
+				$this->objectUnset($object, $fieldMeta->getProperty());
+			}
 		}
 
 		// Set processed data
