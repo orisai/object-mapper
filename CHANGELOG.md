@@ -27,6 +27,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - Callbacks
 	- receive `FieldContext` (callback-specific) instead of `FieldContext` and `ObjectContext` instead of
 	  `MappedObjectContext`
+	- are not called via closure binding when public
 - Contexts
 	- `TypeContext`, `MappedObjectContext` and `FieldContext` replaced with `ServicesContext`, `DynamicContext`,
 	  `PropertyContext`, `FieldContext` (for callbacks) and `ObjectContext` (callback-specific)
@@ -56,6 +57,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 		- creates `MappedObjectType` only when necessary (performance optimization)
 		- automatic meta cache reset after main `process()` call (performance optimization) replaced with `reset()`
 		  method
+		- properties are not set/unset via closure binding when public
 
 ### Removed
 

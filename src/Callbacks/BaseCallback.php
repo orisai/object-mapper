@@ -335,17 +335,24 @@ abstract class BaseCallback implements Callback
 		}
 
 		$method = $args->method;
+		$methodInst = $declaringClass->getMethod($method);
 
 		if ($args->isStatic) {
 			$class = $holder->getClass();
-			$callbackOutput = (static fn () => $class::$method($data, $context))
+
+			$callbackOutput = $methodInst->isPublic()
+				? $class::$method($data, $context)
+				: (static fn () => $class::$method($data, $context))
 				->bindTo(null, $declaringClass->getName())();
 		} else {
 			$instance = $holder->getInstance();
-			// Closure with bound instance cannot be static
+
 			// phpcs:disable SlevomatCodingStandard.Functions.StaticClosure.ClosureNotStatic
-			$callbackOutput = (fn () => $instance->$method($data, $context))
+			$callbackOutput = $methodInst->isPublic()
+				? $instance->$method($data, $context)
+				: (fn () => $instance->$method($data, $context))
 				->bindTo($instance, $declaringClass->getName())();
+			// phpcs:enable
 		}
 
 		return $args->returnsValue ? $callbackOutput : $data;

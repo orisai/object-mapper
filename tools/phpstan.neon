@@ -27,17 +27,17 @@ parameters:
 		-
 			message: '#^Variable property access on Orisai\\ObjectMapper\\MappedObject\.$#'
 			path: ../src/Processing/DefaultProcessor.php
-			count: 2
+			count: 4
 
 		# Callback call
 		-
 			message: '#^Variable static method call on class-string\<Orisai\\ObjectMapper\\MappedObject\>\.$#'
 			path: ../src/Callbacks/BaseCallback.php
-			count: 1
+			count: 2
 		-
 			message: '#^Variable method call on Orisai\\ObjectMapper\\MappedObject\.$#'
 			path: ../src/Callbacks/BaseCallback.php
-			count: 1
+			count: 2
 
 		# Dark mapping magic
 		-

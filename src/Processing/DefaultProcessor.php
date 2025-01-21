@@ -35,6 +35,7 @@ use function array_keys;
 use function array_map;
 use function assert;
 use function is_array;
+use const PHP_VERSION_ID;
 
 final class DefaultProcessor implements Processor
 {
@@ -576,10 +577,14 @@ final class DefaultProcessor implements Processor
 		$declaringClass = $property->getDeclaringClass();
 		$name = $property->getName();
 
-		// phpcs:disable SlevomatCodingStandard.Functions.StaticClosure
-		(fn () => $object->$name = $value)
-			->bindTo($object, $declaringClass->getName())();
-		// phpcs:enable
+		if ($property->isPublic() && (PHP_VERSION_ID < 8_01_00 || !$property->isReadOnly())) {
+			$object->$name = $value;
+		} else {
+			// phpcs:disable SlevomatCodingStandard.Functions.StaticClosure
+			(fn () => $object->$name = $value)
+				->bindTo($object, $declaringClass->getName())();
+			// phpcs:enable
+		}
 	}
 
 	private function objectUnset(MappedObject $object, ReflectionProperty $property): void
@@ -587,11 +592,15 @@ final class DefaultProcessor implements Processor
 		$declaringClass = $property->getDeclaringClass();
 		$name = $property->getName();
 
-		// phpcs:disable SlevomatCodingStandard.Functions.StaticClosure
-		(function () use ($object, $name): void {
+		if ($property->isPublic() && (PHP_VERSION_ID < 8_01_00 || !$property->isReadOnly())) {
 			unset($object->$name);
-		})->bindTo($object, $declaringClass->getName())();
-		// phpcs:enable
+		} else {
+			// phpcs:disable SlevomatCodingStandard.Functions.StaticClosure
+			(function () use ($object, $name): void {
+				unset($object->$name);
+			})->bindTo($object, $declaringClass->getName())();
+			// phpcs:enable
+		}
 	}
 
 }
