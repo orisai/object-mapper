@@ -10,7 +10,7 @@ interface MetaSource
 {
 
 	/**
-	 * @param ReflectionClass<MappedObject> $class
+	 * @param ReflectionClass<covariant MappedObject> $class
 	 */
 	public function load(ReflectionClass $class): CompileMeta;
 

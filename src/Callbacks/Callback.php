@@ -38,7 +38,7 @@ interface Callback
 	 * @param T_ARGS $args
 	 * @param ObjectContext|FieldContext $context
 	 * @param ObjectHolder<MappedObject> $holder
-	 * @param ReflectionClass<MappedObject> $declaringClass
+	 * @param ReflectionClass<covariant MappedObject> $declaringClass
 	 * @return mixed
 	 * @throws ValueDoesNotMatch
 	 * @throws InvalidData

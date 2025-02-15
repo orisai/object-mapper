@@ -129,8 +129,8 @@ final class MetaResolver
 	}
 
 	/**
-	 * @param ReflectionClass<MappedObject> $rootClass
-	 * @param ReflectionClass<object> $reflector
+	 * @param ReflectionClass<covariant MappedObject> $rootClass
+	 * @param ReflectionClass<covariant object> $reflector
 	 * @return never
 	 */
 	private function throwClassMetaOutsideOfMappedObject(

@@ -60,7 +60,7 @@ abstract class ReflectorMetaSource implements MetaSource
 	}
 
 	/**
-	 * @param ReflectionClass<MappedObject> $class
+	 * @param ReflectionClass<covariant MappedObject> $class
 	 */
 	private function getStructureGroup(ReflectionClass $class): StructureGroup
 	{
@@ -72,7 +72,7 @@ abstract class ReflectorMetaSource implements MetaSource
 	}
 
 	/**
-	 * @param ReflectionClass<MappedObject> $rootClass
+	 * @param ReflectionClass<covariant MappedObject> $rootClass
 	 * @return list<ClassCompileMeta>
 	 */
 	private function loadClassMeta(ReflectionClass $rootClass, StructureGroup $group): array
@@ -134,7 +134,7 @@ abstract class ReflectorMetaSource implements MetaSource
 	}
 
 	/**
-	 * @param ReflectionClass<MappedObject> $rootClass
+	 * @param ReflectionClass<covariant MappedObject> $rootClass
 	 * @return list<FieldCompileMeta>
 	 */
 	private function loadPropertiesMeta(ReflectionClass $rootClass, StructureGroup $group): array
@@ -262,7 +262,7 @@ abstract class ReflectorMetaSource implements MetaSource
 	}
 
 	/**
-	 * @param ReflectionClass<MappedObject> $rootClass
+	 * @param ReflectionClass<covariant MappedObject> $rootClass
 	 * @param list<FieldCompileMeta> $resolvedGroup
 	 */
 	private function checkFieldInvariance(ReflectionClass $rootClass, array $resolvedGroup): void
@@ -291,7 +291,7 @@ abstract class ReflectorMetaSource implements MetaSource
 	}
 
 	/**
-	 * @param ReflectionClass<MappedObject> $rootClass
+	 * @param ReflectionClass<covariant MappedObject> $rootClass
 	 */
 	private function getRelativePropertyName(PropertyStructure $propertyStructure, ReflectionClass $rootClass): string
 	{

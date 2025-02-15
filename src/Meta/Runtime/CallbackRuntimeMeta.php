@@ -21,13 +21,13 @@ final class CallbackRuntimeMeta
 	/** @var T */
 	private Args $args;
 
-	/** @var ReflectionClass<MappedObject> */
+	/** @var ReflectionClass<covariant MappedObject> */
 	private ReflectionClass $declaringClass;
 
 	/**
 	 * @param class-string<Callback<T>> $type
 	 * @param T $args
-	 * @param ReflectionClass<MappedObject> $declaringClass
+	 * @param ReflectionClass<covariant MappedObject> $declaringClass
 	 */
 	public function __construct(string $type, Args $args, ReflectionClass $declaringClass)
 	{
@@ -53,7 +53,7 @@ final class CallbackRuntimeMeta
 	}
 
 	/**
-	 * @return ReflectionClass<MappedObject>
+	 * @return ReflectionClass<covariant MappedObject>
 	 */
 	public function getDeclaringClass(): ReflectionClass
 	{
