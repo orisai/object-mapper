@@ -29,7 +29,6 @@ use Orisai\ObjectMapper\Types\MappedObjectType;
 use Orisai\ObjectMapper\Types\MessageType;
 use Orisai\ObjectMapper\Types\Type;
 use ReflectionProperty;
-use function array_diff;
 use function array_key_exists;
 use function array_keys;
 use function array_map;
@@ -221,8 +220,11 @@ final class DefaultProcessor implements Processor
 		DynamicContext $dynamic
 	): array
 	{
-		$data = $this->handleSentFields($data, $call, $dynamic);
-		$data = $this->handleMissingFields($data, $call, $dynamic);
+		$meta = $call->getMeta();
+		$fieldsMeta = $meta->getFields();
+
+		$data = $this->handleSentFields($data, $call, $dynamic, $fieldsMeta);
+		$data = $this->handleMissingFields($data, $call, $dynamic, $fieldsMeta);
 
 		$type = $call->getTypeIfInitialized();
 
@@ -236,28 +238,32 @@ final class DefaultProcessor implements Processor
 	/**
 	 * @param array<int|string, mixed>           $data
 	 * @param ProcessorCallContext<MappedObject> $call
+	 * @param array<int|string, FieldRuntimeMeta> $fieldsMeta
+	 * @param-out array<int|string, FieldRuntimeMeta> $fieldsMeta
 	 * @return array<int|string, mixed>
 	 */
 	private function handleSentFields(
 		array $data,
 		ProcessorCallContext $call,
-		DynamicContext $dynamic
+		DynamicContext $dynamic,
+		array &$fieldsMeta
 	): array
 	{
 		$type = null;
 		$options = $dynamic->getOptions();
 
-		$meta = $call->getMeta();
-		$fieldsMeta = $meta->getFields();
 		$fieldNames = array_keys($fieldsMeta);
 
 		foreach ($data as $fieldName => $value) {
 			// Skip invalid field
 			if ($type !== null && $type->isFieldInvalid($fieldName)) {
+				unset($fieldsMeta[$fieldName]);
+
 				continue;
 			}
 
 			$fieldMeta = $fieldsMeta[$fieldName] ?? null;
+			unset($fieldsMeta[$fieldName]);
 
 			// Unknown field
 			if ($fieldMeta === null) {
@@ -321,41 +327,26 @@ final class DefaultProcessor implements Processor
 	/**
 	 * @param array<int|string, mixed>           $data
 	 * @param ProcessorCallContext<MappedObject> $call
-	 * @return array<int|string>
-	 */
-	private function findMissingFields(array $data, ProcessorCallContext $call): array
-	{
-		$meta = $call->getMeta();
-
-		return array_diff(
-			array_keys($meta->getFields()),
-			array_keys($data),
-		);
-	}
-
-	/**
-	 * @param array<int|string, mixed>           $data
-	 * @param ProcessorCallContext<MappedObject> $call
+	 * @param array<int|string, FieldRuntimeMeta> $fieldsMeta
 	 * @return array<int|string, mixed>
 	 */
 	private function handleMissingFields(
 		array $data,
 		ProcessorCallContext $call,
-		DynamicContext $dynamic
+		DynamicContext $dynamic,
+		array $fieldsMeta
 	): array
 	{
 		$type = null;
 		$options = $dynamic->getOptions();
 		$initializeObjects = $dynamic->shouldInitializeObjects();
 
-		$meta = $call->getMeta();
-		$fieldsMeta = $meta->getFields();
-
 		$requiredFields = $options->getRequiredFields();
 		$fillDefaultValues = $initializeObjects || $options->isPrefillDefaultValues();
 
-		foreach ($this->findMissingFields($data, $call) as $missingField) {
-			$fieldMeta = $fieldsMeta[$missingField];
+		// $fieldsMeta contains only missing fields at this point
+		foreach ($fieldsMeta as $fieldName => $fieldMeta) {
+			$fieldMeta = $fieldsMeta[$fieldName];
 			$defaultMeta = $fieldMeta->getDefault();
 
 			if ($requiredFields === RequiredFields::nonDefault() && $defaultMeta->hasValue()) {
@@ -363,18 +354,18 @@ final class DefaultProcessor implements Processor
 				// If VOs are initialized then values are always prefilled - user can work with them in after callback,
 				//   and they are defined by VO anyway
 				if ($fillDefaultValues) {
-					$data[$missingField] = $defaultMeta->getValue();
+					$data[$fieldName] = $defaultMeta->getValue();
 				}
 			} elseif (
 				$requiredFields !== RequiredFields::none()
-				&& ($type === null || !$type->isFieldInvalid($missingField))
+				&& ($type === null || !$type->isFieldInvalid($fieldName))
 			) {
 				// Field is missing and have no default value, mark as invalid
 				$fieldRuleMeta = $fieldMeta->getRule();
 				$fieldRule = $this->ruleManager->getRule($fieldRuleMeta->getType());
 				$type ??= $call->getType();
 				$type->overwriteInvalidField(
-					$missingField,
+					$fieldName,
 					ValueDoesNotMatch::create(
 						$fieldRule->createType(
 							$fieldRuleMeta->getArgs(),

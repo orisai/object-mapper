@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased](https://github.com/orisai/object-mapper/compare/0.3.0...v1.x)
 
+### Changed
+
+- Simplify finding missing fields (performance optimization)
+
 ### Fixed
 
 - PHPStan generics
