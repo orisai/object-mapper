@@ -69,7 +69,7 @@ final class DocsArrayPrinter implements MappedObjectPrinter
 	private function printMappedObjectType(MappedObjectType $type): array
 	{
 		$meta = $this->metaLoader->load($type->getClass());
-		$fieldsMeta = $meta->getFields();
+		$fieldsMeta = $meta->fields;
 
 		$fields = [];
 		$defaults = $this->defaultsPrinter->printType($type);
@@ -92,7 +92,7 @@ final class DocsArrayPrinter implements MappedObjectPrinter
 		return [
 			'type' => 'mapped object',
 			'sourceClass' => $type->getClass(),
-			'docs' => $this->printDocs($meta->getClass()),
+			'docs' => $this->printDocs($meta->class),
 			'fields' => $fields,
 		];
 	}
@@ -119,7 +119,7 @@ final class DocsArrayPrinter implements MappedObjectPrinter
 	private function printDocs(NodeRuntimeMeta $meta): array
 	{
 		$docs = [];
-		foreach ($meta->getDocs() as $docsMeta) {
+		foreach ($meta->docs as $docsMeta) {
 			$name = $docsMeta->getName();
 			$args = $docsMeta->getArgs();
 			$docs[$name] = $args;

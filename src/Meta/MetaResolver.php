@@ -74,7 +74,7 @@ final class MetaResolver
 			$this->resolveFieldsMeta($class, $meta),
 		);
 
-		$this->checkObjectCanBeInstantiated($class, $runtimeMeta->getClass());
+		$this->checkObjectCanBeInstantiated($class, $runtimeMeta->class);
 
 		return $runtimeMeta;
 	}
@@ -177,7 +177,7 @@ final class MetaResolver
 	{
 		$injectors = [];
 		foreach ($meta->getModifier(RequiresDependenciesModifier::class) as $modifier) {
-			$injectors[] = $modifier->getArgs()->injector;
+			$injectors[] = $modifier->args->injector;
 		}
 
 		$this->objectCreator->createInstance($class->getName(), $injectors);
@@ -211,10 +211,10 @@ final class MetaResolver
 	{
 		$modifier = $fieldMeta->getModifier(FieldNameModifier::class);
 		if ($modifier !== null) {
-			return $modifier->getArgs()->name;
+			return $modifier->args->name;
 		}
 
-		return $fieldMeta->getProperty()->getName();
+		return $fieldMeta->property->getName();
 	}
 
 	/**
@@ -314,7 +314,7 @@ final class MetaResolver
 				$classReflector,
 			);
 
-			$array[$callbackMeta->getType()][$key] = $callbackMeta;
+			$array[$callbackMeta->type][$key] = $callbackMeta;
 		}
 
 		return $array;

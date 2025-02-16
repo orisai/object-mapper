@@ -11,6 +11,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 - Simplify finding missing fields (performance optimization)
 - Reduce calls needed to find field names for "did you mean" error helper
+- Runtime meta
+	- replace getters with readonly properties
 
 ### Fixed
 

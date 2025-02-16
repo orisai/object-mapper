@@ -33,12 +33,12 @@ final class DefaultValuesArrayPrinter implements MappedObjectPrinter
 	 */
 	private function printMappedObjectType(MappedObjectType $type): array
 	{
-		$meta = $this->metaLoader->load($type->getClass())->getFields();
+		$meta = $this->metaLoader->load($type->getClass())->fields;
 		$formatted = [];
 		$fields = $type->getFields();
 
 		foreach ($fields as $fieldName => $fieldType) {
-			$defaultMeta = $meta[$fieldName]->getDefault();
+			$defaultMeta = $meta[$fieldName]->default;
 
 			if ($fieldType instanceof MappedObjectType) {
 				$value = $this->printMappedObjectType($fieldType);

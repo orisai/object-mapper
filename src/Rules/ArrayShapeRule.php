@@ -83,14 +83,14 @@ final class ArrayShapeRule implements Rule
 				continue;
 			}
 
-			$fieldRule = $services->getRule($fieldRuleMeta->getType());
+			$fieldRule = $services->getRule($fieldRuleMeta->type);
 
 			$type ??= $this->createType($args, $services, $dynamic);
 			$type->overwriteInvalidField(
 				$fieldName,
 				ValueDoesNotMatch::create(
 					$fieldRule->createType(
-						$fieldRuleMeta->getArgs(),
+						$fieldRuleMeta->args,
 						$services,
 						$dynamic->createClone(),
 					),
@@ -127,8 +127,8 @@ final class ArrayShapeRule implements Rule
 				continue;
 			}
 
-			$fieldRule = $services->getRule($fieldRuleMeta->getType());
-			$fieldArgs = $fieldRuleMeta->getArgs();
+			$fieldRule = $services->getRule($fieldRuleMeta->type);
+			$fieldArgs = $fieldRuleMeta->args;
 
 			try {
 				$fieldValue = $fieldRule->processValue(
@@ -162,8 +162,8 @@ final class ArrayShapeRule implements Rule
 	{
 		$type = new ArrayShapeType();
 		foreach ($args->fields as $fieldName => $fieldRuleMeta) {
-			$fieldRule = $services->getRule($fieldRuleMeta->getType());
-			$fieldArgs = $fieldRuleMeta->getArgs();
+			$fieldRule = $services->getRule($fieldRuleMeta->type);
+			$fieldArgs = $fieldRuleMeta->args;
 
 			$fieldType = $fieldRule->createType($fieldArgs, $services, $dynamic->createClone());
 

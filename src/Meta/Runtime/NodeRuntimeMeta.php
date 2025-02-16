@@ -7,16 +7,18 @@ use Orisai\ObjectMapper\Callbacks\Callback;
 use Orisai\ObjectMapper\Meta\Shared\DocMeta;
 
 /**
+ * @readonly
+ *
  * @internal
  */
 abstract class NodeRuntimeMeta
 {
 
 	/** @var array<class-string<Callback<Args>>, array<int, CallbackRuntimeMeta<Args>>> */
-	private array $callbacks;
+	public array $callbacks;
 
 	/** @var array<string, DocMeta> */
-	private array $docs;
+	public array $docs;
 
 	/**
 	 * @template T_ARGS of Args
@@ -29,33 +31,12 @@ abstract class NodeRuntimeMeta
 		$this->docs = $docs;
 	}
 
-	public function hasAnyCallbacks(): bool
-	{
-		return $this->callbacks !== [];
-	}
-
-	/**
-	 * @return array<class-string<Callback<Args>>, array<int, CallbackRuntimeMeta<Args>>>
-	 */
-	public function getCallbacks(): array
-	{
-		return $this->callbacks;
-	}
-
 	/**
 	 * @return array<int, CallbackRuntimeMeta<Args>>
 	 */
 	public function getCallbacksByType(string $type): array
 	{
 		return $this->callbacks[$type] ?? [];
-	}
-
-	/**
-	 * @return array<string, DocMeta>
-	 */
-	public function getDocs(): array
-	{
-		return $this->docs;
 	}
 
 	/**

@@ -52,11 +52,7 @@ final class FieldRuntimeMetaTest extends TestCase
 
 		$meta = new FieldRuntimeMeta($callbacks, $docs, $modifiers, $rule, $default, $property);
 
-		self::assertSame(
-			$callbacks,
-			$meta->getCallbacks(),
-		);
-		self::assertTrue($meta->hasAnyCallbacks());
+		self::assertSame($callbacks, $meta->callbacks);
 		self::assertSame(
 			$beforeCallbacks,
 			$meta->getCallbacksByType(BeforeCallback::class),
@@ -65,22 +61,10 @@ final class FieldRuntimeMetaTest extends TestCase
 			[],
 			$meta->getCallbacksByType(AfterCallback::class),
 		);
-		self::assertSame(
-			$docs,
-			$meta->getDocs(),
-		);
-		self::assertSame(
-			$modifiers,
-			$meta->getModifiers(),
-		);
-		self::assertSame(
-			$rule,
-			$meta->getRule(),
-		);
-		self::assertSame(
-			$property,
-			$meta->getProperty(),
-		);
+		self::assertSame($docs, $meta->docs);
+		self::assertSame($modifiers, $meta->modifiers);
+		self::assertSame($rule, $meta->rule);
+		self::assertSame($property, $meta->property);
 		self::assertEquals($meta, unserialize(serialize($meta)));
 	}
 

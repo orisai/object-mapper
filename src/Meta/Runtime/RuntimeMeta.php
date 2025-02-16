@@ -4,14 +4,16 @@ namespace Orisai\ObjectMapper\Meta\Runtime;
 
 /**
  * Value object for meta returned from MetaLoader
+ *
+ * @readonly
  */
 final class RuntimeMeta
 {
 
-	private ClassRuntimeMeta $class;
+	public ClassRuntimeMeta $class;
 
 	/** @var array<int|string, FieldRuntimeMeta> */
-	private array $fields;
+	public array $fields;
 
 	/**
 	 * @param array<int|string, FieldRuntimeMeta> $fields
@@ -20,19 +22,6 @@ final class RuntimeMeta
 	{
 		$this->class = $class;
 		$this->fields = $fields;
-	}
-
-	public function getClass(): ClassRuntimeMeta
-	{
-		return $this->class;
-	}
-
-	/**
-	 * @return array<int|string, FieldRuntimeMeta>
-	 */
-	public function getFields(): array
-	{
-		return $this->fields;
 	}
 
 	/**

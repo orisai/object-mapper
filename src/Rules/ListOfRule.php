@@ -104,8 +104,8 @@ final class ListOfRule extends MultiValueRule
 		}
 
 		$itemMeta = $args->itemRuleMeta;
-		$itemRule = $services->getRule($itemMeta->getType());
-		$itemArgs = $itemMeta->getArgs();
+		$itemRule = $services->getRule($itemMeta->type);
+		$itemArgs = $itemMeta->args;
 		if (!$itemRule instanceof PhasedRule) {
 			$itemRule = new PhasedRuleAdapter($itemRule);
 			$phasedRule = false;
@@ -199,8 +199,8 @@ final class ListOfRule extends MultiValueRule
 	): GenericArrayType
 	{
 		$itemMeta = $args->itemRuleMeta;
-		$itemRule = $services->getRule($itemMeta->getType());
-		$itemArgs = $itemMeta->getArgs();
+		$itemRule = $services->getRule($itemMeta->type);
+		$itemArgs = $itemMeta->args;
 
 		$type = GenericArrayType::forList(
 			$this->createKeyType(),

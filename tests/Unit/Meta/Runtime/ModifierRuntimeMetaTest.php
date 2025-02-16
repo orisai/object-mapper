@@ -18,8 +18,8 @@ final class ModifierRuntimeMetaTest extends TestCase
 		$args = new FieldNameArgs('name');
 		$meta = new ModifierRuntimeMeta($type, $args);
 
-		self::assertSame($type, $meta->getType());
-		self::assertSame($args, $meta->getArgs());
+		self::assertSame($type, $meta->type);
+		self::assertSame($args, $meta->args);
 		self::assertEquals($meta, unserialize(serialize($meta)));
 	}
 

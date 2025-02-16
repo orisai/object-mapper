@@ -40,8 +40,8 @@ final class AnyOfRule extends CompoundRule
 				continue;
 			}
 
-			$nestedRule = $services->getRule($nestedRuleMeta->getType());
-			$nestedRuleArgs = $nestedRuleMeta->getArgs();
+			$nestedRule = $services->getRule($nestedRuleMeta->type);
+			$nestedRuleArgs = $nestedRuleMeta->args;
 
 			try {
 				$value = $nestedRule->processValue(

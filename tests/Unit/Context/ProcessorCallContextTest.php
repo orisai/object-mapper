@@ -21,7 +21,7 @@ final class ProcessorCallContextTest extends TestCase
 		$holder = new ObjectHolder(
 			new ObjectCreator($deps->dependencyInjectorManager),
 			DefaultsVO::class,
-			$meta->getClass(),
+			$meta->class,
 		);
 		$typeCreator = static fn (): Type => new MappedObjectType(DefaultsVO::class);
 

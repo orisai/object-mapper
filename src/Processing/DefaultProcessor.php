@@ -116,7 +116,7 @@ final class DefaultProcessor implements Processor
 
 		$dynamic = new DynamicContext($options, $initializeObjects);
 		$call = new ProcessorCallContext(
-			new ObjectHolder($this->objectCreator, $class, $meta->getClass()),
+			new ObjectHolder($this->objectCreator, $class, $meta->class),
 			$meta,
 			fn (): MappedObjectType => $this->createMappedObjectType($class, $dynamic),
 		);
@@ -143,9 +143,9 @@ final class DefaultProcessor implements Processor
 	): array
 	{
 		$meta = $call->getMeta();
-		$classMeta = $meta->getClass();
+		$classMeta = $meta->class;
 
-		if ($classMeta->hasAnyCallbacks()) {
+		if ($classMeta->callbacks !== []) {
 			$callbackContext = new ObjectContext($this->services, $dynamic, $call);
 
 			$data = $this->handleClassCallbacks(
@@ -221,7 +221,7 @@ final class DefaultProcessor implements Processor
 	): array
 	{
 		$meta = $call->getMeta();
-		$fieldsMeta = $meta->getFields();
+		$fieldsMeta = $meta->fields;
 
 		$data = $this->handleSentFields($data, $call, $dynamic, $fieldsMeta);
 		$data = $this->handleMissingFields($data, $call, $dynamic, $fieldsMeta);
@@ -298,14 +298,14 @@ final class DefaultProcessor implements Processor
 				continue;
 			}
 
-			$property = $fieldMeta->getProperty();
+			$property = $fieldMeta->property;
 			$className = $property->getDeclaringClass()->getName();
 			$propertyName = $property->getName();
 			$propertyContext = $this->propertyContextCache[$className][$propertyName]
 				?? (
 				$this->propertyContextCache[$className][$propertyName] = new PropertyContext(
-					$fieldMeta->getDefault(),
-					$fieldMeta->getProperty(),
+					$fieldMeta->default,
+					$fieldMeta->property,
 					$fieldName,
 				));
 
@@ -350,7 +350,7 @@ final class DefaultProcessor implements Processor
 		// $fieldsMeta contains only missing fields at this point
 		foreach ($fieldsMeta as $fieldName => $fieldMeta) {
 			$fieldMeta = $fieldsMeta[$fieldName];
-			$defaultMeta = $fieldMeta->getDefault();
+			$defaultMeta = $fieldMeta->default;
 
 			if ($requiredFields === RequiredFields::nonDefault() && $defaultMeta->hasValue()) {
 				// Add default value if defaults are not required and should be used
@@ -364,14 +364,14 @@ final class DefaultProcessor implements Processor
 				&& ($type === null || !$type->isFieldInvalid($fieldName))
 			) {
 				// Field is missing and have no default value, mark as invalid
-				$fieldRuleMeta = $fieldMeta->getRule();
-				$fieldRule = $this->ruleManager->getRule($fieldRuleMeta->getType());
+				$fieldRuleMeta = $fieldMeta->rule;
+				$fieldRule = $this->ruleManager->getRule($fieldRuleMeta->type);
 				$type ??= $call->getType();
 				$type->overwriteInvalidField(
 					$fieldName,
 					ValueDoesNotMatch::create(
 						$fieldRule->createType(
-							$fieldRuleMeta->getArgs(),
+							$fieldRuleMeta->args,
 							$this->services,
 							$dynamic,
 						),
@@ -403,7 +403,7 @@ final class DefaultProcessor implements Processor
 		FieldRuntimeMeta $meta
 	)
 	{
-		if ($meta->hasAnyCallbacks()) {
+		if ($meta->callbacks !== []) {
 			$callbackContext = new FieldContext(
 				$this->services,
 				$dynamic,
@@ -436,12 +436,12 @@ final class DefaultProcessor implements Processor
 		FieldRuntimeMeta $meta
 	)
 	{
-		$ruleMeta = $meta->getRule();
-		$rule = $this->ruleManager->getRule($ruleMeta->getType());
+		$ruleMeta = $meta->rule;
+		$rule = $this->ruleManager->getRule($ruleMeta->type);
 
 		return $rule->processValue(
 			$value,
-			$ruleMeta->getArgs(),
+			$ruleMeta->args,
 			$this->services,
 			$property,
 			$dynamic,
@@ -509,10 +509,10 @@ final class DefaultProcessor implements Processor
 		foreach ($meta->getCallbacksByType($callbackType) as $callback) {
 			$data = $callbackType::invoke(
 				$data,
-				$callback->getArgs(),
+				$callback->args,
 				$holder,
 				$callbackContext,
-				$callback->getDeclaringClass(),
+				$callback->declaringClass,
 			);
 		}
 
@@ -545,18 +545,18 @@ final class DefaultProcessor implements Processor
 			$this->rawValuesMap->setRawValues($object, $rawData);
 		}
 
-		$fieldsMeta = $meta->getFields();
+		$fieldsMeta = $meta->fields;
 
 		if ($dynamic->getOptions()->getRequiredFields() === RequiredFields::none()) {
 			// Reset mapped properties state
 			foreach ($fieldsMeta as $fieldMeta) {
-				$this->objectUnset($object, $fieldMeta->getProperty());
+				$this->objectUnset($object, $fieldMeta->property);
 			}
 		}
 
 		// Set processed data
 		foreach ($data as $fieldName => $value) {
-			$this->objectSet($object, $fieldsMeta[$fieldName]->getProperty(), $value);
+			$this->objectSet($object, $fieldsMeta[$fieldName]->property, $value);
 		}
 	}
 

@@ -11,17 +11,18 @@ final class FieldRuntimeMeta extends NodeRuntimeMeta
 {
 
 	/** @var RuleRuntimeMeta<Args> */
-	private RuleRuntimeMeta $rule;
+	public RuleRuntimeMeta $rule;
 
-	private DefaultValueMeta $default;
+	public DefaultValueMeta $default;
 
-	private ReflectionProperty $property;
+	public ReflectionProperty $property;
 
 	/** @var array<class-string<Modifier<Args>>, ModifierRuntimeMeta<Args>> */
-	private array $modifiers;
+	public array $modifiers;
 
 	/**
-	 * @param array<class-string<Modifier<Args>>, ModifierRuntimeMeta<Args>> $modifiers
+	 * @template T_ARGS of Args
+	 * @param array<class-string<Modifier<T_ARGS>>, ModifierRuntimeMeta<T_ARGS>> $modifiers
 	 * @param RuleRuntimeMeta<Args> $rule
 	 */
 	public function __construct(
@@ -41,39 +42,13 @@ final class FieldRuntimeMeta extends NodeRuntimeMeta
 	}
 
 	/**
-	 * @return RuleRuntimeMeta<Args>
-	 */
-	public function getRule(): RuleRuntimeMeta
-	{
-		return $this->rule;
-	}
-
-	public function getDefault(): DefaultValueMeta
-	{
-		return $this->default;
-	}
-
-	public function getProperty(): ReflectionProperty
-	{
-		return $this->property;
-	}
-
-	/**
-	 * @return array<class-string<Modifier<Args>>, ModifierRuntimeMeta<Args>>
-	 */
-	public function getModifiers(): array
-	{
-		return $this->modifiers;
-	}
-
-	/**
 	 * @template T of Args
 	 * @param class-string<Modifier<T>> $type
 	 * @return ModifierRuntimeMeta<T>|null
 	 */
 	public function getModifier(string $type): ?ModifierRuntimeMeta
 	{
-		return $this->getModifiers()[$type] ?? null;
+		return $this->modifiers[$type] ?? null;
 	}
 
 	/**

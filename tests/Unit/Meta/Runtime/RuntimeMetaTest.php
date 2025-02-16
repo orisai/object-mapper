@@ -34,14 +34,8 @@ final class RuntimeMetaTest extends TestCase
 
 		$meta = new RuntimeMeta($class, $fields);
 
-		self::assertSame(
-			$class,
-			$meta->getClass(),
-		);
-		self::assertSame(
-			$fields,
-			$meta->getFields(),
-		);
+		self::assertSame($class, $meta->class);
+		self::assertSame($fields, $meta->fields);
 		self::assertEquals($meta, unserialize(serialize($meta)));
 	}
 

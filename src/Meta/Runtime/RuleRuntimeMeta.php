@@ -7,15 +7,17 @@ use Orisai\ObjectMapper\Rules\Rule;
 
 /**
  * @template-covariant T of Args
+ *
+ * @readonly
  */
 final class RuleRuntimeMeta
 {
 
 	/** @var class-string<Rule<T>> */
-	private string $type;
+	public string $type;
 
 	/** @var T */
-	private Args $args;
+	public Args $args;
 
 	/**
 	 * @param class-string<Rule<T>> $type
@@ -25,22 +27,6 @@ final class RuleRuntimeMeta
 	{
 		$this->type = $type;
 		$this->args = $args;
-	}
-
-	/**
-	 * @return class-string<Rule<T>>
-	 */
-	public function getType(): string
-	{
-		return $this->type;
-	}
-
-	/**
-	 * @return T
-	 */
-	public function getArgs(): Args
-	{
-		return $this->args;
 	}
 
 	/**

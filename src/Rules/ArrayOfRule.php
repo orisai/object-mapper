@@ -131,8 +131,8 @@ final class ArrayOfRule extends MultiValueRule
 		}
 
 		$itemMeta = $args->itemRuleMeta;
-		$itemRule = $services->getRule($itemMeta->getType());
-		$itemArgs = $itemMeta->getArgs();
+		$itemRule = $services->getRule($itemMeta->type);
+		$itemArgs = $itemMeta->args;
 		if (!$itemRule instanceof PhasedRule) {
 			$itemRule = new PhasedRuleAdapter($itemRule);
 			$phasedRule = false;
@@ -142,8 +142,8 @@ final class ArrayOfRule extends MultiValueRule
 
 		$keyMeta = $args->keyRuleMeta;
 		if ($keyMeta !== null) {
-			$keyRule = $services->getRule($keyMeta->getType());
-			$keyArgs = $keyMeta->getArgs();
+			$keyRule = $services->getRule($keyMeta->type);
+			$keyArgs = $keyMeta->args;
 		} else {
 			$keyRule = null;
 			$keyArgs = null;
@@ -234,13 +234,13 @@ final class ArrayOfRule extends MultiValueRule
 	): GenericArrayType
 	{
 		$itemMeta = $args->itemRuleMeta;
-		$itemRule = $services->getRule($itemMeta->getType());
-		$itemArgs = $itemMeta->getArgs();
+		$itemRule = $services->getRule($itemMeta->type);
+		$itemArgs = $itemMeta->args;
 
 		$keyMeta = $args->keyRuleMeta;
 		if ($keyMeta !== null) {
-			$keyRule = $services->getRule($keyMeta->getType());
-			$keyArgs = $keyMeta->getArgs();
+			$keyRule = $services->getRule($keyMeta->type);
+			$keyArgs = $keyMeta->args;
 			$keyType = $keyRule->createType($keyArgs, $services, $dynamic->createClone());
 		}
 

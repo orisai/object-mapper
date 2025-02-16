@@ -65,8 +65,8 @@ abstract class CompoundRule implements Rule
 		$type = $this->createCompoundType();
 
 		foreach ($args->rules as $key => $nestedRuleMeta) {
-			$nestedRule = $services->getRule($nestedRuleMeta->getType());
-			$nestedRuleArgs = $nestedRuleMeta->getArgs();
+			$nestedRule = $services->getRule($nestedRuleMeta->type);
+			$nestedRuleArgs = $nestedRuleMeta->args;
 			$type->addSubtype(
 				$key,
 				$nestedRule->createType($nestedRuleArgs, $services, $dynamic->createClone()),

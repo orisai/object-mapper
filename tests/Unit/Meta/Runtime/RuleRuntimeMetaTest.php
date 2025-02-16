@@ -18,8 +18,8 @@ final class RuleRuntimeMetaTest extends TestCase
 		$args = new EmptyArgs();
 		$meta = new RuleRuntimeMeta($type, $args);
 
-		self::assertSame($type, $meta->getType());
-		self::assertSame($args, $meta->getArgs());
+		self::assertSame($type, $meta->type);
+		self::assertSame($args, $meta->args);
 		self::assertEquals($meta, unserialize(serialize($meta)));
 	}
 

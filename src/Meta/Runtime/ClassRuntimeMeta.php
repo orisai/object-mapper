@@ -9,23 +9,16 @@ final class ClassRuntimeMeta extends NodeRuntimeMeta
 {
 
 	/** @var array<class-string<Modifier<Args>>, list<ModifierRuntimeMeta<Args>>> */
-	private array $modifiers;
+	public array $modifiers;
 
 	/**
-	 * @param array<class-string<Modifier<Args>>, list<ModifierRuntimeMeta<Args>>> $modifiers
+	 * @template T_ARGS of Args
+	 * @param array<class-string<Modifier<T_ARGS>>, list<ModifierRuntimeMeta<T_ARGS>>> $modifiers
 	 */
 	public function __construct(array $callbacks, array $docs, array $modifiers)
 	{
 		parent::__construct($callbacks, $docs);
 		$this->modifiers = $modifiers;
-	}
-
-	/**
-	 * @return array<class-string<Modifier<Args>>, list<ModifierRuntimeMeta<Args>>>
-	 */
-	public function getModifiers(): array
-	{
-		return $this->modifiers;
 	}
 
 	/**
@@ -35,7 +28,7 @@ final class ClassRuntimeMeta extends NodeRuntimeMeta
 	 */
 	public function getModifier(string $type): array
 	{
-		return $this->getModifiers()[$type] ?? [];
+		return $this->modifiers[$type] ?? [];
 	}
 
 	/**

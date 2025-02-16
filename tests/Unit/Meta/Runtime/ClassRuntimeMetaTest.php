@@ -49,11 +49,7 @@ final class ClassRuntimeMetaTest extends TestCase
 
 		$meta = new ClassRuntimeMeta($callbacks, $docs, $modifiers);
 
-		self::assertSame(
-			$callbacks,
-			$meta->getCallbacks(),
-		);
-		self::assertTrue($meta->hasAnyCallbacks());
+		self::assertSame($callbacks, $meta->callbacks);
 		self::assertSame(
 			$beforeCallbacks,
 			$meta->getCallbacksByType(BeforeCallback::class),
@@ -62,14 +58,8 @@ final class ClassRuntimeMetaTest extends TestCase
 			[],
 			$meta->getCallbacksByType(AfterCallback::class),
 		);
-		self::assertSame(
-			$docs,
-			$meta->getDocs(),
-		);
-		self::assertSame(
-			$modifiers,
-			$meta->getModifiers(),
-		);
+		self::assertSame($docs, $meta->docs);
+		self::assertSame($modifiers, $meta->modifiers);
 		self::assertEquals($meta, unserialize(serialize($meta)));
 	}
 

@@ -98,7 +98,7 @@ final class MappedObjectRule implements Rule
 			return $type;
 		}
 
-		foreach ($services->getMeta($args->class)->getFields() as $fieldName => $fieldMeta) {
+		foreach ($services->getMeta($args->class)->fields as $fieldName => $fieldMeta) {
 			$type->addField(
 				$fieldName,
 				$this->getTypeCreator($fieldMeta, $args, $services, $dynamic),
@@ -118,9 +118,9 @@ final class MappedObjectRule implements Rule
 		DynamicContext $dynamic
 	): Closure
 	{
-		$fieldRuleMeta = $fieldMeta->getRule();
-		$fieldRule = $services->getRule($fieldRuleMeta->getType());
-		$fieldArgs = $fieldRuleMeta->getArgs();
+		$fieldRuleMeta = $fieldMeta->rule;
+		$fieldRule = $services->getRule($fieldRuleMeta->type);
+		$fieldArgs = $fieldRuleMeta->args;
 
 		return static fn (): Type => $fieldRule->createType(
 			$fieldArgs,

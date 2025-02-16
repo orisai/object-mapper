@@ -55,7 +55,7 @@ final class ObjectHolder
 
 		$injectors = [];
 		foreach ($this->meta->getModifier(RequiresDependenciesModifier::class) as $modifier) {
-			$injectors[] = $modifier->getArgs()->injector;
+			$injectors[] = $modifier->args->injector;
 		}
 
 		return $this->instance = $this->creator->createInstance($this->class, $injectors);

@@ -22,9 +22,9 @@ final class CallbackRuntimeMetaTest extends TestCase
 		$declaringClass = new ReflectionClass(DefaultsVO::class);
 		$meta = new CallbackRuntimeMeta($type, $args, $declaringClass);
 
-		self::assertSame($type, $meta->getType());
-		self::assertSame($args, $meta->getArgs());
-		self::assertSame($declaringClass, $meta->getDeclaringClass());
+		self::assertSame($type, $meta->type);
+		self::assertSame($args, $meta->args);
+		self::assertSame($declaringClass, $meta->declaringClass);
 		self::assertEquals($meta, unserialize(serialize($meta)));
 	}
 
