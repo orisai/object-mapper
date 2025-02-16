@@ -588,7 +588,11 @@ final class DefaultProcessor implements Processor
 		$declaringClass = $property->getDeclaringClass();
 		$name = $property->getName();
 
-		if ($property->isPublic() && (PHP_VERSION_ID < 8_01_00 || !$property->isReadOnly())) {
+		if (
+			$property->isInitialized($object)
+			&& $property->isPublic()
+			&& (PHP_VERSION_ID < 8_01_00 || !$property->isReadOnly())
+		) {
 			unset($object->$name);
 		} else {
 			// phpcs:disable SlevomatCodingStandard.Functions.StaticClosure
