@@ -114,7 +114,6 @@ final class DefaultProcessor implements Processor
 		$meta = $this->metaCache[$class] ??= $this->metaLoader->load($class);
 
 		$options ??= new Options();
-		$options = $options->withProcessedClass($class);
 
 		$dynamic = new DynamicContext($options, $initializeObjects);
 		$call = new ProcessorCallContext(

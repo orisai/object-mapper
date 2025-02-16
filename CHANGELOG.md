@@ -11,6 +11,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 - PHPStan generics
 
+### Removed
+
+- `Options` - `withProcessedClass()`, `getProcessedClass()` - no longer used
+
 ## [0.3.0](https://github.com/orisai/object-mapper/compare/0.2.0...0.3.0) - 2025-01-21
 
 ### Added
