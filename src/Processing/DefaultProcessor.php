@@ -257,13 +257,13 @@ final class DefaultProcessor implements Processor
 		foreach ($data as $fieldName => $value) {
 			// Skip invalid field
 			if ($type !== null && $type->isFieldInvalid($fieldName)) {
-				unset($fieldsMeta[$fieldName]);
+				unset($fieldsMeta[$fieldName]); // Remaining fields are handled as missing
 
 				continue;
 			}
 
 			$fieldMeta = $fieldsMeta[$fieldName] ?? null;
-			unset($fieldsMeta[$fieldName]);
+			unset($fieldsMeta[$fieldName]); // Remaining fields are handled as missing
 
 			// Unknown field
 			if ($fieldMeta === null) {

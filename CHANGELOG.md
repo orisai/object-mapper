@@ -9,10 +9,14 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ### Changed
 
-- Simplify finding missing fields (performance optimization)
-- Reduce calls needed to find field names for "did you mean" error helper
 - Runtime meta
 	- replace getters with readonly properties
+- `DefaultProcessor`
+	- Simplify finding missing fields (performance optimization)
+	- Reduce calls needed to find field names for "did you mean" error helper (performance optimization)
+- `ArrayShapeRule`
+	- Simplify finding missing fields (performance optimization)
+	- Reduce calls needed to find field names for "did you mean" error helper (performance optimization)
 
 ### Fixed
 

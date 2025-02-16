@@ -74,30 +74,8 @@ final class ArrayShapeRule implements Rule
 		}
 
 		$fields = $args->fields;
-		$fieldNames = array_keys($fields);
+		$hintedFieldNames = null;
 		$type = null;
-
-		// Missing fields
-		foreach ($fields as $fieldName => $fieldRuleMeta) {
-			if (array_key_exists($fieldName, $value)) {
-				continue;
-			}
-
-			$fieldRule = $services->getRule($fieldRuleMeta->type);
-
-			$type ??= $this->createType($args, $services, $dynamic);
-			$type->overwriteInvalidField(
-				$fieldName,
-				ValueDoesNotMatch::create(
-					$fieldRule->createType(
-						$fieldRuleMeta->args,
-						$services,
-						$dynamic->createClone(),
-					),
-					Value::none(),
-				),
-			);
-		}
 
 		// Sent fields
 		foreach ($value as $fieldName => $fieldValue) {
@@ -108,7 +86,10 @@ final class ArrayShapeRule implements Rule
 				unset($value[$fieldName]);
 
 				$hintedFieldName = Helpers::getSuggestion(
-					array_map(static fn ($fieldName) => (string) $fieldName, $fieldNames),
+					$hintedFieldNames ??= array_map(
+						static fn ($fieldName) => (string) $fieldName,
+						array_keys($fields),
+					),
 					(string) $fieldName,
 				);
 				$hint = $hintedFieldName !== null && !array_key_exists($hintedFieldName, $value)
@@ -127,6 +108,7 @@ final class ArrayShapeRule implements Rule
 				continue;
 			}
 
+			unset($fields[$fieldName]); // Remaining fields are handled as missing
 			$fieldRule = $services->getRule($fieldRuleMeta->type);
 			$fieldArgs = $fieldRuleMeta->args;
 
@@ -145,6 +127,24 @@ final class ArrayShapeRule implements Rule
 				$type ??= $this->createType($args, $services, $dynamic);
 				$type->overwriteInvalidField($fieldName, $exception);
 			}
+		}
+
+		// Missing fields
+		foreach ($fields as $fieldName => $fieldRuleMeta) {
+			$fieldRule = $services->getRule($fieldRuleMeta->type);
+
+			$type ??= $this->createType($args, $services, $dynamic);
+			$type->overwriteInvalidField(
+				$fieldName,
+				ValueDoesNotMatch::create(
+					$fieldRule->createType(
+						$fieldRuleMeta->args,
+						$services,
+						$dynamic->createClone(),
+					),
+					Value::none(),
+				),
+			);
 		}
 
 		if ($type !== null && ($type->hasInvalidFields() || $type->hasErrors())) {
