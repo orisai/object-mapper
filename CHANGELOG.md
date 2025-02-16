@@ -15,6 +15,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 	- Simplify finding missing fields (performance optimization)
 	- Reduce calls needed to find field names for "did you mean" error helper (performance optimization)
 	- Call `unset()` only for initialized properties (performance optimization)
+	- Create functions for setting and unsetting non public-set properties only once (performance optimization)
 - `ArrayShapeRule`
 	- Simplify finding missing fields (performance optimization)
 	- Reduce calls needed to find field names for "did you mean" error helper (performance optimization)

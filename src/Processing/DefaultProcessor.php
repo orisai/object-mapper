@@ -2,6 +2,7 @@
 
 namespace Orisai\ObjectMapper\Processing;
 
+use Closure;
 use Nette\Utils\Helpers;
 use Orisai\ObjectMapper\Args\Args;
 use Orisai\ObjectMapper\Callbacks\AfterCallback;
@@ -28,7 +29,6 @@ use Orisai\ObjectMapper\Rules\RuleManager;
 use Orisai\ObjectMapper\Types\MappedObjectType;
 use Orisai\ObjectMapper\Types\MessageType;
 use Orisai\ObjectMapper\Types\Type;
-use ReflectionProperty;
 use function array_key_exists;
 use function array_keys;
 use function array_map;
@@ -49,6 +49,12 @@ final class DefaultProcessor implements Processor
 
 	private ServicesContext $services;
 
+	/** @var Closure(MappedObject, string, mixed): void */
+	private Closure $setFunction;
+
+	/** @var Closure(MappedObject, string): void */
+	private Closure $unsetFunction;
+
 	/** @var array<class-string<MappedObject>, RuntimeMeta> */
 	private array $metaCache = [];
 
@@ -62,6 +68,14 @@ final class DefaultProcessor implements Processor
 		$this->objectCreator = $objectCreator;
 		$this->rawValuesMap = new RawValuesMap();
 		$this->services = new ServicesContext($metaLoader, $ruleManager, $this);
+		// phpcs:disable SlevomatCodingStandard.Functions.StaticClosure
+		$this->setFunction = function (MappedObject $object, string $name, $value): void {
+			$object->$name = $value;
+		};
+		$this->unsetFunction = function (MappedObject $object, string $name): void {
+			unset($object->$name);
+		};
+		// phpcs:enable
 	}
 
 	public function reset(): void
@@ -548,59 +562,49 @@ final class DefaultProcessor implements Processor
 		$fieldsMeta = $meta->fields;
 
 		if ($dynamic->getOptions()->getRequiredFields() === RequiredFields::none()) {
+			$unsetter = $this->unsetFunction;
+
 			// Reset mapped properties state
 			foreach ($fieldsMeta as $fieldMeta) {
-				$this->objectUnset($object, $fieldMeta->property);
+				$property = $fieldMeta->property;
+				$declaringClass = $property->getDeclaringClass();
+				$name = $property->getName();
+
+				if (
+					$property->isInitialized($object)
+					&& $property->isPublic()
+					&& (PHP_VERSION_ID < 8_01_00 || !$property->isReadOnly())
+				) {
+					unset($object->$name);
+				} else {
+					// phpcs:disable SlevomatCodingStandard.Functions.StaticClosure
+					$unsetter->bindTo($object, $declaringClass->getName())($object, $name);
+					// phpcs:enable
+				}
 			}
 		}
 
+		$setter = $this->setFunction;
+
 		// Set processed data
 		foreach ($data as $fieldName => $value) {
-			$this->objectSet($object, $fieldsMeta[$fieldName]->property, $value);
+			$property = $fieldsMeta[$fieldName]->property;
+			$name = $property->getName();
+
+			if ($property->isPublic() && (PHP_VERSION_ID < 8_01_00 || !$property->isReadOnly())) {
+				$object->$name = $value;
+			} else {
+				$setter->bindTo(
+					$object,
+					$property->getDeclaringClass()->getName(),
+				)($object, $name, $value);
+			}
 		}
 	}
 
 	public function getRawValues(MappedObject $object)
 	{
 		return $this->rawValuesMap->getRawValues($object);
-	}
-
-	/**
-	 * @param mixed $value
-	 */
-	private function objectSet(MappedObject $object, ReflectionProperty $property, $value): void
-	{
-		$declaringClass = $property->getDeclaringClass();
-		$name = $property->getName();
-
-		if ($property->isPublic() && (PHP_VERSION_ID < 8_01_00 || !$property->isReadOnly())) {
-			$object->$name = $value;
-		} else {
-			// phpcs:disable SlevomatCodingStandard.Functions.StaticClosure
-			(fn () => $object->$name = $value)
-				->bindTo($object, $declaringClass->getName())();
-			// phpcs:enable
-		}
-	}
-
-	private function objectUnset(MappedObject $object, ReflectionProperty $property): void
-	{
-		$declaringClass = $property->getDeclaringClass();
-		$name = $property->getName();
-
-		if (
-			$property->isInitialized($object)
-			&& $property->isPublic()
-			&& (PHP_VERSION_ID < 8_01_00 || !$property->isReadOnly())
-		) {
-			unset($object->$name);
-		} else {
-			// phpcs:disable SlevomatCodingStandard.Functions.StaticClosure
-			(function () use ($object, $name): void {
-				unset($object->$name);
-			})->bindTo($object, $declaringClass->getName())();
-			// phpcs:enable
-		}
 	}
 
 }
