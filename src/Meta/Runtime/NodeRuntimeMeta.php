@@ -14,7 +14,7 @@ use Orisai\ObjectMapper\Meta\Shared\DocMeta;
 abstract class NodeRuntimeMeta
 {
 
-	/** @var array<class-string<Callback<Args>>, array<int, CallbackRuntimeMeta<Args>>> */
+	/** @var array<class-string<Callback<Args>>, list<CallbackRuntimeMeta<Args>>> */
 	public array $callbacks;
 
 	/** @var array<string, DocMeta> */
@@ -22,7 +22,7 @@ abstract class NodeRuntimeMeta
 
 	/**
 	 * @template T_ARGS of Args
-	 * @param array<class-string<Callback<T_ARGS>>, array<int, CallbackRuntimeMeta<T_ARGS>>> $callbacks
+	 * @param array<class-string<Callback<T_ARGS>>, list<CallbackRuntimeMeta<T_ARGS>>> $callbacks
 	 * @param array<string, DocMeta> $docs
 	 */
 	public function __construct(array $callbacks, array $docs)
@@ -32,7 +32,7 @@ abstract class NodeRuntimeMeta
 	}
 
 	/**
-	 * @return array<int, CallbackRuntimeMeta<Args>>
+	 * @return list<CallbackRuntimeMeta<Args>>
 	 */
 	public function getCallbacksByType(string $type): array
 	{

@@ -11,19 +11,19 @@ use Orisai\ReflectionMeta\Structure\ClassStructure;
 abstract class NodeCompileMeta
 {
 
-	/** @var array<int, CallbackCompileMeta> */
+	/** @var list<CallbackCompileMeta> */
 	private array $callbacks;
 
-	/** @var array<int, DocMeta> */
+	/** @var list<DocMeta> */
 	private array $docs;
 
-	/** @var array<int, ModifierCompileMeta> */
+	/** @var list<ModifierCompileMeta> */
 	private array $modifiers;
 
 	/**
-	 * @param array<int, CallbackCompileMeta> $callbacks
-	 * @param array<int, DocMeta>             $docs
-	 * @param array<int, ModifierCompileMeta> $modifiers
+	 * @param list<CallbackCompileMeta> $callbacks
+	 * @param list<DocMeta> $docs
+	 * @param list<ModifierCompileMeta> $modifiers
 	 */
 	public function __construct(array $callbacks, array $docs, array $modifiers)
 	{
@@ -33,7 +33,7 @@ abstract class NodeCompileMeta
 	}
 
 	/**
-	 * @return array<int, CallbackCompileMeta>
+	 * @return list<CallbackCompileMeta>
 	 */
 	public function getCallbacks(): array
 	{
@@ -41,7 +41,7 @@ abstract class NodeCompileMeta
 	}
 
 	/**
-	 * @return array<int, DocMeta>
+	 * @return list<DocMeta>
 	 */
 	public function getDocs(): array
 	{
@@ -49,7 +49,7 @@ abstract class NodeCompileMeta
 	}
 
 	/**
-	 * @return array<int, ModifierCompileMeta>
+	 * @return list<ModifierCompileMeta>
 	 */
 	public function getModifiers(): array
 	{

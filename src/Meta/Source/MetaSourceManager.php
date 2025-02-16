@@ -6,7 +6,7 @@ interface MetaSourceManager
 {
 
 	/**
-	 * @return array<MetaSource>
+	 * @return list<MetaSource>
 	 */
 	public function getAll(): array;
 

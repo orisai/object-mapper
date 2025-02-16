@@ -296,7 +296,7 @@ final class MetaResolver
 	/**
 	 * @param ReflectionClass<MappedObject>|ReflectionProperty $reflector
 	 * @param ReflectionClass<MappedObject>                    $classReflector
-	 * @return array<class-string<Callback<Args>>, array<int, CallbackRuntimeMeta<Args>>>
+	 * @return array<class-string<Callback<Args>>, list<CallbackRuntimeMeta<Args>>>
 	 */
 	private function resolveCallbacksMeta(
 		NodeCompileMeta $meta,
@@ -306,7 +306,7 @@ final class MetaResolver
 	): array
 	{
 		$array = [];
-		foreach ($meta->getCallbacks() as $key => $callback) {
+		foreach ($meta->getCallbacks() as $callback) {
 			$callbackMeta = $this->resolveCallbackMeta(
 				$callback,
 				$context,
@@ -314,7 +314,7 @@ final class MetaResolver
 				$classReflector,
 			);
 
-			$array[$callbackMeta->type][$key] = $callbackMeta;
+			$array[$callbackMeta->type][] = $callbackMeta;
 		}
 
 		return $array;
