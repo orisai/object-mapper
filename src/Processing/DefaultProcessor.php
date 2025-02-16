@@ -252,7 +252,7 @@ final class DefaultProcessor implements Processor
 		$type = null;
 		$options = $dynamic->getOptions();
 
-		$fieldNames = array_keys($fieldsMeta);
+		$hintedFieldNames = null;
 
 		foreach ($data as $fieldName => $value) {
 			// Skip invalid field
@@ -275,7 +275,10 @@ final class DefaultProcessor implements Processor
 				}
 
 				$hintedFieldName = Helpers::getSuggestion(
-					array_map(static fn ($fieldName) => (string) $fieldName, $fieldNames),
+					$hintedFieldNames ??= array_map(
+						static fn ($fieldName) => (string) $fieldName,
+						array_keys($fieldsMeta),
+					),
 					(string) $fieldName,
 				);
 				$hint = $hintedFieldName !== null && !array_key_exists($hintedFieldName, $data)
