@@ -1,6 +1,12 @@
 parameters:
 	ignoreErrors:
 		-
+			message: '#^Property Orisai\\ObjectMapper\\Printers\\ErrorVisualPrinter\<T of array\<mixed\>\|string\>\:\:\$converter \(Orisai\\ObjectMapper\\Printers\\TypeToPrimitiveConverter\<T of array\<mixed\>\|string\>\) does not accept Orisai\\ObjectMapper\\Printers\\TypeToPrimitiveConverter\<covariant T of array\<mixed\>\|string\>\.$#'
+			identifier: assign.propertyType
+			count: 1
+			path: ../src/Printers/ErrorVisualPrinter.php
+
+		-
 			message: '#^Unreachable statement \- code above always terminates\.$#'
 			identifier: deadCode.unreachable
 			count: 3

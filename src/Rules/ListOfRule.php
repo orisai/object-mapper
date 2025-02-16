@@ -2,6 +2,7 @@
 
 namespace Orisai\ObjectMapper\Rules;
 
+use Orisai\Exceptions\Logic\InvalidArgument;
 use Orisai\ObjectMapper\Args\Args;
 use Orisai\ObjectMapper\Args\ArgsChecker;
 use Orisai\ObjectMapper\Exception\InvalidData;
@@ -15,9 +16,12 @@ use Orisai\ObjectMapper\Processing\Value;
 use Orisai\ObjectMapper\Types\GenericArrayType;
 use Orisai\ObjectMapper\Types\SimpleValueType;
 use Orisai\Utils\Arrays\ArrayMerger;
+use function assert;
 use function count;
+use function get_debug_type;
 use function is_array;
 use function is_int;
+use function sprintf;
 
 /**
  * @extends MultiValueRule<MultiValueArgs>
@@ -52,6 +56,20 @@ final class ListOfRule extends MultiValueRule
 		$mergeDefaults = false;
 		if ($checker->hasArg(self::MergeDefaults)) {
 			$mergeDefaults = $checker->checkBool(self::MergeDefaults);
+		}
+
+		if (
+			$mergeDefaults
+			&& $context->hasDefaultValue()
+			&& !is_array($defaultValue = $context->getDefaultValue())
+		) {
+			throw InvalidArgument::create()
+				->withMessage(sprintf(
+					'Argument "%s" given to "%s" is set to true but the default value is "%s" insteadof an array.',
+					self::MergeDefaults,
+					self::class,
+					get_debug_type($defaultValue),
+				));
 		}
 
 		return new MultiValueArgs(
@@ -186,7 +204,9 @@ final class ListOfRule extends MultiValueRule
 		}
 
 		if ($args->mergeDefaults && $property->hasDefaultValue()) {
-			$value = ArrayMerger::merge($property->getDefaultValue(), $value);
+			$default = $property->getDefaultValue();
+			assert(is_array($default)); // Rule validates that default is an array
+			$value = ArrayMerger::merge($default, $value);
 		}
 
 		return $value;

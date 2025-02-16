@@ -16,7 +16,7 @@ use Orisai\ObjectMapper\Types\TypeParameter;
 use function get_class;
 
 /**
- * @template T of string|array
+ * @template T of string|array<mixed>
  */
 final class ErrorVisualPrinter implements ErrorPrinter, TypePrinter
 {
@@ -25,7 +25,7 @@ final class ErrorVisualPrinter implements ErrorPrinter, TypePrinter
 	private TypeToPrimitiveConverter $converter;
 
 	/**
-	 * @param TypeToPrimitiveConverter<T> $converter
+	 * @param TypeToPrimitiveConverter<covariant T> $converter
 	 */
 	public function __construct(TypeToPrimitiveConverter $converter)
 	{

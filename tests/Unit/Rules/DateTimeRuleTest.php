@@ -116,8 +116,8 @@ final class DateTimeRuleTest extends ProcessingTestCase
 	}
 
 	/**
-	 * @param mixed              $value
-	 * @param array<int, string> $invalidParameters
+	 * @param mixed $value
+	 * @param list<int|string|array<int|string, mixed>> $invalidParameters
 	 *
 	 * @dataProvider provideInvalidValues
 	 */
@@ -148,12 +148,9 @@ final class DateTimeRuleTest extends ProcessingTestCase
 			$parameters = [];
 			foreach ($type->getParameters() as $parameter) {
 				if ($parameter->isInvalid()) {
-					$parameterString = $parameter->getKey();
-					if ($parameter->hasValue()) {
-						$parameterString .= ": {$parameter->getValue()}";
-					}
-
-					$parameters[] = $parameterString;
+					$parameters[] = $parameter->hasValue()
+						? [$parameter->getKey(), $parameter->getValue()]
+						: $parameter->getKey();
 				}
 			}
 
@@ -177,7 +174,7 @@ final class DateTimeRuleTest extends ProcessingTestCase
 		]];
 
 		yield ['whatever', DateTimeInterface::ATOM, [
-			'format: Y-m-d\TH:i:sP',
+			['format', 'Y-m-d\TH:i:sP'],
 			'A four digit year could not be found',
 			PHP_VERSION_ID < 8_01_07 ? 'Data missing' : 'Not enough data available to satisfy format',
 		]];
@@ -187,7 +184,7 @@ final class DateTimeRuleTest extends ProcessingTestCase
 		], 'timestamp'];
 
 		yield ['2013-04-12T16:40:00-04:00', DateTimeInterface::COOKIE, [
-			'format: l, d-M-Y H:i:s T',
+			['format', 'l, d-M-Y H:i:s T'],
 			'A textual day could not be found',
 			'Unexpected data found.',
 			'The separation symbol could not be found',

@@ -14,6 +14,7 @@ use Orisai\ObjectMapper\Rules\ArrayOf;
 use Orisai\ObjectMapper\Rules\MixedValue;
 use Orisai\ObjectMapper\Rules\StringValue;
 use function array_key_exists;
+use function assert;
 use function is_array;
 
 /**
@@ -75,6 +76,8 @@ final class CallbacksVO implements MappedObject
 			return $data;
 		}
 
+		assert(is_array($data['array']));
+		$data['array']['beforeClassCallback'] = [];
 		$data['array']['beforeClassCallback'][] = $context->shouldInitializeObjects();
 
 		// Set default value, processor don't know it's going to be structure and thinks value is required
@@ -97,6 +100,8 @@ final class CallbacksVO implements MappedObject
 	 */
 	public static function afterClass(array $data, ObjectContext $context): array
 	{
+		assert(is_array($data['array']));
+		$data['array']['afterClassCallback'] = [];
 		$data['array']['afterClassCallback'][] = $context->shouldInitializeObjects();
 
 		if ($context->shouldInitializeObjects() && !$data['structure'] instanceof MappedObject) {
@@ -118,6 +123,7 @@ final class CallbacksVO implements MappedObject
 	 */
 	public static function afterArrayProcessing(array $array, FieldContext $context): array
 	{
+		$array['afterArrayProcessingCallback'] = [];
 		$array['afterArrayProcessingCallback'][] = $context->shouldInitializeObjects();
 
 		return $array;
@@ -129,6 +135,7 @@ final class CallbacksVO implements MappedObject
 	 */
 	public static function afterArrayInitialization(array $array, FieldContext $context): array
 	{
+		$array['afterArrayInitializationCallback'] = [];
 		$array['afterArrayInitializationCallback'][] = $context->shouldInitializeObjects();
 
 		return $array;

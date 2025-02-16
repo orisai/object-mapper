@@ -6,7 +6,7 @@ use Orisai\ObjectMapper\Types\CompoundTypeOperator;
 use Orisai\ObjectMapper\Types\TypeParameter;
 
 /**
- * @template T of string|array
+ * @template T of string|array<mixed>
  */
 interface TypeToPrimitiveConverter
 {

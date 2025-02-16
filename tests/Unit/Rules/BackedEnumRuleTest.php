@@ -8,6 +8,7 @@ use Orisai\ObjectMapper\Exception\ValueDoesNotMatch;
 use Orisai\ObjectMapper\Rules\BackedEnumArgs;
 use Orisai\ObjectMapper\Rules\BackedEnumRule;
 use Orisai\ObjectMapper\Types\EnumType;
+use stdClass;
 use Tests\Orisai\ObjectMapper\Doubles\Php81\ExampleIntEnum;
 use Tests\Orisai\ObjectMapper\Doubles\Php81\ExampleStringEnum;
 use Tests\Orisai\ObjectMapper\Toolkit\ProcessingTestCase;
@@ -145,6 +146,18 @@ final class BackedEnumRuleTest extends ProcessingTestCase
 
 		yield [
 			'string',
+			new BackedEnumArgs(ExampleIntEnum::class, false),
+			[0, 1],
+		];
+
+		yield [
+			['foo', 'bar'],
+			new BackedEnumArgs(ExampleIntEnum::class, false),
+			[0, 1],
+		];
+
+		yield [
+			new stdClass(),
 			new BackedEnumArgs(ExampleIntEnum::class, false),
 			[0, 1],
 		];

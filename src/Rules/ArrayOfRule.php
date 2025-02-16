@@ -15,9 +15,12 @@ use Orisai\ObjectMapper\Processing\Context\ServicesContext;
 use Orisai\ObjectMapper\Processing\Value;
 use Orisai\ObjectMapper\Types\GenericArrayType;
 use Orisai\Utils\Arrays\ArrayMerger;
+use function assert;
 use function count;
 use function get_debug_type;
 use function is_array;
+use function is_int;
+use function is_string;
 use function sprintf;
 
 /**
@@ -159,6 +162,7 @@ final class ArrayOfRule extends MultiValueRule
 						$property,
 						$dynamic->createClone(),
 					);
+					assert(is_int($key) || is_string($key));
 				} catch (ValueDoesNotMatch | InvalidData $exception) {
 					$type ??= $this->createType($args, $services, $dynamic);
 					$type->addInvalidKey($key, $exception);
@@ -221,7 +225,9 @@ final class ArrayOfRule extends MultiValueRule
 		}
 
 		if ($args->mergeDefaults && $property->hasDefaultValue()) {
-			$value = ArrayMerger::merge($property->getDefaultValue(), $value);
+			$default = $property->getDefaultValue();
+			assert(is_array($default)); // Rule validates that default is an array
+			$value = ArrayMerger::merge($default, $value);
 		}
 
 		return $value;

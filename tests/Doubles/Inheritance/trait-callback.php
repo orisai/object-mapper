@@ -6,6 +6,7 @@ use Orisai\ObjectMapper\Callbacks\After;
 use Orisai\ObjectMapper\Callbacks\Before;
 use Orisai\ObjectMapper\MappedObject;
 use Orisai\ObjectMapper\Rules\StringValue;
+use function assert;
 use function is_array;
 use function is_string;
 
@@ -42,6 +43,7 @@ trait A
 	 */
 	private function after(array $data): array
 	{
+		assert(is_string($data['string']));
 		$data['string'] .= '-A::after';
 
 		return $data;

@@ -6,6 +6,7 @@ use Orisai\Exceptions\Logic\InvalidState;
 use Orisai\ObjectMapper\Processing\RawValuesMap;
 use PHPUnit\Framework\TestCase;
 use Tests\Orisai\ObjectMapper\Doubles\DefaultsVO;
+use function assert;
 use function serialize;
 use function unserialize;
 use const PHP_VERSION_ID;
@@ -58,6 +59,7 @@ MSG,
 		$data = serialize($object);
 		unset($object);
 		$object = unserialize($data);
+		assert($object instanceof DefaultsVO);
 
 		$this->expectException(InvalidState::class);
 		$map->getRawValues($object);

@@ -39,8 +39,11 @@ use ReflectionProperty;
 use Reflector;
 use function array_key_exists;
 use function array_merge;
+use function assert;
 use function get_class;
 use function is_a;
+use function is_int;
+use function is_string;
 use const PHP_VERSION_ID;
 
 /**
@@ -487,6 +490,7 @@ final class MetaResolver
 			foreach ($fieldMeta->getModifiers() as $modifier) {
 				if ($modifier->getType() === FieldNameModifier::class) {
 					$fieldName = $modifier->getArgs()[FieldNameModifier::Name];
+					assert(is_string($fieldName) || is_int($fieldName));
 
 					break;
 				}
