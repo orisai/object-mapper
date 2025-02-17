@@ -23,6 +23,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ### Fixed
 
 - PHPStan generics
+- `DateTimeRule`
+	- `format: 'iso_compat'` parses second fractions with 1 or more digits
+		- previously expected 3 or less
+		- fractions above 6 digits are ignored, they are not supported by native DateTimeInterface implementation
 
 ### Removed
 

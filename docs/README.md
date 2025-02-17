@@ -1505,8 +1505,8 @@ Parameters:
 	- default `DateTimeRule::FormatIsoCompat`
 		- expects standard ISO 8601 format as defined by
 			- `DateTimeInterface::ATOM`
-			- and JS ISO format `Y-m-d\TH:i:s.v\Z`
-		- e.g. `2013-04-12T16:40:00-04:00`, `2013-04-12T16:40:00.000Z`
+			- and JS/Go/others ISO format `Y-m-d\TH:i:s.u\Z` (second fractions above 6 digits are ignored)
+		- e.g. `2013-04-12T16:40:00-04:00`, `2013-04-12T16:40:00.000Z`, `2013-04-12T16:40:00.489932695Z`
 	- accepts any of the formats which are [supported by PHP](https://www.php.net/manual/en/datetime.formats.php)
 	- to try auto-parse date-time of unknown format, use format `any` (`DateTimeRule::FormatAny`)
 	- for timestamp use format `timestamp` (`DateTimeRule::FormatTimestamp`)

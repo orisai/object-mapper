@@ -23,6 +23,7 @@ use function assert;
 use function is_a;
 use function is_int;
 use function is_string;
+use function preg_replace;
 use function sprintf;
 use function strpos;
 use function substr;
@@ -42,7 +43,7 @@ final class DateTimeRule implements Rule
 		FormatAny = 'any',
 		FormatIsoCompat = 'iso_compat';
 
-	private const JsIsoFormat = 'Y-m-d\TH:i:s.v\Z';
+	private const JsIsoFormat = 'Y-m-d\TH:i:s.u\Z';
 
 	public function resolveArgs(array $args, MetaFieldContext $context): DateTimeArgs
 	{
@@ -137,13 +138,23 @@ final class DateTimeRule implements Rule
 				throw ValueDoesNotMatch::create($type, Value::of($value));
 			}
 		} elseif ($format === self::FormatIsoCompat) {
-			$datetime = $stringValue !== ''
-				&& substr($stringValue, -1) === 'Z'
-				? $classType::createFromFormat(self::JsIsoFormat, $stringValue, new DateTimeZone('UTC'))
-				: $classType::createFromFormat(
+			if ($stringValue !== '' && substr($stringValue, -1) === 'Z') {
+				// Truncate fractional seconds beyond 6 digits if present.
+				// Example: 2023-07-14T13:52:32.489932695Z -> 2023-07-14T13:52:32.489932Z
+				$truncatedValue = preg_replace('/\.(\d{6})\d+Z$/', '.$1Z', $stringValue);
+				$datetime = $truncatedValue === null
+					? false
+					: $classType::createFromFormat(
+						self::JsIsoFormat,
+						$truncatedValue,
+						new DateTimeZone('UTC'),
+					);
+			} else {
+				$datetime = $classType::createFromFormat(
 					DateTimeInterface::ATOM,
 					$stringValue,
 				);
+			}
 		} else {
 			$datetime = $classType::createFromFormat($format, $stringValue);
 		}
