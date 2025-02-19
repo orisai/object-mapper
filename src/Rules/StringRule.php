@@ -2,6 +2,7 @@
 
 namespace Orisai\ObjectMapper\Rules;
 
+use Nette\Utils\Strings;
 use Orisai\ObjectMapper\Args\Args;
 use Orisai\ObjectMapper\Args\ArgsChecker;
 use Orisai\ObjectMapper\Exception\ValueDoesNotMatch;
@@ -25,13 +26,14 @@ final class StringRule implements Rule
 		Pattern = 'pattern',
 		MinLength = 'minLength',
 		MaxLength = 'maxLength',
-		NotEmpty = 'notEmpty';
+		NotEmpty = 'notEmpty',
+		Trim = 'trim';
 
 	public function resolveArgs(array $args, MetaFieldContext $context): StringArgs
 	{
 		$checker = new ArgsChecker($args, self::class);
 
-		$checker->checkAllowedArgs([self::Pattern, self::NotEmpty, self::MinLength, self::MaxLength]);
+		$checker->checkAllowedArgs([self::Pattern, self::NotEmpty, self::MinLength, self::MaxLength, self::Trim]);
 
 		$pattern = null;
 		if ($checker->hasArg(self::Pattern)) {
@@ -53,7 +55,12 @@ final class StringRule implements Rule
 			$maxLength = $checker->checkNullableInt(self::MaxLength);
 		}
 
-		return new StringArgs($pattern, $notEmpty, $minLength, $maxLength);
+		$trim = false;
+		if ($checker->hasArg(self::Trim)) {
+			$trim = $checker->checkBool(self::Trim);
+		}
+
+		return new StringArgs($pattern, $notEmpty, $minLength, $maxLength, $trim);
 	}
 
 	public function getArgsType(): string
@@ -78,9 +85,14 @@ final class StringRule implements Rule
 			throw ValueDoesNotMatch::create($this->createType($args, $services, $dynamic), Value::of($value));
 		}
 
+		$trimmedValue = null;
+		if ($args->trim) {
+			$trimmedValue = $value = Strings::trim($value);
+		}
+
 		$invalidParameters = [];
 
-		if ($args->notEmpty && preg_match('/\S/', $value) !== 1) {
+		if ($args->notEmpty && ($trimmedValue ?? Strings::trim($value)) === '') {
 			$invalidParameters[] = self::NotEmpty;
 		}
 

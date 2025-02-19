@@ -12,12 +12,13 @@ final class StringArgsTest extends TestCase
 
 	public function test(): void
 	{
-		$args = new StringArgs(null, false, null, null);
+		$args = new StringArgs(null, false, null, null, true);
 
 		self::assertNull($args->pattern);
 		self::assertFalse($args->notEmpty);
 		self::assertNull($args->minLength);
 		self::assertNull($args->maxLength);
+		self::assertTrue($args->trim);
 
 		self::assertEquals(
 			unserialize(serialize($args)),
@@ -27,12 +28,13 @@ final class StringArgsTest extends TestCase
 
 	public function testVariant(): void
 	{
-		$args = new StringArgs('/[\s\S]/', true, 10, 20);
+		$args = new StringArgs('/[\s\S]/', true, 10, 20, false);
 
 		self::assertSame('/[\s\S]/', $args->pattern);
 		self::assertTrue($args->notEmpty);
 		self::assertSame(10, $args->minLength);
 		self::assertSame(20, $args->maxLength);
+		self::assertFalse($args->trim);
 
 		self::assertEquals(
 			unserialize(serialize($args)),

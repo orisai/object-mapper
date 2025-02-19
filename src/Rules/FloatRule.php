@@ -2,6 +2,7 @@
 
 namespace Orisai\ObjectMapper\Rules;
 
+use Nette\Utils\Strings;
 use Orisai\Exceptions\Logic\InvalidArgument;
 use Orisai\ObjectMapper\Args\Args;
 use Orisai\ObjectMapper\Args\ArgsChecker;
@@ -180,11 +181,14 @@ final class FloatRule implements Rule
 	 */
 	private function tryConvert(string $value)
 	{
+		$originalValue = $value;
+
+		$value = Strings::trim($value);
 		if (preg_match('#^[+-]?[0-9]*[.]?[0-9]+\z#', $value) === 1) {
 			return (float) $value;
 		}
 
-		return $value;
+		return $originalValue;
 	}
 
 }

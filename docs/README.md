@@ -288,6 +288,7 @@ Parameters:
 - `castBoolLike`
 	- accepts also `0` (int|string), `1` (int|string), `'true'` (string, any case), `'false'` (string, any case)
 	- value is cast to respective bool value
+	- empty characters from start and end of a string are ignored
 	- default `false` - bool-like are not cast
 
 ### enum - from array rule
@@ -459,6 +460,7 @@ Parameters:
 - `castNumericString`
 	- accepts also numeric strings (float and int)
 	- value is cast to respective float value
+	- empty characters from start and end of a string are ignored
 	- default `false` - numeric strings are not cast
 	- e.g. `'10.0'`, `'10'`, `'+10.0'`, `'-10.0'` (commas, spaces etc. are not supported)
 
@@ -593,6 +595,7 @@ Parameters:
 - `castNumericString`
 	- accepts also numeric strings (int)
 	- value is cast to respective int value
+	- empty characters from start and end of a string are ignored
 	- default `false` - numeric strings are not cast
 	- e.g. `'10'`, `'+10'`, `'-10'` (commas, spaces etc. are not supported)
 
@@ -713,6 +716,7 @@ Parameters:
 - `castEmptyString`
 	- accepts any string with only empty characters
 	- value is cast to null
+	- empty characters from start and end of a string are ignored
 	- default `false` - empty strings are not cast
 	- e.g. `''`, `'   '`, `"\t"` ,`"\t\n\r""`
 
@@ -895,7 +899,7 @@ final class StringInput implements MappedObject
 	public string $field;
 
 	/** @var non-empty-string */
-	#[StringValue(minLength: 1, maxLength: 100, notEmpty: true, pattern: '/^abc/')]
+	#[StringValue(minLength: 1, maxLength: 100, notEmpty: true, trim: true, pattern: '/^abc/')]
 	public string $anotherField;
 
 }
@@ -948,6 +952,9 @@ Parameters:
 	- string **must not** contain **only** empty characters
 	- default `false` - empty strings are allowed
 	- e.g. `''`, `'   '`, `"\t"` ,`"\t\n\r""`
+- `trim`
+	- trim empty characters from start and end of the string
+	- default `false`
 - `pattern`
 	- regex pattern which must match
 	- default `null` - no validation by pattern

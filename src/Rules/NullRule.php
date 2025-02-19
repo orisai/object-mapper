@@ -2,6 +2,7 @@
 
 namespace Orisai\ObjectMapper\Rules;
 
+use Nette\Utils\Strings;
 use Orisai\ObjectMapper\Args\Args;
 use Orisai\ObjectMapper\Args\ArgsChecker;
 use Orisai\ObjectMapper\Exception\ValueDoesNotMatch;
@@ -12,7 +13,6 @@ use Orisai\ObjectMapper\Processing\Context\ServicesContext;
 use Orisai\ObjectMapper\Processing\Value;
 use Orisai\ObjectMapper\Types\SimpleValueType;
 use function is_string;
-use function preg_match;
 
 /**
  * @implements Rule<NullArgs>
@@ -54,8 +54,8 @@ final class NullRule implements Rule
 		DynamicContext $dynamic
 	)
 	{
-		if ($value !== null) {
-			$value = $this->tryConvert($value, $args);
+		if ($args->castEmptyString && $value !== null) {
+			$value = $this->tryConvert($value);
 		}
 
 		if ($value !== null) {
@@ -84,13 +84,15 @@ final class NullRule implements Rule
 	 * @param mixed $value
 	 * @return mixed
 	 */
-	private function tryConvert($value, NullArgs $args)
+	private function tryConvert($value)
 	{
-		if ($args->castEmptyString && is_string($value) && preg_match('/\S/', $value) !== 1) {
+		$originalValue = $value;
+
+		if (is_string($value) && Strings::trim($value) === '') {
 			return null;
 		}
 
-		return $value;
+		return $originalValue;
 	}
 
 }

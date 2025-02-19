@@ -7,6 +7,11 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased](https://github.com/orisai/object-mapper/compare/0.3.0...v1.x)
 
+### Added
+
+- `StringRule`
+	- `trim` option to remove empty characters from start and end of the string
+
 ### Changed
 
 - Runtime meta
@@ -19,6 +24,16 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - `ArrayShapeRule`
 	- Simplify finding missing fields (performance optimization)
 	- Reduce calls needed to find field names for "did you mean" error helper (performance optimization)
+- `BoolRule`
+	- `castBoolLike` option trims empty characters from start and end of the string
+- `FloatRule`
+	- `castNumericString` option trims empty characters from start and end of the string
+- `IntRule`
+	- `castNumericString` option trims empty characters from start and end of the string
+- `NullRule`
+	- `castEmptyString` option trims empty characters from start and end of the string
+- `StringRule`
+	- `notEmpty` detects more empty values
 
 ### Fixed
 

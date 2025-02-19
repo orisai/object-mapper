@@ -123,6 +123,8 @@ final class IntRuleTest extends ProcessingTestCase
 		yield ['+10', 10];
 		yield ['100', 100];
 		yield ['-100', -100];
+		yield ["\n\t -100 \t", -100];
+		yield [' -100 ', -100];
 	}
 
 	/**

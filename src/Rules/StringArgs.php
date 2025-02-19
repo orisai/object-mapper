@@ -18,17 +18,21 @@ final class StringArgs implements Args
 
 	public ?int $maxLength;
 
+	public bool $trim;
+
 	public function __construct(
 		?string $pattern,
 		bool $notEmpty,
 		?int $minLength,
-		?int $maxLength
+		?int $maxLength,
+		bool $trim
 	)
 	{
 		$this->pattern = $pattern;
 		$this->notEmpty = $notEmpty;
 		$this->minLength = $minLength;
 		$this->maxLength = $maxLength;
+		$this->trim = $trim;
 	}
 
 }

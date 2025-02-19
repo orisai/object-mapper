@@ -86,6 +86,7 @@ final class NullRuleTest extends ProcessingTestCase
 		yield [''];
 		yield [' '];
 		yield ['                     '];
+		yield ["\n\t"];
 	}
 
 	/**

@@ -107,6 +107,8 @@ final class BoolRuleTest extends ProcessingTestCase
 		yield ['fAlSe', false];
 		yield [0, false];
 		yield ['0', false];
+		yield ["\t 1 \n", true];
+		yield [' false ', false];
 	}
 
 	/**

@@ -144,6 +144,9 @@ final class FloatRuleTest extends ProcessingTestCase
 		yield ['100', 100.0];
 		yield ['100.12', 100.12];
 		yield ['-100', -100.0];
+		yield ['-100.5', -100.5];
+		yield ["\n\t -100.5 \t", -100.5];
+		yield [' -100.5 ', -100.5];
 	}
 
 	/**

@@ -70,7 +70,7 @@ final class ArrayOfRuleTest extends ProcessingTestCase
 			],
 			new ArrayOfArgs(
 				new RuleRuntimeMeta(ScalarRule::class, new EmptyArgs()),
-				new RuleRuntimeMeta(StringRule::class, new StringArgs(null, false, null, null)),
+				new RuleRuntimeMeta(StringRule::class, new StringArgs(null, false, null, null, false)),
 				1,
 				10,
 				true,

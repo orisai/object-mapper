@@ -23,17 +23,21 @@ final class StringValue implements RuleDefinition
 
 	private bool $notEmpty;
 
+	private bool $trim;
+
 	public function __construct(
 		?string $pattern = null,
 		?int $minLength = null,
 		?int $maxLength = null,
-		bool $notEmpty = false
+		bool $notEmpty = false,
+		bool $trim = false
 	)
 	{
 		$this->pattern = $pattern;
 		$this->minLength = $minLength;
 		$this->maxLength = $maxLength;
 		$this->notEmpty = $notEmpty;
+		$this->trim = $trim;
 	}
 
 	public function getType(): string
@@ -48,6 +52,7 @@ final class StringValue implements RuleDefinition
 			StringRule::MinLength => $this->minLength,
 			StringRule::MaxLength => $this->maxLength,
 			StringRule::NotEmpty => $this->notEmpty,
+			StringRule::Trim => $this->trim,
 		];
 	}
 

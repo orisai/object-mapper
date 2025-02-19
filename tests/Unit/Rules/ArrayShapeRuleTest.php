@@ -69,7 +69,7 @@ final class ArrayShapeRuleTest extends ProcessingTestCase
 			],
 			new ArrayShapeArgs([
 				1 => new RuleRuntimeMeta(ScalarRule::class, new EmptyArgs()),
-				'foo' => new RuleRuntimeMeta(StringRule::class, new StringArgs(null, false, null, null)),
+				'foo' => new RuleRuntimeMeta(StringRule::class, new StringArgs(null, false, null, null, false)),
 			]),
 		];
 	}

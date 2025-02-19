@@ -2,6 +2,7 @@
 
 namespace Orisai\ObjectMapper\Rules;
 
+use Nette\Utils\Strings;
 use Orisai\ObjectMapper\Args\Args;
 use Orisai\ObjectMapper\Args\ArgsChecker;
 use Orisai\ObjectMapper\Exception\ValueDoesNotMatch;
@@ -64,8 +65,8 @@ final class BoolRule implements Rule
 	{
 		$initValue = $value;
 
-		if (!is_bool($value)) {
-			$value = $this->tryConvert($value, $args);
+		if ($args->castBoolLike && !is_bool($value)) {
+			$value = $this->tryConvert($value);
 		}
 
 		if (is_bool($value)) {
@@ -94,22 +95,22 @@ final class BoolRule implements Rule
 	 * @param mixed $value
 	 * @return mixed
 	 */
-	private function tryConvert($value, BoolArgs $args)
+	private function tryConvert($value)
 	{
-		if ($args->castBoolLike) {
-			if (is_string($value)) {
-				$value = strtolower($value);
-			}
+		$originalValue = $value;
 
-			if (
-				(is_string($value) || is_int($value))
-				&& isset(self::CastMap[$value])
-			) {
-				return self::CastMap[$value];
-			}
+		if (is_string($value)) {
+			$value = strtolower(Strings::trim($value));
 		}
 
-		return $value;
+		if (
+			(is_string($value) || is_int($value))
+			&& isset(self::CastMap[$value])
+		) {
+			return self::CastMap[$value];
+		}
+
+		return $originalValue;
 	}
 
 }

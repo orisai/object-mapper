@@ -24,6 +24,7 @@ final class StringValueTest extends TestCase
 				'minLength' => null,
 				'maxLength' => null,
 				'notEmpty' => false,
+				'trim' => false,
 			],
 			$definition->getArgs(),
 		);
@@ -37,9 +38,9 @@ final class StringValueTest extends TestCase
 	/**
 	 * @dataProvider provideVariant
 	 */
-	public function testVariant(?string $pattern, ?int $minLength, ?int $maxLength, bool $notEmpty): void
+	public function testVariant(?string $pattern, ?int $minLength, ?int $maxLength, bool $notEmpty, bool $trim): void
 	{
-		$definition = new StringValue($pattern, $minLength, $maxLength, $notEmpty);
+		$definition = new StringValue($pattern, $minLength, $maxLength, $notEmpty, $trim);
 
 		self::assertEquals(
 			[
@@ -47,6 +48,7 @@ final class StringValueTest extends TestCase
 				'minLength' => $minLength,
 				'maxLength' => $maxLength,
 				'notEmpty' => $notEmpty,
+				'trim' => $trim,
 			],
 			$definition->getArgs(),
 		);
@@ -59,6 +61,7 @@ final class StringValueTest extends TestCase
 			null,
 			null,
 			false,
+			true,
 		];
 
 		yield [
@@ -66,6 +69,7 @@ final class StringValueTest extends TestCase
 			10,
 			20,
 			true,
+			false,
 		];
 	}
 

@@ -36,7 +36,7 @@ final class StringRuleTest extends ProcessingTestCase
 	{
 		yield [
 			[],
-			new StringArgs(null, false, null, null),
+			new StringArgs(null, false, null, null, false),
 		];
 
 		yield [
@@ -45,8 +45,9 @@ final class StringRuleTest extends ProcessingTestCase
 				StringRule::NotEmpty => false,
 				StringRule::MinLength => 1,
 				StringRule::MaxLength => 10,
+				StringRule::Trim => true,
 			],
-			new StringArgs('foo', false, 1, 10),
+			new StringArgs('foo', false, 1, 10, true),
 		];
 
 		yield [
@@ -55,8 +56,9 @@ final class StringRuleTest extends ProcessingTestCase
 				StringRule::NotEmpty => true,
 				StringRule::MinLength => 5,
 				StringRule::MaxLength => 20,
+				StringRule::Trim => false,
 			],
-			new StringArgs('bar', true, 5, 20),
+			new StringArgs('bar', true, 5, 20, false),
 		];
 	}
 
@@ -137,7 +139,7 @@ final class StringRuleTest extends ProcessingTestCase
 		try {
 			$this->rule->processValue(
 				$value,
-				new StringArgs('/[\s\S]/', true, 1, 10),
+				new StringArgs('/[\s\S]/', true, 1, 10, false),
 				$this->dependencies->servicesContext,
 				$this->dependencies->createPropertyContext(),
 				$this->dependencies->createDynamicContext(),
@@ -166,7 +168,7 @@ final class StringRuleTest extends ProcessingTestCase
 		try {
 			$this->rule->processValue(
 				$value,
-				new StringArgs('/[\s\S]/', true, 1, 10),
+				new StringArgs('/[\s\S]/', true, 1, 10, false),
 				$this->dependencies->servicesContext,
 				$this->dependencies->createPropertyContext(),
 				$this->dependencies->createDynamicContext(),
@@ -190,14 +192,14 @@ final class StringRuleTest extends ProcessingTestCase
 	/**
 	 * @dataProvider provideEmptyValues
 	 */
-	public function testProcessEmpty(string $value): void
+	public function testProcessEmpty(string $value, bool $trim): void
 	{
 		$exception = null;
 
 		try {
 			$this->rule->processValue(
 				$value,
-				new StringArgs(null, true, null, null),
+				new StringArgs(null, true, null, null, $trim),
 				$this->dependencies->servicesContext,
 				$this->dependencies->createPropertyContext(),
 				$this->dependencies->createDynamicContext(),
@@ -212,7 +214,11 @@ final class StringRuleTest extends ProcessingTestCase
 			self::assertFalse($type->hasParameter(StringRule::MinLength));
 			self::assertFalse($type->hasParameter(StringRule::Pattern));
 			self::assertFalse($type->hasParameter(StringRule::MaxLength));
-			self::assertSame($value, $exception->getValue()->get());
+			if ($trim) {
+				self::assertSame('', $exception->getValue()->get());
+			} else {
+				self::assertSame($value, $exception->getValue()->get());
+			}
 		}
 
 		self::assertNotNull($exception);
@@ -223,9 +229,43 @@ final class StringRuleTest extends ProcessingTestCase
 	 */
 	public function provideEmptyValues(): Generator
 	{
-		yield [''];
-		yield [' '];
-		yield ['                     '];
+		yield ['', false];
+		yield [' ', false];
+		yield ['                     ', false];
+		yield ["\n\t", false];
+		yield ['', true];
+		yield [' ', true];
+		yield ['                     ', true];
+		yield ["\n\t", true];
+	}
+
+	/**
+	 * @dataProvider provideTrim
+	 */
+	public function testTrim(string $givenValue, string $expectedValue, bool $notEmpty): void
+	{
+		$processed = $this->rule->processValue(
+			$givenValue,
+			new StringArgs(null, $notEmpty, null, null, true),
+			$this->dependencies->servicesContext,
+			$this->dependencies->createPropertyContext(),
+			$this->dependencies->createDynamicContext(),
+		);
+
+		self::assertSame($expectedValue, $processed);
+	}
+
+	/**
+	 * @return Generator<array<mixed>>
+	 */
+	public function provideTrim(): Generator
+	{
+		yield ['', '', false];
+		yield [' ', '', false];
+		yield ['                     ', '', false];
+		yield ["\n\t", '', false];
+		yield [' foo  ', 'foo', true];
+		yield [" \n foo \t", 'foo', true];
 	}
 
 	public function testType(): void
@@ -253,7 +293,7 @@ final class StringRuleTest extends ProcessingTestCase
 
 	public function testTypeWithArgs(): void
 	{
-		$args = new StringArgs('/[\s\S]/', true, 1, 10);
+		$args = new StringArgs('/[\s\S]/', true, 1, 10, false);
 
 		$type = $this->rule->createType(
 			$args,
