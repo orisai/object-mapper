@@ -1,13 +1,13 @@
 <?php declare(strict_types = 1);
 
-namespace Tests\Orisai\ObjectMapper\Unit\Context;
+namespace Tests\Orisai\ObjectMapper\Unit\Meta\Context;
 
 use Orisai\ObjectMapper\Meta\Context\MetaFieldContext;
 use Orisai\ObjectMapper\Meta\Shared\DefaultValueMeta;
 use Orisai\ObjectMapper\Tester\ObjectMapperTester;
 use PHPUnit\Framework\TestCase;
 
-final class ArgsFieldContextTest extends TestCase
+final class MetaFieldContextTest extends TestCase
 {
 
 	public function test(): void

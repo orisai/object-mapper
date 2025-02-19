@@ -1,12 +1,12 @@
 <?php declare(strict_types = 1);
 
-namespace Tests\Orisai\ObjectMapper\Unit\Context;
+namespace Tests\Orisai\ObjectMapper\Unit\Meta\Context;
 
 use Orisai\ObjectMapper\Meta\Context\MetaContext;
 use Orisai\ObjectMapper\Tester\ObjectMapperTester;
 use PHPUnit\Framework\TestCase;
 
-final class ArgsContextTest extends TestCase
+final class MetaContextTest extends TestCase
 {
 
 	public function test(): void

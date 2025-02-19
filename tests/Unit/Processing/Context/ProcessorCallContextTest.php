@@ -1,6 +1,6 @@
 <?php declare(strict_types = 1);
 
-namespace Tests\Orisai\ObjectMapper\Unit\Context;
+namespace Tests\Orisai\ObjectMapper\Unit\Processing\Context;
 
 use Orisai\ObjectMapper\Processing\Context\ProcessorCallContext;
 use Orisai\ObjectMapper\Processing\ObjectCreator;
