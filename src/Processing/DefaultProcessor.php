@@ -28,7 +28,6 @@ use Orisai\ObjectMapper\Rules\MappedObjectRule;
 use Orisai\ObjectMapper\Rules\RuleManager;
 use Orisai\ObjectMapper\Types\MappedObjectType;
 use Orisai\ObjectMapper\Types\MessageType;
-use Orisai\ObjectMapper\Types\Type;
 use function array_key_exists;
 use function array_keys;
 use function array_map;
@@ -422,7 +421,7 @@ final class DefaultProcessor implements Processor
 				$this->services,
 				$dynamic,
 				$property,
-				static fn (): Type => $call->getType()->getField($property->getFieldName()),
+				$call,
 			);
 
 			$value = $this->applyCallbacks($value, $callbackContext, $call, $meta, BeforeCallback::class);

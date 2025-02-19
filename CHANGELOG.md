@@ -34,6 +34,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 	- `castEmptyString` option trims empty characters from start and end of the string
 - `StringRule`
 	- `notEmpty` detects more empty values
+- `FieldContext`
+	- Replace redundant `Type` lazy getter with one from the `CallContext`
 
 ### Fixed
 

@@ -2,8 +2,9 @@
 
 namespace Orisai\ObjectMapper\Callbacks\Context;
 
-use Closure;
+use Orisai\ObjectMapper\MappedObject;
 use Orisai\ObjectMapper\Processing\Context\DynamicContext;
+use Orisai\ObjectMapper\Processing\Context\ProcessorCallContext;
 use Orisai\ObjectMapper\Processing\Context\PropertyContext;
 use Orisai\ObjectMapper\Processing\Context\ServicesContext;
 use Orisai\ObjectMapper\Types\Type;
@@ -13,36 +14,27 @@ final class FieldContext extends CallbackBaseContext
 
 	private PropertyContext $property;
 
-	/** @var Closure(): Type */
-	private Closure $typeCreator;
-
-	private ?Type $type = null;
+	/** @var ProcessorCallContext<MappedObject> */
+	private ProcessorCallContext $call;
 
 	/**
-	 * @param Closure(): Type $typeCreator
+	 * @param ProcessorCallContext<MappedObject> $call
 	 */
 	public function __construct(
 		ServicesContext $services,
 		DynamicContext $dynamic,
 		PropertyContext $property,
-		Closure $typeCreator
+		ProcessorCallContext $call
 	)
 	{
 		parent::__construct($services, $dynamic);
 		$this->property = $property;
-		$this->typeCreator = $typeCreator;
+		$this->call = $call;
 	}
 
 	public function getType(): Type
 	{
-		if ($this->type !== null) {
-			return $this->type;
-		}
-
-		$type = ($this->typeCreator)();
-		unset($this->typeCreator);
-
-		return $this->type = $type;
+		return $this->call->getType()->getField($this->property->getFieldName());
 	}
 
 	public function getPropertyName(): string
