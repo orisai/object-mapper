@@ -24,7 +24,7 @@ final class AnyOfTest extends TestCase
 		self::assertSame(AnyOfRule::class, $definition->getType());
 		self::assertEquals(
 			[
-				'rules' => [
+				AnyOfRule::Rules => [
 					new RuleCompileMeta($sub1->getType(), $sub1->getArgs()),
 					new RuleCompileMeta($sub2->getType(), $sub2->getArgs()),
 				],

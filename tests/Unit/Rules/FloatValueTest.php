@@ -20,10 +20,10 @@ final class FloatValueTest extends TestCase
 		self::assertSame(FloatRule::class, $definition->getType());
 		self::assertSame(
 			[
-				'min' => null,
-				'max' => null,
-				'unsigned' => false,
-				'castNumericString' => false,
+				FloatRule::Min => null,
+				FloatRule::Max => null,
+				FloatRule::Unsigned => false,
+				FloatRule::CastNumericString => false,
 			],
 			$definition->getArgs(),
 		);
@@ -43,10 +43,10 @@ final class FloatValueTest extends TestCase
 
 		self::assertSame(
 			[
-				'min' => $min,
-				'max' => $max,
-				'unsigned' => $unsigned,
-				'castNumericString' => $castNumericString,
+				FloatRule::Min => $min,
+				FloatRule::Max => $max,
+				FloatRule::Unsigned => $unsigned,
+				FloatRule::CastNumericString => $castNumericString,
 			],
 			$definition->getArgs(),
 		);

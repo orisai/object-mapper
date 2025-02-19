@@ -21,9 +21,9 @@ final class ArrayEnumValueTest extends TestCase
 		self::assertSame(ArrayEnumRule::class, $definition->getType());
 		self::assertSame(
 			[
-				'cases' => $cases,
-				'useKeys' => false,
-				'allowUnknown' => false,
+				ArrayEnumRule::Cases => $cases,
+				ArrayEnumRule::UseKeys => false,
+				ArrayEnumRule::AllowUnknown => false,
 			],
 			$definition->getArgs(),
 		);
@@ -45,9 +45,9 @@ final class ArrayEnumValueTest extends TestCase
 
 		self::assertEquals(
 			[
-				'cases' => $cases,
-				'useKeys' => $useKeys,
-				'allowUnknown' => $allowUnknown,
+				ArrayEnumRule::Cases => $cases,
+				ArrayEnumRule::UseKeys => $useKeys,
+				ArrayEnumRule::AllowUnknown => $allowUnknown,
 			],
 			$definition->getArgs(),
 		);

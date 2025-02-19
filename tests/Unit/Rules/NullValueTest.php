@@ -20,7 +20,7 @@ final class NullValueTest extends TestCase
 		self::assertSame(NullRule::class, $definition->getType());
 		self::assertSame(
 			[
-				'castEmptyString' => false,
+				NullRule::CastEmptyString => false,
 			],
 			$definition->getArgs(),
 		);
@@ -40,7 +40,7 @@ final class NullValueTest extends TestCase
 
 		self::assertEquals(
 			[
-				'castEmptyString' => $castEmptyString,
+				NullRule::CastEmptyString => $castEmptyString,
 			],
 			$definition->getArgs(),
 		);

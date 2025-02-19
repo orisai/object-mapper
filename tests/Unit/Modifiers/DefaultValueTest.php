@@ -22,7 +22,7 @@ final class DefaultValueTest extends TestCase
 		self::assertSame(DefaultValueModifier::class, $definition->getType());
 		self::assertSame(
 			[
-				'value' => $value,
+				DefaultValueModifier::Value => $value,
 			],
 			$definition->getArgs(),
 		);

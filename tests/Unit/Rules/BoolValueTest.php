@@ -20,7 +20,7 @@ final class BoolValueTest extends TestCase
 		self::assertSame(BoolRule::class, $definition->getType());
 		self::assertSame(
 			[
-				'castBoolLike' => false,
+				BoolRule::CastBoolLike => false,
 			],
 			$definition->getArgs(),
 		);
@@ -40,7 +40,7 @@ final class BoolValueTest extends TestCase
 
 		self::assertEquals(
 			[
-				'castBoolLike' => $castBoolLike,
+				BoolRule::CastBoolLike => $castBoolLike,
 			],
 			$definition->getArgs(),
 		);

@@ -27,7 +27,7 @@ final class ArrayShapeTest extends TestCase
 		self::assertSame(ArrayShapeRule::class, $definition->getType());
 		self::assertEquals(
 			[
-				'fields' => [
+				ArrayShapeRule::Fields => [
 					'foo' => new RuleCompileMeta(
 						$fields['foo']->getType(),
 						$fields['foo']->getArgs(),

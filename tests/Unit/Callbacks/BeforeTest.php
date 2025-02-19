@@ -22,8 +22,8 @@ final class BeforeTest extends TestCase
 		self::assertSame(BeforeCallback::class, $definition->getType());
 		self::assertSame(
 			[
-				'method' => $method,
-				'runtime' => 'process',
+				BeforeCallback::Method => $method,
+				BeforeCallback::Runtime => 'process',
 			],
 			$definition->getArgs(),
 		);
@@ -45,8 +45,8 @@ final class BeforeTest extends TestCase
 
 		self::assertEquals(
 			[
-				'method' => $method,
-				'runtime' => $runtime,
+				BeforeCallback::Method => $method,
+				BeforeCallback::Runtime => $runtime,
 			],
 			$definition->getArgs(),
 		);

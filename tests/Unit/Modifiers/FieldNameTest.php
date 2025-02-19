@@ -22,7 +22,7 @@ final class FieldNameTest extends TestCase
 		self::assertSame(FieldNameModifier::class, $definition->getType());
 		self::assertSame(
 			[
-				'name' => $name,
+				FieldNameModifier::Name => $name,
 			],
 			$definition->getArgs(),
 		);

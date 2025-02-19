@@ -20,11 +20,11 @@ final class StringValueTest extends TestCase
 		self::assertSame(StringRule::class, $definition->getType());
 		self::assertSame(
 			[
-				'pattern' => null,
-				'minLength' => null,
-				'maxLength' => null,
-				'notEmpty' => false,
-				'trim' => false,
+				StringRule::Pattern => null,
+				StringRule::MinLength => null,
+				StringRule::MaxLength => null,
+				StringRule::NotEmpty => false,
+				StringRule::Trim => false,
 			],
 			$definition->getArgs(),
 		);
@@ -44,11 +44,11 @@ final class StringValueTest extends TestCase
 
 		self::assertEquals(
 			[
-				'pattern' => $pattern,
-				'minLength' => $minLength,
-				'maxLength' => $maxLength,
-				'notEmpty' => $notEmpty,
-				'trim' => $trim,
+				StringRule::Pattern => $pattern,
+				StringRule::MinLength => $minLength,
+				StringRule::MaxLength => $maxLength,
+				StringRule::NotEmpty => $notEmpty,
+				StringRule::Trim => $trim,
 			],
 			$definition->getArgs(),
 		);

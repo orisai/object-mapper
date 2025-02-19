@@ -22,8 +22,8 @@ final class AfterTest extends TestCase
 		self::assertSame(AfterCallback::class, $definition->getType());
 		self::assertSame(
 			[
-				'method' => $method,
-				'runtime' => 'process',
+				AfterCallback::Method => $method,
+				AfterCallback::Runtime => 'process',
 			],
 			$definition->getArgs(),
 		);
@@ -45,8 +45,8 @@ final class AfterTest extends TestCase
 
 		self::assertEquals(
 			[
-				'method' => $method,
-				'runtime' => $runtime,
+				AfterCallback::Method => $method,
+				AfterCallback::Runtime => $runtime,
 			],
 			$definition->getArgs(),
 		);

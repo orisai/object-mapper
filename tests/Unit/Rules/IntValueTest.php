@@ -20,10 +20,10 @@ final class IntValueTest extends TestCase
 		self::assertSame(IntRule::class, $definition->getType());
 		self::assertSame(
 			[
-				'min' => null,
-				'max' => null,
-				'unsigned' => false,
-				'castNumericString' => false,
+				IntRule::Min => null,
+				IntRule::Max => null,
+				IntRule::Unsigned => false,
+				IntRule::CastNumericString => false,
 			],
 			$definition->getArgs(),
 		);
@@ -43,10 +43,10 @@ final class IntValueTest extends TestCase
 
 		self::assertSame(
 			[
-				'min' => $min,
-				'max' => $max,
-				'unsigned' => $unsigned,
-				'castNumericString' => $castNumericString,
+				IntRule::Min => $min,
+				IntRule::Max => $max,
+				IntRule::Unsigned => $unsigned,
+				IntRule::CastNumericString => $castNumericString,
 			],
 			$definition->getArgs(),
 		);

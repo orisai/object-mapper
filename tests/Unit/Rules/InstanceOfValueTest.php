@@ -21,7 +21,7 @@ final class InstanceOfValueTest extends TestCase
 		self::assertSame(InstanceOfRule::class, $definition->getType());
 		self::assertSame(
 			[
-				'type' => $type,
+				InstanceOfRule::Type => $type,
 			],
 			$definition->getArgs(),
 		);

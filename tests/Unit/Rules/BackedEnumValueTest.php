@@ -27,8 +27,8 @@ final class BackedEnumValueTest extends TestCase
 		self::assertSame(BackedEnumRule::class, $definition->getType());
 		self::assertSame(
 			[
-				'class' => ExampleIntEnum::class,
-				'allowUnknown' => false,
+				BackedEnumRule::ClassName => ExampleIntEnum::class,
+				BackedEnumRule::AllowUnknown => false,
 			],
 			$definition->getArgs(),
 		);
@@ -47,8 +47,8 @@ final class BackedEnumValueTest extends TestCase
 
 		self::assertEquals(
 			[
-				'class' => $class,
-				'allowUnknown' => $allowUnknown,
+				BackedEnumRule::ClassName => $class,
+				BackedEnumRule::AllowUnknown => $allowUnknown,
 			],
 			$definition->getArgs(),
 		);

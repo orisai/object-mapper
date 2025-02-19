@@ -26,11 +26,11 @@ final class ArrayOfTest extends TestCase
 		self::assertSame(ArrayOfRule::class, $definition->getType());
 		self::assertEquals(
 			[
-				'item' => new RuleCompileMeta($item->getType(), $item->getArgs()),
-				'minItems' => null,
-				'maxItems' => null,
-				'mergeDefaults' => false,
-				'key' => null,
+				ArrayOfRule::ItemRule => new RuleCompileMeta($item->getType(), $item->getArgs()),
+				ArrayOfRule::MinItems => null,
+				ArrayOfRule::MaxItems => null,
+				ArrayOfRule::MergeDefaults => false,
+				ArrayOfRule::KeyRule => null,
 			],
 			$definition->getArgs(),
 		);
@@ -56,11 +56,11 @@ final class ArrayOfTest extends TestCase
 
 		self::assertEquals(
 			[
-				'item' => new RuleCompileMeta($item->getType(), $item->getArgs()),
-				'minItems' => $minItems,
-				'maxItems' => $maxItems,
-				'mergeDefaults' => $mergeDefaults,
-				'key' => $key === null ? null : new RuleCompileMeta($key->getType(), $key->getArgs()),
+				ArrayOfRule::ItemRule => new RuleCompileMeta($item->getType(), $item->getArgs()),
+				ArrayOfRule::MinItems => $minItems,
+				ArrayOfRule::MaxItems => $maxItems,
+				ArrayOfRule::MergeDefaults => $mergeDefaults,
+				ArrayOfRule::KeyRule => $key === null ? null : new RuleCompileMeta($key->getType(), $key->getArgs()),
 			],
 			$definition->getArgs(),
 		);

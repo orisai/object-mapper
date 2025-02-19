@@ -25,10 +25,10 @@ final class ListOfTest extends TestCase
 		self::assertSame(ListOfRule::class, $definition->getType());
 		self::assertEquals(
 			[
-				'item' => new RuleCompileMeta($item->getType(), $item->getArgs()),
-				'minItems' => null,
-				'maxItems' => null,
-				'mergeDefaults' => false,
+				ListOfRule::ItemRule => new RuleCompileMeta($item->getType(), $item->getArgs()),
+				ListOfRule::MinItems => null,
+				ListOfRule::MaxItems => null,
+				ListOfRule::MergeDefaults => false,
 			],
 			$definition->getArgs(),
 		);
@@ -48,10 +48,10 @@ final class ListOfTest extends TestCase
 
 		self::assertEquals(
 			[
-				'item' => new RuleCompileMeta($item->getType(), $item->getArgs()),
-				'minItems' => $minItems,
-				'maxItems' => $maxItems,
-				'mergeDefaults' => $mergeDefaults,
+				ListOfRule::ItemRule => new RuleCompileMeta($item->getType(), $item->getArgs()),
+				ListOfRule::MinItems => $minItems,
+				ListOfRule::MaxItems => $maxItems,
+				ListOfRule::MergeDefaults => $mergeDefaults,
 			],
 			$definition->getArgs(),
 		);
