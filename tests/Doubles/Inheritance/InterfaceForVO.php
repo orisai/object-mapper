@@ -2,11 +2,11 @@
 
 namespace Tests\Orisai\ObjectMapper\Doubles\Inheritance;
 
-use Orisai\ObjectMapper\Callbacks\After;
+use Orisai\ObjectMapper\Callbacks\AfterValidation;
 use Orisai\ObjectMapper\MappedObject;
 
 /**
- * @After("after")
+ * @AfterValidation("after")
  */
 interface InterfaceForVO extends MappedObject
 {

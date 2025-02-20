@@ -2,7 +2,7 @@
 
 namespace Tests\Orisai\ObjectMapper\Unit\Meta\Compile;
 
-use Orisai\ObjectMapper\Callbacks\BeforeCallback;
+use Orisai\ObjectMapper\Callbacks\BeforeValidationCallback;
 use Orisai\ObjectMapper\Meta\Compile\CallbackCompileMeta;
 use Orisai\ObjectMapper\Meta\Compile\ClassCompileMeta;
 use Orisai\ObjectMapper\Meta\Compile\CompileMeta;
@@ -87,7 +87,7 @@ final class CompileMetaTest extends TestCase
 			[
 				new ClassCompileMeta(
 					[
-						new CallbackCompileMeta(BeforeCallback::class, []),
+						new CallbackCompileMeta(BeforeValidationCallback::class, []),
 					],
 					[],
 					[],

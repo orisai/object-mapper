@@ -3,8 +3,8 @@
 namespace Tests\Orisai\ObjectMapper\Doubles\Callbacks;
 
 use Orisai\Exceptions\Logic\InvalidState;
-use Orisai\ObjectMapper\Callbacks\After;
-use Orisai\ObjectMapper\Callbacks\Before;
+use Orisai\ObjectMapper\Callbacks\AfterValidation;
+use Orisai\ObjectMapper\Callbacks\BeforeValidation;
 use Orisai\ObjectMapper\Callbacks\CallbackRuntime;
 use Orisai\ObjectMapper\Callbacks\Context\FieldContext;
 use Orisai\ObjectMapper\Callbacks\Context\ObjectContext;
@@ -18,8 +18,8 @@ use function assert;
 use function is_array;
 
 /**
- * @Before(method="beforeClass", runtime=CallbackRuntime::Always)
- * @After(method="afterClass", runtime=CallbackRuntime::Always)
+ * @BeforeValidation(method="beforeClass", runtime=CallbackRuntime::Always)
+ * @AfterValidation(method="afterClass", runtime=CallbackRuntime::Always)
  */
 final class CallbacksVO implements MappedObject
 {
@@ -33,8 +33,8 @@ final class CallbacksVO implements MappedObject
 	 *         @MixedValue(),
 	 *     ),
 	 * )
-	 * @After(method="afterArrayInitialization", runtime=CallbackRuntime::Process)
-	 * @After(method="afterArrayProcessing", runtime=CallbackRuntime::ProcessWithoutMapping)
+	 * @AfterValidation(method="afterArrayInitialization", runtime=CallbackRuntime::Process)
+	 * @AfterValidation(method="afterArrayProcessing", runtime=CallbackRuntime::ProcessWithoutMapping)
 	 */
 	public array $array;
 
@@ -42,7 +42,7 @@ final class CallbacksVO implements MappedObject
 	 * @ArrayOf(
 	 *     @MixedValue()
 	 * )
-	 * @After(method="afterStructure", runtime=CallbackRuntime::Always)
+	 * @AfterValidation(method="afterStructure", runtime=CallbackRuntime::Always)
 	 */
 	public MappedObject $structure;
 
@@ -51,8 +51,8 @@ final class CallbacksVO implements MappedObject
 
 	/**
 	 * @StringValue()
-	 * @Before(method="beforeImmutableDefaultValue", runtime=CallbackRuntime::Always)
-	 * @Before(method="afterImmutableDefaultValue", runtime=CallbackRuntime::Always)
+	 * @BeforeValidation(method="beforeImmutableDefaultValue", runtime=CallbackRuntime::Always)
+	 * @BeforeValidation(method="afterImmutableDefaultValue", runtime=CallbackRuntime::Always)
 	 */
 	public string $immutableDefaultValue = 'defaultValue_immutable';
 
@@ -61,8 +61,8 @@ final class CallbacksVO implements MappedObject
 
 	/**
 	 * @StringValue()
-	 * @Before(method="beforeCallbackSetValue", runtime=CallbackRuntime::Always)
-	 * @After(method="afterCallbackSetValue", runtime=CallbackRuntime::Always)
+	 * @BeforeValidation(method="beforeCallbackSetValue", runtime=CallbackRuntime::Always)
+	 * @AfterValidation(method="afterCallbackSetValue", runtime=CallbackRuntime::Always)
 	 */
 	public string $callbackSetValue;
 

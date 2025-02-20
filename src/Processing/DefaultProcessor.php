@@ -5,8 +5,8 @@ namespace Orisai\ObjectMapper\Processing;
 use Closure;
 use Nette\Utils\Helpers;
 use Orisai\ObjectMapper\Args\Args;
-use Orisai\ObjectMapper\Callbacks\AfterCallback;
-use Orisai\ObjectMapper\Callbacks\BeforeCallback;
+use Orisai\ObjectMapper\Callbacks\AfterValidationCallback;
+use Orisai\ObjectMapper\Callbacks\BeforeValidationCallback;
 use Orisai\ObjectMapper\Callbacks\Callback;
 use Orisai\ObjectMapper\Callbacks\Context\CallbackBaseContext;
 use Orisai\ObjectMapper\Callbacks\Context\FieldContext;
@@ -166,7 +166,7 @@ final class DefaultProcessor implements Processor
 				$call,
 				$callbackContext,
 				$classMeta,
-				BeforeCallback::class,
+				BeforeValidationCallback::class,
 			);
 		}
 
@@ -179,7 +179,7 @@ final class DefaultProcessor implements Processor
 				$call,
 				$callbackContext,
 				$classMeta,
-				AfterCallback::class,
+				AfterValidationCallback::class,
 			);
 			assert(is_array($data)); // After class callbacks are forced to return array
 		}
@@ -424,13 +424,13 @@ final class DefaultProcessor implements Processor
 				$call,
 			);
 
-			$value = $this->applyCallbacks($value, $callbackContext, $call, $meta, BeforeCallback::class);
+			$value = $this->applyCallbacks($value, $callbackContext, $call, $meta, BeforeValidationCallback::class);
 		}
 
 		$value = $this->processPropertyRules($value, $property, $dynamic, $meta);
 
 		if (isset($callbackContext)) {
-			$value = $this->applyCallbacks($value, $callbackContext, $call, $meta, AfterCallback::class);
+			$value = $this->applyCallbacks($value, $callbackContext, $call, $meta, AfterValidationCallback::class);
 		}
 
 		return $value;

@@ -3,27 +3,27 @@
 namespace Tests\Orisai\ObjectMapper\Unit\Callbacks;
 
 use Generator;
-use Orisai\ObjectMapper\Callbacks\After;
-use Orisai\ObjectMapper\Callbacks\AfterCallback;
+use Orisai\ObjectMapper\Callbacks\AfterValidation;
+use Orisai\ObjectMapper\Callbacks\AfterValidationCallback;
 use Orisai\ObjectMapper\Callbacks\CallbackRuntime;
 use Orisai\ObjectMapper\Tester\DefinitionTester;
 use PHPUnit\Framework\TestCase;
 use function get_class;
 use const PHP_VERSION_ID;
 
-final class AfterTest extends TestCase
+final class AfterValidationTest extends TestCase
 {
 
 	public function test(): void
 	{
 		$method = 'methodName';
-		$definition = new After($method);
+		$definition = new AfterValidation($method);
 
-		self::assertSame(AfterCallback::class, $definition->getType());
+		self::assertSame(AfterValidationCallback::class, $definition->getType());
 		self::assertSame(
 			[
-				AfterCallback::Method => $method,
-				AfterCallback::Runtime => 'process',
+				AfterValidationCallback::Method => $method,
+				AfterValidationCallback::Runtime => 'process',
 			],
 			$definition->getArgs(),
 		);
@@ -41,12 +41,12 @@ final class AfterTest extends TestCase
 	 */
 	public function testVariant(string $method, string $runtime): void
 	{
-		$definition = new After($method, $runtime);
+		$definition = new AfterValidation($method, $runtime);
 
 		self::assertEquals(
 			[
-				AfterCallback::Method => $method,
-				AfterCallback::Runtime => $runtime,
+				AfterValidationCallback::Method => $method,
+				AfterValidationCallback::Runtime => $runtime,
 			],
 			$definition->getArgs(),
 		);

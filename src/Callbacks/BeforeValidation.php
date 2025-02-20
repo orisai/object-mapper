@@ -12,7 +12,7 @@ use Doctrine\Common\Annotations\Annotation\Target;
  * @Target({"CLASS", "PROPERTY"})
  */
 #[Attribute(Attribute::TARGET_CLASS | Attribute::TARGET_PROPERTY)]
-final class Before implements CallbackDefinition
+final class BeforeValidation implements CallbackDefinition
 {
 
 	private string $method;
@@ -31,14 +31,14 @@ final class Before implements CallbackDefinition
 
 	public function getType(): string
 	{
-		return BeforeCallback::class;
+		return BeforeValidationCallback::class;
 	}
 
 	public function getArgs(): array
 	{
 		return [
-			BaseCallback::Method => $this->method,
-			BaseCallback::Runtime => $this->runtime,
+			ValidationCallback::Method => $this->method,
+			ValidationCallback::Runtime => $this->runtime,
 		];
 	}
 

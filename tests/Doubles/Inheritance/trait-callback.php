@@ -2,8 +2,8 @@
 
 namespace Tests\Orisai\ObjectMapper\Doubles\Inheritance\TraitCallback;
 
-use Orisai\ObjectMapper\Callbacks\After;
-use Orisai\ObjectMapper\Callbacks\Before;
+use Orisai\ObjectMapper\Callbacks\AfterValidation;
+use Orisai\ObjectMapper\Callbacks\BeforeValidation;
 use Orisai\ObjectMapper\MappedObject;
 use Orisai\ObjectMapper\Rules\StringValue;
 use function assert;
@@ -11,8 +11,8 @@ use function is_array;
 use function is_string;
 
 /**
- * @Before("before")
- * @After("after")
+ * @BeforeValidation("before")
+ * @AfterValidation("after")
  */
 trait A
 {

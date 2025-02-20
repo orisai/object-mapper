@@ -25,11 +25,11 @@ use function is_a;
 use function sprintf;
 
 /**
- * @implements Callback<BaseCallbackArgs>
+ * @implements Callback<ValidationCallbackArgs>
  *
  * @internal
  */
-abstract class BaseCallback implements Callback
+abstract class ValidationCallback implements Callback
 {
 
 	public const
@@ -55,7 +55,7 @@ abstract class BaseCallback implements Callback
 		array $args,
 		MetaContext $context,
 		Reflector $reflector
-	): BaseCallbackArgs
+	): ValidationCallbackArgs
 	{
 		$checker = new ArgsChecker($args, static::class);
 		$checker->checkAllowedArgs([self::Method, self::Runtime]);
@@ -82,7 +82,7 @@ abstract class BaseCallback implements Callback
 
 		$method = self::validateMethod($class, $property, $methodName);
 
-		return new BaseCallbackArgs(
+		return new ValidationCallbackArgs(
 			$methodName,
 			$method->isStatic(),
 			self::getMethodReturnsValue($method),
@@ -313,11 +313,11 @@ abstract class BaseCallback implements Callback
 
 	public static function getArgsType(): string
 	{
-		return BaseCallbackArgs::class;
+		return ValidationCallbackArgs::class;
 	}
 
 	/**
-	 * @param BaseCallbackArgs $args
+	 * @param ValidationCallbackArgs $args
 	 * @return mixed
 	 */
 	public static function invoke(

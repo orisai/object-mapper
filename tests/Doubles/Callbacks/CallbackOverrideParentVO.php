@@ -2,7 +2,7 @@
 
 namespace Tests\Orisai\ObjectMapper\Doubles\Callbacks;
 
-use Orisai\ObjectMapper\Callbacks\After;
+use Orisai\ObjectMapper\Callbacks\AfterValidation;
 use Orisai\ObjectMapper\MappedObject;
 use Orisai\ObjectMapper\Rules\StringValue;
 
@@ -11,8 +11,8 @@ abstract class CallbackOverrideParentVO implements MappedObject
 
 	/**
 	 * @StringValue()
-	 * @After("afterField")
-	 * @After("afterFieldStatic")
+	 * @AfterValidation("afterField")
+	 * @AfterValidation("afterFieldStatic")
 	 */
 	public string $field;
 

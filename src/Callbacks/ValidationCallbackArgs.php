@@ -4,7 +4,7 @@ namespace Orisai\ObjectMapper\Callbacks;
 
 use Orisai\ObjectMapper\Args\Args;
 
-final class BaseCallbackArgs implements Args
+final class ValidationCallbackArgs implements Args
 {
 
 	public string $method;

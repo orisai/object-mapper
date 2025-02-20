@@ -2,11 +2,11 @@
 
 namespace Tests\Orisai\ObjectMapper\Doubles\Callbacks;
 
-use Orisai\ObjectMapper\Callbacks\Before;
+use Orisai\ObjectMapper\Callbacks\BeforeValidation;
 use Orisai\ObjectMapper\MappedObject;
 
 /**
- * @Before(method="before")
+ * @BeforeValidation(method="before")
  */
 final class BeforeClassCallbackMixedValueVO implements MappedObject
 {

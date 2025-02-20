@@ -2,18 +2,18 @@
 
 namespace Tests\Orisai\ObjectMapper\Unit\Callbacks;
 
-use Orisai\ObjectMapper\Callbacks\BaseCallbackArgs;
 use Orisai\ObjectMapper\Callbacks\CallbackRuntime;
+use Orisai\ObjectMapper\Callbacks\ValidationCallbackArgs;
 use PHPUnit\Framework\TestCase;
 use function serialize;
 use function unserialize;
 
-final class BaseCallbackArgsTest extends TestCase
+final class ValidationCallbackArgsTest extends TestCase
 {
 
 	public function test(): void
 	{
-		$args = new BaseCallbackArgs(
+		$args = new ValidationCallbackArgs(
 			'methodName',
 			false,
 			true,
@@ -33,7 +33,7 @@ final class BaseCallbackArgsTest extends TestCase
 
 	public function testVariant(): void
 	{
-		$args = new BaseCallbackArgs(
+		$args = new ValidationCallbackArgs(
 			'differentName',
 			true,
 			false,

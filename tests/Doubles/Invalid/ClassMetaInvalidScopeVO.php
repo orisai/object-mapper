@@ -2,10 +2,10 @@
 
 namespace Tests\Orisai\ObjectMapper\Doubles\Invalid;
 
-use Orisai\ObjectMapper\Callbacks\Before;
+use Orisai\ObjectMapper\Callbacks\BeforeValidation;
 
 /**
- * @Before("before")
+ * @BeforeValidation("before")
  */
 abstract class ClassMetaInvalidScopeVO
 {

@@ -9,7 +9,7 @@ use ReflectionParameter;
 use function in_array;
 use function sprintf;
 
-final class BeforeCallback extends BaseCallback
+final class AfterValidationCallback extends ValidationCallback
 {
 
 	protected static function validateClassMethodDataParam(
@@ -20,22 +20,34 @@ final class BeforeCallback extends BaseCallback
 	{
 		$type = self::getTypeName($paramData->getType());
 
-		if (in_array($type, ['mixed', null], true)) {
+		if ($type === 'array') {
 			return;
 		}
 
 		throw InvalidArgument::create()
 			->withMessage(sprintf(
-				'First parameter of class callback method %s::%s should have "mixed" or none type instead of %s',
+				'First parameter of class callback method %s::%s should have "array" type instead of %s',
 				$class->getName(),
 				$method->getName(),
-				$type,
+				$type ?? 'none',
 			));
 	}
 
 	protected static function validateClassMethodReturn(ReflectionClass $class, ReflectionMethod $method): void
 	{
-		// Any type is okay
+		$type = self::getTypeName($method->getReturnType());
+
+		if (in_array($type, ['array', 'void', 'never'], true)) {
+			return;
+		}
+
+		throw InvalidArgument::create()
+			->withMessage(sprintf(
+				'Return type of class callback method %s::%s should be "array", "void" or "never" instead of %s',
+				$class->getName(),
+				$method->getName(),
+				$type ?? 'none',
+			));
 	}
 
 	protected static function validatePropertyMethodDataParam(
@@ -44,19 +56,7 @@ final class BeforeCallback extends BaseCallback
 		ReflectionParameter $paramData
 	): void
 	{
-		$type = self::getTypeName($paramData->getType());
-
-		if (in_array($type, [null, 'mixed'], true)) {
-			return;
-		}
-
-		throw InvalidArgument::create()
-			->withMessage(sprintf(
-				'First parameter of before field callback method %s::%s should have none or "mixed" type instead of %s',
-				$class->getName(),
-				$method->getName(),
-				$type,
-			));
+		// Any type is okay
 	}
 
 }

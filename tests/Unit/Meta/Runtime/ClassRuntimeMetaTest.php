@@ -2,10 +2,10 @@
 
 namespace Tests\Orisai\ObjectMapper\Unit\Meta\Runtime;
 
-use Orisai\ObjectMapper\Callbacks\AfterCallback;
-use Orisai\ObjectMapper\Callbacks\BaseCallbackArgs;
-use Orisai\ObjectMapper\Callbacks\BeforeCallback;
+use Orisai\ObjectMapper\Callbacks\AfterValidationCallback;
+use Orisai\ObjectMapper\Callbacks\BeforeValidationCallback;
 use Orisai\ObjectMapper\Callbacks\CallbackRuntime;
+use Orisai\ObjectMapper\Callbacks\ValidationCallbackArgs;
 use Orisai\ObjectMapper\Docs\DescriptionDoc;
 use Orisai\ObjectMapper\Meta\Runtime\CallbackRuntimeMeta;
 use Orisai\ObjectMapper\Meta\Runtime\ClassRuntimeMeta;
@@ -27,13 +27,13 @@ final class ClassRuntimeMetaTest extends TestCase
 	{
 		$beforeCallbacks = [
 			new CallbackRuntimeMeta(
-				BeforeCallback::class,
-				new BaseCallbackArgs('method', false, false, CallbackRuntime::process()),
+				BeforeValidationCallback::class,
+				new ValidationCallbackArgs('method', false, false, CallbackRuntime::process()),
 				new ReflectionClass(DefaultsVO::class),
 			),
 		];
 		$callbacks = [
-			BeforeCallback::class => $beforeCallbacks,
+			BeforeValidationCallback::class => $beforeCallbacks,
 		];
 		$docs = [
 			DescriptionDoc::getUniqueName() => new DocMeta(DescriptionDoc::class, []),
@@ -52,11 +52,11 @@ final class ClassRuntimeMetaTest extends TestCase
 		self::assertSame($callbacks, $meta->callbacks);
 		self::assertSame(
 			$beforeCallbacks,
-			$meta->getCallbacksByType(BeforeCallback::class),
+			$meta->getCallbacksByType(BeforeValidationCallback::class),
 		);
 		self::assertSame(
 			[],
-			$meta->getCallbacksByType(AfterCallback::class),
+			$meta->getCallbacksByType(AfterValidationCallback::class),
 		);
 		self::assertSame($docs, $meta->docs);
 		self::assertSame($modifiers, $meta->modifiers);

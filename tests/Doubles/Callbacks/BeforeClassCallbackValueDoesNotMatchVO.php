@@ -2,13 +2,13 @@
 
 namespace Tests\Orisai\ObjectMapper\Doubles\Callbacks;
 
-use Orisai\ObjectMapper\Callbacks\Before;
+use Orisai\ObjectMapper\Callbacks\BeforeValidation;
 use Orisai\ObjectMapper\Exception\ValueDoesNotMatch;
 use Orisai\ObjectMapper\MappedObject;
 use Orisai\ObjectMapper\Processing\Value;
 
 /**
- * @Before(method="before")
+ * @BeforeValidation(method="before")
  */
 final class BeforeClassCallbackValueDoesNotMatchVO implements MappedObject
 {

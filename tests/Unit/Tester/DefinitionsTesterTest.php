@@ -4,7 +4,7 @@ namespace Tests\Orisai\ObjectMapper\Unit\Tester;
 
 use Orisai\Exceptions\Logic\InvalidArgument;
 use Orisai\Exceptions\Logic\InvalidState;
-use Orisai\ObjectMapper\Callbacks\After;
+use Orisai\ObjectMapper\Callbacks\AfterValidation;
 use Orisai\ObjectMapper\Rules\MixedValue;
 use Orisai\ObjectMapper\Rules\StringValue;
 use Orisai\ObjectMapper\Tester\DefinitionTester;
@@ -68,20 +68,20 @@ final class DefinitionsTesterTest extends TestCase
 	{
 		$this->expectException(InvalidArgument::class);
 		$this->expectExceptionMessage(
-			"'Orisai\ObjectMapper\Callbacks\After' does not implement 'Orisai\ObjectMapper\Rules\RuleDefinition'.",
+			"'Orisai\ObjectMapper\Callbacks\AfterValidation' does not implement 'Orisai\ObjectMapper\Rules\RuleDefinition'.",
 		);
 
-		DefinitionTester::assertIsRuleAnnotation(After::class);
+		DefinitionTester::assertIsRuleAnnotation(AfterValidation::class);
 	}
 
 	public function testNotRuleAttribute(): void
 	{
 		$this->expectException(InvalidArgument::class);
 		$this->expectExceptionMessage(
-			"'Orisai\ObjectMapper\Callbacks\After' does not implement 'Orisai\ObjectMapper\Rules\RuleDefinition'.",
+			"'Orisai\ObjectMapper\Callbacks\AfterValidation' does not implement 'Orisai\ObjectMapper\Rules\RuleDefinition'.",
 		);
 
-		DefinitionTester::assertIsRuleAttribute(After::class);
+		DefinitionTester::assertIsRuleAttribute(AfterValidation::class);
 	}
 
 	public function testMissingAnnotationAtCallback(): void

@@ -2,7 +2,7 @@
 
 namespace Tests\Orisai\ObjectMapper\Unit\Meta\Compile;
 
-use Orisai\ObjectMapper\Callbacks\BeforeCallback;
+use Orisai\ObjectMapper\Callbacks\BeforeValidationCallback;
 use Orisai\ObjectMapper\Meta\Compile\CallbackCompileMeta;
 use PHPUnit\Framework\TestCase;
 
@@ -11,7 +11,7 @@ final class CallbackCompileMetaTest extends TestCase
 
 	public function test(): void
 	{
-		$type = BeforeCallback::class;
+		$type = BeforeValidationCallback::class;
 		$args = ['foo' => 'bar'];
 		$meta = new CallbackCompileMeta($type, $args);
 

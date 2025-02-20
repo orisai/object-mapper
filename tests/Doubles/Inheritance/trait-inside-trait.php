@@ -2,7 +2,7 @@
 
 namespace Tests\Orisai\ObjectMapper\Doubles\Inheritance\TraitInsideTrait;
 
-use Orisai\ObjectMapper\Callbacks\After;
+use Orisai\ObjectMapper\Callbacks\AfterValidation;
 use Orisai\ObjectMapper\MappedObject;
 use Orisai\ObjectMapper\Rules\StringValue;
 
@@ -45,9 +45,9 @@ final class TraitInsideTraitVO extends P1
 
 	/**
 	 * @StringValue()
-	 * @After("privateA1")
-	 * @After("protectedA1")
-	 * @After("publicA1")
+	 * @AfterValidation("privateA1")
+	 * @AfterValidation("protectedA1")
+	 * @AfterValidation("publicA1")
 	 */
 	public string $string;
 

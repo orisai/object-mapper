@@ -32,11 +32,11 @@ parameters:
 		# Callback call
 		-
 			message: '#^Variable static method call on class-string\<Orisai\\ObjectMapper\\MappedObject\>\.$#'
-			path: ../src/Callbacks/BaseCallback.php
+			path: ../src/Callbacks/ValidationCallback.php
 			count: 2
 		-
 			message: '#^Variable method call on Orisai\\ObjectMapper\\MappedObject\.$#'
-			path: ../src/Callbacks/BaseCallback.php
+			path: ../src/Callbacks/ValidationCallback.php
 			count: 2
 
 		# Dark mapping magic

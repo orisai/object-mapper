@@ -3,8 +3,8 @@
 namespace Tests\Orisai\ObjectMapper\Doubles\Callbacks;
 
 use Orisai\Exceptions\Logic\InvalidState;
-use Orisai\ObjectMapper\Callbacks\After;
-use Orisai\ObjectMapper\Callbacks\Before;
+use Orisai\ObjectMapper\Callbacks\AfterValidation;
+use Orisai\ObjectMapper\Callbacks\BeforeValidation;
 use Orisai\ObjectMapper\Exception\ValueDoesNotMatch;
 use Orisai\ObjectMapper\MappedObject;
 use Orisai\ObjectMapper\Processing\Value;
@@ -12,21 +12,21 @@ use Orisai\ObjectMapper\Rules\StringValue;
 use function is_array;
 
 /**
- * @Before(method="beforeClass")
- * @After(method="afterClass")
+ * @BeforeValidation(method="beforeClass")
+ * @AfterValidation(method="afterClass")
  */
 final class PropertyCallbacksFailureVO implements MappedObject
 {
 
 	/**
 	 * @StringValue()
-	 * @Before(method="beforeNeverValidated")
+	 * @BeforeValidation(method="beforeNeverValidated")
 	 */
 	public string $neverValidated;
 
 	/**
 	 * @StringValue()
-	 * @After(method="afterValidationFailed")
+	 * @AfterValidation(method="afterValidationFailed")
 	 */
 	public string $validationFailed;
 

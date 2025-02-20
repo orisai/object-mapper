@@ -2,7 +2,7 @@
 
 namespace Tests\Orisai\ObjectMapper\Doubles\Inheritance;
 
-use Orisai\ObjectMapper\Callbacks\After;
+use Orisai\ObjectMapper\Callbacks\AfterValidation;
 use Orisai\ObjectMapper\Rules\StringValue;
 
 trait ChildTraitVO
@@ -10,22 +10,22 @@ trait ChildTraitVO
 
 	/**
 	 * @StringValue()
-	 * @After("afterTraitProperty")
-	 * @After("afterTraitPropertyStatic")
+	 * @AfterValidation("afterTraitProperty")
+	 * @AfterValidation("afterTraitPropertyStatic")
 	 */
 	private string $childTraitPrivate;
 
 	/**
 	 * @StringValue()
-	 * @After("afterTraitProperty")
-	 * @After("afterTraitPropertyStatic")
+	 * @AfterValidation("afterTraitProperty")
+	 * @AfterValidation("afterTraitPropertyStatic")
 	 */
 	protected string $childTraitProtected;
 
 	/**
 	 * @StringValue()
-	 * @After("afterTraitProperty")
-	 * @After("afterTraitPropertyStatic")
+	 * @AfterValidation("afterTraitProperty")
+	 * @AfterValidation("afterTraitPropertyStatic")
 	 */
 	public string $childTraitPublic;
 

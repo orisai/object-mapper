@@ -21,21 +21,29 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 	- Reduce calls needed to find field names for "did you mean" error helper (performance optimization)
 	- Call `unset()` only for initialized properties (performance optimization)
 	- Create functions for setting and unsetting non public-set properties only once (performance optimization)
-- `ArrayShapeRule`
-	- Simplify finding missing fields (performance optimization)
-	- Reduce calls needed to find field names for "did you mean" error helper (performance optimization)
-- `BoolRule`
-	- `castBoolLike` option trims empty characters from start and end of the string
-- `FloatRule`
-	- `castNumericString` option trims empty characters from start and end of the string
-- `IntRule`
-	- `castNumericString` option trims empty characters from start and end of the string
-- `NullRule`
-	- `castEmptyString` option trims empty characters from start and end of the string
-- `StringRule`
-	- `notEmpty` detects more empty values
-- `FieldContext`
-	- Replace redundant `Type` lazy getter with one from the `CallContext`
+- Callbacks
+	- renamed
+		- `Before` -> `BeforeValidation`
+		- `BeforeCallback` -> `BeforeValidationCallback`
+		- `After` -> `AfterValidation`
+		- `AfterCallback` -> `AfterValidationCallback`
+- Rules
+	- `ArrayShapeRule`
+		- Simplify finding missing fields (performance optimization)
+		- Reduce calls needed to find field names for "did you mean" error helper (performance optimization)
+	- `BoolRule`
+		- `castBoolLike` option trims empty characters from start and end of the string
+	- `FloatRule`
+		- `castNumericString` option trims empty characters from start and end of the string
+	- `IntRule`
+		- `castNumericString` option trims empty characters from start and end of the string
+	- `NullRule`
+		- `castEmptyString` option trims empty characters from start and end of the string
+	- `StringRule`
+		- `notEmpty` detects more empty values
+- Contexts
+	- `FieldContext`
+		- Replace redundant `Type` lazy getter with one from the `CallContext`
 
 ### Fixed
 

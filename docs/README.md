@@ -2172,7 +2172,7 @@ Define callbacks before and after mapped objects and their fields:
 	<summary><code>#[Attributes()]</code></summary>
 
 ```php
-use Orisai\ObjectMapper\Callbacks\After;
+use Orisai\ObjectMapper\Callbacks\AfterValidation;
 use Orisai\ObjectMapper\Callbacks\Context\FieldContext;
 use Orisai\ObjectMapper\MappedObject;
 use Orisai\ObjectMapper\Rules\StringValue;
@@ -2180,7 +2180,7 @@ use Orisai\ObjectMapper\Rules\StringValue;
 final class WithCallbackInput implements MappedObject
 {
 
-	#[After('afterField')]
+	#[AfterValidation('afterField')]
 	#[StringValue()]
 	public string $field;
 
@@ -2197,7 +2197,7 @@ final class WithCallbackInput implements MappedObject
 	<summary><code>@Annotations()</code></summary>
 
 ```php
-use Orisai\ObjectMapper\Callbacks\After;
+use Orisai\ObjectMapper\Callbacks\AfterValidation;
 use Orisai\ObjectMapper\Callbacks\Context\FieldContext;
 use Orisai\ObjectMapper\MappedObject;
 use Orisai\ObjectMapper\Rules\StringValue;
@@ -2207,7 +2207,7 @@ final class WithCallbackInput implements MappedObject
 
 	/**
 	 * @StringValue()
-	 * @After("afterField")
+	 * @AfterValidation("afterField")
 	 */
 	public string $field;
 
@@ -2253,13 +2253,13 @@ After mapped object
 	<summary><code>#[Attributes()]</code></summary>
 
 ```php
-use Orisai\ObjectMapper\Callbacks\After;
-use Orisai\ObjectMapper\Callbacks\Before;
+use Orisai\ObjectMapper\Callbacks\AfterValidation;
+use Orisai\ObjectMapper\Callbacks\BeforeValidation;
 use Orisai\ObjectMapper\Callbacks\Context\ObjectContext;
 use Orisai\ObjectMapper\MappedObject;
 
-#[Before('beforeObject')]
-#[After('afterObject')]
+#[BeforeValidation('beforeObject')]
+#[AfterValidation('afterObject')]
 final class WithMappedObjectCallbacksInput implements MappedObject
 {
 
@@ -2285,14 +2285,14 @@ final class WithMappedObjectCallbacksInput implements MappedObject
 	<summary><code>@Annotations()</code></summary>
 
 ```php
-use Orisai\ObjectMapper\Callbacks\After;
-use Orisai\ObjectMapper\Callbacks\Before;
+use Orisai\ObjectMapper\Callbacks\AfterValidation;
+use Orisai\ObjectMapper\Callbacks\BeforeValidation;
 use Orisai\ObjectMapper\Callbacks\Context\ObjectContext;
 use Orisai\ObjectMapper\MappedObject;
 
 /**
- * @Before("beforeObject")
- * @After("afterObject")
+ * @BeforeValidation("beforeObject")
+ * @AfterValidation("afterObject")
  */
 final class WithMappedObjectCallbacksInput implements MappedObject
 {
@@ -2341,8 +2341,8 @@ After field
 	<summary><code>#[Attributes()]</code></summary>
 
 ```php
-use Orisai\ObjectMapper\Callbacks\After;
-use Orisai\ObjectMapper\Callbacks\Before;
+use Orisai\ObjectMapper\Callbacks\AfterValidation;
+use Orisai\ObjectMapper\Callbacks\BeforeValidation;
 use Orisai\ObjectMapper\Callbacks\Context\FieldContext;
 use Orisai\ObjectMapper\MappedObject;
 use Orisai\ObjectMapper\Rules\StringValue;
@@ -2350,8 +2350,8 @@ use Orisai\ObjectMapper\Rules\StringValue;
 final class WithFieldCallbacksInput implements MappedObject
 {
 
-	#[Before('beforeField')]
-	#[After('afterField')]
+	#[BeforeValidation('beforeField')]
+	#[AfterValidation('afterField')]
 	#[StringValue()]
 	public string $field;
 
@@ -2373,8 +2373,8 @@ final class WithFieldCallbacksInput implements MappedObject
 	<summary><code>@Annotations()</code></summary>
 
 ```php
-use Orisai\ObjectMapper\Callbacks\After;
-use Orisai\ObjectMapper\Callbacks\Before;
+use Orisai\ObjectMapper\Callbacks\AfterValidation;
+use Orisai\ObjectMapper\Callbacks\BeforeValidation;
 use Orisai\ObjectMapper\Callbacks\Context\FieldContext;
 use Orisai\ObjectMapper\MappedObject;
 use Orisai\ObjectMapper\Rules\StringValue;
@@ -2383,8 +2383,8 @@ final class WithFieldCallbacksInput implements MappedObject
 {
 
 	/**
-	 * @Before("beforeField")
-	 * @After("afterField")
+	 * @BeforeValidation("beforeField")
+	 * @AfterValidation("afterField")
 	 * @StringValue()
 	 */
 	public string $field;
@@ -2410,7 +2410,7 @@ final class WithFieldCallbacksInput implements MappedObject
 Field callbacks are called only when field is sent. Callback is not invoked for default value.
 
 ```php
-use Orisai\ObjectMapper\Callbacks\After;
+use Orisai\ObjectMapper\Callbacks\AfterValidation;
 use Orisai\ObjectMapper\Callbacks\Context\FieldContext;
 use Orisai\ObjectMapper\MappedObject;
 use Orisai\ObjectMapper\Rules\StringValue;
@@ -2420,7 +2420,7 @@ final class WithNotInvokedCallbackInput implements MappedObject
 
 	/**
      * @StringValue()
-	 * @After("afterField")
+	 * @AfterValidation("afterField")
 	 */
 	public string $field = 'default';
 
@@ -2447,14 +2447,14 @@ Callbacks are by default expected to return a value:
 	<summary><code>#[Attributes()]</code></summary>
 
 ```php
-use Orisai\ObjectMapper\Callbacks\After;
+use Orisai\ObjectMapper\Callbacks\AfterValidation;
 use Orisai\ObjectMapper\MappedObject;
 use Orisai\ObjectMapper\Rules\MixedValue;
 
 final class WithReturningCallbackInput implements MappedObject
 {
 
-	#[After('afterField')]
+	#[AfterValidation('afterField')]
 	#[MixedValue()]
 	public mixed $field;
 
@@ -2471,7 +2471,7 @@ final class WithReturningCallbackInput implements MappedObject
 	<summary><code>@Annotations()</code></summary>
 
 ```php
-use Orisai\ObjectMapper\Callbacks\After;
+use Orisai\ObjectMapper\Callbacks\AfterValidation;
 use Orisai\ObjectMapper\MappedObject;
 use Orisai\ObjectMapper\Rules\MixedValue;
 
@@ -2481,7 +2481,7 @@ final class WithReturningCallbackInput implements MappedObject
 	/**
 	 * @var mixed
 	 * @MixedValue()
-	 * @After("afterField")
+	 * @AfterValidation("afterField")
 	 */
 	public $field;
 
@@ -2504,7 +2504,7 @@ We may change that by defining `void` or `never` return type:
 	<summary><code>#[Attributes()]</code></summary>
 
 ```php
-use Orisai\ObjectMapper\Callbacks\After;
+use Orisai\ObjectMapper\Callbacks\AfterValidation;
 use Orisai\ObjectMapper\Exception\ValueDoesNotMatch;
 use Orisai\ObjectMapper\MappedObject;
 use Orisai\ObjectMapper\Processing\Value;
@@ -2513,7 +2513,7 @@ use Orisai\ObjectMapper\Rules\StringValue;
 final class WithNotReturningCallbackInput implements MappedObject
 {
 
-	#[After('afterRemoved')]
+	#[AfterValidation('afterRemoved')]
 	#[StringValue()]
 	public string $removed;
 
@@ -2530,7 +2530,7 @@ final class WithNotReturningCallbackInput implements MappedObject
 	<summary><code>@Annotations()</code></summary>
 
 ```php
-use Orisai\ObjectMapper\Callbacks\After;
+use Orisai\ObjectMapper\Callbacks\AfterValidation;
 use Orisai\ObjectMapper\Exception\ValueDoesNotMatch;
 use Orisai\ObjectMapper\MappedObject;
 use Orisai\ObjectMapper\Processing\Value;
@@ -2541,7 +2541,7 @@ final class WithNotReturningCallbackInput implements MappedObject
 
 	/**
 	 * @StringValue()
-	 * @After("afterRemoved")
+	 * @AfterValidation("afterRemoved")
 	 */
 	public string $removed;
 
@@ -2635,7 +2635,7 @@ Create mapped object that requires dependencies via `RequiresDependencies`, spec
 	<summary><code>#[Attributes()]</code></summary>
 
 ```php
-use Orisai\ObjectMapper\Callbacks\After;
+use Orisai\ObjectMapper\Callbacks\AfterValidation;
 use Orisai\ObjectMapper\Exception\ValueDoesNotMatch;
 use Orisai\ObjectMapper\MappedObject;
 use Orisai\ObjectMapper\Modifiers\RequiresDependencies;
@@ -2648,7 +2648,7 @@ final class WithDependenciesInput implements MappedObject
 
 	public ExampleService $service;
 
-	#[After('afterField')]
+	#[AfterValidation('afterField')]
 	#[MixedValue()]
 	public mixed $field;
 
@@ -2669,7 +2669,7 @@ final class WithDependenciesInput implements MappedObject
 	<summary><code>@Annotations()</code></summary>
 
 ```php
-use Orisai\ObjectMapper\Callbacks\After;
+use Orisai\ObjectMapper\Callbacks\AfterValidation;
 use Orisai\ObjectMapper\Exception\ValueDoesNotMatch;
 use Orisai\ObjectMapper\MappedObject;
 use Orisai\ObjectMapper\Modifiers\RequiresDependencies;
@@ -2686,7 +2686,7 @@ final class WithDependenciesInput implements MappedObject
 
 	/**
 	 * @MixedValue()
-	 * @After("afterField")
+	 * @AfterValidation("afterField")
 	 */
 	public $field;
 

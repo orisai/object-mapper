@@ -2,7 +2,7 @@
 
 namespace Tests\Orisai\ObjectMapper\Doubles\Inheritance;
 
-use Orisai\ObjectMapper\Callbacks\After;
+use Orisai\ObjectMapper\Callbacks\AfterValidation;
 use Orisai\ObjectMapper\Rules\StringValue;
 
 final class ChildVO extends ParentVO
@@ -12,22 +12,22 @@ final class ChildVO extends ParentVO
 
 	/**
 	 * @StringValue()
-	 * @After("afterProperty")
-	 * @After("afterPropertyStatic")
+	 * @AfterValidation("afterProperty")
+	 * @AfterValidation("afterPropertyStatic")
 	 */
 	private string $childPrivate;
 
 	/**
 	 * @StringValue()
-	 * @After("afterProperty")
-	 * @After("afterPropertyStatic")
+	 * @AfterValidation("afterProperty")
+	 * @AfterValidation("afterPropertyStatic")
 	 */
 	protected string $childProtected;
 
 	/**
 	 * @StringValue()
-	 * @After("afterProperty")
-	 * @After("afterPropertyStatic")
+	 * @AfterValidation("afterProperty")
+	 * @AfterValidation("afterPropertyStatic")
 	 */
 	public string $childPublic;
 

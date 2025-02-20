@@ -2,7 +2,7 @@
 
 namespace Tests\Orisai\ObjectMapper\Doubles\Inheritance;
 
-use Orisai\ObjectMapper\Callbacks\After;
+use Orisai\ObjectMapper\Callbacks\AfterValidation;
 use Orisai\ObjectMapper\MappedObject;
 use Orisai\ObjectMapper\Rules\StringValue;
 
@@ -11,37 +11,37 @@ final class CallbacksVisibilityVO implements MappedObject
 
 	/**
 	 * @StringValue()
-	 * @After("afterPublic")
+	 * @AfterValidation("afterPublic")
 	 */
 	public string $public;
 
 	/**
 	 * @StringValue()
-	 * @After("afterProtected")
+	 * @AfterValidation("afterProtected")
 	 */
 	public string $protected;
 
 	/**
 	 * @StringValue()
-	 * @After("afterPrivate")
+	 * @AfterValidation("afterPrivate")
 	 */
 	public string $private;
 
 	/**
 	 * @StringValue()
-	 * @After("afterPublicStatic")
+	 * @AfterValidation("afterPublicStatic")
 	 */
 	public string $publicStatic;
 
 	/**
 	 * @StringValue()
-	 * @After("afterProtectedStatic")
+	 * @AfterValidation("afterProtectedStatic")
 	 */
 	public string $protectedStatic;
 
 	/**
 	 * @StringValue()
-	 * @After("afterPrivateStatic")
+	 * @AfterValidation("afterPrivateStatic")
 	 */
 	public string $privateStatic;
 

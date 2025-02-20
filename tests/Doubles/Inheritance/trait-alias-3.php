@@ -2,7 +2,7 @@
 
 namespace Tests\Orisai\ObjectMapper\Doubles\Inheritance\TraitAlias3;
 
-use Orisai\ObjectMapper\Callbacks\After;
+use Orisai\ObjectMapper\Callbacks\AfterValidation;
 use Orisai\ObjectMapper\MappedObject;
 use Orisai\ObjectMapper\Rules\StringValue;
 
@@ -27,7 +27,7 @@ final class TraitAlias3VO implements MappedObject
 	 * Method's original name is available via reflection even after being aliased
 	 *
 	 * @StringValue()
-	 * @After("originalMethod")
+	 * @AfterValidation("originalMethod")
 	 */
 	public string $string;
 

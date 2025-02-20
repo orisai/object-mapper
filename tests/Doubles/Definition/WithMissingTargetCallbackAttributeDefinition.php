@@ -3,7 +3,7 @@
 namespace Tests\Orisai\ObjectMapper\Doubles\Definition;
 
 use Attribute;
-use Orisai\ObjectMapper\Callbacks\BeforeCallback;
+use Orisai\ObjectMapper\Callbacks\BeforeValidationCallback;
 use Orisai\ObjectMapper\Callbacks\CallbackDefinition;
 
 #[Attribute(Attribute::TARGET_CLASS)]
@@ -12,7 +12,7 @@ final class WithMissingTargetCallbackAttributeDefinition implements CallbackDefi
 
 	public function getType(): string
 	{
-		return BeforeCallback::class;
+		return BeforeValidationCallback::class;
 	}
 
 	public function getArgs(): array

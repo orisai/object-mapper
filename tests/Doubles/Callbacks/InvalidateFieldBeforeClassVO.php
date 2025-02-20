@@ -2,7 +2,7 @@
 
 namespace Tests\Orisai\ObjectMapper\Doubles\Callbacks;
 
-use Orisai\ObjectMapper\Callbacks\Before;
+use Orisai\ObjectMapper\Callbacks\BeforeValidation;
 use Orisai\ObjectMapper\Callbacks\Context\ObjectContext;
 use Orisai\ObjectMapper\Exception\ValueDoesNotMatch;
 use Orisai\ObjectMapper\MappedObject;
@@ -11,7 +11,7 @@ use Orisai\ObjectMapper\Rules\StringValue;
 use Orisai\ObjectMapper\Types\MessageType;
 
 /**
- * @Before("before")
+ * @BeforeValidation("before")
  */
 final class InvalidateFieldBeforeClassVO implements MappedObject
 {

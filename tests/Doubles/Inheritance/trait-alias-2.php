@@ -2,7 +2,7 @@
 
 namespace Tests\Orisai\ObjectMapper\Doubles\Inheritance\TraitAlias2;
 
-use Orisai\ObjectMapper\Callbacks\After;
+use Orisai\ObjectMapper\Callbacks\AfterValidation;
 use Orisai\ObjectMapper\MappedObject;
 use Orisai\ObjectMapper\Rules\StringValue;
 
@@ -11,7 +11,7 @@ trait A
 
 	/**
 	 * @StringValue()
-	 * @After("originalMethod")
+	 * @AfterValidation("originalMethod")
 	 */
 	public string $string;
 

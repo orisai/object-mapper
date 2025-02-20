@@ -2,7 +2,7 @@
 
 namespace Tests\Orisai\ObjectMapper\Doubles\Inheritance\TraitInsteadOf2;
 
-use Orisai\ObjectMapper\Callbacks\After;
+use Orisai\ObjectMapper\Callbacks\AfterValidation;
 use Orisai\ObjectMapper\MappedObject;
 use Orisai\ObjectMapper\Rules\StringValue;
 
@@ -13,7 +13,7 @@ trait A
 	 * Trait is defined in a way that method should always return $string-a but class may override this method
 	 *
 	 * @StringValue()
-	 * @After("collidingMethod")
+	 * @AfterValidation("collidingMethod")
 	 */
 	public string $string;
 

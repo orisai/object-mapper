@@ -2,7 +2,7 @@
 
 namespace Tests\Orisai\ObjectMapper\Doubles\Inheritance\TraitInsteadOf1;
 
-use Orisai\ObjectMapper\Callbacks\After;
+use Orisai\ObjectMapper\Callbacks\AfterValidation;
 use Orisai\ObjectMapper\MappedObject;
 use Orisai\ObjectMapper\Rules\StringValue;
 
@@ -36,7 +36,7 @@ final class TraitInstead1OfVO implements MappedObject
 
 	/**
 	 * @StringValue()
-	 * @After("collidingMethod")
+	 * @AfterValidation("collidingMethod")
 	 */
 	public string $string;
 

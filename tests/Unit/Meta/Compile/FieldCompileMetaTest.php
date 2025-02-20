@@ -2,8 +2,8 @@
 
 namespace Tests\Orisai\ObjectMapper\Unit\Meta\Compile;
 
-use Orisai\ObjectMapper\Callbacks\AfterCallback;
-use Orisai\ObjectMapper\Callbacks\BeforeCallback;
+use Orisai\ObjectMapper\Callbacks\AfterValidationCallback;
+use Orisai\ObjectMapper\Callbacks\BeforeValidationCallback;
 use Orisai\ObjectMapper\Docs\DescriptionDoc;
 use Orisai\ObjectMapper\Docs\SummaryDoc;
 use Orisai\ObjectMapper\Meta\Compile\CallbackCompileMeta;
@@ -28,7 +28,7 @@ final class FieldCompileMetaTest extends TestCase
 	public function test(): void
 	{
 		$callbacks = [
-			new CallbackCompileMeta(BeforeCallback::class, []),
+			new CallbackCompileMeta(BeforeValidationCallback::class, []),
 		];
 		$docs = [
 			new DocMeta(DescriptionDoc::class, []),
@@ -114,7 +114,7 @@ final class FieldCompileMetaTest extends TestCase
 
 		$meta1 = new FieldCompileMeta(
 			[
-				new CallbackCompileMeta(BeforeCallback::class, []),
+				new CallbackCompileMeta(BeforeValidationCallback::class, []),
 			],
 			[],
 			[],
@@ -123,7 +123,7 @@ final class FieldCompileMetaTest extends TestCase
 		);
 		$meta2 = new FieldCompileMeta(
 			[
-				new CallbackCompileMeta(AfterCallback::class, []),
+				new CallbackCompileMeta(AfterValidationCallback::class, []),
 			],
 			[],
 			[],

@@ -3,27 +3,27 @@
 namespace Tests\Orisai\ObjectMapper\Unit\Callbacks;
 
 use Generator;
-use Orisai\ObjectMapper\Callbacks\Before;
-use Orisai\ObjectMapper\Callbacks\BeforeCallback;
+use Orisai\ObjectMapper\Callbacks\BeforeValidation;
+use Orisai\ObjectMapper\Callbacks\BeforeValidationCallback;
 use Orisai\ObjectMapper\Callbacks\CallbackRuntime;
 use Orisai\ObjectMapper\Tester\DefinitionTester;
 use PHPUnit\Framework\TestCase;
 use function get_class;
 use const PHP_VERSION_ID;
 
-final class BeforeTest extends TestCase
+final class BeforeValidationTest extends TestCase
 {
 
 	public function test(): void
 	{
 		$method = 'methodName';
-		$definition = new Before($method);
+		$definition = new BeforeValidation($method);
 
-		self::assertSame(BeforeCallback::class, $definition->getType());
+		self::assertSame(BeforeValidationCallback::class, $definition->getType());
 		self::assertSame(
 			[
-				BeforeCallback::Method => $method,
-				BeforeCallback::Runtime => 'process',
+				BeforeValidationCallback::Method => $method,
+				BeforeValidationCallback::Runtime => 'process',
 			],
 			$definition->getArgs(),
 		);
@@ -41,12 +41,12 @@ final class BeforeTest extends TestCase
 	 */
 	public function testVariant(string $method, string $runtime): void
 	{
-		$definition = new Before($method, $runtime);
+		$definition = new BeforeValidation($method, $runtime);
 
 		self::assertEquals(
 			[
-				BeforeCallback::Method => $method,
-				BeforeCallback::Runtime => $runtime,
+				BeforeValidationCallback::Method => $method,
+				BeforeValidationCallback::Runtime => $runtime,
 			],
 			$definition->getArgs(),
 		);

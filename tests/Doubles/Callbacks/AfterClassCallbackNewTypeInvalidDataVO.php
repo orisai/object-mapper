@@ -2,7 +2,7 @@
 
 namespace Tests\Orisai\ObjectMapper\Doubles\Callbacks;
 
-use Orisai\ObjectMapper\Callbacks\After;
+use Orisai\ObjectMapper\Callbacks\AfterValidation;
 use Orisai\ObjectMapper\Exception\InvalidData;
 use Orisai\ObjectMapper\Exception\ValueDoesNotMatch;
 use Orisai\ObjectMapper\MappedObject;
@@ -13,7 +13,7 @@ use Orisai\ObjectMapper\Types\MessageType;
 use Tests\Orisai\ObjectMapper\Doubles\EmptyVO;
 
 /**
- * @After(method="after")
+ * @AfterValidation(method="after")
  */
 final class AfterClassCallbackNewTypeInvalidDataVO implements MappedObject
 {
