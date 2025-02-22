@@ -21,6 +21,7 @@ use Orisai\ObjectMapper\Meta\Runtime\CallbackRuntimeMeta;
 use Orisai\ObjectMapper\Meta\Runtime\ClassRuntimeMeta;
 use Orisai\ObjectMapper\Meta\Runtime\FieldRuntimeMeta;
 use Orisai\ObjectMapper\Meta\Runtime\ModifierRuntimeMeta;
+use Orisai\ObjectMapper\Meta\Runtime\PhpPropertyMeta;
 use Orisai\ObjectMapper\Meta\Runtime\RuleRuntimeMeta;
 use Orisai\ObjectMapper\Meta\Runtime\RuntimeMeta;
 use Orisai\ObjectMapper\Meta\Shared\DefaultValueMeta;
@@ -217,7 +218,7 @@ final class MetaResolver
 			return $modifier->args->name;
 		}
 
-		return $fieldMeta->property->getName();
+		return $fieldMeta->property->name;
 	}
 
 	/**
@@ -260,7 +261,7 @@ final class MetaResolver
 				$context,
 			),
 			$defaultValue,
-			$reflector,
+			PhpPropertyMeta::from($reflector),
 		);
 	}
 

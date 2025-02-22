@@ -5,12 +5,12 @@ namespace Tests\Orisai\ObjectMapper\Unit\Meta\Runtime;
 use Orisai\ObjectMapper\Args\EmptyArgs;
 use Orisai\ObjectMapper\Meta\Runtime\ClassRuntimeMeta;
 use Orisai\ObjectMapper\Meta\Runtime\FieldRuntimeMeta;
+use Orisai\ObjectMapper\Meta\Runtime\PhpPropertyMeta;
 use Orisai\ObjectMapper\Meta\Runtime\RuleRuntimeMeta;
 use Orisai\ObjectMapper\Meta\Runtime\RuntimeMeta;
 use Orisai\ObjectMapper\Meta\Shared\DefaultValueMeta;
 use Orisai\ObjectMapper\Rules\MixedRule;
 use PHPUnit\Framework\TestCase;
-use ReflectionProperty;
 use Tests\Orisai\ObjectMapper\Doubles\NoDefaultsVO;
 use function serialize;
 use function unserialize;
@@ -28,7 +28,7 @@ final class RuntimeMetaTest extends TestCase
 				[],
 				new RuleRuntimeMeta(MixedRule::class, new EmptyArgs()),
 				DefaultValueMeta::fromNothing(),
-				new ReflectionProperty(NoDefaultsVO::class, 'string'),
+				new PhpPropertyMeta(NoDefaultsVO::class, 'property', true),
 			),
 		];
 

@@ -5,7 +5,6 @@ namespace Orisai\ObjectMapper\Meta\Runtime;
 use Orisai\ObjectMapper\Args\Args;
 use Orisai\ObjectMapper\Meta\Shared\DefaultValueMeta;
 use Orisai\ObjectMapper\Modifiers\Modifier;
-use ReflectionProperty;
 
 final class FieldRuntimeMeta extends NodeRuntimeMeta
 {
@@ -15,7 +14,7 @@ final class FieldRuntimeMeta extends NodeRuntimeMeta
 
 	public DefaultValueMeta $default;
 
-	public ReflectionProperty $property;
+	public PhpPropertyMeta $property;
 
 	/** @var array<class-string<Modifier<Args>>, ModifierRuntimeMeta<Args>> */
 	public array $modifiers;
@@ -31,7 +30,7 @@ final class FieldRuntimeMeta extends NodeRuntimeMeta
 		array $modifiers,
 		RuleRuntimeMeta $rule,
 		DefaultValueMeta $default,
-		ReflectionProperty $property
+		PhpPropertyMeta $property
 	)
 	{
 		parent::__construct($callbacks, $docs);
@@ -60,8 +59,7 @@ final class FieldRuntimeMeta extends NodeRuntimeMeta
 			'parent' => parent::__serialize(),
 			'rule' => $this->rule,
 			'default' => $this->default,
-			'class' => $this->property->getDeclaringClass()->getName(),
-			'property' => $this->property->getName(),
+			'property' => $this->property,
 			'modifiers' => $this->modifiers,
 		];
 	}
@@ -74,7 +72,7 @@ final class FieldRuntimeMeta extends NodeRuntimeMeta
 		parent::__unserialize($data['parent']);
 		$this->rule = $data['rule'];
 		$this->default = $data['default'];
-		$this->property = new ReflectionProperty($data['class'], $data['property']);
+		$this->property = $data['property'];
 		$this->modifiers = $data['modifiers'];
 	}
 

@@ -34,7 +34,6 @@ use function array_keys;
 use function array_map;
 use function assert;
 use function is_array;
-use const PHP_VERSION_ID;
 
 final class DefaultProcessor implements Processor
 {
@@ -328,13 +327,13 @@ final class DefaultProcessor implements Processor
 			}
 
 			$property = $fieldMeta->property;
-			$className = $property->getDeclaringClass()->getName();
-			$propertyName = $property->getName();
+			$className = $property->declaringClass;
+			$propertyName = $property->name;
 			$propertyContext = $this->propertyContextCache[$className][$propertyName]
 				?? (
 				$this->propertyContextCache[$className][$propertyName] = new PropertyContext(
 					$fieldMeta->default,
-					$fieldMeta->property->getName(),
+					$fieldMeta->property->name,
 					$fieldName,
 				));
 
@@ -581,18 +580,13 @@ final class DefaultProcessor implements Processor
 			// Reset mapped properties state
 			foreach ($fieldsMeta as $fieldMeta) {
 				$property = $fieldMeta->property;
-				$declaringClass = $property->getDeclaringClass();
-				$name = $property->getName();
+				$name = $property->name;
 
-				if (
-					$property->isInitialized($object)
-					&& $property->isPublic()
-					&& (PHP_VERSION_ID < 8_01_00 || !$property->isReadOnly())
-				) {
+				if ($property->isPublicSet) {
 					unset($object->$name);
 				} else {
 					// phpcs:disable SlevomatCodingStandard.Functions.StaticClosure
-					$unsetter->bindTo($object, $declaringClass->getName())($object, $name);
+					$unsetter->bindTo($object, $property->declaringClass)($object, $name);
 					// phpcs:enable
 				}
 			}
@@ -603,14 +597,14 @@ final class DefaultProcessor implements Processor
 		// Set processed data
 		foreach ($data as $fieldName => $value) {
 			$property = $fieldsMeta[$fieldName]->property;
-			$name = $property->getName();
+			$name = $property->name;
 
-			if ($property->isPublic() && (PHP_VERSION_ID < 8_01_00 || !$property->isReadOnly())) {
+			if ($property->isPublicSet) {
 				$object->$name = $value;
 			} else {
 				$setter->bindTo(
 					$object,
-					$property->getDeclaringClass()->getName(),
+					$property->declaringClass,
 				)($object, $name, $value);
 			}
 		}

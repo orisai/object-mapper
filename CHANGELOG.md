@@ -24,7 +24,6 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - `DefaultProcessor`
 	- Simplify finding missing fields (performance optimization)
 	- Reduce calls needed to find field names for "did you mean" error helper (performance optimization)
-	- Call `unset()` only for initialized properties (performance optimization)
 	- Create functions for setting and unsetting non public-set properties only once (performance optimization)
 - Callbacks
 	- renamed
@@ -62,9 +61,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 - `Options` - `withProcessedClass()`, `getProcessedClass()` - no longer used
 - Runtime reflection (performance optimization), from:
-	- `PropertyContext`
 	- `CallbackRuntimeMeta`
 	- `Callback`
+	- `PropertyContext`
+	- `FieldRuntimeMeta`
 
 ## [0.3.0](https://github.com/orisai/object-mapper/compare/0.2.0...0.3.0) - 2025-01-21
 

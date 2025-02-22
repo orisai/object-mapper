@@ -12,6 +12,7 @@ use Orisai\ObjectMapper\Meta\Runtime\CallbackRuntimeMeta;
 use Orisai\ObjectMapper\Meta\Runtime\FieldRuntimeMeta;
 use Orisai\ObjectMapper\Meta\Runtime\ModifierRuntimeMeta;
 use Orisai\ObjectMapper\Meta\Runtime\PhpMethodMeta;
+use Orisai\ObjectMapper\Meta\Runtime\PhpPropertyMeta;
 use Orisai\ObjectMapper\Meta\Runtime\RuleRuntimeMeta;
 use Orisai\ObjectMapper\Meta\Shared\DefaultValueMeta;
 use Orisai\ObjectMapper\Meta\Shared\DocMeta;
@@ -19,7 +20,6 @@ use Orisai\ObjectMapper\Modifiers\FieldNameArgs;
 use Orisai\ObjectMapper\Modifiers\FieldNameModifier;
 use Orisai\ObjectMapper\Rules\MixedRule;
 use PHPUnit\Framework\TestCase;
-use ReflectionProperty;
 use Tests\Orisai\ObjectMapper\Doubles\NoDefaultsVO;
 use function serialize;
 use function unserialize;
@@ -29,7 +29,7 @@ final class FieldRuntimeMetaTest extends TestCase
 
 	public function test(): void
 	{
-		$property = new ReflectionProperty(NoDefaultsVO::class, 'string');
+		$property = new PhpPropertyMeta(NoDefaultsVO::class, 'property', true);
 
 		$beforeCallbacks = [
 			new CallbackRuntimeMeta(
