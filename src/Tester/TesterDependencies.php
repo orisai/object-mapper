@@ -14,7 +14,6 @@ use Orisai\ObjectMapper\Processing\DefaultDependencyInjectorManager;
 use Orisai\ObjectMapper\Processing\Options;
 use Orisai\ObjectMapper\Processing\Processor;
 use Orisai\ObjectMapper\Rules\DefaultRuleManager;
-use ReflectionProperty;
 
 final class TesterDependencies
 {
@@ -69,8 +68,8 @@ final class TesterDependencies
 	{
 		return new PropertyContext(
 			$default ?? DefaultValueMeta::fromNothing(),
-			new ReflectionProperty(self::class, 'processor'),
-			'test',
+			'propertyName',
+			'fieldName',
 		);
 	}
 

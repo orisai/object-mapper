@@ -334,7 +334,7 @@ final class DefaultProcessor implements Processor
 				?? (
 				$this->propertyContextCache[$className][$propertyName] = new PropertyContext(
 					$fieldMeta->default,
-					$fieldMeta->property,
+					$fieldMeta->property->getName(),
 					$fieldName,
 				));
 

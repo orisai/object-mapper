@@ -3,7 +3,6 @@
 namespace Orisai\ObjectMapper\Processing\Context;
 
 use Orisai\ObjectMapper\Meta\Shared\DefaultValueMeta;
-use ReflectionProperty;
 
 /**
  * @readonly
@@ -13,7 +12,7 @@ final class PropertyContext
 
 	private DefaultValueMeta $default;
 
-	private ReflectionProperty $property;
+	private string $propertyName;
 
 	/** @var int|string */
 	private $fieldName;
@@ -23,12 +22,12 @@ final class PropertyContext
 	 */
 	public function __construct(
 		DefaultValueMeta $default,
-		ReflectionProperty $property,
+		string $propertyName,
 		$fieldName
 	)
 	{
 		$this->default = $default;
-		$this->property = $property;
+		$this->propertyName = $propertyName;
 		$this->fieldName = $fieldName;
 	}
 
@@ -47,7 +46,7 @@ final class PropertyContext
 
 	public function getPropertyName(): string
 	{
-		return $this->property->getName();
+		return $this->propertyName;
 	}
 
 	/**

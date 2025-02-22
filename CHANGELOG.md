@@ -61,6 +61,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ### Removed
 
 - `Options` - `withProcessedClass()`, `getProcessedClass()` - no longer used
+- Runtime reflection (performance optimization), from:
+	- `PropertyContext`
 
 ## [0.3.0](https://github.com/orisai/object-mapper/compare/0.2.0...0.3.0) - 2025-01-21
 
