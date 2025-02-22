@@ -38,6 +38,10 @@ parameters:
 			message: '#^Variable method call on Orisai\\ObjectMapper\\MappedObject\.$#'
 			path: ../src/Callbacks/ValidationCallback.php
 			count: 2
+		-
+			message: '#^Variable method call on Orisai\\ObjectMapper\\MappedObject\.$#'
+			path: ../src/Callbacks/AfterMappingCallback.php
+			count: 2
 
 		# Dark mapping magic
 		-

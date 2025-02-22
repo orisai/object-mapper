@@ -31,7 +31,7 @@ final class DefinitionsTesterTest extends TestCase
 			"'Orisai\ObjectMapper\Rules\StringValue' does not implement 'Orisai\ObjectMapper\Callbacks\CallbackDefinition'.",
 		);
 
-		DefinitionTester::assertIsCallbackAnnotation(StringValue::class);
+		DefinitionTester::assertIsValidationCallbackAnnotation(StringValue::class);
 	}
 
 	public function testNotCallbackAttribute(): void
@@ -41,7 +41,7 @@ final class DefinitionsTesterTest extends TestCase
 			"'Orisai\ObjectMapper\Rules\StringValue' does not implement 'Orisai\ObjectMapper\Callbacks\CallbackDefinition'.",
 		);
 
-		DefinitionTester::assertIsCallbackAttribute(StringValue::class);
+		DefinitionTester::assertIsValidationCallbackAttribute(StringValue::class);
 	}
 
 	public function testNotModifierAnnotation(): void
@@ -91,7 +91,7 @@ final class DefinitionsTesterTest extends TestCase
 			"'Tests\Orisai\ObjectMapper\Doubles\Definition\AttributeLessCallbackDefinition' does not define annotation '@Annotation'.",
 		);
 
-		DefinitionTester::assertIsCallbackAnnotation(AttributeLessCallbackDefinition::class);
+		DefinitionTester::assertIsValidationCallbackAnnotation(AttributeLessCallbackDefinition::class);
 	}
 
 	public function testMissingAttributeAtCallback(): void
@@ -105,7 +105,7 @@ final class DefinitionsTesterTest extends TestCase
 			"'Tests\Orisai\ObjectMapper\Doubles\Definition\AttributeLessCallbackDefinition' does not define attribute '#[Attribute]'.",
 		);
 
-		DefinitionTester::assertIsCallbackAttribute(AttributeLessCallbackDefinition::class);
+		DefinitionTester::assertIsValidationCallbackAttribute(AttributeLessCallbackDefinition::class);
 	}
 
 	public function testMissingAnnotationAtModifier(): void
@@ -239,7 +239,7 @@ final class DefinitionsTesterTest extends TestCase
 			. " must define target 'Attribute::TARGET_PROPERTY'.",
 		);
 
-		DefinitionTester::assertIsCallbackAttribute(WithMissingTargetCallbackAttributeDefinition::class);
+		DefinitionTester::assertIsValidationCallbackAttribute(WithMissingTargetCallbackAttributeDefinition::class);
 	}
 
 	public function testCallbackAttributeWithExtraTarget(): void
@@ -256,7 +256,7 @@ final class DefinitionsTesterTest extends TestCase
 			. " Allowed are: 'Attribute::TARGET_CLASS', 'Attribute::TARGET_PROPERTY'.",
 		);
 
-		DefinitionTester::assertIsCallbackAttribute(WithExtraTargetCallbackAttributeDefinition::class);
+		DefinitionTester::assertIsValidationCallbackAttribute(WithExtraTargetCallbackAttributeDefinition::class);
 	}
 
 }

@@ -5,6 +5,7 @@ namespace Orisai\ObjectMapper\Processing;
 use Closure;
 use Nette\Utils\Helpers;
 use Orisai\ObjectMapper\Args\Args;
+use Orisai\ObjectMapper\Callbacks\AfterMappingCallback;
 use Orisai\ObjectMapper\Callbacks\AfterValidationCallback;
 use Orisai\ObjectMapper\Callbacks\BeforeValidationCallback;
 use Orisai\ObjectMapper\Callbacks\Callback;
@@ -97,6 +98,21 @@ final class DefaultProcessor implements Processor
 
 		$object = $call->getObjectHolder()->getInstance();
 		$this->fillObject($object, $processedData, $data, $call, $dynamic);
+
+		$meta = $call->getMeta();
+		$classMeta = $meta->class;
+
+		if ($classMeta->callbacks !== []) {
+			$callbackContext = new ObjectContext($this->services, $dynamic, $call);
+
+			$this->handleClassCallbacks(
+				[],
+				$call,
+				$callbackContext,
+				$classMeta,
+				AfterMappingCallback::class,
+			);
+		}
 
 		return $object;
 	}

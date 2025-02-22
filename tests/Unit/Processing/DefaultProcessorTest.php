@@ -17,6 +17,7 @@ use stdClass;
 use Tests\Orisai\ObjectMapper\Doubles\Callbacks\AfterClassCallbackCurrentTypeInvalidDataVO;
 use Tests\Orisai\ObjectMapper\Doubles\Callbacks\AfterClassCallbackNewTypeInvalidDataVO;
 use Tests\Orisai\ObjectMapper\Doubles\Callbacks\AfterClassCallbackValueDoesNotMatchVO;
+use Tests\Orisai\ObjectMapper\Doubles\Callbacks\AfterMappingCallbackVO;
 use Tests\Orisai\ObjectMapper\Doubles\Callbacks\BeforeClassCallbackMixedValueVO;
 use Tests\Orisai\ObjectMapper\Doubles\Callbacks\BeforeClassCallbackValueDoesNotMatchVO;
 use Tests\Orisai\ObjectMapper\Doubles\Callbacks\CallbackOverrideChildVO;
@@ -906,6 +907,19 @@ MSG,
 			$vo,
 			new CallbackOverrideChildVO('value-parent-child-parentStatic-childStatic'),
 		);
+	}
+
+	public function testAfterMappingCallback(): void
+	{
+		$data = [
+			'string' => 'value',
+			'int' => 123,
+		];
+
+		$vo = $this->processor->process($data, AfterMappingCallbackVO::class);
+
+		self::assertSame($data, $vo->mappedValues);
+		self::assertSame($data, $vo->mappedValues2);
 	}
 
 	public function testRequiredNonDefaultFields(): void

@@ -65,7 +65,7 @@ final class DefinitionTester
 	/**
 	 * @param class-string $class
 	 */
-	public static function assertIsCallbackAttribute(string $class): void
+	public static function assertIsValidationCallbackAttribute(string $class): void
 	{
 		self::assertClassType($class, CallbackDefinition::class);
 		self::assertIsAttribute($class, [Attribute::TARGET_CLASS, Attribute::TARGET_PROPERTY]);
@@ -74,10 +74,28 @@ final class DefinitionTester
 	/**
 	 * @param class-string $class
 	 */
-	public static function assertIsCallbackAnnotation(string $class): void
+	public static function assertIsValidationCallbackAnnotation(string $class): void
 	{
 		self::assertClassType($class, CallbackDefinition::class);
 		self::assertIsAnnotation($class, [Target::TARGET_CLASS, Target::TARGET_PROPERTY]);
+	}
+
+	/**
+	 * @param class-string $class
+	 */
+	public static function assertIsMappingCallbackAttribute(string $class): void
+	{
+		self::assertClassType($class, CallbackDefinition::class);
+		self::assertIsAttribute($class, [Attribute::TARGET_CLASS]);
+	}
+
+	/**
+	 * @param class-string $class
+	 */
+	public static function assertIsMappingCallbackAnnotation(string $class): void
+	{
+		self::assertClassType($class, CallbackDefinition::class);
+		self::assertIsAnnotation($class, [Attribute::TARGET_CLASS]);
 	}
 
 	/**

@@ -9,8 +9,13 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ### Added
 
-- `StringRule`
-	- `trim` option to remove empty characters from start and end of the string
+- Callbacks
+	- `AfterMappingCallback`
+		- called after object is fully initialized, for additional validations
+		- `AfterMapping` annotation/attribute
+- Rules
+	- `StringRule`
+		- `trim` option to remove empty characters from start and end of the string
 
 ### Changed
 

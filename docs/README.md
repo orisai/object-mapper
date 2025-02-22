@@ -43,8 +43,9 @@ of them to type-safe objects.
 	- [All fields are required](#all-fields-are-required)
 	- [No fields are required](#no-fields-are-required)
 - [Callbacks](#callbacks)
-	- [Mapped object callbacks](#mapped-object-callbacks)
-	- [Field callbacks](#field-callbacks)
+	- [Validation object callbacks](#validation-object-callbacks)
+	- [After mapping object callbacks](#after-mapping-object-callbacks)
+	- [Validation field callbacks](#validation-field-callbacks)
 	- [Returned value](#returned-value)
 	- [Context](#callback-context)
 - [Dependencies](#dependencies)
@@ -1223,7 +1224,7 @@ use Orisai\ObjectMapper\Rules\MixedValue;
 final class ListOfInput implements MappedObject
 {
 
-	/** @var list<int, mixed> */
+	/** @var list<mixed> */
 	#[ListOf(new MixedValue())]
 	public array $field;
 
@@ -1253,7 +1254,7 @@ final class ListOfInput implements MappedObject
 {
 
 	/**
-	 * @var list<int, mixed>
+	 * @var list<mixed>
 	 * @ListOf(
 	 *     @MixedValue(),
 	 * )
@@ -2224,13 +2225,13 @@ final class WithCallbackInput implements MappedObject
 callbacks are called and overwrites any of set values.
 
 In all callbacks are used [field names](#mapping-field-names-to-properties), not property names.
-In [field callbacks](#field-callbacks), current field name can be accessed via [context](#callback-context).
+In [field callbacks](#validation-field-callbacks), current field name can be accessed via [context](#callback-context).
 
 Callbacks can be both static and non-static, object mapper initializes object to call non-static callbacks when needed.
 
 Callbacks can have any visibility - public, protected or private.
 
-### Mapped object callbacks
+### Validation object callbacks
 
 Modify and check data before and after processing fields with their rules
 
@@ -2319,7 +2320,95 @@ final class WithMappedObjectCallbacksInput implements MappedObject
 ```
 </details>
 
-### Field callbacks
+### After mapping object callbacks
+
+Validate object after being fully initialized
+
+<details open>
+	<summary><code>#[Attributes()]</code></summary>
+
+```php
+use Orisai\ObjectMapper\Callbacks\AfterMapping;
+use Orisai\ObjectMapper\Callbacks\Context\ObjectContext;
+use Orisai\ObjectMapper\Exception\ValueDoesNotMatch;
+use Orisai\ObjectMapper\MappedObject;
+use Orisai\ObjectMapper\Processing\Value;
+use Orisai\ObjectMapper\Rules\ListOf;
+use Orisai\ObjectMapper\Rules\StringValue;
+use Orisai\ObjectMapper\Types\MessageType;
+
+#[AfterMapping('afterObject')]
+final class AfterMappingCallbackInput implements MappedObject
+{
+
+	/** @var list<string> */
+	#[ListOf(new StringValue())]
+	public array $allowed = [];
+
+	/** @var list<string> */
+	#[ListOf(new StringValue())]
+	public array $forbidden = [];
+
+	private function afterObject(ObjectContext $context): void
+	{
+		if ($this->allowed !== [] && $this->forbidden !== []) {
+			$context->getType()->addError(ValueDoesNotMatch::create(
+				new MessageType("Specify either 'allowed' or 'forbidden', not both."),
+				Value::none(),
+			));
+		}
+	}
+
+}
+```
+</details>
+
+<details>
+	<summary><code>@Annotations()</code></summary>
+
+```php
+use Orisai\ObjectMapper\Callbacks\AfterMapping;
+use Orisai\ObjectMapper\Callbacks\Context\ObjectContext;
+use Orisai\ObjectMapper\Exception\ValueDoesNotMatch;
+use Orisai\ObjectMapper\MappedObject;
+use Orisai\ObjectMapper\Processing\Value;
+use Orisai\ObjectMapper\Rules\ListOf;
+use Orisai\ObjectMapper\Rules\StringValue;
+use Orisai\ObjectMapper\Types\MessageType;
+
+/**
+ * @AfterMapping("afterObject")
+ */
+final class AfterMappingCallbackInput implements MappedObject
+{
+
+	/**
+	 * @var list<string>
+	 * @ListOf(@StringValue())
+	 */
+	public array $allowed = [];
+
+	/**
+	 * @var list<string>
+	 * @ListOf(@StringValue())
+	 */
+	public array $forbidden = [];
+
+	private function afterObject(ObjectContext $context): void
+	{
+		if ($this->allowed !== [] && $this->forbidden !== []) {
+			$context->getType()->addError(ValueDoesNotMatch::create(
+				new MessageType("Specify either 'allowed' or 'forbidden', not both."),
+				Value::none(),
+			));
+		}
+	}
+
+}
+```
+</details>
+
+### Validation field callbacks
 
 Modify and check data before and after processing field with its rule
 
@@ -2441,7 +2530,8 @@ $input = $processor->process(['field' => 'new value'], WithNotInvokedCallbackInp
 
 ### Returned value
 
-Callbacks are by default expected to return a value:
+[Validation object callbacks](#validation-object-callbacks) and
+[validation field callbacks](#validation-field-callbacks) are by default expected to return a value:
 
 <details open>
 	<summary><code>#[Attributes()]</code></summary>
@@ -2556,7 +2646,7 @@ final class WithNotReturningCallbackInput implements MappedObject
 
 ### Callback context
 
-Both [mapped object callbacks](#mapped-object-callbacks) and [field callbacks](#field-callbacks) have additional context
+[Validation object callbacks](#validation-object-callbacks) and [validation field callbacks](#validation-field-callbacks) have additional context
 available as a second parameter, for extended processing:
 
 Mapped object and field contexts
@@ -2564,15 +2654,13 @@ Mapped object and field contexts
 ```php
 $context->getProcessor(); // Processor
 $context->getOptions(); // Options
-$context->shouldMapDataToObjects(); // bool
+$context->shouldInitializeObjects(); // bool
 $context->getType(); // Type
 ```
 
 Field context
 
 ```php
-$context->hasDefaultValue(); // bool
-$context->getDefaultValue(); // mixed|exception
 $context->getFieldName(); // int|string
 $context->getPropertyName(); // string
 ```

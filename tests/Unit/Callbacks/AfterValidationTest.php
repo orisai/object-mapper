@@ -28,9 +28,9 @@ final class AfterValidationTest extends TestCase
 			$definition->getArgs(),
 		);
 
-		DefinitionTester::assertIsCallbackAnnotation(get_class($definition));
+		DefinitionTester::assertIsValidationCallbackAnnotation(get_class($definition));
 		if (PHP_VERSION_ID >= 8_00_00) {
-			DefinitionTester::assertIsCallbackAttribute(get_class($definition));
+			DefinitionTester::assertIsValidationCallbackAttribute(get_class($definition));
 		}
 	}
 
