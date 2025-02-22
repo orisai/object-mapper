@@ -110,7 +110,7 @@ final class MetaResolver
 
 			$context = new MetaContext($this->loader, $this);
 
-			$callbacksByMeta[] = $this->resolveCallbacksMeta($classMeta, $context, $reflector, $reflector);
+			$callbacksByMeta[] = $this->resolveCallbacksMeta($classMeta, $context, $reflector);
 			$docsByMeta[] = $this->resolveDocsMeta($classMeta, $context);
 			$modifiersByMeta[] = $this->resolveClassModifiersMeta($classMeta, $context);
 		}
@@ -252,7 +252,7 @@ final class MetaResolver
 		$context = new MetaFieldContext($this->loader, $this, $defaultValue);
 
 		return new FieldRuntimeMeta(
-			$this->resolveCallbacksMeta($meta, $context, $reflector, $classReflector),
+			$this->resolveCallbacksMeta($meta, $context, $reflector),
 			$this->resolveDocsMeta($meta, $context),
 			$this->resolveFieldModifiersMeta($meta, $context),
 			$this->resolveRuleMeta(
@@ -298,14 +298,12 @@ final class MetaResolver
 
 	/**
 	 * @param ReflectionClass<MappedObject>|ReflectionProperty $reflector
-	 * @param ReflectionClass<MappedObject>                    $classReflector
 	 * @return array<class-string<Callback<Args>>, list<CallbackRuntimeMeta<Args>>>
 	 */
 	private function resolveCallbacksMeta(
 		NodeCompileMeta $meta,
 		MetaContext $context,
-		Reflector $reflector,
-		ReflectionClass $classReflector
+		Reflector $reflector
 	): array
 	{
 		$array = [];
@@ -314,7 +312,6 @@ final class MetaResolver
 				$callback,
 				$context,
 				$reflector,
-				$classReflector,
 			);
 
 			$array[$callbackMeta->type][] = $callbackMeta;
@@ -325,14 +322,12 @@ final class MetaResolver
 
 	/**
 	 * @param ReflectionClass<MappedObject>|ReflectionProperty $reflector
-	 * @param ReflectionClass<MappedObject>                    $declaringClass
 	 * @return CallbackRuntimeMeta<Args>
 	 */
 	private function resolveCallbackMeta(
 		CallbackCompileMeta $meta,
 		MetaContext $context,
-		Reflector $reflector,
-		ReflectionClass $declaringClass
+		Reflector $reflector
 	): CallbackRuntimeMeta
 	{
 		$type = $meta->getType();
@@ -349,7 +344,7 @@ final class MetaResolver
 				);
 		}
 
-		return new CallbackRuntimeMeta($type, $args, $declaringClass);
+		return new CallbackRuntimeMeta($type, $args);
 	}
 
 	/**

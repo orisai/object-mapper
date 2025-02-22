@@ -11,6 +11,7 @@ use Orisai\ObjectMapper\Callbacks\Context\FieldContext;
 use Orisai\ObjectMapper\Callbacks\Context\ObjectContext;
 use Orisai\ObjectMapper\MappedObject;
 use Orisai\ObjectMapper\Meta\Context\MetaContext;
+use Orisai\ObjectMapper\Meta\Runtime\PhpMethodMeta;
 use Orisai\ObjectMapper\Processing\ObjectHolder;
 use ReflectionClass;
 use ReflectionMethod;
@@ -73,6 +74,7 @@ abstract class ValidationCallback implements Callback
 		}
 
 		if ($reflector instanceof ReflectionProperty) {
+			/** @var ReflectionClass<MappedObject> $class */
 			$class = $reflector->getDeclaringClass();
 			$property = $reflector;
 		} else {
@@ -83,10 +85,8 @@ abstract class ValidationCallback implements Callback
 		$method = self::validateMethod($class, $property, $methodName);
 
 		return new ValidationCallbackArgs(
-			$methodName,
-			$method->isStatic(),
-			self::getMethodReturnsValue($method),
 			CallbackRuntime::from($runtime),
+			PhpMethodMeta::from($method),
 		);
 	}
 
@@ -272,14 +272,6 @@ abstract class ValidationCallback implements Callback
 		return $type->getName();
 	}
 
-	/**
-	 * Method is expected to return data unless void or never return type is defined
-	 */
-	private static function getMethodReturnsValue(ReflectionMethod $method): bool
-	{
-		return !in_array(self::getTypeName($method->getReturnType()), ['void', 'never'], true);
-	}
-
 	public static function getArgsType(): string
 	{
 		return ValidationCallbackArgs::class;
@@ -293,8 +285,7 @@ abstract class ValidationCallback implements Callback
 		$data,
 		Args $args,
 		ObjectHolder $holder,
-		CallbackBaseContext $context,
-		ReflectionClass $declaringClass
+		CallbackBaseContext $context
 	)
 	{
 		// Callback is skipped for unsupported runtime
@@ -303,28 +294,28 @@ abstract class ValidationCallback implements Callback
 			return $data;
 		}
 
-		$method = $args->method;
-		$methodInst = $declaringClass->getMethod($method);
+		$meta = $args->meta;
+		$method = $meta->method;
 
-		if ($args->isStatic) {
+		if ($meta->isStatic) {
 			$class = $holder->getClass();
 
-			$callbackOutput = $methodInst->isPublic()
+			$callbackOutput = $meta->isPublic
 				? $class::$method($data, $context)
 				: (static fn () => $class::$method($data, $context))
-				->bindTo(null, $declaringClass->getName())();
+				->bindTo(null, $meta->declaringClass)();
 		} else {
 			$instance = $holder->getInstance();
 
 			// phpcs:disable SlevomatCodingStandard.Functions.StaticClosure.ClosureNotStatic
-			$callbackOutput = $methodInst->isPublic()
+			$callbackOutput = $meta->isPublic
 				? $instance->$method($data, $context)
 				: (fn () => $instance->$method($data, $context))
-				->bindTo($instance, $declaringClass->getName())();
+				->bindTo($instance, $meta->declaringClass)();
 			// phpcs:enable
 		}
 
-		return $args->returnsValue ? $callbackOutput : $data;
+		return $meta->returnsValue ? $callbackOutput : $data;
 	}
 
 }

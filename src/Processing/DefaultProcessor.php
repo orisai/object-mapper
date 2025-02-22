@@ -541,7 +541,6 @@ final class DefaultProcessor implements Processor
 				$callback->args,
 				$holder,
 				$callbackContext,
-				$callback->declaringClass,
 			);
 		}
 

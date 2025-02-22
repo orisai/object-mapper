@@ -3,29 +3,19 @@
 namespace Orisai\ObjectMapper\Callbacks;
 
 use Orisai\ObjectMapper\Args\Args;
+use Orisai\ObjectMapper\Meta\Runtime\PhpMethodMeta;
 
 final class ValidationCallbackArgs implements Args
 {
 
-	public string $method;
-
-	public bool $isStatic;
-
-	public bool $returnsValue;
-
 	public CallbackRuntime $runtime;
 
-	public function __construct(
-		string $method,
-		bool $isStatic,
-		bool $returnsValue,
-		CallbackRuntime $runtime
-	)
+	public PhpMethodMeta $meta;
+
+	public function __construct(CallbackRuntime $runtime, PhpMethodMeta $meta)
 	{
-		$this->method = $method;
-		$this->isStatic = $isStatic;
-		$this->returnsValue = $returnsValue;
 		$this->runtime = $runtime;
+		$this->meta = $meta;
 	}
 
 }

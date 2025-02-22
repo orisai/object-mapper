@@ -4,11 +4,9 @@ namespace Orisai\ObjectMapper\Meta\Runtime;
 
 use Orisai\ObjectMapper\Args\Args;
 use Orisai\ObjectMapper\Callbacks\Callback;
-use Orisai\ObjectMapper\MappedObject;
-use ReflectionClass;
 
 /**
- * @phpstan-type T_SERIALIZED array{type: class-string<Callback<T>>, args: T, declaringClass: class-string<MappedObject>}
+ * @phpstan-type T_SERIALIZED array{type: class-string<Callback<T>>, args: T}
  *
  * @template-covariant T of Args
  *
@@ -23,19 +21,14 @@ final class CallbackRuntimeMeta
 	/** @var T */
 	public Args $args;
 
-	/** @var ReflectionClass<covariant MappedObject> */
-	public ReflectionClass $declaringClass;
-
 	/**
 	 * @param class-string<Callback<T>> $type
 	 * @param T $args
-	 * @param ReflectionClass<covariant MappedObject> $declaringClass
 	 */
-	public function __construct(string $type, Args $args, ReflectionClass $declaringClass)
+	public function __construct(string $type, Args $args)
 	{
 		$this->type = $type;
 		$this->args = $args;
-		$this->declaringClass = $declaringClass;
 	}
 
 	/**
@@ -46,7 +39,6 @@ final class CallbackRuntimeMeta
 		return [
 			'type' => $this->type,
 			'args' => $this->args,
-			'declaringClass' => $this->declaringClass->getName(),
 		];
 	}
 
@@ -57,7 +49,6 @@ final class CallbackRuntimeMeta
 	{
 		$this->type = $data['type'];
 		$this->args = $data['args'];
-		$this->declaringClass = new ReflectionClass($data['declaringClass']);
 	}
 
 }

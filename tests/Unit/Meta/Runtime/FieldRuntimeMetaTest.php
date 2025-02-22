@@ -11,6 +11,7 @@ use Orisai\ObjectMapper\Docs\DescriptionDoc;
 use Orisai\ObjectMapper\Meta\Runtime\CallbackRuntimeMeta;
 use Orisai\ObjectMapper\Meta\Runtime\FieldRuntimeMeta;
 use Orisai\ObjectMapper\Meta\Runtime\ModifierRuntimeMeta;
+use Orisai\ObjectMapper\Meta\Runtime\PhpMethodMeta;
 use Orisai\ObjectMapper\Meta\Runtime\RuleRuntimeMeta;
 use Orisai\ObjectMapper\Meta\Shared\DefaultValueMeta;
 use Orisai\ObjectMapper\Meta\Shared\DocMeta;
@@ -33,8 +34,16 @@ final class FieldRuntimeMetaTest extends TestCase
 		$beforeCallbacks = [
 			new CallbackRuntimeMeta(
 				BeforeValidationCallback::class,
-				new ValidationCallbackArgs('method', false, false, CallbackRuntime::process()),
-				$property->getDeclaringClass(),
+				new ValidationCallbackArgs(
+					CallbackRuntime::process(),
+					new PhpMethodMeta(
+						NoDefaultsVO::class,
+						'method',
+						false,
+						false,
+						false,
+					),
+				),
 			),
 		];
 

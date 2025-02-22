@@ -10,6 +10,7 @@ use Orisai\ObjectMapper\Callbacks\Context\CallbackBaseContext;
 use Orisai\ObjectMapper\Callbacks\Context\ObjectContext;
 use Orisai\ObjectMapper\MappedObject;
 use Orisai\ObjectMapper\Meta\Context\MetaContext;
+use Orisai\ObjectMapper\Meta\Runtime\PhpMethodMeta;
 use Orisai\ObjectMapper\Processing\ObjectHolder;
 use ReflectionClass;
 use ReflectionMethod;
@@ -67,7 +68,9 @@ final class AfterMappingCallback implements Callback
 				));
 		}
 
-		return new AfterMappingCallbackArgs($methodName);
+		return new AfterMappingCallbackArgs(
+			PhpMethodMeta::from($method),
+		);
 	}
 
 	/**
@@ -212,20 +215,19 @@ final class AfterMappingCallback implements Callback
 		$data,
 		Args $args,
 		ObjectHolder $holder,
-		CallbackBaseContext $context,
-		ReflectionClass $declaringClass
+		CallbackBaseContext $context
 	)
 	{
-		$method = $args->method;
-		$methodInst = $declaringClass->getMethod($method);
+		$meta = $args->meta;
+		$method = $meta->method;
 
 		$instance = $holder->getInstance();
 
 		// phpcs:disable SlevomatCodingStandard.Functions.StaticClosure.ClosureNotStatic
-		$methodInst->isPublic()
+		$meta->isPublic
 			? $instance->$method($context)
 			: (fn () => $instance->$method($context))
-			->bindTo($instance, $declaringClass->getName())();
+			->bindTo($instance, $meta->declaringClass)();
 		// phpcs:enable
 
 		return [];

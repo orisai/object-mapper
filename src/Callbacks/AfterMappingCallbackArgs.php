@@ -3,15 +3,16 @@
 namespace Orisai\ObjectMapper\Callbacks;
 
 use Orisai\ObjectMapper\Args\Args;
+use Orisai\ObjectMapper\Meta\Runtime\PhpMethodMeta;
 
 final class AfterMappingCallbackArgs implements Args
 {
 
-	public string $method;
+	public PhpMethodMeta $meta;
 
-	public function __construct(string $method)
+	public function __construct(PhpMethodMeta $meta)
 	{
-		$this->method = $method;
+		$this->meta = $meta;
 	}
 
 }

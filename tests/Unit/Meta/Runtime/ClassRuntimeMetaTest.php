@@ -10,13 +10,13 @@ use Orisai\ObjectMapper\Docs\DescriptionDoc;
 use Orisai\ObjectMapper\Meta\Runtime\CallbackRuntimeMeta;
 use Orisai\ObjectMapper\Meta\Runtime\ClassRuntimeMeta;
 use Orisai\ObjectMapper\Meta\Runtime\ModifierRuntimeMeta;
+use Orisai\ObjectMapper\Meta\Runtime\PhpMethodMeta;
 use Orisai\ObjectMapper\Meta\Shared\DocMeta;
 use Orisai\ObjectMapper\Modifiers\RequiresDependenciesArgs;
 use Orisai\ObjectMapper\Modifiers\RequiresDependenciesModifier;
 use PHPUnit\Framework\TestCase;
-use ReflectionClass;
-use Tests\Orisai\ObjectMapper\Doubles\DefaultsVO;
 use Tests\Orisai\ObjectMapper\Doubles\Dependencies\DependenciesUsingVoInjector;
+use Tests\Orisai\ObjectMapper\Doubles\NoDefaultsVO;
 use function serialize;
 use function unserialize;
 
@@ -28,8 +28,16 @@ final class ClassRuntimeMetaTest extends TestCase
 		$beforeCallbacks = [
 			new CallbackRuntimeMeta(
 				BeforeValidationCallback::class,
-				new ValidationCallbackArgs('method', false, false, CallbackRuntime::process()),
-				new ReflectionClass(DefaultsVO::class),
+				new ValidationCallbackArgs(
+					CallbackRuntime::process(),
+					new PhpMethodMeta(
+						NoDefaultsVO::class,
+						'method',
+						false,
+						false,
+						false,
+					),
+				),
 			),
 		];
 		$callbacks = [

@@ -10,7 +10,6 @@ use Orisai\ObjectMapper\Callbacks\Context\CallbackBaseContext;
 use Orisai\ObjectMapper\Meta\Context\MetaContext;
 use Orisai\ObjectMapper\Processing\ObjectHolder;
 use Orisai\ObjectMapper\Rules\NullArgs;
-use ReflectionClass;
 use Reflector;
 
 /**
@@ -34,8 +33,7 @@ final class WrongArgsTypeCallback implements Callback
 		$data,
 		Args $args,
 		ObjectHolder $holder,
-		CallbackBaseContext $context,
-		ReflectionClass $declaringClass
+		CallbackBaseContext $context
 	): void
 	{
 		throw NotImplemented::create();
