@@ -7,6 +7,18 @@ parameters:
 			path: ../src/Printers/ErrorVisualPrinter.php
 
 		-
+			message: '#^Method Orisai\\ObjectMapper\\Processing\\ObjectCreator\:\:createInstance\(\) should return T of Orisai\\ObjectMapper\\MappedObject but returns Orisai\\ObjectMapper\\MappedObject\.$#'
+			identifier: return.type
+			count: 1
+			path: ../src/Processing/ObjectCreator.php
+
+		-
+			message: '#^Parameter \#1 \$object of method Orisai\\ObjectMapper\\Processing\\DependencyInjector\<T of Orisai\\ObjectMapper\\MappedObject\>\:\:inject\(\) expects T of Orisai\\ObjectMapper\\MappedObject, Orisai\\ObjectMapper\\MappedObject given\.$#'
+			identifier: argument.type
+			count: 1
+			path: ../src/Processing/ObjectCreator.php
+
+		-
 			message: '#^Unreachable statement \- code above always terminates\.$#'
 			identifier: deadCode.unreachable
 			count: 3

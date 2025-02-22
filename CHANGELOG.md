@@ -120,6 +120,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 		  method
 		- properties are not set/unset via closure binding when public
 		- call `unset()` for mapped object properties only in `RequiredFields::none()` mode (performance optimization)
+	- `ObjectCreator`
+		- caches created reflections
 
 ### Removed
 

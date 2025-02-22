@@ -81,6 +81,7 @@ final class DefaultProcessor implements Processor
 	{
 		$this->metaCache = [];
 		$this->propertyContextCache = [];
+		$this->objectCreator->reset();
 	}
 
 	/**

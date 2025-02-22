@@ -8,6 +8,9 @@ use ReflectionClass;
 final class ObjectCreator
 {
 
+	/** @var array<class-string<MappedObject>, ReflectionClass<MappedObject>> */
+	private array $reflectors = [];
+
 	private DependencyInjectorManager $injectorManager;
 
 	public function __construct(DependencyInjectorManager $injectorManager)
@@ -23,13 +26,21 @@ final class ObjectCreator
 	 */
 	public function createInstance(string $class, array $injectors): MappedObject
 	{
-		$instance = (new ReflectionClass($class))->newInstanceWithoutConstructor();
+		$reflector = $this->reflectors[$class]
+			?? ($this->reflectors[$class] = new ReflectionClass($class));
+
+		$instance = $reflector->newInstanceWithoutConstructor();
 
 		foreach ($injectors as $injector) {
 			$this->injectorManager->get($injector)->inject($instance);
 		}
 
 		return $instance;
+	}
+
+	public function reset(): void
+	{
+		$this->reflectors = [];
 	}
 
 }
