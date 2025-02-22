@@ -3,7 +3,6 @@
 namespace Orisai\ObjectMapper\Callbacks;
 
 use Orisai\Exceptions\Logic\InvalidArgument;
-use ReflectionClass;
 use ReflectionMethod;
 use ReflectionParameter;
 use function in_array;
@@ -13,7 +12,6 @@ final class BeforeValidationCallback extends ValidationCallback
 {
 
 	protected static function validateClassMethodDataParam(
-		ReflectionClass $class,
 		ReflectionMethod $method,
 		ReflectionParameter $paramData
 	): void
@@ -27,19 +25,18 @@ final class BeforeValidationCallback extends ValidationCallback
 		throw InvalidArgument::create()
 			->withMessage(sprintf(
 				'First parameter of class callback method %s::%s should have "mixed" or none type instead of %s',
-				$class->getName(),
+				$method->getDeclaringClass()->getName(),
 				$method->getName(),
 				$type,
 			));
 	}
 
-	protected static function validateClassMethodReturn(ReflectionClass $class, ReflectionMethod $method): void
+	protected static function validateClassMethodReturn(ReflectionMethod $method): void
 	{
 		// Any type is okay
 	}
 
 	protected static function validatePropertyMethodDataParam(
-		ReflectionClass $class,
 		ReflectionMethod $method,
 		ReflectionParameter $paramData
 	): void
@@ -53,7 +50,7 @@ final class BeforeValidationCallback extends ValidationCallback
 		throw InvalidArgument::create()
 			->withMessage(sprintf(
 				'First parameter of before field callback method %s::%s should have none or "mixed" type instead of %s',
-				$class->getName(),
+				$method->getDeclaringClass()->getName(),
 				$method->getName(),
 				$type,
 			));

@@ -101,7 +101,7 @@ abstract class ValidationCallback implements Callback
 	{
 		$method = self::validateMethodExistence($class, $methodName);
 
-		self::validateMethodSignature($method, $class, $property);
+		self::validateMethodSignature($method, $property);
 
 		return $method;
 	}
@@ -132,34 +132,29 @@ abstract class ValidationCallback implements Callback
 		return $class->getMethod($methodName);
 	}
 
-	/**
-	 * @param ReflectionClass<MappedObject> $class
-	 */
 	private static function validateMethodSignature(
 		ReflectionMethod $method,
-		ReflectionClass $class,
 		?ReflectionProperty $property
 	): void
 	{
-		[$paramData, $paramContext] = self::validateParametersCount($class, $method);
+		[$paramData, $paramContext] = self::validateParametersCount($method);
 
 		$property === null
-			? self::validateClassMethodSignature($class, $method, $paramData, $paramContext)
-			: self::validatePropertyMethodSignature($class, $method, $paramData, $paramContext);
+			? self::validateClassMethodSignature($method, $paramData, $paramContext)
+			: self::validatePropertyMethodSignature($method, $paramData, $paramContext);
 	}
 
 	/**
-	 * @param ReflectionClass<MappedObject> $class
 	 * @return array{ReflectionParameter|null, ReflectionParameter|null}
 	 */
-	private static function validateParametersCount(ReflectionClass $class, ReflectionMethod $method): array
+	private static function validateParametersCount(ReflectionMethod $method): array
 	{
 		$requiredCount = $method->getNumberOfRequiredParameters();
 		if ($requiredCount > 2) {
 			throw InvalidArgument::create()
 				->withMessage(sprintf(
 					'Callback method %s::%s should have only 2 required parameters, %s required parameters given',
-					$class->getName(),
+					$method->getDeclaringClass()->getName(),
 					$method->getName(),
 					$requiredCount,
 				));
@@ -176,49 +171,34 @@ abstract class ValidationCallback implements Callback
 	/**
 	 * beforeClass(<nothing>|mixed $data, MappedObjectContext $context): <anything>
 	 * afterClass(array $data, MappedObjectContext $context): array|void|never
-	 *
-	 * @param ReflectionClass<MappedObject> $class
 	 */
 	private static function validateClassMethodSignature(
-		ReflectionClass $class,
 		ReflectionMethod $method,
 		?ReflectionParameter $paramData,
 		?ReflectionParameter $paramContext
 	): void
 	{
 		if ($paramData !== null) {
-			static::validateClassMethodDataParam($class, $method, $paramData);
+			static::validateClassMethodDataParam($method, $paramData);
 		}
 
 		if ($paramContext !== null) {
-			self::validateClassMethodContextParam($class, $method, $paramContext);
+			self::validateClassMethodContextParam($method, $paramContext);
 		}
 
-		static::validateClassMethodReturn($class, $method);
+		static::validateClassMethodReturn($method);
 	}
 
-	/**
-	 * @param ReflectionClass<MappedObject> $class
-	 */
 	abstract protected static function validateClassMethodDataParam(
-		ReflectionClass $class,
 		ReflectionMethod $method,
 		ReflectionParameter $paramData
 	): void;
 
-	/**
-	 * @param ReflectionClass<MappedObject> $class
-	 */
 	abstract protected static function validateClassMethodReturn(
-		ReflectionClass $class,
 		ReflectionMethod $method
 	): void;
 
-	/**
-	 * @param ReflectionClass<MappedObject> $class
-	 */
 	private static function validateClassMethodContextParam(
-		ReflectionClass $class,
 		ReflectionMethod $method,
 		ReflectionParameter $paramContext
 	): void
@@ -230,7 +210,7 @@ abstract class ValidationCallback implements Callback
 			throw InvalidArgument::create()
 				->withMessage(sprintf(
 					'Second parameter of class callback method %s::%s should have "%s" type instead of %s',
-					$class->getName(),
+					$method->getDeclaringClass()->getName(),
 					$method->getName(),
 					ObjectContext::class,
 					$type ?? 'none',
@@ -241,39 +221,28 @@ abstract class ValidationCallback implements Callback
 	/**
 	 * beforeField(<nothing>|mixed $data, FieldContext $context): <anything>
 	 * afterField(<anything> $data, FieldContext $context): <anything>
-	 *
-	 * @param ReflectionClass<MappedObject> $class
 	 */
 	private static function validatePropertyMethodSignature(
-		ReflectionClass $class,
 		ReflectionMethod $method,
 		?ReflectionParameter $paramData,
 		?ReflectionParameter $paramContext
 	): void
 	{
 		if ($paramData !== null) {
-			static::validatePropertyMethodDataParam($class, $method, $paramData);
+			static::validatePropertyMethodDataParam($method, $paramData);
 		}
 
 		if ($paramContext !== null) {
-			self::validatePropertyMethodContextParam($class, $method, $paramContext);
+			self::validatePropertyMethodContextParam($method, $paramContext);
 		}
 	}
 
-	/**
-	 * @param ReflectionClass<MappedObject> $class
-	 */
 	abstract protected static function validatePropertyMethodDataParam(
-		ReflectionClass $class,
 		ReflectionMethod $method,
 		ReflectionParameter $paramData
 	): void;
 
-	/**
-	 * @param ReflectionClass<MappedObject> $class
-	 */
 	private static function validatePropertyMethodContextParam(
-		ReflectionClass $class,
 		ReflectionMethod $method,
 		ReflectionParameter $paramContext
 	): void
@@ -287,7 +256,7 @@ abstract class ValidationCallback implements Callback
 		throw InvalidArgument::create()
 			->withMessage(sprintf(
 				'Second parameter of field callback method %s::%s should have "%s" type instead of %s',
-				$class->getName(),
+				$method->getDeclaringClass()->getName(),
 				$method->getName(),
 				FieldContext::class,
 				$type ?? 'none',
