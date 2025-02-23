@@ -55,6 +55,7 @@ use Tests\Orisai\ObjectMapper\Doubles\InternalClassExtendingVO;
 use Tests\Orisai\ObjectMapper\Doubles\NoDefaultsVO;
 use Tests\Orisai\ObjectMapper\Doubles\Php80\AttributesVO;
 use Tests\Orisai\ObjectMapper\Doubles\Php80\ConstructorPromotedVO;
+use Tests\Orisai\ObjectMapper\Doubles\Php80\CtorPromotionChildVo;
 use Tests\Orisai\ObjectMapper\Doubles\Php80\DefaultsOverrideVO;
 use Tests\Orisai\ObjectMapper\Doubles\Php81\NewInInitializersVO;
 use Tests\Orisai\ObjectMapper\Doubles\Php81\ObjectDefaultVO;
@@ -1340,6 +1341,29 @@ arrayOfMixed: array<mixed>',
 
 		self::assertSame('default', $vo->optionalString);
 		self::assertNull($vo->optionalUntyped);
+	}
+
+	public function testConstructorPromotionDefaultValueOverride(): void
+	{
+		if (PHP_VERSION_ID < 8_00_00) {
+			self::markTestSkipped('Ctor promotion requires PHP 8.0');
+		}
+
+		$data = [
+			'a' => '1',
+		];
+
+		$vo = $this->processor->process($data, CtorPromotionChildVo::class);
+
+		self::assertEquals(
+			$vo,
+			new CtorPromotionChildVo(
+				'1',
+				'foo',
+				'bar', // TODO - this should be 'overriden' value from child
+				'baz',
+			),
+		);
 	}
 
 	public function testNewInInitializers(): void
