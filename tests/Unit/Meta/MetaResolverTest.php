@@ -15,6 +15,8 @@ use Tests\Orisai\ObjectMapper\Doubles\Invalid\FieldMetaInvalidScopeRootVO;
 use Tests\Orisai\ObjectMapper\Doubles\Invalid\FieldNameIdenticalWithAnotherPropertyNameVO;
 use Tests\Orisai\ObjectMapper\Doubles\Invalid\FieldNamesFromTraitVO;
 use Tests\Orisai\ObjectMapper\Doubles\Invalid\FieldTraitMetaInvalidScopeRootVO;
+use Tests\Orisai\ObjectMapper\Doubles\Invalid\FieldWithNoRuleChildVO;
+use Tests\Orisai\ObjectMapper\Doubles\Invalid\FieldWithNoRuleVO;
 use Tests\Orisai\ObjectMapper\Doubles\Invalid\MultipleIdenticalFieldNamesVO;
 use Tests\Orisai\ObjectMapper\Doubles\Invalid\StaticMappedPropertyVO;
 use Tests\Orisai\ObjectMapper\Doubles\Invalid\VariantFieldChildVO;
@@ -159,6 +161,40 @@ MSG,
 		);
 
 		$this->metaLoader->load(VariantFieldChildVO::class);
+	}
+
+	public function testFieldWithNoRuleRelativeName(): void
+	{
+		$this->expectException(InvalidArgument::class);
+		$this->expectExceptionMessage(
+			<<<'MSG'
+Context: Resolving metadata of mapped object
+         'Tests\Orisai\ObjectMapper\Doubles\Invalid\FieldWithNoRuleVO'.
+Problem: Property '$field' has some mapped object definition (in annotation),
+         but no rule definition.
+Solution: Either remove the definition or add a rule definition.
+MSG,
+		);
+
+		$this->metaLoader->load(FieldWithNoRuleVO::class);
+	}
+
+	public function testFieldWithNoRuleAbsoluteName(): void
+	{
+		$this->expectException(InvalidArgument::class);
+		$this->expectExceptionMessage(
+			<<<'MSG'
+Context: Resolving metadata of mapped object
+         'Tests\Orisai\ObjectMapper\Doubles\Invalid\FieldWithNoRuleChildVO'.
+Problem: Property
+         'Tests\Orisai\ObjectMapper\Doubles\Invalid\FieldWithNoRuleVO->$field'
+         has some mapped object definition (in annotation), but no rule
+         definition.
+Solution: Either remove the definition or add a rule definition.
+MSG,
+		);
+
+		$this->metaLoader->load(FieldWithNoRuleChildVO::class);
 	}
 
 	public function testMultipleIdenticalFieldNames(): void

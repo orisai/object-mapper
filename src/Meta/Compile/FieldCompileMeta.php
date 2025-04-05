@@ -8,7 +8,7 @@ use Orisai\ReflectionMeta\Structure\PropertyStructure;
 final class FieldCompileMeta extends NodeCompileMeta
 {
 
-	private RuleCompileMeta $rule;
+	private ?RuleCompileMeta $rule;
 
 	private ClassStructure $class;
 
@@ -18,7 +18,7 @@ final class FieldCompileMeta extends NodeCompileMeta
 		array $callbacks,
 		array $docs,
 		array $modifiers,
-		RuleCompileMeta $rule,
+		?RuleCompileMeta $rule,
 		PropertyStructure $property
 	)
 	{
@@ -31,7 +31,7 @@ final class FieldCompileMeta extends NodeCompileMeta
 		$this->property = $property;
 	}
 
-	public function getRule(): RuleCompileMeta
+	public function getRule(): ?RuleCompileMeta
 	{
 		return $this->rule;
 	}

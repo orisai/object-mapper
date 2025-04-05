@@ -197,10 +197,18 @@ final class MetaResolver
 		$sourceName = $meta->getSourceName();
 		foreach ($meta->getFields() as $fieldMetas) {
 			$this->checkFieldInvariance($rootClass, $fieldMetas, $sourceName);
+			$firstFieldMeta = $fieldMetas[0];
+			$ruleMeta = $firstFieldMeta->getRule();
+
+			if ($ruleMeta === null) {
+				$this->throwFieldHasNoRule($rootClass, $meta, $firstFieldMeta);
+			}
+
 			foreach ($fieldMetas as $fieldMeta) {
 				$resolved = $this->resolveFieldMeta(
 					$rootClass,
 					$fieldMeta,
+					$ruleMeta,
 					$this->getDefaultValue($fieldMeta),
 				);
 
@@ -210,6 +218,30 @@ final class MetaResolver
 		}
 
 		return $fields;
+	}
+
+	/**
+	 * @param ReflectionClass<MappedObject> $rootClass
+	 * @return never
+	 */
+	private function throwFieldHasNoRule(
+		ReflectionClass $rootClass,
+		CompileMeta $meta,
+		FieldCompileMeta $firstFieldMeta
+	): void
+	{
+		$propertyName = $this->getRelativePropertyName($firstFieldMeta->getProperty(), $rootClass);
+
+		$message = Message::create()
+			->withContext("Resolving metadata of mapped object '{$rootClass->getName()}'.")
+			->withProblem(
+				"Property '$propertyName' has some mapped object definition"
+				. " (in {$meta->getSourceName()}), but no rule definition.",
+			)
+			->withSolution('Either remove the definition or add a rule definition.');
+
+		throw InvalidArgument::create()
+			->withMessage($message);
 	}
 
 	/**
@@ -258,11 +290,12 @@ final class MetaResolver
 	 */
 	private function resolveFieldMeta(
 		ReflectionClass $rootClass,
-		FieldCompileMeta $meta,
+		FieldCompileMeta $fieldMeta,
+		RuleCompileMeta $ruleMeta,
 		DefaultValueMeta $defaultValue
 	): FieldRuntimeMeta
 	{
-		$fieldStructure = $meta->getProperty();
+		$fieldStructure = $fieldMeta->getProperty();
 		$reflector = $fieldStructure->getContextReflector();
 
 		if ($reflector->isStatic()) {
@@ -285,13 +318,10 @@ final class MetaResolver
 		$context = new MetaFieldContext($this->loader, $this, $defaultValue);
 
 		return new FieldRuntimeMeta(
-			$this->resolveCallbacksMeta($meta, $context, $reflector),
-			$this->resolveDocsMeta($meta, $context),
-			$this->resolveFieldModifiersMeta($meta, $context),
-			$this->resolveRuleMeta(
-				$meta->getRule(),
-				$context,
-			),
+			$this->resolveCallbacksMeta($fieldMeta, $context, $reflector),
+			$this->resolveDocsMeta($fieldMeta, $context),
+			$this->resolveFieldModifiersMeta($fieldMeta, $context),
+			$this->resolveRuleMeta($ruleMeta, $context),
 			$defaultValue,
 			PhpPropertyMeta::from($reflector),
 		);

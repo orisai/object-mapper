@@ -15,8 +15,6 @@ use PHPUnit\Framework\TestCase;
 use ReflectionClass;
 use Tests\Orisai\ObjectMapper\Doubles\Invalid\FieldWithMultipleRulesChildVO;
 use Tests\Orisai\ObjectMapper\Doubles\Invalid\FieldWithMultipleRulesVO;
-use Tests\Orisai\ObjectMapper\Doubles\Invalid\FieldWithNoRuleChildVO;
-use Tests\Orisai\ObjectMapper\Doubles\Invalid\FieldWithNoRuleVO;
 use Tests\Orisai\ObjectMapper\Doubles\Invalid\RuleAboveClassChildVO;
 use Tests\Orisai\ObjectMapper\Doubles\Invalid\RuleAboveClassVO;
 use Tests\Orisai\ObjectMapper\Doubles\Invalid\UnsupportedClassDefinitionVO;
@@ -153,46 +151,6 @@ Problem: Property
          has multiple rule definitions (in annotation), but only one is allowed.
 Solution: Combine multiple with 'Orisai\ObjectMapper\Rules\AnyOf' or
           'Orisai\ObjectMapper\Rules\AllOf'.
-MSG,
-		);
-
-		$this->source->load($reflector, $group);
-	}
-
-	public function testFieldWithNoRuleRelativeName(): void
-	{
-		$reflector = new ReflectionClass(FieldWithNoRuleVO::class);
-		$group = $this->createStructureGroup($reflector);
-
-		$this->expectException(InvalidArgument::class);
-		$this->expectExceptionMessage(
-			<<<'MSG'
-Context: Resolving metadata of mapped object
-         'Tests\Orisai\ObjectMapper\Doubles\Invalid\FieldWithNoRuleVO'.
-Problem: Property '$field' has some mapped object definition (in annotation),
-         but no rule definition.
-Solution: Either remove the definition or add a rule definition.
-MSG,
-		);
-
-		$this->source->load($reflector, $group);
-	}
-
-	public function testFieldWithNoRuleAbsoluteName(): void
-	{
-		$reflector = new ReflectionClass(FieldWithNoRuleChildVO::class);
-		$group = $this->createStructureGroup($reflector);
-
-		$this->expectException(InvalidArgument::class);
-		$this->expectExceptionMessage(
-			<<<'MSG'
-Context: Resolving metadata of mapped object
-         'Tests\Orisai\ObjectMapper\Doubles\Invalid\FieldWithNoRuleChildVO'.
-Problem: Property
-         'Tests\Orisai\ObjectMapper\Doubles\Invalid\FieldWithNoRuleVO->$field'
-         has some mapped object definition (in annotation), but no rule
-         definition.
-Solution: Either remove the definition or add a rule definition.
 MSG,
 		);
 

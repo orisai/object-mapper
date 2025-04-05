@@ -183,21 +183,6 @@ abstract class ReflectorMetaSource implements MetaSource
 					continue;
 				}
 
-				if ($rule === null) {
-					$propertyName = $this->getRelativePropertyName($propertyStructure, $rootClass);
-
-					$message = Message::create()
-						->withContext("Resolving metadata of mapped object '{$rootClass->getName()}'.")
-						->withProblem(
-							"Property '$propertyName' has some mapped object definition"
-							. " (in {$this->getSourceName()}), but no rule definition.",
-						)
-						->withSolution('Either remove the definition or add a rule definition.');
-
-					throw InvalidArgument::create()
-						->withMessage($message);
-				}
-
 				$resolvedGroup[] = new FieldCompileMeta(
 					$callbacks,
 					$docs,
