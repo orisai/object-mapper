@@ -19,10 +19,7 @@ use Orisai\ObjectMapper\Modifiers\ModifierDefinition;
 use Orisai\ObjectMapper\Rules\RuleDefinition;
 use Orisai\ReflectionMeta\Reader\MetaReader;
 use Orisai\ReflectionMeta\Structure\PropertyStructure;
-use Orisai\ReflectionMeta\Structure\StructureBuilder;
-use Orisai\ReflectionMeta\Structure\StructureFlattener;
 use Orisai\ReflectionMeta\Structure\StructureGroup;
-use Orisai\ReflectionMeta\Structure\StructureGrouper;
 use Orisai\SourceMap\AboveReflectorSource;
 use Orisai\SourceMap\ReflectorSource;
 use ReflectionClass;
@@ -43,31 +40,17 @@ abstract class ReflectorMetaSource implements MetaSource
 		$this->reader = $reader;
 	}
 
-	public function load(ReflectionClass $class): CompileMeta
+	public function load(ReflectionClass $rootClass, StructureGroup $group): CompileMeta
 	{
-		$group = $this->getStructureGroup($class);
-
 		$sources = [];
 		foreach ($group->getClasses() as $structure) {
 			$sources[] = $structure->getSource();
 		}
 
 		return new CompileMeta(
-			$this->loadClassMeta($class, $group),
-			$this->loadPropertiesMeta($class, $group),
+			$this->loadClassMeta($rootClass, $group),
+			$this->loadPropertiesMeta($rootClass, $group),
 			$sources,
-		);
-	}
-
-	/**
-	 * @param ReflectionClass<covariant MappedObject> $class
-	 */
-	private function getStructureGroup(ReflectionClass $class): StructureGroup
-	{
-		return StructureGrouper::group(
-			StructureFlattener::flatten(
-				StructureBuilder::build($class),
-			),
 		);
 	}
 

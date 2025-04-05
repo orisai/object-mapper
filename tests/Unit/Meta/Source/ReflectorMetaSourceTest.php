@@ -7,6 +7,10 @@ use Orisai\Exceptions\Logic\InvalidArgument;
 use Orisai\ObjectMapper\MappedObject;
 use Orisai\ObjectMapper\Meta\Source\AnnotationsMetaSource;
 use Orisai\ObjectMapper\Meta\Source\ReflectorMetaSource;
+use Orisai\ReflectionMeta\Structure\StructureBuilder;
+use Orisai\ReflectionMeta\Structure\StructureFlattener;
+use Orisai\ReflectionMeta\Structure\StructureGroup;
+use Orisai\ReflectionMeta\Structure\StructureGrouper;
 use PHPUnit\Framework\TestCase;
 use ReflectionClass;
 use Tests\Orisai\ObjectMapper\Doubles\Invalid\FieldWithMultipleRulesChildVO;
@@ -31,12 +35,27 @@ final class ReflectorMetaSourceTest extends TestCase
 	}
 
 	/**
+	 * @param ReflectionClass<covariant MappedObject> $class
+	 */
+	private function createStructureGroup(ReflectionClass $class): StructureGroup
+	{
+		return StructureGrouper::group(
+			StructureFlattener::flatten(
+				StructureBuilder::build($class),
+			),
+		);
+	}
+
+	/**
 	 * @param class-string<MappedObject> $class
 	 *
 	 * @dataProvider provideUnsupportedDefinitionType
 	 */
 	public function testUnsupportedDefinitionType(string $class): void
 	{
+		$reflector = new ReflectionClass($class);
+		$group = $this->createStructureGroup($reflector);
+
 		$this->expectException(InvalidArgument::class);
 		$this->expectExceptionMessage(
 			"Definition 'Tests\Orisai\ObjectMapper\Doubles\Definition\UnsupportedDefinition' "
@@ -47,7 +66,7 @@ final class ReflectorMetaSourceTest extends TestCase
 			. "'Orisai\ObjectMapper\Rules\RuleDefinition'.",
 		);
 
-		$this->source->load(new ReflectionClass($class));
+		$this->source->load($reflector, $group);
 	}
 
 	public function provideUnsupportedDefinitionType(): Generator
@@ -63,8 +82,10 @@ final class ReflectorMetaSourceTest extends TestCase
 
 	public function testFieldInvarianceRelativeName(): void
 	{
-		$this->expectException(InvalidArgument::class);
+		$reflector = new ReflectionClass(VariantFieldVO::class);
+		$group = $this->createStructureGroup($reflector);
 
+		$this->expectException(InvalidArgument::class);
 		$this->expectExceptionMessage(
 			<<<'MSG'
 Context: Resolving metadata of mapped object
@@ -76,11 +97,14 @@ Solution: Don't override metadata of properties in child classes.
 MSG,
 		);
 
-		$this->source->load(new ReflectionClass(VariantFieldVO::class));
+		$this->source->load($reflector, $group);
 	}
 
 	public function testFieldInvarianceFullName(): void
 	{
+		$reflector = new ReflectionClass(VariantFieldChildVO::class);
+		$group = $this->createStructureGroup($reflector);
+
 		$this->expectException(InvalidArgument::class);
 		$this->expectExceptionMessage(
 			<<<'MSG'
@@ -94,11 +118,14 @@ Solution: Don't override metadata of properties in child classes.
 MSG,
 		);
 
-		$this->source->load(new ReflectionClass(VariantFieldChildVO::class));
+		$this->source->load($reflector, $group);
 	}
 
 	public function testRuleAboveClassRelativeName(): void
 	{
+		$reflector = new ReflectionClass(RuleAboveClassVO::class);
+		$group = $this->createStructureGroup($reflector);
+
 		$this->expectException(InvalidArgument::class);
 		$this->expectExceptionMessage(
 			<<<'MSG'
@@ -110,11 +137,14 @@ Problem: Rule definition
 MSG,
 		);
 
-		$this->source->load(new ReflectionClass(RuleAboveClassVO::class));
+		$this->source->load($reflector, $group);
 	}
 
 	public function testRuleAboveClassFullName(): void
 	{
+		$reflector = new ReflectionClass(RuleAboveClassChildVO::class);
+		$group = $this->createStructureGroup($reflector);
+
 		$this->expectException(InvalidArgument::class);
 		$this->expectExceptionMessage(
 			<<<'MSG'
@@ -128,11 +158,14 @@ Problem: Rule definition
 MSG,
 		);
 
-		$this->source->load(new ReflectionClass(RuleAboveClassChildVO::class));
+		$this->source->load($reflector, $group);
 	}
 
 	public function testFieldWithMultipleRulesRelativeName(): void
 	{
+		$reflector = new ReflectionClass(FieldWithMultipleRulesVO::class);
+		$group = $this->createStructureGroup($reflector);
+
 		$this->expectException(InvalidArgument::class);
 		$this->expectExceptionMessage(
 			<<<'MSG'
@@ -145,11 +178,14 @@ Solution: Combine multiple with 'Orisai\ObjectMapper\Rules\AnyOf' or
 MSG,
 		);
 
-		$this->source->load(new ReflectionClass(FieldWithMultipleRulesVO::class));
+		$this->source->load($reflector, $group);
 	}
 
 	public function testFieldWithMultipleRulesAbsoluteName(): void
 	{
+		$reflector = new ReflectionClass(FieldWithMultipleRulesChildVO::class);
+		$group = $this->createStructureGroup($reflector);
+
 		$this->expectException(InvalidArgument::class);
 		$this->expectExceptionMessage(
 			<<<'MSG'
@@ -163,11 +199,14 @@ Solution: Combine multiple with 'Orisai\ObjectMapper\Rules\AnyOf' or
 MSG,
 		);
 
-		$this->source->load(new ReflectionClass(FieldWithMultipleRulesChildVO::class));
+		$this->source->load($reflector, $group);
 	}
 
 	public function testFieldWithNoRuleRelativeName(): void
 	{
+		$reflector = new ReflectionClass(FieldWithNoRuleVO::class);
+		$group = $this->createStructureGroup($reflector);
+
 		$this->expectException(InvalidArgument::class);
 		$this->expectExceptionMessage(
 			<<<'MSG'
@@ -179,11 +218,14 @@ Solution: Either remove the definition or add a rule definition.
 MSG,
 		);
 
-		$this->source->load(new ReflectionClass(FieldWithNoRuleVO::class));
+		$this->source->load($reflector, $group);
 	}
 
 	public function testFieldWithNoRuleAbsoluteName(): void
 	{
+		$reflector = new ReflectionClass(FieldWithNoRuleChildVO::class);
+		$group = $this->createStructureGroup($reflector);
+
 		$this->expectException(InvalidArgument::class);
 		$this->expectExceptionMessage(
 			<<<'MSG'
@@ -197,7 +239,7 @@ Solution: Either remove the definition or add a rule definition.
 MSG,
 		);
 
-		$this->source->load(new ReflectionClass(FieldWithNoRuleChildVO::class));
+		$this->source->load($reflector, $group);
 	}
 
 }

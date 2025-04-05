@@ -20,6 +20,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ### Changed
 
 - Meta
+	- `MetaSource`
+		- `load()` accepts `StructureGroup` as a 2nd parameter
 	- `MetaLoader`
 		- resolve meta from all sources to validate them, even though only one is used
 	- Runtime meta

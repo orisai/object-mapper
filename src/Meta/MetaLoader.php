@@ -10,6 +10,10 @@ use Orisai\ObjectMapper\Meta\Cache\MetaCache;
 use Orisai\ObjectMapper\Meta\Runtime\ClassRuntimeMeta;
 use Orisai\ObjectMapper\Meta\Runtime\RuntimeMeta;
 use Orisai\ObjectMapper\Meta\Source\MetaSourceManager;
+use Orisai\ReflectionMeta\Structure\StructureBuilder;
+use Orisai\ReflectionMeta\Structure\StructureFlattener;
+use Orisai\ReflectionMeta\Structure\StructureGroup;
+use Orisai\ReflectionMeta\Structure\StructureGrouper;
 use Orisai\SourceMap\ClassSource;
 use ReflectionClass;
 use ReflectionException;
@@ -133,11 +137,13 @@ final class MetaLoader
 	 */
 	private function createRuntimeMeta(ReflectionClass $class): array
 	{
+		$group = $this->createStructureGroup($class);
+
 		$resolvedMetas = [];
 		$sourcesByMetaSource = [];
 
 		foreach ($this->sourceManager->getAll() as $metaSource) {
-			$sourceMeta = $metaSource->load($class);
+			$sourceMeta = $metaSource->load($class, $group);
 			$sourcesByMetaSource[] = $sourceMeta->getSources();
 
 			if (!$sourceMeta->hasAnyMeta()) {
@@ -171,6 +177,18 @@ final class MetaLoader
 		$resolvedFileDependencies = array_values(array_unique($fileDependencies));
 
 		return [$meta, $resolvedFileDependencies];
+	}
+
+	/**
+	 * @param ReflectionClass<covariant MappedObject> $class
+	 */
+	private function createStructureGroup(ReflectionClass $class): StructureGroup
+	{
+		return StructureGrouper::group(
+			StructureFlattener::flatten(
+				StructureBuilder::build($class),
+			),
+		);
 	}
 
 	/**
