@@ -36,7 +36,9 @@ final class FieldCompileMetaTest extends TestCase
 		$modifiers = [
 			new ModifierCompileMeta(FieldNameModifier::class, []),
 		];
-		$rule = new RuleCompileMeta(MixedRule::class, []);
+		$rules = [
+			new RuleCompileMeta(MixedRule::class, []),
+		];
 		$reflector = new ReflectionProperty(NoDefaultsVO::class, 'string');
 		$property = new PropertyStructure(
 			$reflector,
@@ -44,7 +46,7 @@ final class FieldCompileMetaTest extends TestCase
 			[],
 		);
 
-		$meta = new FieldCompileMeta($callbacks, $docs, $modifiers, $rule, $property);
+		$meta = new FieldCompileMeta($callbacks, $docs, $modifiers, $rules, $property);
 
 		self::assertSame(
 			$callbacks,
@@ -59,8 +61,8 @@ final class FieldCompileMetaTest extends TestCase
 			$meta->getModifiers(),
 		);
 		self::assertSame(
-			$rule,
-			$meta->getRule(),
+			$rules,
+			$meta->getRules(),
 		);
 		self::assertEquals(
 			new ClassStructure(
@@ -89,14 +91,18 @@ final class FieldCompileMetaTest extends TestCase
 			[],
 			[],
 			[],
-			new RuleCompileMeta(MixedRule::class, []),
+			[
+				new RuleCompileMeta(MixedRule::class, []),
+			],
 			$property,
 		);
 		$meta2 = new FieldCompileMeta(
 			[],
 			[],
 			[],
-			new RuleCompileMeta(StringRule::class, []),
+			[
+				new RuleCompileMeta(StringRule::class, []),
+			],
 			$property,
 		);
 
@@ -118,7 +124,9 @@ final class FieldCompileMetaTest extends TestCase
 			],
 			[],
 			[],
-			new RuleCompileMeta(MixedRule::class, []),
+			[
+				new RuleCompileMeta(MixedRule::class, []),
+			],
 			$property,
 		);
 		$meta2 = new FieldCompileMeta(
@@ -127,7 +135,9 @@ final class FieldCompileMetaTest extends TestCase
 			],
 			[],
 			[],
-			new RuleCompileMeta(MixedRule::class, []),
+			[
+				new RuleCompileMeta(MixedRule::class, []),
+			],
 			$property,
 		);
 
@@ -149,7 +159,9 @@ final class FieldCompileMetaTest extends TestCase
 				new DocMeta(SummaryDoc::class, []),
 			],
 			[],
-			new RuleCompileMeta(MixedRule::class, []),
+			[
+				new RuleCompileMeta(MixedRule::class, []),
+			],
 			$property,
 		);
 		$meta2 = new FieldCompileMeta(
@@ -158,7 +170,9 @@ final class FieldCompileMetaTest extends TestCase
 				new DocMeta(DescriptionDoc::class, []),
 			],
 			[],
-			new RuleCompileMeta(MixedRule::class, []),
+			[
+				new RuleCompileMeta(MixedRule::class, []),
+			],
 			$property,
 		);
 
@@ -180,7 +194,9 @@ final class FieldCompileMetaTest extends TestCase
 			[
 				new ModifierCompileMeta(DefaultValueModifier::class, []),
 			],
-			new RuleCompileMeta(MixedRule::class, []),
+			[
+				new RuleCompileMeta(MixedRule::class, []),
+			],
 			$property,
 		);
 		$meta2 = new FieldCompileMeta(
@@ -189,7 +205,9 @@ final class FieldCompileMetaTest extends TestCase
 			[
 				new ModifierCompileMeta(FieldNameModifier::class, []),
 			],
-			new RuleCompileMeta(MixedRule::class, []),
+			[
+				new RuleCompileMeta(MixedRule::class, []),
+			],
 			$property,
 		);
 

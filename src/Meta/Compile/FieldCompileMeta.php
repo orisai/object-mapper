@@ -8,22 +8,26 @@ use Orisai\ReflectionMeta\Structure\PropertyStructure;
 final class FieldCompileMeta extends NodeCompileMeta
 {
 
-	private ?RuleCompileMeta $rule;
+	/** @var list<RuleCompileMeta> */
+	private array $rules;
 
 	private ClassStructure $class;
 
 	private PropertyStructure $property;
 
+	/**
+	 * @param list<RuleCompileMeta> $rules
+	 */
 	public function __construct(
 		array $callbacks,
 		array $docs,
 		array $modifiers,
-		?RuleCompileMeta $rule,
+		array $rules,
 		PropertyStructure $property
 	)
 	{
 		parent::__construct($callbacks, $docs, $modifiers);
-		$this->rule = $rule;
+		$this->rules = $rules;
 		$this->class = new ClassStructure(
 			$property->getContextReflector()->getDeclaringClass(),
 			$property->getSource()->getClass(),
@@ -31,9 +35,12 @@ final class FieldCompileMeta extends NodeCompileMeta
 		$this->property = $property;
 	}
 
-	public function getRule(): ?RuleCompileMeta
+	/**
+	 * @return list<RuleCompileMeta>
+	 */
+	public function getRules(): array
 	{
-		return $this->rule;
+		return $this->rules;
 	}
 
 	public function getClass(): ClassStructure
@@ -48,7 +55,7 @@ final class FieldCompileMeta extends NodeCompileMeta
 
 	public function hasEqualMeta(self $meta): bool
 	{
-		if ($this->rule != $meta->getRule()) {
+		if ($this->rules != $meta->getRules()) {
 			return false;
 		}
 

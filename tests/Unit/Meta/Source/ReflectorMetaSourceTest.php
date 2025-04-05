@@ -13,8 +13,6 @@ use Orisai\ReflectionMeta\Structure\StructureGroup;
 use Orisai\ReflectionMeta\Structure\StructureGrouper;
 use PHPUnit\Framework\TestCase;
 use ReflectionClass;
-use Tests\Orisai\ObjectMapper\Doubles\Invalid\FieldWithMultipleRulesChildVO;
-use Tests\Orisai\ObjectMapper\Doubles\Invalid\FieldWithMultipleRulesVO;
 use Tests\Orisai\ObjectMapper\Doubles\Invalid\RuleAboveClassChildVO;
 use Tests\Orisai\ObjectMapper\Doubles\Invalid\RuleAboveClassVO;
 use Tests\Orisai\ObjectMapper\Doubles\Invalid\UnsupportedClassDefinitionVO;
@@ -110,47 +108,6 @@ Problem: Rule definition
          (used above class
          'Tests\Orisai\ObjectMapper\Doubles\Invalid\RuleAboveClassVO') cannot be
          used on class, it is only allowed on properties.
-MSG,
-		);
-
-		$this->source->load($reflector, $group);
-	}
-
-	public function testFieldWithMultipleRulesRelativeName(): void
-	{
-		$reflector = new ReflectionClass(FieldWithMultipleRulesVO::class);
-		$group = $this->createStructureGroup($reflector);
-
-		$this->expectException(InvalidArgument::class);
-		$this->expectExceptionMessage(
-			<<<'MSG'
-Context: Resolving metadata of mapped object
-         'Tests\Orisai\ObjectMapper\Doubles\Invalid\FieldWithMultipleRulesVO'.
-Problem: Property '$field' has multiple rule definitions (in annotation), but
-         only one is allowed.
-Solution: Combine multiple with 'Orisai\ObjectMapper\Rules\AnyOf' or
-          'Orisai\ObjectMapper\Rules\AllOf'.
-MSG,
-		);
-
-		$this->source->load($reflector, $group);
-	}
-
-	public function testFieldWithMultipleRulesAbsoluteName(): void
-	{
-		$reflector = new ReflectionClass(FieldWithMultipleRulesChildVO::class);
-		$group = $this->createStructureGroup($reflector);
-
-		$this->expectException(InvalidArgument::class);
-		$this->expectExceptionMessage(
-			<<<'MSG'
-Context: Resolving metadata of mapped object
-         'Tests\Orisai\ObjectMapper\Doubles\Invalid\FieldWithMultipleRulesChildVO'.
-Problem: Property
-         'Tests\Orisai\ObjectMapper\Doubles\Invalid\FieldWithMultipleRulesVO->$field'
-         has multiple rule definitions (in annotation), but only one is allowed.
-Solution: Combine multiple with 'Orisai\ObjectMapper\Rules\AnyOf' or
-          'Orisai\ObjectMapper\Rules\AllOf'.
 MSG,
 		);
 

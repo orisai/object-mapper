@@ -41,6 +41,7 @@ use Reflector;
 use function array_key_exists;
 use function array_merge;
 use function assert;
+use function count;
 use function get_class;
 use function is_a;
 use function is_int;
@@ -198,17 +199,21 @@ final class MetaResolver
 		foreach ($meta->getFields() as $fieldMetas) {
 			$this->checkFieldInvariance($rootClass, $fieldMetas, $sourceName);
 			$firstFieldMeta = $fieldMetas[0];
-			$ruleMeta = $firstFieldMeta->getRule();
+			$ruleMetas = $firstFieldMeta->getRules();
 
-			if ($ruleMeta === null) {
+			if ($ruleMetas === []) {
 				$this->throwFieldHasNoRule($rootClass, $meta, $firstFieldMeta);
+			}
+
+			if (count($ruleMetas) !== 1) {
+				$this->throwFieldHasMoreThanOneRule($rootClass, $meta, $firstFieldMeta);
 			}
 
 			foreach ($fieldMetas as $fieldMeta) {
 				$resolved = $this->resolveFieldMeta(
 					$rootClass,
 					$fieldMeta,
-					$ruleMeta,
+					$ruleMetas[0],
 					$this->getDefaultValue($fieldMeta),
 				);
 
@@ -239,6 +244,30 @@ final class MetaResolver
 				. " (in {$meta->getSourceName()}), but no rule definition.",
 			)
 			->withSolution('Either remove the definition or add a rule definition.');
+
+		throw InvalidArgument::create()
+			->withMessage($message);
+	}
+
+	/**
+	 * @param ReflectionClass<MappedObject> $rootClass
+	 * @return never
+	 */
+	private function throwFieldHasMoreThanOneRule(
+		ReflectionClass $rootClass,
+		CompileMeta $meta,
+		FieldCompileMeta $firstFieldMeta
+	): void
+	{
+		$propertyName = $this->getRelativePropertyName($firstFieldMeta->getProperty(), $rootClass);
+
+		$message = Message::create()
+			->withContext("Resolving metadata of mapped object '{$rootClass->getName()}'.")
+			->withProblem(
+				"Property '$propertyName' has multiple rule definitions"
+				. " (in {$meta->getSourceName()}), but only one is allowed.",
+			)
+			->withSolution("Combine multiple with '{$meta->getAnyOfSourceKey()}' or '{$meta->getAllOfSourceKey()}'.");
 
 		throw InvalidArgument::create()
 			->withMessage($message);

@@ -19,17 +19,30 @@ final class CompileMeta
 
 	private string $sourceName;
 
+	private string $anyOfSourceKey;
+
+	private string $allOfSourceKey;
+
 	/**
 	 * @param list<ClassCompileMeta> $classes
 	 * @param list<non-empty-list<FieldCompileMeta>> $fields
 	 * @param list<ClassSource|FileSource> $sources
 	 */
-	public function __construct(array $classes, array $fields, array $sources, string $sourceName)
+	public function __construct(
+		array $classes,
+		array $fields,
+		array $sources,
+		string $sourceName,
+		string $anyOfSourceKey,
+		string $allOfSourceKey
+	)
 	{
 		$this->classes = $classes;
 		$this->fields = $fields;
 		$this->sources = $sources;
 		$this->sourceName = $sourceName;
+		$this->anyOfSourceKey = $anyOfSourceKey;
+		$this->allOfSourceKey = $allOfSourceKey;
 	}
 
 	/**
@@ -74,6 +87,16 @@ final class CompileMeta
 	public function getSourceName(): string
 	{
 		return $this->sourceName;
+	}
+
+	public function getAnyOfSourceKey(): string
+	{
+		return $this->anyOfSourceKey;
+	}
+
+	public function getAllOfSourceKey(): string
+	{
+		return $this->allOfSourceKey;
 	}
 
 }

@@ -18,7 +18,6 @@ use Orisai\ObjectMapper\Meta\Shared\DocMeta;
 use Orisai\ObjectMapper\Modifiers\ModifierDefinition;
 use Orisai\ObjectMapper\Rules\RuleDefinition;
 use Orisai\ReflectionMeta\Reader\MetaReader;
-use Orisai\ReflectionMeta\Structure\PropertyStructure;
 use Orisai\ReflectionMeta\Structure\StructureGroup;
 use Orisai\SourceMap\AboveReflectorSource;
 use Orisai\SourceMap\ReflectorSource;
@@ -48,9 +47,11 @@ abstract class ReflectorMetaSource implements MetaSource
 
 		return new CompileMeta(
 			$this->loadClassMeta($rootClass, $group),
-			$this->loadPropertiesMeta($rootClass, $group),
+			$this->loadPropertiesMeta($group),
 			$sources,
 			$this->getSourceName(),
+			$this->getAnyOfSourceKey(),
+			$this->getAllOfSourceKey(),
 		);
 	}
 
@@ -117,10 +118,9 @@ abstract class ReflectorMetaSource implements MetaSource
 	}
 
 	/**
-	 * @param ReflectionClass<covariant MappedObject> $rootClass
 	 * @return list<non-empty-list<FieldCompileMeta>>
 	 */
-	private function loadPropertiesMeta(ReflectionClass $rootClass, StructureGroup $group): array
+	private function loadPropertiesMeta(StructureGroup $group): array
 	{
 		$resolved = [];
 		foreach ($group->getGroupedProperties() as $groupedProperty) {
@@ -132,32 +132,13 @@ abstract class ReflectorMetaSource implements MetaSource
 				$callbacks = [];
 				$docs = [];
 				$modifiers = [];
-				$rule = null;
+				$rules = [];
 
 				foreach ($definitions as $definition) {
 					$definition = $this->checkDefinitionType($definition);
 
 					if ($definition instanceof RuleDefinition) {
-						if ($rule !== null) {
-							$propertyName = $this->getRelativePropertyName($propertyStructure, $rootClass);
-
-							$message = Message::create()
-								->withContext("Resolving metadata of mapped object '{$rootClass->getName()}'.")
-								->withProblem(
-									"Property '$propertyName' has multiple rule definitions"
-									. " (in {$this->getSourceName()}), but only one is allowed.",
-								)
-								->withSolution(sprintf(
-									"Combine multiple with '%s' or '%s'.",
-									$this->getAnyOfSourceKey(),
-									$this->getAllOfSourceKey(),
-								));
-
-							throw InvalidArgument::create()
-								->withMessage($message);
-						}
-
-						$rule = new RuleCompileMeta(
+						$rules[] = new RuleCompileMeta(
 							$definition->getType(),
 							$definition->getArgs(),
 						);
@@ -179,7 +160,7 @@ abstract class ReflectorMetaSource implements MetaSource
 					}
 				}
 
-				if ($rule === null && $callbacks === [] && $docs === [] && $modifiers === []) {
+				if ($rules === [] && $callbacks === [] && $docs === [] && $modifiers === []) {
 					continue;
 				}
 
@@ -187,7 +168,7 @@ abstract class ReflectorMetaSource implements MetaSource
 					$callbacks,
 					$docs,
 					$modifiers,
-					$rule,
+					$rules,
 					$propertyStructure,
 				);
 			}
@@ -226,21 +207,6 @@ abstract class ReflectorMetaSource implements MetaSource
 		}
 
 		return $definition;
-	}
-
-	/**
-	 * @param ReflectionClass<covariant MappedObject> $rootClass
-	 */
-	private function getRelativePropertyName(PropertyStructure $propertyStructure, ReflectionClass $rootClass): string
-	{
-		$property = $propertyStructure->getSource()->getReflector();
-		$class = $property->getDeclaringClass();
-
-		if ($class->getName() === $rootClass->getName()) {
-			return '$' . $property->getName();
-		}
-
-		return $class->getName() . '->$' . $property->getName();
 	}
 
 	/**

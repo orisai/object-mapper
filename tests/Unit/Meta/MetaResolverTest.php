@@ -15,6 +15,8 @@ use Tests\Orisai\ObjectMapper\Doubles\Invalid\FieldMetaInvalidScopeRootVO;
 use Tests\Orisai\ObjectMapper\Doubles\Invalid\FieldNameIdenticalWithAnotherPropertyNameVO;
 use Tests\Orisai\ObjectMapper\Doubles\Invalid\FieldNamesFromTraitVO;
 use Tests\Orisai\ObjectMapper\Doubles\Invalid\FieldTraitMetaInvalidScopeRootVO;
+use Tests\Orisai\ObjectMapper\Doubles\Invalid\FieldWithMultipleRulesChildVO;
+use Tests\Orisai\ObjectMapper\Doubles\Invalid\FieldWithMultipleRulesVO;
 use Tests\Orisai\ObjectMapper\Doubles\Invalid\FieldWithNoRuleChildVO;
 use Tests\Orisai\ObjectMapper\Doubles\Invalid\FieldWithNoRuleVO;
 use Tests\Orisai\ObjectMapper\Doubles\Invalid\MultipleIdenticalFieldNamesVO;
@@ -195,6 +197,41 @@ MSG,
 		);
 
 		$this->metaLoader->load(FieldWithNoRuleChildVO::class);
+	}
+
+	public function testFieldWithMultipleRulesRelativeName(): void
+	{
+		$this->expectException(InvalidArgument::class);
+		$this->expectExceptionMessage(
+			<<<'MSG'
+Context: Resolving metadata of mapped object
+         'Tests\Orisai\ObjectMapper\Doubles\Invalid\FieldWithMultipleRulesVO'.
+Problem: Property '$field' has multiple rule definitions (in annotation), but
+         only one is allowed.
+Solution: Combine multiple with 'Orisai\ObjectMapper\Rules\AnyOf' or
+          'Orisai\ObjectMapper\Rules\AllOf'.
+MSG,
+		);
+
+		$this->metaLoader->load(FieldWithMultipleRulesVO::class);
+	}
+
+	public function testFieldWithMultipleRulesAbsoluteName(): void
+	{
+		$this->expectException(InvalidArgument::class);
+		$this->expectExceptionMessage(
+			<<<'MSG'
+Context: Resolving metadata of mapped object
+         'Tests\Orisai\ObjectMapper\Doubles\Invalid\FieldWithMultipleRulesChildVO'.
+Problem: Property
+         'Tests\Orisai\ObjectMapper\Doubles\Invalid\FieldWithMultipleRulesVO->$field'
+         has multiple rule definitions (in annotation), but only one is allowed.
+Solution: Combine multiple with 'Orisai\ObjectMapper\Rules\AnyOf' or
+          'Orisai\ObjectMapper\Rules\AllOf'.
+MSG,
+		);
+
+		$this->metaLoader->load(FieldWithMultipleRulesChildVO::class);
 	}
 
 	public function testMultipleIdenticalFieldNames(): void

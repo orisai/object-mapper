@@ -7,8 +7,6 @@ use Orisai\ObjectMapper\Meta\Compile\CallbackCompileMeta;
 use Orisai\ObjectMapper\Meta\Compile\ClassCompileMeta;
 use Orisai\ObjectMapper\Meta\Compile\CompileMeta;
 use Orisai\ObjectMapper\Meta\Compile\FieldCompileMeta;
-use Orisai\ObjectMapper\Meta\Compile\RuleCompileMeta;
-use Orisai\ObjectMapper\Rules\MixedRule;
 use Orisai\ReflectionMeta\Structure\ClassStructure;
 use Orisai\ReflectionMeta\Structure\PropertyStructure;
 use Orisai\SourceMap\ClassSource;
@@ -37,7 +35,7 @@ final class CompileMetaTest extends TestCase
 					[],
 					[],
 					[],
-					new RuleCompileMeta(MixedRule::class, []),
+					[],
 					new PropertyStructure(
 						$reflector->getProperty('string'),
 						new PropertySource($reflector->getProperty('string')),
@@ -51,8 +49,10 @@ final class CompileMetaTest extends TestCase
 			new FileSource(__FILE__),
 		];
 		$sourceName = 'test';
+		$anyOfKey = 'any-of';
+		$allOfKey = 'all-of';
 
-		$meta = new CompileMeta($classes, $fields, $sources, $sourceName);
+		$meta = new CompileMeta($classes, $fields, $sources, $sourceName, $anyOfKey, $allOfKey);
 
 		self::assertSame(
 			$classes,
@@ -69,6 +69,14 @@ final class CompileMetaTest extends TestCase
 		self::assertSame(
 			$sourceName,
 			$meta->getSourceName(),
+		);
+		self::assertSame(
+			$anyOfKey,
+			$meta->getAnyOfSourceKey(),
+		);
+		self::assertSame(
+			$allOfKey,
+			$meta->getAllOfSourceKey(),
 		);
 		self::assertTrue($meta->hasAnyMeta());
 	}
@@ -88,6 +96,8 @@ final class CompileMetaTest extends TestCase
 			[],
 			[],
 			'test',
+			'any-of',
+			'all-of',
 		);
 		self::assertFalse($meta->hasAnyMeta());
 
@@ -105,6 +115,8 @@ final class CompileMetaTest extends TestCase
 			[],
 			[],
 			'test',
+			'any-of',
+			'all-of',
 		);
 		self::assertTrue($meta->hasAnyMeta());
 
@@ -118,7 +130,7 @@ final class CompileMetaTest extends TestCase
 						[],
 						[],
 						[],
-						new RuleCompileMeta(MixedRule::class, []),
+						[],
 						new PropertyStructure(
 							$reflector->getProperty('string'),
 							new PropertySource($reflector->getProperty('string')),
@@ -129,6 +141,8 @@ final class CompileMetaTest extends TestCase
 			],
 			[],
 			'test',
+			'any-of',
+			'all-of',
 		);
 		self::assertTrue($meta->hasAnyMeta());
 	}
