@@ -7,15 +7,14 @@ use Orisai\Exceptions\Logic\InvalidArgument;
 use Orisai\Exceptions\Message;
 use Orisai\ObjectMapper\MappedObject;
 use Orisai\ObjectMapper\Meta\Cache\MetaCache;
-use Orisai\ObjectMapper\Meta\Compile\ClassCompileMeta;
-use Orisai\ObjectMapper\Meta\Compile\CompileMeta;
+use Orisai\ObjectMapper\Meta\Runtime\ClassRuntimeMeta;
 use Orisai\ObjectMapper\Meta\Runtime\RuntimeMeta;
 use Orisai\ObjectMapper\Meta\Source\MetaSourceManager;
-use Orisai\ReflectionMeta\Structure\ClassStructure;
 use Orisai\SourceMap\ClassSource;
 use ReflectionClass;
 use ReflectionException;
 use UnitEnum;
+use function array_key_last;
 use function array_merge;
 use function array_unique;
 use function array_values;
@@ -134,36 +133,26 @@ final class MetaLoader
 	 */
 	private function createRuntimeMeta(ReflectionClass $class): array
 	{
-		$meta = null;
+		$resolvedMetas = [];
 		$sourcesByMetaSource = [];
 
-		// Current sources replace each other
-		// Sources modifying previous source are not supported
 		foreach ($this->sourceManager->getAll() as $metaSource) {
 			$sourceMeta = $metaSource->load($class);
 			$sourcesByMetaSource[] = $sourceMeta->getSources();
 
-			if ($sourceMeta->hasAnyMeta()) {
-				$meta = $sourceMeta;
-
-				break;
+			if (!$sourceMeta->hasAnyMeta()) {
+				continue;
 			}
+
+			$resolvedMetas[] = $this->getResolver()->resolve($class, $sourceMeta);
 		}
 
-		if ($meta === null) {
-			$meta = new CompileMeta(
-				[
-					new ClassCompileMeta(
-						[],
-						[],
-						[],
-						new ClassStructure($class, new ClassSource($class)),
-					),
-				],
+		$meta = $resolvedMetas === []
+			? new RuntimeMeta(
+				new ClassRuntimeMeta([], [], []),
 				[],
-				[],
-			);
-		}
+			)
+			: $resolvedMetas[array_key_last($resolvedMetas)];
 
 		$fileDependencies = [];
 		foreach (array_merge(...$sourcesByMetaSource) as $source) {
@@ -179,10 +168,9 @@ final class MetaLoader
 			}
 		}
 
-		return [
-			$this->getResolver()->resolve($class, $meta),
-			array_values(array_unique($fileDependencies)),
-		];
+		$resolvedFileDependencies = array_values(array_unique($fileDependencies));
+
+		return [$meta, $resolvedFileDependencies];
 	}
 
 	/**

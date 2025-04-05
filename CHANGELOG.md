@@ -19,8 +19,11 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ### Changed
 
-- Runtime meta
-	- replace getters with readonly properties
+- Meta
+	- `MetaLoader`
+		- resolve meta from all sources to validate them, even though only one is used
+	- Runtime meta
+		- replace getters with readonly properties
 - `DefaultProcessor`
 	- Simplify finding missing fields (performance optimization)
 	- Reduce calls needed to find field names for "did you mean" error helper (performance optimization)
