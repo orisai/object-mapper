@@ -50,8 +50,9 @@ final class CompileMetaTest extends TestCase
 			new ClassSource(new ReflectionClass(self::class)),
 			new FileSource(__FILE__),
 		];
+		$sourceName = 'test';
 
-		$meta = new CompileMeta($classes, $fields, $sources);
+		$meta = new CompileMeta($classes, $fields, $sources, $sourceName);
 
 		self::assertSame(
 			$classes,
@@ -64,6 +65,10 @@ final class CompileMetaTest extends TestCase
 		self::assertSame(
 			$sources,
 			$meta->getSources(),
+		);
+		self::assertSame(
+			$sourceName,
+			$meta->getSourceName(),
 		);
 		self::assertTrue($meta->hasAnyMeta());
 	}
@@ -82,6 +87,7 @@ final class CompileMetaTest extends TestCase
 			],
 			[],
 			[],
+			'test',
 		);
 		self::assertFalse($meta->hasAnyMeta());
 
@@ -98,6 +104,7 @@ final class CompileMetaTest extends TestCase
 			],
 			[],
 			[],
+			'test',
 		);
 		self::assertTrue($meta->hasAnyMeta());
 
@@ -121,6 +128,7 @@ final class CompileMetaTest extends TestCase
 				],
 			],
 			[],
+			'test',
 		);
 		self::assertTrue($meta->hasAnyMeta());
 	}

@@ -21,8 +21,6 @@ use Tests\Orisai\ObjectMapper\Doubles\Invalid\RuleAboveClassChildVO;
 use Tests\Orisai\ObjectMapper\Doubles\Invalid\RuleAboveClassVO;
 use Tests\Orisai\ObjectMapper\Doubles\Invalid\UnsupportedClassDefinitionVO;
 use Tests\Orisai\ObjectMapper\Doubles\Invalid\UnsupportedPropertyDefinitionVO;
-use Tests\Orisai\ObjectMapper\Doubles\Invalid\VariantFieldChildVO;
-use Tests\Orisai\ObjectMapper\Doubles\Invalid\VariantFieldVO;
 
 final class ReflectorMetaSourceTest extends TestCase
 {
@@ -78,47 +76,6 @@ final class ReflectorMetaSourceTest extends TestCase
 		yield [
 			UnsupportedPropertyDefinitionVO::class,
 		];
-	}
-
-	public function testFieldInvarianceRelativeName(): void
-	{
-		$reflector = new ReflectionClass(VariantFieldVO::class);
-		$group = $this->createStructureGroup($reflector);
-
-		$this->expectException(InvalidArgument::class);
-		$this->expectExceptionMessage(
-			<<<'MSG'
-Context: Resolving metadata of mapped object
-         'Tests\Orisai\ObjectMapper\Doubles\Invalid\VariantFieldVO'.
-Problem: Definition in annotation of property '$field' differs from definition
-         in annotation of property
-         'Tests\Orisai\ObjectMapper\Doubles\Invalid\VariantFieldParentVO->$field'.
-Solution: Don't override metadata of properties in child classes.
-MSG,
-		);
-
-		$this->source->load($reflector, $group);
-	}
-
-	public function testFieldInvarianceFullName(): void
-	{
-		$reflector = new ReflectionClass(VariantFieldChildVO::class);
-		$group = $this->createStructureGroup($reflector);
-
-		$this->expectException(InvalidArgument::class);
-		$this->expectExceptionMessage(
-			<<<'MSG'
-Context: Resolving metadata of mapped object
-         'Tests\Orisai\ObjectMapper\Doubles\Invalid\VariantFieldChildVO'.
-Problem: Definition in annotation of property
-         'Tests\Orisai\ObjectMapper\Doubles\Invalid\VariantFieldVO->$field'
-         differs from definition in annotation of property
-         'Tests\Orisai\ObjectMapper\Doubles\Invalid\VariantFieldParentVO->$field'.
-Solution: Don't override metadata of properties in child classes.
-MSG,
-		);
-
-		$this->source->load($reflector, $group);
 	}
 
 	public function testRuleAboveClassRelativeName(): void

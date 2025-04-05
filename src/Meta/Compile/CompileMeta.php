@@ -17,16 +17,19 @@ final class CompileMeta
 	/** @var list<ClassSource|FileSource> */
 	private array $sources;
 
+	private string $sourceName;
+
 	/**
 	 * @param list<ClassCompileMeta> $classes
 	 * @param list<non-empty-list<FieldCompileMeta>> $fields
 	 * @param list<ClassSource|FileSource> $sources
 	 */
-	public function __construct(array $classes, array $fields, array $sources)
+	public function __construct(array $classes, array $fields, array $sources, string $sourceName)
 	{
 		$this->classes = $classes;
 		$this->fields = $fields;
 		$this->sources = $sources;
+		$this->sourceName = $sourceName;
 	}
 
 	/**
@@ -66,6 +69,11 @@ final class CompileMeta
 		}
 
 		return false;
+	}
+
+	public function getSourceName(): string
+	{
+		return $this->sourceName;
 	}
 
 }

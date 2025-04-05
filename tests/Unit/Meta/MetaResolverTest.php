@@ -17,6 +17,8 @@ use Tests\Orisai\ObjectMapper\Doubles\Invalid\FieldNamesFromTraitVO;
 use Tests\Orisai\ObjectMapper\Doubles\Invalid\FieldTraitMetaInvalidScopeRootVO;
 use Tests\Orisai\ObjectMapper\Doubles\Invalid\MultipleIdenticalFieldNamesVO;
 use Tests\Orisai\ObjectMapper\Doubles\Invalid\StaticMappedPropertyVO;
+use Tests\Orisai\ObjectMapper\Doubles\Invalid\VariantFieldChildVO;
+use Tests\Orisai\ObjectMapper\Doubles\Invalid\VariantFieldVO;
 use Tests\Orisai\ObjectMapper\Doubles\Invalid\WrongCallbackArgsTypeVO;
 use Tests\Orisai\ObjectMapper\Doubles\Invalid\WrongRuleArgsTypeVO;
 use Tests\Orisai\ObjectMapper\Doubles\Rules\WrongArgsTypeRule;
@@ -122,6 +124,41 @@ Problem: Property
 Solution: Implement the 'Orisai\ObjectMapper\MappedObject' interface.
 MSG,
 		];
+	}
+
+	public function testFieldInvarianceRelativeName(): void
+	{
+		$this->expectException(InvalidArgument::class);
+		$this->expectExceptionMessage(
+			<<<'MSG'
+Context: Resolving metadata of mapped object
+         'Tests\Orisai\ObjectMapper\Doubles\Invalid\VariantFieldVO'.
+Problem: Definition in annotation of property '$field' differs from definition
+         in annotation of property
+         'Tests\Orisai\ObjectMapper\Doubles\Invalid\VariantFieldParentVO->$field'.
+Solution: Don't override metadata of properties in child classes.
+MSG,
+		);
+
+		$this->metaLoader->load(VariantFieldVO::class);
+	}
+
+	public function testFieldInvarianceFullName(): void
+	{
+		$this->expectException(InvalidArgument::class);
+		$this->expectExceptionMessage(
+			<<<'MSG'
+Context: Resolving metadata of mapped object
+         'Tests\Orisai\ObjectMapper\Doubles\Invalid\VariantFieldChildVO'.
+Problem: Definition in annotation of property
+         'Tests\Orisai\ObjectMapper\Doubles\Invalid\VariantFieldVO->$field'
+         differs from definition in annotation of property
+         'Tests\Orisai\ObjectMapper\Doubles\Invalid\VariantFieldParentVO->$field'.
+Solution: Don't override metadata of properties in child classes.
+MSG,
+		);
+
+		$this->metaLoader->load(VariantFieldChildVO::class);
 	}
 
 	public function testMultipleIdenticalFieldNames(): void

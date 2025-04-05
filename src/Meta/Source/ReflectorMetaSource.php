@@ -50,6 +50,7 @@ abstract class ReflectorMetaSource implements MetaSource
 			$this->loadClassMeta($rootClass, $group),
 			$this->loadPropertiesMeta($rootClass, $group),
 			$sources,
+			$this->getSourceName(),
 		);
 	}
 
@@ -210,7 +211,6 @@ abstract class ReflectorMetaSource implements MetaSource
 				continue;
 			}
 
-			$this->checkFieldInvariance($rootClass, $resolvedGroup);
 			$resolved[] = $resolvedGroup;
 		}
 
@@ -241,35 +241,6 @@ abstract class ReflectorMetaSource implements MetaSource
 		}
 
 		return $definition;
-	}
-
-	/**
-	 * @param ReflectionClass<covariant MappedObject> $rootClass
-	 * @param list<FieldCompileMeta> $resolvedGroup
-	 */
-	private function checkFieldInvariance(ReflectionClass $rootClass, array $resolvedGroup): void
-	{
-		$sourceName = $this->getSourceName();
-		$previousFieldMeta = null;
-		foreach ($resolvedGroup as $fieldMeta) {
-			if ($previousFieldMeta !== null && !$fieldMeta->hasEqualMeta($previousFieldMeta)) {
-				$name = $this->getRelativePropertyName($fieldMeta->getProperty(), $rootClass);
-				$previousName = $this->getRelativePropertyName($previousFieldMeta->getProperty(), $rootClass);
-
-				$message = Message::create()
-					->withContext("Resolving metadata of mapped object '{$rootClass->getName()}'.")
-					->withProblem(
-						"Definition in $sourceName of property '$name' differs from definition in $sourceName"
-						. " of property '$previousName'.",
-					)
-					->withSolution("Don't override metadata of properties in child classes.");
-
-				throw InvalidArgument::create()
-					->withMessage($message);
-			}
-
-			$previousFieldMeta = $fieldMeta;
-		}
 	}
 
 	/**
