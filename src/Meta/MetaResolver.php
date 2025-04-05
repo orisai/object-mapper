@@ -194,15 +194,17 @@ final class MetaResolver
 	private function resolveFieldsMeta(ReflectionClass $rootClass, CompileMeta $meta): array
 	{
 		$fields = [];
-		foreach ($meta->getFields() as $fieldMeta) {
-			$resolved = $this->resolveFieldMeta(
-				$rootClass,
-				$fieldMeta,
-				$this->getDefaultValue($fieldMeta),
-			);
+		foreach ($meta->getFields() as $fieldMetas) {
+			foreach ($fieldMetas as $fieldMeta) {
+				$resolved = $this->resolveFieldMeta(
+					$rootClass,
+					$fieldMeta,
+					$this->getDefaultValue($fieldMeta),
+				);
 
-			$fieldName = $this->propertyNameToFieldName($resolved);
-			$fields[$fieldName] = $resolved;
+				$fieldName = $this->propertyNameToFieldName($resolved);
+				$fields[$fieldName] = $resolved;
+			}
 		}
 
 		return $fields;
@@ -476,38 +478,54 @@ final class MetaResolver
 	 */
 	private function checkFieldNames(ReflectionClass $rootClass, CompileMeta $meta): void
 	{
+		/** @var array<int|string, PropertyStructure> $map */
 		$map = [];
-		foreach ($meta->getFields() as $fieldMeta) {
-			$propertyStructure = $fieldMeta->getProperty();
-			$property = $propertyStructure->getContextReflector();
+		foreach ($meta->getFields() as $fieldMetas) {
+			foreach ($fieldMetas as $fieldMeta) {
+				$propertyStructure = $fieldMeta->getProperty();
+				$property = $propertyStructure->getContextReflector();
 
-			$fieldName = $property->getName();
+				$fieldName = $property->getName();
 
-			foreach ($fieldMeta->getModifiers() as $modifier) {
-				if ($modifier->getType() === FieldNameModifier::class) {
-					$fieldName = $modifier->getArgs()[FieldNameModifier::Name];
-					assert(is_string($fieldName) || is_int($fieldName));
+				foreach ($fieldMeta->getModifiers() as $modifier) {
+					if ($modifier->getType() === FieldNameModifier::class) {
+						$fieldName = $modifier->getArgs()[FieldNameModifier::Name];
+						assert(is_string($fieldName) || is_int($fieldName));
 
-					break;
+						break;
+					}
 				}
+
+				$collidingPropertyStructure = $map[$fieldName] ?? null;
+				if ($collidingPropertyStructure !== null) {
+					$collidingProperty = $collidingPropertyStructure->getContextReflector();
+					$isSameProperty = !$property->isPrivate()
+						&& !$collidingProperty->isPrivate()
+						&& $property->getName() === $collidingProperty->getName();
+
+					if (!$isSameProperty) {
+						$propertyName = $this->getRelativePropertyName(
+							$propertyStructure,
+							$rootClass,
+						);
+						$collidingPropertyName = $this->getRelativePropertyName(
+							$collidingPropertyStructure,
+							$rootClass,
+						);
+
+						$message = Message::create()
+							->withContext("Resolving metadata of mapped object '{$rootClass->getName()}'.")
+							->withProblem("Properties '$propertyName' and '$collidingPropertyName'"
+								. " have conflicting field name '$fieldName'.")
+							->withSolution('Define unique field name for each mapped property.');
+
+						throw InvalidState::create()
+							->withMessage($message);
+					}
+				}
+
+				$map[$fieldName] = $propertyStructure;
 			}
-
-			$collidingPropertyStructure = $map[$fieldName] ?? null;
-			if ($collidingPropertyStructure !== null) {
-				$propertyName = $this->getRelativePropertyName($propertyStructure, $rootClass);
-				$collidingPropertyName = $this->getRelativePropertyName($collidingPropertyStructure, $rootClass);
-
-				$message = Message::create()
-					->withContext("Resolving metadata of mapped object '{$rootClass->getName()}'.")
-					->withProblem("Properties '$propertyName' and '$collidingPropertyName'"
-						. " have conflicting field name '$fieldName'.")
-					->withSolution('Define unique field name for each mapped property.');
-
-				throw InvalidState::create()
-					->withMessage($message);
-			}
-
-			$map[$fieldName] = $propertyStructure;
 		}
 	}
 

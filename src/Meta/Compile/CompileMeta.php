@@ -11,15 +11,15 @@ final class CompileMeta
 	/** @var list<ClassCompileMeta> */
 	private array $classes;
 
-	/** @var list<FieldCompileMeta> */
+	/** @var list<non-empty-list<FieldCompileMeta>> */
 	private array $fields;
 
 	/** @var list<ClassSource|FileSource> */
 	private array $sources;
 
 	/**
-	 * @param list<ClassCompileMeta>       $classes
-	 * @param list<FieldCompileMeta>       $fields
+	 * @param list<ClassCompileMeta> $classes
+	 * @param list<non-empty-list<FieldCompileMeta>> $fields
 	 * @param list<ClassSource|FileSource> $sources
 	 */
 	public function __construct(array $classes, array $fields, array $sources)
@@ -38,7 +38,7 @@ final class CompileMeta
 	}
 
 	/**
-	 * @return list<FieldCompileMeta>
+	 * @return list<non-empty-list<FieldCompileMeta>>
 	 */
 	public function getFields(): array
 	{

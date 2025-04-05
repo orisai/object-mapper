@@ -32,17 +32,19 @@ final class CompileMetaTest extends TestCase
 			new ClassCompileMeta([], [], [], $class),
 		];
 		$fields = [
-			new FieldCompileMeta(
-				[],
-				[],
-				[],
-				new RuleCompileMeta(MixedRule::class, []),
-				new PropertyStructure(
-					$reflector->getProperty('string'),
-					new PropertySource($reflector->getProperty('string')),
+			[
+				new FieldCompileMeta(
 					[],
+					[],
+					[],
+					new RuleCompileMeta(MixedRule::class, []),
+					new PropertyStructure(
+						$reflector->getProperty('string'),
+						new PropertySource($reflector->getProperty('string')),
+						[],
+					),
 				),
-			),
+			],
 		];
 		$sources = [
 			new ClassSource(new ReflectionClass(self::class)),
@@ -104,17 +106,19 @@ final class CompileMetaTest extends TestCase
 				new ClassCompileMeta([], [], [], $class),
 			],
 			[
-				new FieldCompileMeta(
-					[],
-					[],
-					[],
-					new RuleCompileMeta(MixedRule::class, []),
-					new PropertyStructure(
-						$reflector->getProperty('string'),
-						new PropertySource($reflector->getProperty('string')),
+				[
+					new FieldCompileMeta(
 						[],
+						[],
+						[],
+						new RuleCompileMeta(MixedRule::class, []),
+						new PropertyStructure(
+							$reflector->getProperty('string'),
+							new PropertySource($reflector->getProperty('string')),
+							[],
+						),
 					),
-				),
+				],
 			],
 			[],
 		);

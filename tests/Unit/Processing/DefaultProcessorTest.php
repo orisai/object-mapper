@@ -1360,7 +1360,7 @@ arrayOfMixed: array<mixed>',
 			new CtorPromotionChildVo(
 				'1',
 				'foo',
-				'bar', // TODO - this should be 'overriden' value from child
+				'overridden',
 				'baz',
 			),
 		);

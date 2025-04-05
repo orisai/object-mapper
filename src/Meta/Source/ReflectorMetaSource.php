@@ -23,7 +23,6 @@ use Orisai\ReflectionMeta\Structure\StructureGroup;
 use Orisai\SourceMap\AboveReflectorSource;
 use Orisai\SourceMap\ReflectorSource;
 use ReflectionClass;
-use function array_key_first;
 use function get_class;
 use function sprintf;
 
@@ -118,7 +117,7 @@ abstract class ReflectorMetaSource implements MetaSource
 
 	/**
 	 * @param ReflectionClass<covariant MappedObject> $rootClass
-	 * @return list<FieldCompileMeta>
+	 * @return list<non-empty-list<FieldCompileMeta>>
 	 */
 	private function loadPropertiesMeta(ReflectionClass $rootClass, StructureGroup $group): array
 	{
@@ -212,7 +211,7 @@ abstract class ReflectorMetaSource implements MetaSource
 			}
 
 			$this->checkFieldInvariance($rootClass, $resolvedGroup);
-			$resolved[] = $resolvedGroup[array_key_first($resolvedGroup)];
+			$resolved[] = $resolvedGroup;
 		}
 
 		return $resolved;

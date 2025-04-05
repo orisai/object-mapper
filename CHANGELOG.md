@@ -24,6 +24,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 		- `load()` accepts `StructureGroup` as a 2nd parameter
 	- `MetaLoader`
 		- resolve meta from all sources to validate them, even though only one is used
+	- Compile meta
+		- `CompileMeta`
+			- `getFields()` returns list of fields, including grouped and ordered duplicates (from child classes,
+			  traits, ...)
 	- Runtime meta
 		- replace getters with readonly properties
 - `DefaultProcessor`
@@ -61,6 +65,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 	- `format: 'iso_compat'` parses second fractions with 1 or more digits
 		- previously expected 3 or less
 		- fractions above 6 digits are ignored, they are not supported by native DateTimeInterface implementation
+- Overriding field's default value by native default value in a child class
 
 ### Removed
 

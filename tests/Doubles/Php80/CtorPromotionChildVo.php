@@ -11,7 +11,7 @@ final class CtorPromotionChildVo extends CtorPromotionParentVo
 		string $a,
 		public string $b,
 		#[StringValue]
-		public string $c = 'overriden',
+		public string $c = 'overridden',
 		#[StringValue]
 		public string $d = 'baz',
 	)
