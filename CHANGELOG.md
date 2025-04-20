@@ -24,6 +24,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 		- `load()` accepts `StructureGroup` as a 2nd parameter
 	- `MetaLoader`
 		- resolve meta from all sources to validate them, even though only one is used
+	- `AnnotationsMetaSource`, `AttributesMetaSource`
+		- validate that definitions are not used on constants/methods/parameters
 	- Compile meta
 		- `CompileMeta`
 			- `getFields()` returns list of fields, including grouped and ordered duplicates (from child classes,

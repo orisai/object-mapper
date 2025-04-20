@@ -18,12 +18,14 @@ use Orisai\ObjectMapper\Meta\Shared\DocMeta;
 use Orisai\ObjectMapper\Modifiers\ModifierDefinition;
 use Orisai\ObjectMapper\Rules\RuleDefinition;
 use Orisai\ReflectionMeta\Reader\MetaReader;
+use Orisai\ReflectionMeta\Structure\Structure;
 use Orisai\ReflectionMeta\Structure\StructureGroup;
 use Orisai\SourceMap\AboveReflectorSource;
 use Orisai\SourceMap\ReflectorSource;
 use ReflectionClass;
 use function get_class;
 use function sprintf;
+use const PHP_VERSION_ID;
 
 /**
  * @internal
@@ -40,6 +42,8 @@ abstract class ReflectorMetaSource implements MetaSource
 
 	public function load(ReflectionClass $rootClass, StructureGroup $group): CompileMeta
 	{
+		$this->checkUnsupportedReflectors($rootClass, $group);
+
 		$sources = [];
 		foreach ($group->getClasses() as $structure) {
 			$sources[] = $structure->getSource();
@@ -53,6 +57,63 @@ abstract class ReflectorMetaSource implements MetaSource
 			$this->getAnyOfSourceKey(),
 			$this->getAllOfSourceKey(),
 		);
+	}
+
+	/**
+	 * @param ReflectionClass<covariant MappedObject> $rootClass
+	 */
+	private function checkUnsupportedReflectors(ReflectionClass $rootClass, StructureGroup $group): void
+	{
+		foreach ($group->getGroupedConstants() as $groupedConstant) {
+			foreach ($groupedConstant as $constantStructure) {
+				$reflector = $constantStructure->getSource()->getReflector();
+				$definitions = $this->reader->readConstant($reflector, MetaDefinition::class);
+
+				if ($definitions !== []) {
+					$this->throwUnsupportedReflector($rootClass, $constantStructure, 'constants');
+				}
+			}
+		}
+
+		foreach ($group->getGroupedMethods() as $groupedMethod) {
+			foreach ($groupedMethod as $methodStructure) {
+				$reflector = $methodStructure->getSource()->getReflector();
+				$definitions = $this->reader->readMethod($reflector, MetaDefinition::class);
+
+				if ($definitions !== []) {
+					$this->throwUnsupportedReflector($rootClass, $methodStructure, 'methods');
+				}
+
+				foreach ($methodStructure->getParameters() as $parameterStructure) {
+					$parameterReflector = $parameterStructure->getSource()->getReflector();
+
+					// Promoted properties from constructor are duplicated
+					if (PHP_VERSION_ID >= 8_00_00 && $parameterReflector->isPromoted()) {
+						continue;
+					}
+
+					$parameterDefinitions = $this->reader->readParameter($parameterReflector, MetaDefinition::class);
+					if ($parameterDefinitions !== []) {
+						$this->throwUnsupportedReflector($rootClass, $parameterStructure, 'parameters');
+					}
+				}
+			}
+		}
+	}
+
+	/**
+	 * @param ReflectionClass<covariant MappedObject> $rootClass
+	 * @return never
+	 */
+	private function throwUnsupportedReflector(ReflectionClass $rootClass, Structure $structure, string $type): void
+	{
+		$message = Message::create()
+			->withContext("Resolving metadata of mapped object '{$rootClass->getName()}'.")
+			->withProblem("Definitions are not allowed on $type.")
+			->withSolution("Remove definition from '{$structure->getSource()->toString()}'.");
+
+		throw InvalidArgument::create()
+			->withMessage($message);
 	}
 
 	/**
