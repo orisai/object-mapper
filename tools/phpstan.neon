@@ -23,6 +23,10 @@ parameters:
 			- Orisai\Exceptions\Check\CheckedException
 
 	ignoreErrors:
+		# Internal classes in tests
+		-
+			message: '#(.+)internal(.+)Orisai(.+)#'
+			path: ../tests
 		# Values mapping to object
 		-
 			message: '#^Variable property access on Orisai\\ObjectMapper\\MappedObject\.$#'
