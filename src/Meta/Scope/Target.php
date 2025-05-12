@@ -23,6 +23,9 @@ final class Target
 	/** @readonly */
 	public string $name;
 
+	/** @readonly */
+	public string $value = 'property'; //TODO - values - class, constant, ...
+
 	/** @var array<string, self> */
 	private static array $instances = [];
 

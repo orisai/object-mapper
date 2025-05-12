@@ -6,6 +6,7 @@ use Exception;
 use Orisai\Exceptions\Logic\InvalidState;
 use Orisai\Exceptions\Message;
 use Orisai\ObjectMapper\Meta\Compile\CompileMeta;
+use Orisai\ObjectMapper\Meta\Compile\FieldCompileMeta;
 use Orisai\ObjectMapper\Meta\MetaDefinition;
 use Orisai\ReflectionMeta\Structure\PropertyStructure;
 use function array_key_first;
@@ -60,24 +61,25 @@ final class ScopeResolver
 				$scopedDefinitions = [];
 
 				foreach ($property->getDefinitions() as $definition) {
-					$this->checkScopeHandlerCompatibility($definition);
 					$scope = $definition->getScope();
+					$handler = $definition->getHandler();
+
+					if (!is_a($handler, $scope, true)) {
+						$this->throwHandlerIncompatibleWithScope($definition);
+					}
+
 					$config = $this->getConfig($definition);
 
 					//TODO - testovat, že target anotace/atributu odpovídá našemu Target
 					$targets = $config->targets;
 					if (!in_array($target, $targets, true)) {
-						//TODO - použitý target není pro tuhle definici povolený její skupinou
-						//		- vypsat kde je definice použitá
-						throw new Exception('a - ' . $propertyStructure->getSource()->toString());
+						$this->throwTargetIsNotAllowed($target, $definition, $propertyStructure);
 					}
 
 					$hierarchy = $config->hierarchyPosition;
 					//TODO - dovolit první třídu, nejen trait? co když bude property definovaná skrze interface?
-					if ($hierarchy === HierarchyPosition::firstType() && $property !== $firstGroupedProperty) {
-						throw new Exception(
-							'e - ' . $propertyStructure->getSource()->toString() . ' ' . get_class($definition),
-						);
+					if ($property !== $firstGroupedProperty && $hierarchy === HierarchyPosition::firstType()) {
+						$this->throwDefinitionNotUsedAboveFirstOccurrence($definition, $propertyStructure, $target, $firstGroupedProperty);
 					}
 
 					$scopesByProperty[$propertyName][$scope] = true;
@@ -113,20 +115,22 @@ final class ScopeResolver
 		return $scopedProperties;
 	}
 
-	private function checkScopeHandlerCompatibility(MetaDefinition $definition): void
+	/**
+	 * @return never
+	 */
+	private function throwHandlerIncompatibleWithScope(MetaDefinition $definition): void
 	{
+		$className = get_class($definition);
 		$scope = $definition->getScope();
 		$handler = $definition->getHandler();
 
-		if (!is_a($handler, $scope, true)) {
-			$message = Message::create()
-				->withContext('Resolving definition . ' . get_class($definition) . '.')
-				->withProblem("Handler $handler is incompatible with scope $scope.")
-				->withSolution('Handler must be either same or a subclass of scope.');
+		$message = Message::create()
+			->withContext("Resolving definition '$className'.")
+			->withProblem("Handler '$handler' is incompatible with scope '$scope'.")
+			->withSolution('Handler must be either same or a subclass of scope.');
 
-			throw InvalidState::create()
-				->withMessage($message);
-		}
+		throw InvalidState::create()
+			->withMessage($message);
 	}
 
 	private function getConfig(MetaDefinition $definition): ScopeConfig
@@ -134,9 +138,10 @@ final class ScopeResolver
 		$scope = $definition->getScope();
 		$config = $this->scopeConfigs[$scope] ?? null;
 		if ($config === null) {
+			$className = get_class($definition);
 			$message = Message::create()
-				->withContext('Resolving definition . ' . get_class($definition) . '.')
-				->withProblem('No config exists for scope ' . $scope . ' returned by the definition.')
+				->withContext("Resolving definition '$className'.")
+				->withProblem("No config exists for scope '$scope' returned by the definition.")
 				->withSolution('Add configuration to scope resolver or use an existing scope in the definition.');
 
 			throw InvalidState::create()
@@ -144,6 +149,47 @@ final class ScopeResolver
 		}
 
 		return $config;
+	}
+
+	/**
+	 * @return never
+	 */
+	private function throwTargetIsNotAllowed(
+		Target $target,
+		MetaDefinition $definition,
+		PropertyStructure $propertyStructure
+	): void
+	{
+		$className = get_class($definition);
+		$message = Message::create()
+			->withContext("Resolving metadata of '{$propertyStructure->getSource()->toString()}'.")
+			->withProblem("Used definition '$className' does not allow to be used on '$target->value'.");
+
+		throw InvalidState::create()
+			->withMessage($message);
+	}
+
+	/**
+	 * @return never
+	 */
+	private function throwDefinitionNotUsedAboveFirstOccurrence(
+		MetaDefinition $definition,
+		PropertyStructure $propertyStructure,
+		Target $target,
+		FieldCompileMeta $firstGroupedProperty
+	): void
+	{
+		$className = get_class($definition);
+
+		$message = Message::create()
+			->withContext("Resolving metadata of '{$propertyStructure->getSource()->toString()}'.")
+			->withProblem(
+				"Used definition '$className' can be used only on the first '$target->value' occurrence,"
+				. " '{$firstGroupedProperty->getPropertyStructure()->getSource()->toString()}'."
+			);
+
+		throw InvalidState::create()
+			->withMessage($message);
 	}
 
 }

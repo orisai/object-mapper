@@ -334,6 +334,8 @@ final class RuntimeResolver
 			$lastContextReflector = $lastPropertyStructure->getContextReflector();
 
 			//TODO - získat 0-1, resolvnout, odstranit ze seznamu na všech úrovních
+			//TODO - zdokumentovat, že lze vytvořit vlastní objekt s výchozí hodnotou
+			//TODO - validovat, že výchozí hodnotu lze nastavit?? v checkObjectIsInstantiable
 			$default = $this->getDefaultValue(
 				$lastPropertyStructure,
 				$lastPropertyConfig['scopedDefinitions'][DefaultValueModifier::class] ?? [],
