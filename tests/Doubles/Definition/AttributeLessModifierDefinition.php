@@ -8,7 +8,12 @@ use Orisai\ObjectMapper\Modifiers\ModifierDefinition;
 final class AttributeLessModifierDefinition implements ModifierDefinition
 {
 
-	public function getType(): string
+	public function getScope(): string
+	{
+		return $this->getHandler();
+	}
+
+	public function getHandler(): string
 	{
 		return DefaultValueModifier::class;
 	}

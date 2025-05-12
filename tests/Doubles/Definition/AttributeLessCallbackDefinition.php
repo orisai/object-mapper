@@ -5,10 +5,15 @@ namespace Tests\Orisai\ObjectMapper\Doubles\Definition;
 use Orisai\ObjectMapper\Callbacks\BeforeValidationCallback;
 use Orisai\ObjectMapper\Callbacks\CallbackDefinition;
 
-final class AttributeLessCallbackDefinition implements CallbackDefinition
+final class AttributeLessCallbackDefinition extends CallbackDefinition
 {
 
-	public function getType(): string
+	public function getScope(): string
+	{
+		return $this->getHandler();
+	}
+
+	public function getHandler(): string
 	{
 		return BeforeValidationCallback::class;
 	}

@@ -17,7 +17,7 @@ final class MappedObjectValueTest extends TestCase
 	{
 		$definition = new MappedObjectValue(DefaultsVO::class);
 
-		self::assertSame(MappedObjectRule::class, $definition->getType());
+		self::assertSame(MappedObjectRule::class, $definition->getHandler());
 		self::assertSame(
 			[
 				MappedObjectRule::ClassName => DefaultsVO::class,

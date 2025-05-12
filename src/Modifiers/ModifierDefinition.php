@@ -11,6 +11,6 @@ interface ModifierDefinition extends MetaDefinition
 	/**
 	 * @return class-string<Modifier<Args>>
 	 */
-	public function getType(): string;
+	public function getHandler(): string;
 
 }

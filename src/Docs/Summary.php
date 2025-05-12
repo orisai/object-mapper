@@ -13,7 +13,7 @@ use Orisai\ReflectionMeta\Filter\AnnotationFilter;
  * @Target({"CLASS", "PROPERTY"})
  */
 #[Attribute(Attribute::TARGET_CLASS | Attribute::TARGET_PROPERTY)]
-final class Summary implements DocDefinition
+final class Summary extends DocDefinition
 {
 
 	private string $message;
@@ -23,7 +23,12 @@ final class Summary implements DocDefinition
 		$this->message = AnnotationFilter::filterMultilineDocblock($message);
 	}
 
-	public function getType(): string
+	public function getScope(): string
+	{
+		return $this->getHandler();
+	}
+
+	public function getHandler(): string
 	{
 		return SummaryDoc::class;
 	}

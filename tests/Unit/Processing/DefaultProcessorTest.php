@@ -23,6 +23,7 @@ use Tests\Orisai\ObjectMapper\Doubles\Callbacks\BeforeClassCallbackValueDoesNotM
 use Tests\Orisai\ObjectMapper\Doubles\Callbacks\CallbackOverrideChildVO;
 use Tests\Orisai\ObjectMapper\Doubles\Callbacks\CallbacksVO;
 use Tests\Orisai\ObjectMapper\Doubles\Callbacks\CallbacksVoContext;
+use Tests\Orisai\ObjectMapper\Doubles\Callbacks\CallbackVisibilityChildVO;
 use Tests\Orisai\ObjectMapper\Doubles\Callbacks\InvalidateFieldBeforeClassVO;
 use Tests\Orisai\ObjectMapper\Doubles\Callbacks\ObjectInitializingVO;
 use Tests\Orisai\ObjectMapper\Doubles\Callbacks\PropertyCallbacksFailureVO;
@@ -41,6 +42,7 @@ use Tests\Orisai\ObjectMapper\Doubles\FieldNames\FieldNamesVO;
 use Tests\Orisai\ObjectMapper\Doubles\ForbiddenConstructorVO;
 use Tests\Orisai\ObjectMapper\Doubles\Inheritance\CallbacksVisibilityVO;
 use Tests\Orisai\ObjectMapper\Doubles\Inheritance\ChildVO;
+use Tests\Orisai\ObjectMapper\Doubles\Inheritance\FieldCallbackChildVo;
 use Tests\Orisai\ObjectMapper\Doubles\Inheritance\InterfaceUsingVO;
 use Tests\Orisai\ObjectMapper\Doubles\Inheritance\PropertiesVisibilityVO;
 use Tests\Orisai\ObjectMapper\Doubles\Inheritance\TraitAlias1\TraitAlias1VO;
@@ -1404,6 +1406,48 @@ arrayOfMixed: array<mixed>',
 		self::assertEquals(
 			$vo,
 			new InternalClassExtendingVO('foo'),
+		);
+	}
+
+	public function testCallbackOverloading(): void
+	{
+		$data = [
+			'test' => 'foo',
+		];
+
+		$vo = $this->processor->process($data, FieldCallbackChildVo::class);
+
+		self::assertEquals(
+			$vo,
+			new FieldCallbackChildVo('foo-parentTrait-parent-child-child'),
+		);
+	}
+
+	public function testCallbackVisibility(): void
+	{
+		$data = [
+			'public' => '1',
+			'protected' => '2',
+			'privateChild' => '3',
+			'privateParent' => '4',
+		];
+
+		$vo = $this->processor->process($data, CallbackVisibilityChildVO::class);
+		self::assertSame(
+			'1-puPcCb-proPcCb-priPcCb-pubCcCb-proCcCb-priCcCb',
+			$vo->public,
+		);
+		self::assertSame(
+			'2-puPcCb-proPcCb-priPcCb-pubCcCb-proCcCb-priCcCb',
+			$vo->getProtected(),
+		);
+		self::assertSame(
+			'3-pubCcCb-proCcCb-priCcCb',
+			$vo->getPrivateChild(),
+		);
+		self::assertSame(
+			'4-puPcCb-proPcCb-priPcCb',
+			$vo->getPrivateParent(),
 		);
 	}
 

@@ -2,11 +2,11 @@
 
 namespace Tests\Orisai\ObjectMapper\Unit\Meta\Compile;
 
-use Orisai\ObjectMapper\Callbacks\BeforeValidationCallback;
-use Orisai\ObjectMapper\Meta\Compile\CallbackCompileMeta;
+use Orisai\ObjectMapper\Callbacks\BeforeValidation;
 use Orisai\ObjectMapper\Meta\Compile\ClassCompileMeta;
 use Orisai\ObjectMapper\Meta\Compile\CompileMeta;
 use Orisai\ObjectMapper\Meta\Compile\FieldCompileMeta;
+use Orisai\ObjectMapper\Rules\StringValue;
 use Orisai\ReflectionMeta\Structure\ClassStructure;
 use Orisai\ReflectionMeta\Structure\PropertyStructure;
 use Orisai\SourceMap\ClassSource;
@@ -27,15 +27,14 @@ final class CompileMetaTest extends TestCase
 			new ClassSource($reflector),
 		);
 		$classes = [
-			new ClassCompileMeta([], [], [], $class),
+			new ClassCompileMeta([], $class),
 		];
 		$fields = [
-			[
+			'string' => [
 				new FieldCompileMeta(
-					[],
-					[],
-					[],
-					[],
+					[
+						new StringValue(),
+					],
 					new PropertyStructure(
 						$reflector->getProperty('string'),
 						new PropertySource($reflector->getProperty('string')),
@@ -60,7 +59,7 @@ final class CompileMetaTest extends TestCase
 		);
 		self::assertSame(
 			$fields,
-			$meta->getFields(),
+			$meta->getGroupedProperties(),
 		);
 		self::assertSame(
 			$sources,
@@ -78,7 +77,7 @@ final class CompileMetaTest extends TestCase
 			$allOfKey,
 			$meta->getAllOfSourceKey(),
 		);
-		self::assertTrue($meta->hasAnyMeta());
+		self::assertTrue($meta->hasAnyDefinitions());
 	}
 
 	public function testHasAnyAttributes(): void
@@ -91,7 +90,7 @@ final class CompileMetaTest extends TestCase
 
 		$meta = new CompileMeta(
 			[
-				new ClassCompileMeta([], [], [], $class),
+				new ClassCompileMeta([], $class),
 			],
 			[],
 			[],
@@ -99,16 +98,14 @@ final class CompileMetaTest extends TestCase
 			'any-of',
 			'all-of',
 		);
-		self::assertFalse($meta->hasAnyMeta());
+		self::assertFalse($meta->hasAnyDefinitions());
 
 		$meta = new CompileMeta(
 			[
 				new ClassCompileMeta(
 					[
-						new CallbackCompileMeta(BeforeValidationCallback::class, []),
+						new BeforeValidation('foo'),
 					],
-					[],
-					[],
 					$class,
 				),
 			],
@@ -118,19 +115,18 @@ final class CompileMetaTest extends TestCase
 			'any-of',
 			'all-of',
 		);
-		self::assertTrue($meta->hasAnyMeta());
+		self::assertTrue($meta->hasAnyDefinitions());
 
 		$meta = new CompileMeta(
 			[
-				new ClassCompileMeta([], [], [], $class),
+				new ClassCompileMeta([], $class),
 			],
 			[
-				[
+				'string' => [
 					new FieldCompileMeta(
-						[],
-						[],
-						[],
-						[],
+						[
+							new StringValue(),
+						],
 						new PropertyStructure(
 							$reflector->getProperty('string'),
 							new PropertySource($reflector->getProperty('string')),
@@ -144,7 +140,7 @@ final class CompileMetaTest extends TestCase
 			'any-of',
 			'all-of',
 		);
-		self::assertTrue($meta->hasAnyMeta());
+		self::assertTrue($meta->hasAnyDefinitions());
 	}
 
 }

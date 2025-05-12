@@ -3,60 +3,23 @@
 namespace Orisai\ObjectMapper\Meta\Runtime;
 
 use Orisai\ObjectMapper\Args\Args;
-use Orisai\ObjectMapper\Callbacks\Callback;
-use Orisai\ObjectMapper\Meta\Shared\DocMeta;
 
 /**
  * @readonly
  *
  * @internal
  */
-abstract class NodeRuntimeMeta
+interface NodeRuntimeMeta
 {
-
-	/** @var array<class-string<Callback<Args>>, list<CallbackRuntimeMeta<Args>>> */
-	public array $callbacks;
-
-	/** @var array<string, DocMeta> */
-	public array $docs;
-
-	/**
-	 * @template T_ARGS of Args
-	 * @param array<class-string<Callback<T_ARGS>>, list<CallbackRuntimeMeta<T_ARGS>>> $callbacks
-	 * @param array<string, DocMeta> $docs
-	 */
-	public function __construct(array $callbacks, array $docs)
-	{
-		$this->callbacks = $callbacks;
-		$this->docs = $docs;
-	}
 
 	/**
 	 * @return list<CallbackRuntimeMeta<Args>>
 	 */
-	public function getCallbacksByType(string $type): array
-	{
-		return $this->callbacks[$type] ?? [];
-	}
+	public function getBeforeValidationCallbacks(): array;
 
 	/**
-	 * @return array<mixed>
+	 * @return list<CallbackRuntimeMeta<Args>>
 	 */
-	public function __serialize(): array
-	{
-		return [
-			'callbacks' => $this->callbacks,
-			'docs' => $this->docs,
-		];
-	}
-
-	/**
-	 * @param array<mixed> $data
-	 */
-	public function __unserialize(array $data): void
-	{
-		$this->callbacks = $data['callbacks'];
-		$this->docs = $data['docs'];
-	}
+	public function getAfterValidationCallbacks(): array;
 
 }

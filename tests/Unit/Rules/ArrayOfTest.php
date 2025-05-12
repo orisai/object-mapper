@@ -3,7 +3,6 @@
 namespace Tests\Orisai\ObjectMapper\Unit\Rules;
 
 use Generator;
-use Orisai\ObjectMapper\Meta\Compile\RuleCompileMeta;
 use Orisai\ObjectMapper\Rules\ArrayOf;
 use Orisai\ObjectMapper\Rules\ArrayOfRule;
 use Orisai\ObjectMapper\Rules\IntValue;
@@ -23,10 +22,10 @@ final class ArrayOfTest extends TestCase
 		$item = new MixedValue();
 		$definition = new ArrayOf($item);
 
-		self::assertSame(ArrayOfRule::class, $definition->getType());
-		self::assertEquals(
+		self::assertSame(ArrayOfRule::class, $definition->getHandler());
+		self::assertSame(
 			[
-				ArrayOfRule::ItemRule => new RuleCompileMeta($item->getType(), $item->getArgs()),
+				ArrayOfRule::ItemRule => $item,
 				ArrayOfRule::MinItems => null,
 				ArrayOfRule::MaxItems => null,
 				ArrayOfRule::MergeDefaults => false,
@@ -54,13 +53,13 @@ final class ArrayOfTest extends TestCase
 	{
 		$definition = new ArrayOf($item, $key, $minItems, $maxItems, $mergeDefaults);
 
-		self::assertEquals(
+		self::assertSame(
 			[
-				ArrayOfRule::ItemRule => new RuleCompileMeta($item->getType(), $item->getArgs()),
+				ArrayOfRule::ItemRule => $item,
 				ArrayOfRule::MinItems => $minItems,
 				ArrayOfRule::MaxItems => $maxItems,
 				ArrayOfRule::MergeDefaults => $mergeDefaults,
-				ArrayOfRule::KeyRule => $key === null ? null : new RuleCompileMeta($key->getType(), $key->getArgs()),
+				ArrayOfRule::KeyRule => $key,
 			],
 			$definition->getArgs(),
 		);

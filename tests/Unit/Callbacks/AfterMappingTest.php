@@ -17,7 +17,7 @@ final class AfterMappingTest extends TestCase
 		$method = 'methodName';
 		$definition = new AfterMapping($method);
 
-		self::assertSame(AfterMappingCallback::class, $definition->getType());
+		self::assertSame(AfterMappingCallback::class, $definition->getHandler());
 		self::assertSame(
 			[
 				AfterMappingCallback::Method => $method,

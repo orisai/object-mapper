@@ -17,7 +17,7 @@ final class BoolValueTest extends TestCase
 	{
 		$definition = new BoolValue();
 
-		self::assertSame(BoolRule::class, $definition->getType());
+		self::assertSame(BoolRule::class, $definition->getHandler());
 		self::assertSame(
 			[
 				BoolRule::CastBoolLike => false,

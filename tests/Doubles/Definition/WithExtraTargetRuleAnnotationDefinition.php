@@ -12,10 +12,10 @@ use Orisai\ObjectMapper\Rules\RuleDefinition;
  * @NamedArgumentConstructor()
  * @Target("ALL")
  */
-final class WithExtraTargetRuleAnnotationDefinition implements RuleDefinition
+final class WithExtraTargetRuleAnnotationDefinition extends RuleDefinition
 {
 
-	public function getType(): string
+	public function getHandler(): string
 	{
 		return MixedRule::class;
 	}

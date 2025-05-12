@@ -8,10 +8,17 @@ namespace Orisai\ObjectMapper\Meta;
 interface MetaDefinition
 {
 
+	//TODO - předefinovat skupiny, otestovat implementace
+
 	/**
 	 * @return class-string
 	 */
-	public function getType(): string;
+	public function getScope(): string;
+
+	/**
+	 * @return class-string
+	 */
+	public function getHandler(): string;
 
 	/**
 	 * @return array<mixed>

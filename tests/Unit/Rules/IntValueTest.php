@@ -17,7 +17,7 @@ final class IntValueTest extends TestCase
 	{
 		$definition = new IntValue();
 
-		self::assertSame(IntRule::class, $definition->getType());
+		self::assertSame(IntRule::class, $definition->getHandler());
 		self::assertSame(
 			[
 				IntRule::Min => null,

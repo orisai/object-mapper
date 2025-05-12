@@ -5,7 +5,6 @@ namespace Orisai\ObjectMapper\Rules;
 use Attribute;
 use Doctrine\Common\Annotations\Annotation\NamedArgumentConstructor;
 use Doctrine\Common\Annotations\Annotation\Target;
-use Orisai\ObjectMapper\Meta\Compile\RuleCompileMeta;
 
 /**
  * @Annotation
@@ -16,7 +15,7 @@ use Orisai\ObjectMapper\Meta\Compile\RuleCompileMeta;
 final class ArrayOf extends MultiValueDefinition
 {
 
-	private ?RuleCompileMeta $key;
+	private ?RuleDefinition $key;
 
 	public function __construct(
 		RuleDefinition $item,
@@ -27,10 +26,10 @@ final class ArrayOf extends MultiValueDefinition
 	)
 	{
 		parent::__construct($item, $minItems, $maxItems, $mergeDefaults);
-		$this->key = $key === null ? null : new RuleCompileMeta($key->getType(), $key->getArgs());
+		$this->key = $key;
 	}
 
-	public function getType(): string
+	public function getHandler(): string
 	{
 		return ArrayOfRule::class;
 	}

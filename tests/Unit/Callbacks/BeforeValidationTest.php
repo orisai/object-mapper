@@ -19,7 +19,7 @@ final class BeforeValidationTest extends TestCase
 		$method = 'methodName';
 		$definition = new BeforeValidation($method);
 
-		self::assertSame(BeforeValidationCallback::class, $definition->getType());
+		self::assertSame(BeforeValidationCallback::class, $definition->getHandler());
 		self::assertSame(
 			[
 				BeforeValidationCallback::Method => $method,

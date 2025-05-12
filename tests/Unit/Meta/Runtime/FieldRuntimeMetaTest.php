@@ -7,17 +7,12 @@ use Orisai\ObjectMapper\Callbacks\AfterValidationCallback;
 use Orisai\ObjectMapper\Callbacks\BeforeValidationCallback;
 use Orisai\ObjectMapper\Callbacks\CallbackRuntime;
 use Orisai\ObjectMapper\Callbacks\ValidationCallbackArgs;
-use Orisai\ObjectMapper\Docs\DescriptionDoc;
 use Orisai\ObjectMapper\Meta\Runtime\CallbackRuntimeMeta;
 use Orisai\ObjectMapper\Meta\Runtime\FieldRuntimeMeta;
-use Orisai\ObjectMapper\Meta\Runtime\ModifierRuntimeMeta;
 use Orisai\ObjectMapper\Meta\Runtime\PhpMethodMeta;
 use Orisai\ObjectMapper\Meta\Runtime\PhpPropertyMeta;
 use Orisai\ObjectMapper\Meta\Runtime\RuleRuntimeMeta;
 use Orisai\ObjectMapper\Meta\Shared\DefaultValueMeta;
-use Orisai\ObjectMapper\Meta\Shared\DocMeta;
-use Orisai\ObjectMapper\Modifiers\FieldNameArgs;
-use Orisai\ObjectMapper\Modifiers\FieldNameModifier;
 use Orisai\ObjectMapper\Rules\MixedRule;
 use PHPUnit\Framework\TestCase;
 use Tests\Orisai\ObjectMapper\Doubles\NoDefaultsVO;
@@ -46,32 +41,34 @@ final class FieldRuntimeMetaTest extends TestCase
 				),
 			),
 		];
-
-		$callbacks = [
-			BeforeValidationCallback::class => $beforeCallbacks,
-		];
-		$docs = [
-			DescriptionDoc::getUniqueName() => new DocMeta(DescriptionDoc::class, []),
-		];
-		$modifiers = [
-			FieldNameModifier::class => new ModifierRuntimeMeta(FieldNameModifier::class, new FieldNameArgs('field')),
+		$afterCallbacks = [
+			new CallbackRuntimeMeta(
+				AfterValidationCallback::class,
+				new ValidationCallbackArgs(
+					CallbackRuntime::process(),
+					new PhpMethodMeta(
+						NoDefaultsVO::class,
+						'method',
+						false,
+						false,
+						false,
+					),
+				),
+			),
 		];
 		$rule = new RuleRuntimeMeta(MixedRule::class, new EmptyArgs());
 		$default = DefaultValueMeta::fromNothing();
 
-		$meta = new FieldRuntimeMeta($callbacks, $docs, $modifiers, $rule, $default, $property);
+		$meta = new FieldRuntimeMeta($beforeCallbacks, $afterCallbacks, $rule, $default, $property);
 
-		self::assertSame($callbacks, $meta->callbacks);
 		self::assertSame(
 			$beforeCallbacks,
-			$meta->getCallbacksByType(BeforeValidationCallback::class),
+			$meta->getBeforeValidationCallbacks(),
 		);
 		self::assertSame(
-			[],
-			$meta->getCallbacksByType(AfterValidationCallback::class),
+			$afterCallbacks,
+			$meta->getAfterValidationCallbacks(),
 		);
-		self::assertSame($docs, $meta->docs);
-		self::assertSame($modifiers, $meta->modifiers);
 		self::assertSame($rule, $meta->rule);
 		self::assertSame($property, $meta->property);
 		self::assertEquals($meta, unserialize(serialize($meta)));

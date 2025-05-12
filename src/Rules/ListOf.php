@@ -15,7 +15,7 @@ use Doctrine\Common\Annotations\Annotation\Target;
 final class ListOf extends MultiValueDefinition
 {
 
-	public function getType(): string
+	public function getHandler(): string
 	{
 		return ListOfRule::class;
 	}

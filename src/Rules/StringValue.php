@@ -12,7 +12,7 @@ use Doctrine\Common\Annotations\Annotation\Target;
  * @Target({"PROPERTY", "ANNOTATION"})
  */
 #[Attribute(Attribute::TARGET_PROPERTY)]
-final class StringValue implements RuleDefinition
+final class StringValue extends RuleDefinition
 {
 
 	private ?string $pattern;
@@ -40,7 +40,7 @@ final class StringValue implements RuleDefinition
 		$this->trim = $trim;
 	}
 
-	public function getType(): string
+	public function getHandler(): string
 	{
 		return StringRule::class;
 	}

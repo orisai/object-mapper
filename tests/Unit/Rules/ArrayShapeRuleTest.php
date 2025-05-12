@@ -5,7 +5,6 @@ namespace Tests\Orisai\ObjectMapper\Unit\Rules;
 use Generator;
 use Orisai\ObjectMapper\Args\EmptyArgs;
 use Orisai\ObjectMapper\Exception\ValueDoesNotMatch;
-use Orisai\ObjectMapper\Meta\Compile\RuleCompileMeta;
 use Orisai\ObjectMapper\Meta\Runtime\RuleRuntimeMeta;
 use Orisai\ObjectMapper\Meta\Shared\DefaultValueMeta;
 use Orisai\ObjectMapper\Rules\ArrayShapeArgs;
@@ -13,11 +12,14 @@ use Orisai\ObjectMapper\Rules\ArrayShapeRule;
 use Orisai\ObjectMapper\Rules\IntRule;
 use Orisai\ObjectMapper\Rules\MappedObjectRule;
 use Orisai\ObjectMapper\Rules\MixedRule;
+use Orisai\ObjectMapper\Rules\MixedValue;
 use Orisai\ObjectMapper\Rules\NullArgs;
 use Orisai\ObjectMapper\Rules\NullRule;
 use Orisai\ObjectMapper\Rules\ScalarRule;
+use Orisai\ObjectMapper\Rules\ScalarValue;
 use Orisai\ObjectMapper\Rules\StringArgs;
 use Orisai\ObjectMapper\Rules\StringRule;
+use Orisai\ObjectMapper\Rules\StringValue;
 use Orisai\ObjectMapper\Types\ArrayShapeType;
 use Orisai\ObjectMapper\Types\SimpleValueType;
 use Tests\Orisai\ObjectMapper\Doubles\EmptyVO;
@@ -52,7 +54,7 @@ final class ArrayShapeRuleTest extends ProcessingTestCase
 		yield [
 			[
 				ArrayShapeRule::Fields => [
-					'foo' => new RuleCompileMeta(MixedRule::class),
+					'foo' => new MixedValue(),
 				],
 			],
 			new ArrayShapeArgs([
@@ -63,8 +65,8 @@ final class ArrayShapeRuleTest extends ProcessingTestCase
 		yield [
 			[
 				ArrayShapeRule::Fields => [
-					1 => new RuleCompileMeta(ScalarRule::class),
-					'foo' => new RuleCompileMeta(StringRule::class),
+					1 => new ScalarValue(),
+					'foo' => new StringValue(),
 				],
 			],
 			new ArrayShapeArgs([

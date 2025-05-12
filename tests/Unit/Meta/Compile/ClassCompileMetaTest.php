@@ -2,13 +2,10 @@
 
 namespace Tests\Orisai\ObjectMapper\Unit\Meta\Compile;
 
-use Orisai\ObjectMapper\Callbacks\BeforeValidationCallback;
-use Orisai\ObjectMapper\Docs\DescriptionDoc;
-use Orisai\ObjectMapper\Meta\Compile\CallbackCompileMeta;
+use Orisai\ObjectMapper\Callbacks\BeforeValidation;
+use Orisai\ObjectMapper\Docs\Description;
 use Orisai\ObjectMapper\Meta\Compile\ClassCompileMeta;
-use Orisai\ObjectMapper\Meta\Compile\ModifierCompileMeta;
-use Orisai\ObjectMapper\Meta\Shared\DocMeta;
-use Orisai\ObjectMapper\Modifiers\FieldNameModifier;
+use Orisai\ObjectMapper\Modifiers\FieldName;
 use Orisai\ReflectionMeta\Structure\ClassStructure;
 use Orisai\SourceMap\ClassSource;
 use PHPUnit\Framework\TestCase;
@@ -20,14 +17,10 @@ final class ClassCompileMetaTest extends TestCase
 
 	public function test(): void
 	{
-		$callbacks = [
-			new CallbackCompileMeta(BeforeValidationCallback::class, []),
-		];
-		$docs = [
-			new DocMeta(DescriptionDoc::class, []),
-		];
-		$modifiers = [
-			new ModifierCompileMeta(FieldNameModifier::class, []),
+		$definitions = [
+			new BeforeValidation('foo'),
+			new Description('description'),
+			new FieldName('foo'),
 		];
 		$reflector = new ReflectionClass(NoDefaultsVO::class);
 		$class = new ClassStructure(
@@ -35,37 +28,16 @@ final class ClassCompileMetaTest extends TestCase
 			new ClassSource($reflector),
 		);
 
-		$meta = new ClassCompileMeta($callbacks, $docs, $modifiers, $class);
+		$meta = new ClassCompileMeta($definitions, $class);
 
 		self::assertSame(
-			$callbacks,
-			$meta->getCallbacks(),
-		);
-		self::assertSame(
-			$docs,
-			$meta->getDocs(),
-		);
-		self::assertSame(
-			$modifiers,
-			$meta->getModifiers(),
+			$definitions,
+			$meta->getDefinitions(),
 		);
 		self::assertSame(
 			$class,
 			$meta->getClass(),
 		);
-		self::assertTrue($meta->hasAnyMeta());
-
-		$meta = new ClassCompileMeta($callbacks, [], [], $class);
-		self::assertTrue($meta->hasAnyMeta());
-
-		$meta = new ClassCompileMeta([], $docs, [], $class);
-		self::assertTrue($meta->hasAnyMeta());
-
-		$meta = new ClassCompileMeta([], [], $modifiers, $class);
-		self::assertTrue($meta->hasAnyMeta());
-
-		$meta = new ClassCompileMeta([], [], [], $class);
-		self::assertFalse($meta->hasAnyMeta());
 	}
 
 }

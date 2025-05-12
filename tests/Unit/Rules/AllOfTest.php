@@ -2,7 +2,6 @@
 
 namespace Tests\Orisai\ObjectMapper\Unit\Rules;
 
-use Orisai\ObjectMapper\Meta\Compile\RuleCompileMeta;
 use Orisai\ObjectMapper\Rules\AllOf;
 use Orisai\ObjectMapper\Rules\AllOfRule;
 use Orisai\ObjectMapper\Rules\IntValue;
@@ -21,12 +20,12 @@ final class AllOfTest extends TestCase
 		$sub2 = new IntValue();
 		$definition = new AllOf([$sub1, $sub2]);
 
-		self::assertSame(AllOfRule::class, $definition->getType());
-		self::assertEquals(
+		self::assertSame(AllOfRule::class, $definition->getHandler());
+		self::assertSame(
 			[
 				AllOfRule::Rules => [
-					new RuleCompileMeta($sub1->getType(), $sub1->getArgs()),
-					new RuleCompileMeta($sub2->getType(), $sub2->getArgs()),
+					$sub1,
+					$sub2,
 				],
 			],
 			$definition->getArgs(),

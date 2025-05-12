@@ -5,17 +5,19 @@ namespace Tests\Orisai\ObjectMapper\Unit\Rules;
 use Generator;
 use Orisai\ObjectMapper\Args\EmptyArgs;
 use Orisai\ObjectMapper\Exception\ValueDoesNotMatch;
-use Orisai\ObjectMapper\Meta\Compile\RuleCompileMeta;
 use Orisai\ObjectMapper\Meta\Runtime\RuleRuntimeMeta;
 use Orisai\ObjectMapper\Rules\AnyOfRule;
 use Orisai\ObjectMapper\Rules\CompoundArgs;
 use Orisai\ObjectMapper\Rules\IntArgs;
 use Orisai\ObjectMapper\Rules\IntRule;
+use Orisai\ObjectMapper\Rules\IntValue;
 use Orisai\ObjectMapper\Rules\MappedObjectArgs;
 use Orisai\ObjectMapper\Rules\MappedObjectRule;
 use Orisai\ObjectMapper\Rules\MixedRule;
+use Orisai\ObjectMapper\Rules\MixedValue;
 use Orisai\ObjectMapper\Rules\NullArgs;
 use Orisai\ObjectMapper\Rules\NullRule;
+use Orisai\ObjectMapper\Rules\NullValue;
 use Orisai\ObjectMapper\Types\CompoundType;
 use Orisai\ObjectMapper\Types\CompoundTypeOperator;
 use Orisai\ObjectMapper\Types\MessageType;
@@ -52,8 +54,8 @@ final class AnyOfRuleTest extends ProcessingTestCase
 		yield [
 			[
 				AnyOfRule::Rules => [
-					new RuleCompileMeta(MixedRule::class),
-					new RuleCompileMeta(MixedRule::class),
+					new MixedValue(),
+					new MixedValue(),
 				],
 			],
 			new CompoundArgs([
@@ -65,8 +67,8 @@ final class AnyOfRuleTest extends ProcessingTestCase
 		yield [
 			[
 				AnyOfRule::Rules => [
-					new RuleCompileMeta(IntRule::class),
-					new RuleCompileMeta(NullRule::class),
+					new IntValue(),
+					new NullValue(),
 				],
 			],
 			new CompoundArgs([

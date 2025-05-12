@@ -24,7 +24,7 @@ final class BackedEnumValueTest extends TestCase
 
 		$definition = new BackedEnumValue(ExampleIntEnum::class);
 
-		self::assertSame(BackedEnumRule::class, $definition->getType());
+		self::assertSame(BackedEnumRule::class, $definition->getHandler());
 		self::assertSame(
 			[
 				BackedEnumRule::ClassName => ExampleIntEnum::class,

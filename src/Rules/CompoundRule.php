@@ -5,7 +5,6 @@ namespace Orisai\ObjectMapper\Rules;
 use Orisai\Exceptions\Logic\InvalidArgument;
 use Orisai\ObjectMapper\Args\Args;
 use Orisai\ObjectMapper\Args\ArgsChecker;
-use Orisai\ObjectMapper\Meta\Compile\RuleCompileMeta;
 use Orisai\ObjectMapper\Meta\Context\MetaFieldContext;
 use Orisai\ObjectMapper\Processing\Context\DynamicContext;
 use Orisai\ObjectMapper\Processing\Context\ServicesContext;
@@ -41,7 +40,7 @@ abstract class CompoundRule implements Rule
 		$resolver = $context->getMetaResolver();
 
 		foreach ($rules as $key => $rule) {
-			if (!$rule instanceof RuleCompileMeta) {
+			if (!$rule instanceof RuleDefinition) {
 				throw InvalidArgument::create();
 			}
 

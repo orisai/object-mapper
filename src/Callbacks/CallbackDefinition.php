@@ -5,12 +5,12 @@ namespace Orisai\ObjectMapper\Callbacks;
 use Orisai\ObjectMapper\Args\Args;
 use Orisai\ObjectMapper\Meta\MetaDefinition;
 
-interface CallbackDefinition extends MetaDefinition
+abstract class CallbackDefinition implements MetaDefinition
 {
 
 	/**
 	 * @return class-string<Callback<Args>>
 	 */
-	public function getType(): string;
+	abstract public function getHandler(): string;
 
 }

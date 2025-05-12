@@ -17,7 +17,7 @@ final class StringValueTest extends TestCase
 	{
 		$definition = new StringValue();
 
-		self::assertSame(StringRule::class, $definition->getType());
+		self::assertSame(StringRule::class, $definition->getHandler());
 		self::assertSame(
 			[
 				StringRule::Pattern => null,

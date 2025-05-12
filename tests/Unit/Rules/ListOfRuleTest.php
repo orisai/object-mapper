@@ -5,13 +5,14 @@ namespace Tests\Orisai\ObjectMapper\Unit\Rules;
 use Generator;
 use Orisai\ObjectMapper\Args\EmptyArgs;
 use Orisai\ObjectMapper\Exception\ValueDoesNotMatch;
-use Orisai\ObjectMapper\Meta\Compile\RuleCompileMeta;
 use Orisai\ObjectMapper\Meta\Runtime\RuleRuntimeMeta;
 use Orisai\ObjectMapper\Meta\Shared\DefaultValueMeta;
 use Orisai\ObjectMapper\Rules\ListOfRule;
 use Orisai\ObjectMapper\Rules\MixedRule;
+use Orisai\ObjectMapper\Rules\MixedValue;
 use Orisai\ObjectMapper\Rules\MultiValueArgs;
 use Orisai\ObjectMapper\Rules\ScalarRule;
+use Orisai\ObjectMapper\Rules\ScalarValue;
 use Orisai\ObjectMapper\Rules\StringRule;
 use Orisai\ObjectMapper\Types\GenericArrayType;
 use Orisai\ObjectMapper\Types\SimpleValueType;
@@ -46,7 +47,7 @@ final class ListOfRuleTest extends ProcessingTestCase
 	{
 		yield [
 			[
-				ListOfRule::ItemRule => new RuleCompileMeta(MixedRule::class),
+				ListOfRule::ItemRule => new MixedValue(),
 			],
 			new MultiValueArgs(
 				new RuleRuntimeMeta(MixedRule::class, new EmptyArgs()),
@@ -58,7 +59,7 @@ final class ListOfRuleTest extends ProcessingTestCase
 
 		yield [
 			[
-				ListOfRule::ItemRule => new RuleCompileMeta(ScalarRule::class),
+				ListOfRule::ItemRule => new ScalarValue(),
 				ListOfRule::MinItems => 1,
 				ListOfRule::MaxItems => 10,
 				ListOfRule::MergeDefaults => true,

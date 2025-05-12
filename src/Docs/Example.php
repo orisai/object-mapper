@@ -2,6 +2,7 @@
 
 namespace Orisai\ObjectMapper\Docs;
 
+use Attribute;
 use Doctrine\Common\Annotations\Annotation\NamedArgumentConstructor;
 use Doctrine\Common\Annotations\Annotation\Target;
 use Orisai\ReflectionMeta\Filter\AnnotationFilter;
@@ -9,9 +10,10 @@ use Orisai\ReflectionMeta\Filter\AnnotationFilter;
 /**
  * @Annotation
  * @NamedArgumentConstructor()
- * @Target({"ANNOTATION"})
+ * @Target({"CLASS", "PROPERTY"})
  */
-final class Example implements DocDefinition
+#[Attribute(Attribute::TARGET_CLASS | Attribute::TARGET_PROPERTY)]
+final class Example extends DocDefinition
 {
 
 	private string $content;
@@ -26,7 +28,12 @@ final class Example implements DocDefinition
 			: AnnotationFilter::filterMultilineDocblock($description);
 	}
 
-	public function getType(): string
+	public function getScope(): string
+	{
+		return $this->getHandler();
+	}
+
+	public function getHandler(): string
 	{
 		return ExampleDoc::class;
 	}

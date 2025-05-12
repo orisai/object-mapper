@@ -19,7 +19,7 @@ final class RequiresDependenciesTest extends TestCase
 	{
 		$definition = new RequiresDependencies(DependenciesUsingVoInjector::class);
 
-		self::assertSame(RequiresDependenciesModifier::class, $definition->getType());
+		self::assertSame(RequiresDependenciesModifier::class, $definition->getHandler());
 		self::assertSame(
 			[
 				RequiresDependenciesModifier::Injector => DependenciesUsingVoInjector::class,

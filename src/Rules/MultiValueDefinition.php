@@ -2,12 +2,10 @@
 
 namespace Orisai\ObjectMapper\Rules;
 
-use Orisai\ObjectMapper\Meta\Compile\RuleCompileMeta;
-
-abstract class MultiValueDefinition implements RuleDefinition
+abstract class MultiValueDefinition extends RuleDefinition
 {
 
-	private RuleCompileMeta $item;
+	private RuleDefinition $item;
 
 	private ?int $minItems;
 
@@ -22,7 +20,7 @@ abstract class MultiValueDefinition implements RuleDefinition
 		bool $mergeDefaults = false
 	)
 	{
-		$this->item = new RuleCompileMeta($item->getType(), $item->getArgs());
+		$this->item = $item;
 		$this->minItems = $minItems;
 		$this->maxItems = $maxItems;
 		$this->mergeDefaults = $mergeDefaults;

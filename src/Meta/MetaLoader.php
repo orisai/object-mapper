@@ -38,7 +38,7 @@ final class MetaLoader
 
 	private MetaResolverFactory $resolverFactory;
 
-	private ?MetaResolver $resolver = null;
+	private ?RuntimeResolver $resolver = null;
 
 	public function __construct(
 		MetaCache $metaCache,
@@ -91,7 +91,7 @@ final class MetaLoader
 			$mappedObjectClass = MappedObject::class;
 
 			$message = Message::create()
-				->withContext("Resolving metadata of mapped object '$class'.")
+				->withContext("Resolving metadata of '$class'.")
 				->withProblem('Class does not implement interface of mapped object.')
 				->withSolution("Implement the '$mappedObjectClass' interface.");
 
@@ -101,7 +101,7 @@ final class MetaLoader
 
 		if ($reflector->isInterface()) {
 			$message = Message::create()
-				->withContext("Resolving metadata of mapped object '$class'.")
+				->withContext("Resolving metadata of '$class'.")
 				->withProblem("'$class' is an interface.")
 				->withSolution('Load metadata only for classes.');
 
@@ -111,7 +111,7 @@ final class MetaLoader
 
 		if ($reflector->isAbstract()) {
 			$message = Message::create()
-				->withContext("Resolving metadata of mapped object '$class'.")
+				->withContext("Resolving metadata of '$class'.")
 				->withProblem("'$class' is abstract.")
 				->withSolution('Load metadata only for non-abstract classes.');
 
@@ -121,7 +121,7 @@ final class MetaLoader
 
 		if (PHP_VERSION_ID >= 8_01_00 && $reflector->isSubclassOf(UnitEnum::class)) {
 			$message = Message::create()
-				->withContext("Resolving metadata of mapped object '$class'.")
+				->withContext("Resolving metadata of '$class'.")
 				->withProblem("Mapped object can't be an enum.");
 
 			throw InvalidArgument::create()
@@ -146,7 +146,7 @@ final class MetaLoader
 			$sourceMeta = $metaSource->load($class, $group);
 			$sourcesByMetaSource[] = $sourceMeta->getSources();
 
-			if (!$sourceMeta->hasAnyMeta()) {
+			if (!$sourceMeta->hasAnyDefinitions()) {
 				continue;
 			}
 
@@ -155,7 +155,7 @@ final class MetaLoader
 
 		$meta = $resolvedMetas === []
 			? new RuntimeMeta(
-				new ClassRuntimeMeta([], [], []),
+				new ClassRuntimeMeta([], []),
 				[],
 			)
 			: $resolvedMetas[array_key_last($resolvedMetas)];
@@ -230,7 +230,7 @@ final class MetaLoader
 		}
 	}
 
-	private function getResolver(): MetaResolver
+	private function getResolver(): RuntimeResolver
 	{
 		if ($this->resolver === null) {
 			$this->resolver = $this->resolverFactory->create($this);

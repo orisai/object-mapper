@@ -19,7 +19,7 @@ final class AfterValidationTest extends TestCase
 		$method = 'methodName';
 		$definition = new AfterValidation($method);
 
-		self::assertSame(AfterValidationCallback::class, $definition->getType());
+		self::assertSame(AfterValidationCallback::class, $definition->getHandler());
 		self::assertSame(
 			[
 				AfterValidationCallback::Method => $method,

@@ -18,7 +18,7 @@ final class ArrayEnumValueTest extends TestCase
 		$cases = ['foo', 'bar', 'baz'];
 		$definition = new ArrayEnumValue($cases);
 
-		self::assertSame(ArrayEnumRule::class, $definition->getType());
+		self::assertSame(ArrayEnumRule::class, $definition->getHandler());
 		self::assertSame(
 			[
 				ArrayEnumRule::Cases => $cases,

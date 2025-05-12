@@ -3,8 +3,8 @@
 namespace Tests\Orisai\ObjectMapper\Doubles\Definition;
 
 use Attribute;
+use Orisai\ObjectMapper\Callbacks\AfterValidationCallback;
 use Orisai\ObjectMapper\Meta\MetaDefinition;
-use stdClass;
 
 /**
  * @Annotation
@@ -13,9 +13,14 @@ use stdClass;
 final class UnsupportedDefinition implements MetaDefinition
 {
 
-	public function getType(): string
+	public function getScope(): string
 	{
-		return stdClass::class;
+		return $this->getHandler();
+	}
+
+	public function getHandler(): string
+	{
+		return AfterValidationCallback::class;
 	}
 
 	public function getArgs(): array

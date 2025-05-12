@@ -16,7 +16,7 @@ final class ScalarValueTest extends TestCase
 	{
 		$definition = new ScalarValue();
 
-		self::assertSame(ScalarRule::class, $definition->getType());
+		self::assertSame(ScalarRule::class, $definition->getHandler());
 		self::assertSame(
 			[],
 			$definition->getArgs(),

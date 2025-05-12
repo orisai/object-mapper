@@ -17,7 +17,7 @@ final class FloatValueTest extends TestCase
 	{
 		$definition = new FloatValue();
 
-		self::assertSame(FloatRule::class, $definition->getType());
+		self::assertSame(FloatRule::class, $definition->getHandler());
 		self::assertSame(
 			[
 				FloatRule::Min => null,

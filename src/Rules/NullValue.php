@@ -12,7 +12,7 @@ use Doctrine\Common\Annotations\Annotation\Target;
  * @Target({"PROPERTY", "ANNOTATION"})
  */
 #[Attribute(Attribute::TARGET_PROPERTY)]
-final class NullValue implements RuleDefinition
+final class NullValue extends RuleDefinition
 {
 
 	private bool $castEmptyString;
@@ -22,7 +22,7 @@ final class NullValue implements RuleDefinition
 		$this->castEmptyString = $castEmptyString;
 	}
 
-	public function getType(): string
+	public function getHandler(): string
 	{
 		return NullRule::class;
 	}

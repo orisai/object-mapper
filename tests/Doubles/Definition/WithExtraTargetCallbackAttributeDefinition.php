@@ -7,10 +7,15 @@ use Orisai\ObjectMapper\Callbacks\BeforeValidationCallback;
 use Orisai\ObjectMapper\Callbacks\CallbackDefinition;
 
 #[Attribute(Attribute::TARGET_ALL)]
-final class WithExtraTargetCallbackAttributeDefinition implements CallbackDefinition
+final class WithExtraTargetCallbackAttributeDefinition extends CallbackDefinition
 {
 
-	public function getType(): string
+	public function getScope(): string
+	{
+		return $this->getHandler();
+	}
+
+	public function getHandler(): string
 	{
 		return BeforeValidationCallback::class;
 	}

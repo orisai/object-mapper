@@ -12,10 +12,15 @@ use Orisai\ObjectMapper\Callbacks\CallbackDefinition;
  * @Target({"PROPERTY"})
  */
 #[Attribute(Attribute::TARGET_PROPERTY)]
-final class WrongArgsTypeCallbackValue implements CallbackDefinition
+final class WrongArgsTypeCallbackValue extends CallbackDefinition
 {
 
-	public function getType(): string
+	public function getScope(): string
+	{
+		return $this->getHandler();
+	}
+
+	public function getHandler(): string
 	{
 		return WrongArgsTypeCallback::class;
 	}

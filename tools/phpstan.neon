@@ -91,17 +91,8 @@ parameters:
 			path: ../src/Meta/Runtime/ClassRuntimeMeta.php
 			count: 1
 		-
-			message: '#^Method (.+)\:\:getModifier\(\) should return (.+)ModifierRuntimeMeta\<T of (.+)Args\>\|null but returns (.+)ModifierRuntimeMeta\<(.+)Args>\|null\.$#'
-			path: ../src/Meta/Runtime/FieldRuntimeMeta.php
-			count: 1
-		-
 			message: '#^Method (.+)\:\:get\(\) should return T of (.+)DependencyInjector but returns (.+)DependencyInjector\<(.+)MappedObject\>\.$#'
 			path: ../src/Processing/DefaultDependencyInjectorManager.php
-
-		# Non-strict comparison, intentional
-		-
-			message: '#^Loose comparison via "!=" is not allowed\.$#'
-			path: ../src/Meta/Compile/FieldCompileMeta.php
 
 		# Dunno, seems to be all fine
 		-

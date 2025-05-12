@@ -5,7 +5,6 @@ namespace Orisai\ObjectMapper\Rules;
 use Attribute;
 use Doctrine\Common\Annotations\Annotation\NamedArgumentConstructor;
 use Doctrine\Common\Annotations\Annotation\Target;
-use Orisai\ObjectMapper\Meta\Compile\RuleCompileMeta;
 
 /**
  * @Annotation
@@ -13,10 +12,10 @@ use Orisai\ObjectMapper\Meta\Compile\RuleCompileMeta;
  * @Target({"PROPERTY", "ANNOTATION"})
  */
 #[Attribute(Attribute::TARGET_PROPERTY)]
-final class ArrayShape implements RuleDefinition
+final class ArrayShape extends RuleDefinition
 {
 
-	/** @var array<int|string, RuleCompileMeta> */
+	/** @var array<int|string, RuleDefinition> */
 	private array $fields;
 
 	/**
@@ -24,10 +23,10 @@ final class ArrayShape implements RuleDefinition
 	 */
 	public function __construct(array $fields)
 	{
-		$this->fields = $this->definitionsToRules($fields);
+		$this->fields = $fields;
 	}
 
-	public function getType(): string
+	public function getHandler(): string
 	{
 		return ArrayShapeRule::class;
 	}
@@ -37,20 +36,6 @@ final class ArrayShape implements RuleDefinition
 		return [
 			ArrayShapeRule::Fields => $this->fields,
 		];
-	}
-
-	/**
-	 * @param array<int|string, RuleDefinition> $definitions
-	 * @return array<int|string, RuleCompileMeta>
-	 */
-	private function definitionsToRules(array $definitions): array
-	{
-		$rules = [];
-		foreach ($definitions as $key => $definition) {
-			$rules[$key] = new RuleCompileMeta($definition->getType(), $definition->getArgs());
-		}
-
-		return $rules;
 	}
 
 }

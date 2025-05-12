@@ -118,14 +118,16 @@ final class DocsArrayPrinter implements MappedObjectPrinter
 	 */
 	private function printDocs(NodeRuntimeMeta $meta): array
 	{
-		$docs = [];
-		foreach ($meta->docs as $docsMeta) {
-			$name = $docsMeta->getName();
-			$args = $docsMeta->getArgs();
-			$docs[$name] = $args;
-		}
-
-		return $docs;
+		//TODO - docs - currently unused
+		//      $docs = [];
+		//      foreach ($meta->docs as $docsMeta) {
+		//          $name = $docsMeta->getType();
+		//          $args = $docsMeta->getArgs();
+		//          $docs[$name] = $args;
+		//      }
+		//
+		//      return $docs;
+		return [];
 	}
 
 	/**

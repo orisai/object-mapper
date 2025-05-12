@@ -20,10 +20,9 @@ final class RuntimeMetaTest extends TestCase
 
 	public function test(): void
 	{
-		$class = new ClassRuntimeMeta([], [], []);
+		$class = new ClassRuntimeMeta([], []);
 		$fields = [
 			'a' => new FieldRuntimeMeta(
-				[],
 				[],
 				[],
 				new RuleRuntimeMeta(MixedRule::class, new EmptyArgs()),

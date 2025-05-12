@@ -31,7 +31,7 @@ final class MetaLoaderTest extends ProcessingTestCase
 		$this->expectException(InvalidArgument::class);
 		$this->expectExceptionMessage(
 			<<<'TXT'
-Context: Resolving metadata of mapped object 'stdClass'.
+Context: Resolving metadata of 'stdClass'.
 Problem: Class does not implement interface of mapped object.
 Solution: Implement the 'Orisai\ObjectMapper\MappedObject' interface.
 TXT,
@@ -46,7 +46,7 @@ TXT,
 		$this->expectException(InvalidArgument::class);
 		$this->expectExceptionMessage(
 			<<<'TXT'
-Context: Resolving metadata of mapped object
+Context: Resolving metadata of
          'Tests\Orisai\ObjectMapper\Doubles\Meta\AbstractVO'.
 Problem: 'Tests\Orisai\ObjectMapper\Doubles\Meta\AbstractVO' is abstract.
 Solution: Load metadata only for non-abstract classes.
@@ -61,7 +61,7 @@ TXT,
 		$this->expectException(InvalidArgument::class);
 		$this->expectExceptionMessage(
 			<<<'TXT'
-Context: Resolving metadata of mapped object
+Context: Resolving metadata of
          'Tests\Orisai\ObjectMapper\Doubles\Meta\InterfaceVO'.
 Problem: 'Tests\Orisai\ObjectMapper\Doubles\Meta\InterfaceVO' is an interface.
 Solution: Load metadata only for classes.
@@ -80,7 +80,7 @@ TXT,
 		$this->expectException(InvalidArgument::class);
 		$this->expectExceptionMessage(
 			<<<'TXT'
-Context: Resolving metadata of mapped object
+Context: Resolving metadata of
          'Tests\Orisai\ObjectMapper\Doubles\Invalid\EnumVO'.
 Problem: Mapped object can't be an enum.
 TXT,

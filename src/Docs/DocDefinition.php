@@ -4,12 +4,12 @@ namespace Orisai\ObjectMapper\Docs;
 
 use Orisai\ObjectMapper\Meta\MetaDefinition;
 
-interface DocDefinition extends MetaDefinition
+abstract class DocDefinition implements MetaDefinition
 {
 
 	/**
 	 * @return class-string<Doc>
 	 */
-	public function getType(): string;
+	abstract public function getHandler(): string;
 
 }

@@ -2,20 +2,11 @@
 
 namespace Tests\Orisai\ObjectMapper\Unit\Meta\Compile;
 
-use Orisai\ObjectMapper\Callbacks\AfterValidationCallback;
-use Orisai\ObjectMapper\Callbacks\BeforeValidationCallback;
-use Orisai\ObjectMapper\Docs\DescriptionDoc;
-use Orisai\ObjectMapper\Docs\SummaryDoc;
-use Orisai\ObjectMapper\Meta\Compile\CallbackCompileMeta;
+use Orisai\ObjectMapper\Callbacks\BeforeValidation;
+use Orisai\ObjectMapper\Docs\Description;
 use Orisai\ObjectMapper\Meta\Compile\FieldCompileMeta;
-use Orisai\ObjectMapper\Meta\Compile\ModifierCompileMeta;
-use Orisai\ObjectMapper\Meta\Compile\RuleCompileMeta;
-use Orisai\ObjectMapper\Meta\Shared\DocMeta;
-use Orisai\ObjectMapper\Modifiers\DefaultValueModifier;
-use Orisai\ObjectMapper\Modifiers\FieldNameModifier;
-use Orisai\ObjectMapper\Rules\MixedRule;
-use Orisai\ObjectMapper\Rules\StringRule;
-use Orisai\ReflectionMeta\Structure\ClassStructure;
+use Orisai\ObjectMapper\Modifiers\FieldName;
+use Orisai\ObjectMapper\Rules\MixedValue;
 use Orisai\ReflectionMeta\Structure\PropertyStructure;
 use Orisai\SourceMap\PropertySource;
 use PHPUnit\Framework\TestCase;
@@ -27,17 +18,11 @@ final class FieldCompileMetaTest extends TestCase
 
 	public function test(): void
 	{
-		$callbacks = [
-			new CallbackCompileMeta(BeforeValidationCallback::class, []),
-		];
-		$docs = [
-			new DocMeta(DescriptionDoc::class, []),
-		];
-		$modifiers = [
-			new ModifierCompileMeta(FieldNameModifier::class, []),
-		];
-		$rules = [
-			new RuleCompileMeta(MixedRule::class, []),
+		$definitions = [
+			new BeforeValidation('foo'),
+			new Description('description'),
+			new FieldName('foo'),
+			new MixedValue(),
 		];
 		$reflector = new ReflectionProperty(NoDefaultsVO::class, 'string');
 		$property = new PropertyStructure(
@@ -46,172 +31,16 @@ final class FieldCompileMetaTest extends TestCase
 			[],
 		);
 
-		$meta = new FieldCompileMeta($callbacks, $docs, $modifiers, $rules, $property);
+		$meta = new FieldCompileMeta($definitions, $property);
 
 		self::assertSame(
-			$callbacks,
-			$meta->getCallbacks(),
-		);
-		self::assertSame(
-			$docs,
-			$meta->getDocs(),
-		);
-		self::assertSame(
-			$modifiers,
-			$meta->getModifiers(),
-		);
-		self::assertSame(
-			$rules,
-			$meta->getRules(),
-		);
-		self::assertEquals(
-			new ClassStructure(
-				$property->getContextReflector()->getDeclaringClass(),
-				$property->getSource()->getClass(),
-			),
-			$meta->getClass(),
+			$definitions,
+			$meta->getDefinitions(),
 		);
 		self::assertSame(
 			$property,
-			$meta->getProperty(),
+			$meta->getPropertyStructure(),
 		);
-		self::assertTrue($meta->hasEqualMeta($meta));
-	}
-
-	public function testUnequalRuleMeta(): void
-	{
-		$reflector = new ReflectionProperty(NoDefaultsVO::class, 'string');
-		$property = new PropertyStructure(
-			$reflector,
-			new PropertySource($reflector),
-			[],
-		);
-
-		$meta1 = new FieldCompileMeta(
-			[],
-			[],
-			[],
-			[
-				new RuleCompileMeta(MixedRule::class, []),
-			],
-			$property,
-		);
-		$meta2 = new FieldCompileMeta(
-			[],
-			[],
-			[],
-			[
-				new RuleCompileMeta(StringRule::class, []),
-			],
-			$property,
-		);
-
-		self::assertFalse($meta1->hasEqualMeta($meta2));
-	}
-
-	public function testUnequalCallbacksMeta(): void
-	{
-		$reflector = new ReflectionProperty(NoDefaultsVO::class, 'string');
-		$property = new PropertyStructure(
-			$reflector,
-			new PropertySource($reflector),
-			[],
-		);
-
-		$meta1 = new FieldCompileMeta(
-			[
-				new CallbackCompileMeta(BeforeValidationCallback::class, []),
-			],
-			[],
-			[],
-			[
-				new RuleCompileMeta(MixedRule::class, []),
-			],
-			$property,
-		);
-		$meta2 = new FieldCompileMeta(
-			[
-				new CallbackCompileMeta(AfterValidationCallback::class, []),
-			],
-			[],
-			[],
-			[
-				new RuleCompileMeta(MixedRule::class, []),
-			],
-			$property,
-		);
-
-		self::assertFalse($meta1->hasEqualMeta($meta2));
-	}
-
-	public function testUnequalDocsMeta(): void
-	{
-		$reflector = new ReflectionProperty(NoDefaultsVO::class, 'string');
-		$property = new PropertyStructure(
-			$reflector,
-			new PropertySource($reflector),
-			[],
-		);
-
-		$meta1 = new FieldCompileMeta(
-			[],
-			[
-				new DocMeta(SummaryDoc::class, []),
-			],
-			[],
-			[
-				new RuleCompileMeta(MixedRule::class, []),
-			],
-			$property,
-		);
-		$meta2 = new FieldCompileMeta(
-			[],
-			[
-				new DocMeta(DescriptionDoc::class, []),
-			],
-			[],
-			[
-				new RuleCompileMeta(MixedRule::class, []),
-			],
-			$property,
-		);
-
-		self::assertFalse($meta1->hasEqualMeta($meta2));
-	}
-
-	public function testUnequalModifiersMeta(): void
-	{
-		$reflector = new ReflectionProperty(NoDefaultsVO::class, 'string');
-		$property = new PropertyStructure(
-			$reflector,
-			new PropertySource($reflector),
-			[],
-		);
-
-		$meta1 = new FieldCompileMeta(
-			[],
-			[],
-			[
-				new ModifierCompileMeta(DefaultValueModifier::class, []),
-			],
-			[
-				new RuleCompileMeta(MixedRule::class, []),
-			],
-			$property,
-		);
-		$meta2 = new FieldCompileMeta(
-			[],
-			[],
-			[
-				new ModifierCompileMeta(FieldNameModifier::class, []),
-			],
-			[
-				new RuleCompileMeta(MixedRule::class, []),
-			],
-			$property,
-		);
-
-		self::assertFalse($meta1->hasEqualMeta($meta2));
 	}
 
 }

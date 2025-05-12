@@ -2,12 +2,10 @@
 
 namespace Orisai\ObjectMapper\Rules;
 
-use Orisai\ObjectMapper\Meta\Compile\RuleCompileMeta;
-
-abstract class CompoundDefinition implements RuleDefinition
+abstract class CompoundDefinition extends RuleDefinition
 {
 
-	/** @var array<RuleCompileMeta> */
+	/** @var array<RuleDefinition> */
 	private array $rules;
 
 	/**
@@ -15,21 +13,7 @@ abstract class CompoundDefinition implements RuleDefinition
 	 */
 	public function __construct(array $definitions)
 	{
-		$this->rules = $this->definitionsToRules($definitions);
-	}
-
-	/**
-	 * @param list<RuleDefinition> $definitions
-	 * @return array<RuleCompileMeta>
-	 */
-	private function definitionsToRules(array $definitions): array
-	{
-		$rules = [];
-		foreach ($definitions as $key => $definition) {
-			$rules[$key] = new RuleCompileMeta($definition->getType(), $definition->getArgs());
-		}
-
-		return $rules;
+		$this->rules = $definitions;
 	}
 
 	public function getArgs(): array

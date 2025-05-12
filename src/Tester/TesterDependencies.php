@@ -5,7 +5,7 @@ namespace Orisai\ObjectMapper\Tester;
 use Orisai\ObjectMapper\Meta\Context\MetaContext;
 use Orisai\ObjectMapper\Meta\Context\MetaFieldContext;
 use Orisai\ObjectMapper\Meta\MetaLoader;
-use Orisai\ObjectMapper\Meta\MetaResolver;
+use Orisai\ObjectMapper\Meta\RuntimeResolver;
 use Orisai\ObjectMapper\Meta\Shared\DefaultValueMeta;
 use Orisai\ObjectMapper\Processing\Context\DynamicContext;
 use Orisai\ObjectMapper\Processing\Context\PropertyContext;
@@ -20,7 +20,7 @@ final class TesterDependencies
 
 	public MetaLoader $metaLoader;
 
-	public MetaResolver $metaResolver;
+	public RuntimeResolver $metaResolver;
 
 	public DefaultRuleManager $ruleManager;
 
@@ -36,7 +36,7 @@ final class TesterDependencies
 	 */
 	public function __construct(
 		MetaLoader $metaLoader,
-		MetaResolver $metaResolver,
+		RuntimeResolver $metaResolver,
 		DefaultRuleManager $ruleManager,
 		Processor $processor,
 		DefaultDependencyInjectorManager $dependencyInjectorManager

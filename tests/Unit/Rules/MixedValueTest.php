@@ -16,7 +16,7 @@ final class MixedValueTest extends TestCase
 	{
 		$definition = new MixedValue();
 
-		self::assertSame(MixedRule::class, $definition->getType());
+		self::assertSame(MixedRule::class, $definition->getHandler());
 		self::assertSame(
 			[],
 			$definition->getArgs(),

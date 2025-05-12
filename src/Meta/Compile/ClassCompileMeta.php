@@ -9,17 +9,10 @@ final class ClassCompileMeta extends NodeCompileMeta
 
 	private ClassStructure $class;
 
-	public function __construct(array $callbacks, array $docs, array $modifiers, ClassStructure $class)
+	public function __construct(array $definitions, ClassStructure $class)
 	{
-		parent::__construct($callbacks, $docs, $modifiers);
+		parent::__construct($definitions);
 		$this->class = $class;
-	}
-
-	public function hasAnyMeta(): bool
-	{
-		return $this->getCallbacks() !== []
-			|| $this->getDocs() !== []
-			|| $this->getModifiers() !== [];
 	}
 
 	public function getClass(): ClassStructure

@@ -12,7 +12,7 @@ use Doctrine\Common\Annotations\Annotation\Target;
  * @Target({"PROPERTY", "ANNOTATION"})
  */
 #[Attribute(Attribute::TARGET_PROPERTY)]
-final class InstanceOfValue implements RuleDefinition
+final class InstanceOfValue extends RuleDefinition
 {
 
 	/** @var class-string */
@@ -26,7 +26,7 @@ final class InstanceOfValue implements RuleDefinition
 		$this->type = $type;
 	}
 
-	public function getType(): string
+	public function getHandler(): string
 	{
 		return InstanceOfRule::class;
 	}

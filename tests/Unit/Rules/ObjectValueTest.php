@@ -16,7 +16,7 @@ final class ObjectValueTest extends TestCase
 	{
 		$definition = new ObjectValue();
 
-		self::assertSame(ObjectRule::class, $definition->getType());
+		self::assertSame(ObjectRule::class, $definition->getHandler());
 		self::assertSame(
 			[],
 			$definition->getArgs(),

@@ -26,7 +26,12 @@ final class FieldName implements ModifierDefinition
 		$this->name = $name;
 	}
 
-	public function getType(): string
+	public function getScope(): string
+	{
+		return $this->getHandler();
+	}
+
+	public function getHandler(): string
 	{
 		return FieldNameModifier::class;
 	}

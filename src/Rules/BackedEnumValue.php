@@ -6,7 +6,7 @@ use Attribute;
 use BackedEnum;
 
 #[Attribute(Attribute::TARGET_PROPERTY)]
-final class BackedEnumValue implements RuleDefinition
+final class BackedEnumValue extends RuleDefinition
 {
 
 	/** @var class-string<BackedEnum> */
@@ -23,7 +23,7 @@ final class BackedEnumValue implements RuleDefinition
 		$this->allowUnknown = $allowUnknown;
 	}
 
-	public function getType(): string
+	public function getHandler(): string
 	{
 		return BackedEnumRule::class;
 	}

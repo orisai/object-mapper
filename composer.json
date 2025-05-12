@@ -33,7 +33,7 @@
 		"nette/utils": "^3.1.0|^4.0.0",
 		"orisai/exceptions": "^1.0.0",
 		"orisai/object-mapper-contracts": "^1.0.0",
-		"orisai/reflection-meta": "^1.0.0",
+		"orisai/reflection-meta": "^1.0.5",
 		"orisai/source-map": "^1.0.0",
 		"orisai/utils": "^1.0.0",
 		"symfony/polyfill-php80": "^1.27.0"

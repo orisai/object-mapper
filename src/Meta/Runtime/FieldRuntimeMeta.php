@@ -4,9 +4,8 @@ namespace Orisai\ObjectMapper\Meta\Runtime;
 
 use Orisai\ObjectMapper\Args\Args;
 use Orisai\ObjectMapper\Meta\Shared\DefaultValueMeta;
-use Orisai\ObjectMapper\Modifiers\Modifier;
 
-final class FieldRuntimeMeta extends NodeRuntimeMeta
+final class FieldRuntimeMeta implements NodeRuntimeMeta
 {
 
 	/** @var RuleRuntimeMeta<Args> */
@@ -16,38 +15,41 @@ final class FieldRuntimeMeta extends NodeRuntimeMeta
 
 	public PhpPropertyMeta $property;
 
-	/** @var array<class-string<Modifier<Args>>, ModifierRuntimeMeta<Args>> */
-	public array $modifiers;
+	/** @var list<CallbackRuntimeMeta<Args>> */
+	private array $beforeValidationCallbacks;
+
+	/** @var list<CallbackRuntimeMeta<Args>> */
+	private array $afterValidationCallbacks;
 
 	/**
 	 * @template T_ARGS of Args
-	 * @param array<class-string<Modifier<T_ARGS>>, ModifierRuntimeMeta<T_ARGS>> $modifiers
+	 * @param list<CallbackRuntimeMeta<T_ARGS>> $beforeValidationCallbacks
+	 * @param list<CallbackRuntimeMeta<T_ARGS>> $afterValidationCallbacks
 	 * @param RuleRuntimeMeta<Args> $rule
 	 */
 	public function __construct(
-		array $callbacks,
-		array $docs,
-		array $modifiers,
+		array $beforeValidationCallbacks,
+		array $afterValidationCallbacks,
 		RuleRuntimeMeta $rule,
 		DefaultValueMeta $default,
 		PhpPropertyMeta $property
 	)
 	{
-		parent::__construct($callbacks, $docs);
 		$this->rule = $rule;
 		$this->default = $default;
 		$this->property = $property;
-		$this->modifiers = $modifiers;
+		$this->beforeValidationCallbacks = $beforeValidationCallbacks;
+		$this->afterValidationCallbacks = $afterValidationCallbacks;
 	}
 
-	/**
-	 * @template T of Args
-	 * @param class-string<Modifier<T>> $type
-	 * @return ModifierRuntimeMeta<T>|null
-	 */
-	public function getModifier(string $type): ?ModifierRuntimeMeta
+	public function getBeforeValidationCallbacks(): array
 	{
-		return $this->modifiers[$type] ?? null;
+		return $this->beforeValidationCallbacks;
+	}
+
+	public function getAfterValidationCallbacks(): array
+	{
+		return $this->afterValidationCallbacks;
 	}
 
 	/**
@@ -56,11 +58,11 @@ final class FieldRuntimeMeta extends NodeRuntimeMeta
 	public function __serialize(): array
 	{
 		return [
-			'parent' => parent::__serialize(),
 			'rule' => $this->rule,
 			'default' => $this->default,
 			'property' => $this->property,
-			'modifiers' => $this->modifiers,
+			'beforeValidationCallbacks' => $this->beforeValidationCallbacks,
+			'afterValidationCallbacks' => $this->afterValidationCallbacks,
 		];
 	}
 
@@ -69,11 +71,11 @@ final class FieldRuntimeMeta extends NodeRuntimeMeta
 	 */
 	public function __unserialize(array $data): void
 	{
-		parent::__unserialize($data['parent']);
 		$this->rule = $data['rule'];
 		$this->default = $data['default'];
 		$this->property = $data['property'];
-		$this->modifiers = $data['modifiers'];
+		$this->beforeValidationCallbacks = $data['beforeValidationCallbacks'];
+		$this->afterValidationCallbacks = $data['afterValidationCallbacks'];
 	}
 
 }

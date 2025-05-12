@@ -23,7 +23,7 @@ final class ObjectHolderTest extends TestCase
 	public function testInitInstance(): void
 	{
 		$creator = new ObjectCreator(new DefaultDependencyInjectorManager());
-		$meta = new ClassRuntimeMeta([], [], []);
+		$meta = new ClassRuntimeMeta([], []);
 		$holder = new ObjectHolder($creator, DefaultsVO::class, $meta);
 
 		self::assertSame(DefaultsVO::class, $holder->getClass());
@@ -57,7 +57,7 @@ final class ObjectHolderTest extends TestCase
 		];
 
 		$creator = new ObjectCreator($manager);
-		$meta = new ClassRuntimeMeta([], [], $modifiers);
+		$meta = new ClassRuntimeMeta([], $modifiers);
 		$holder = new ObjectHolder($creator, DependentChildVO::class, $meta);
 
 		self::assertSame(DependentChildVO::class, $holder->getClass());

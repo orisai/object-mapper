@@ -30,7 +30,12 @@ final class RequiresDependencies implements ModifierDefinition
 		$this->injector = $injector;
 	}
 
-	public function getType(): string
+	public function getScope(): string
+	{
+		return $this->getHandler();
+	}
+
+	public function getHandler(): string
 	{
 		return RequiresDependenciesModifier::class;
 	}

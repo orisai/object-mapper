@@ -19,7 +19,7 @@ final class FieldNameTest extends TestCase
 		$name = 'fieldName';
 		$definition = new FieldName($name);
 
-		self::assertSame(FieldNameModifier::class, $definition->getType());
+		self::assertSame(FieldNameModifier::class, $definition->getHandler());
 		self::assertSame(
 			[
 				FieldNameModifier::Name => $name,

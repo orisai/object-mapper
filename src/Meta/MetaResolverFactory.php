@@ -18,9 +18,9 @@ final class MetaResolverFactory
 		$this->objectCreator = $objectCreator;
 	}
 
-	public function create(MetaLoader $loader): MetaResolver
+	public function create(MetaLoader $loader): RuntimeResolver
 	{
-		return new MetaResolver($loader, $this->ruleManager, $this->objectCreator);
+		return new RuntimeResolver($loader, $this->ruleManager, $this->objectCreator);
 	}
 
 }

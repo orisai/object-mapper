@@ -1,6 +1,6 @@
 <?php declare(strict_types = 1);
 
-namespace Orisai\ObjectMapper\Meta\Shared;
+namespace Orisai\ObjectMapper\Meta\Runtime;
 
 use Orisai\ObjectMapper\Docs\Doc;
 
@@ -26,7 +26,7 @@ final class DocMeta
 	/**
 	 * @return class-string<Doc>
 	 */
-	public function getName(): string
+	public function getType(): string
 	{
 		return $this->name;
 	}

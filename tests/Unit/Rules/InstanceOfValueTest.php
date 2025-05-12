@@ -18,7 +18,7 @@ final class InstanceOfValueTest extends TestCase
 		$type = stdClass::class;
 		$definition = new InstanceOfValue($type);
 
-		self::assertSame(InstanceOfRule::class, $definition->getType());
+		self::assertSame(InstanceOfRule::class, $definition->getHandler());
 		self::assertSame(
 			[
 				InstanceOfRule::Type => $type,

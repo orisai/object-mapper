@@ -3,16 +3,16 @@
 namespace Orisai\ObjectMapper\Meta\Context;
 
 use Orisai\ObjectMapper\Meta\MetaLoader;
-use Orisai\ObjectMapper\Meta\MetaResolver;
+use Orisai\ObjectMapper\Meta\RuntimeResolver;
 
 class MetaContext
 {
 
 	private MetaLoader $metaLoader;
 
-	private MetaResolver $metaResolver;
+	private RuntimeResolver $metaResolver;
 
-	public function __construct(MetaLoader $metaLoader, MetaResolver $metaResolver)
+	public function __construct(MetaLoader $metaLoader, RuntimeResolver $metaResolver)
 	{
 		$this->metaLoader = $metaLoader;
 		$this->metaResolver = $metaResolver;
@@ -23,7 +23,7 @@ class MetaContext
 		return $this->metaLoader;
 	}
 
-	public function getMetaResolver(): MetaResolver
+	public function getMetaResolver(): RuntimeResolver
 	{
 		return $this->metaResolver;
 	}

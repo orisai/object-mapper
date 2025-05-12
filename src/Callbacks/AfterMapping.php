@@ -12,7 +12,7 @@ use Doctrine\Common\Annotations\Annotation\Target;
  * @Target({"CLASS"})
  */
 #[Attribute(Attribute::TARGET_CLASS)]
-final class AfterMapping implements CallbackDefinition
+final class AfterMapping extends CallbackDefinition
 {
 
 	private string $method;
@@ -22,7 +22,12 @@ final class AfterMapping implements CallbackDefinition
 		$this->method = $method;
 	}
 
-	public function getType(): string
+	public function getScope(): string
+	{
+		return $this->getHandler();
+	}
+
+	public function getHandler(): string
 	{
 		return AfterMappingCallback::class;
 	}

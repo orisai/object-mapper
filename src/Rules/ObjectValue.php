@@ -12,10 +12,10 @@ use Doctrine\Common\Annotations\Annotation\Target;
  * @Target({"PROPERTY", "ANNOTATION"})
  */
 #[Attribute(Attribute::TARGET_PROPERTY)]
-final class ObjectValue implements RuleDefinition
+final class ObjectValue extends RuleDefinition
 {
 
-	public function getType(): string
+	public function getHandler(): string
 	{
 		return ObjectRule::class;
 	}

@@ -16,9 +16,9 @@ use Orisai\ObjectMapper\Exception\InvalidData;
 use Orisai\ObjectMapper\Exception\ValueDoesNotMatch;
 use Orisai\ObjectMapper\MappedObject;
 use Orisai\ObjectMapper\Meta\MetaLoader;
+use Orisai\ObjectMapper\Meta\Runtime\CallbackRuntimeMeta;
 use Orisai\ObjectMapper\Meta\Runtime\ClassRuntimeMeta;
 use Orisai\ObjectMapper\Meta\Runtime\FieldRuntimeMeta;
-use Orisai\ObjectMapper\Meta\Runtime\NodeRuntimeMeta;
 use Orisai\ObjectMapper\Meta\Runtime\RuntimeMeta;
 use Orisai\ObjectMapper\Processing\Context\DynamicContext;
 use Orisai\ObjectMapper\Processing\Context\ProcessorCallContext;
@@ -432,24 +432,40 @@ final class DefaultProcessor implements Processor
 		FieldRuntimeMeta $meta
 	)
 	{
-		if ($meta->callbacks !== []) {
-			$callbackContext = new FieldContext(
-				$this->services,
-				$dynamic,
-				$property,
+		$callbackContext = null;
+		$callbacks = $meta->getBeforeValidationCallbacks();
+		if ($callbacks !== []) {
+			$callbackContext = $this->createFieldContext($property, $dynamic, $call);
+			$value = $this->applyCallbacks(
+				$value,
+				$callbackContext,
 				$call,
+				$callbacks,
+				BeforeValidationCallback::class,
 			);
-
-			$value = $this->applyCallbacks($value, $callbackContext, $call, $meta, BeforeValidationCallback::class);
 		}
 
 		$value = $this->processPropertyRules($value, $property, $dynamic, $meta);
 
-		if (isset($callbackContext)) {
-			$value = $this->applyCallbacks($value, $callbackContext, $call, $meta, AfterValidationCallback::class);
+		$callbacks = $meta->getAfterValidationCallbacks();
+		if ($callbacks !== []) {
+			$callbackContext ??= $this->createFieldContext($property, $dynamic, $call);
+			$value = $this->applyCallbacks($value, $callbackContext, $call, $callbacks, AfterValidationCallback::class);
 		}
 
 		return $value;
+	}
+
+	/**
+	 * @param ProcessorCallContext<MappedObject> $call
+	 */
+	private function createFieldContext(
+		PropertyContext $property,
+		DynamicContext $dynamic,
+		ProcessorCallContext $call
+	): FieldContext
+	{
+		return new FieldContext($this->services, $dynamic, $property, $call);
 	}
 
 	/**
@@ -497,7 +513,13 @@ final class DefaultProcessor implements Processor
 	)
 	{
 		try {
-			$data = $this->applyCallbacks($data, $callbackContext, $call, $meta, $callbackType);
+			$data = $this->applyCallbacks(
+				$data,
+				$callbackContext,
+				$call,
+				$meta->getCallbacksByType($callbackType),
+				$callbackType,
+			);
 		} catch (ValueDoesNotMatch | InvalidData $exception) {
 			$type = $callbackContext->getType();
 			$caughtType = $exception->getType();
@@ -519,7 +541,7 @@ final class DefaultProcessor implements Processor
 	 * @param mixed $data
 	 * @param ObjectContext|FieldContext $callbackContext
 	 * @param ProcessorCallContext<MappedObject> $call
-	 * @param ClassRuntimeMeta|FieldRuntimeMeta $meta
+	 * @param list<CallbackRuntimeMeta<Args>> $callbacks
 	 * @param class-string<Callback<Args>> $callbackType
 	 * @return mixed
 	 * @throws ValueDoesNotMatch
@@ -529,13 +551,13 @@ final class DefaultProcessor implements Processor
 		$data,
 		CallbackBaseContext $callbackContext,
 		ProcessorCallContext $call,
-		NodeRuntimeMeta $meta,
+		array $callbacks,
 		string $callbackType
 	)
 	{
 		$holder = $call->getObjectHolder();
 
-		foreach ($meta->getCallbacksByType($callbackType) as $callback) {
+		foreach ($callbacks as $callback) {
 			$data = $callbackType::invoke(
 				$data,
 				$callback->args,

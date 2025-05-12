@@ -15,7 +15,7 @@ use Doctrine\Common\Annotations\Annotation\Target;
 final class AllOf extends CompoundDefinition
 {
 
-	public function getType(): string
+	public function getHandler(): string
 	{
 		return AllOfRule::class;
 	}

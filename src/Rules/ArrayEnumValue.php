@@ -12,7 +12,7 @@ use Doctrine\Common\Annotations\Annotation\Target;
  * @Target({"PROPERTY", "ANNOTATION"})
  */
 #[Attribute(Attribute::TARGET_PROPERTY)]
-final class ArrayEnumValue implements RuleDefinition
+final class ArrayEnumValue extends RuleDefinition
 {
 
 	/** @var array<mixed> */
@@ -32,7 +32,7 @@ final class ArrayEnumValue implements RuleDefinition
 		$this->allowUnknown = $allowUnknown;
 	}
 
-	public function getType(): string
+	public function getHandler(): string
 	{
 		return ArrayEnumRule::class;
 	}

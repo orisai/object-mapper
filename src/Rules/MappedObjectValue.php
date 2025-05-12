@@ -13,7 +13,7 @@ use Orisai\ObjectMapper\MappedObject;
  * @Target({"PROPERTY", "ANNOTATION"})
  */
 #[Attribute(Attribute::TARGET_PROPERTY)]
-final class MappedObjectValue implements RuleDefinition
+final class MappedObjectValue extends RuleDefinition
 {
 
 	/** @var class-string<MappedObject> */
@@ -27,7 +27,7 @@ final class MappedObjectValue implements RuleDefinition
 		$this->class = $class;
 	}
 
-	public function getType(): string
+	public function getHandler(): string
 	{
 		return MappedObjectRule::class;
 	}

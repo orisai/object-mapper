@@ -8,10 +8,10 @@ use Orisai\ObjectMapper\Rules\RuleDefinition;
 /**
  * @Annotation
  */
-final class WithAttributeIncompatibleRuleDefinition implements RuleDefinition
+final class WithAttributeIncompatibleRuleDefinition extends RuleDefinition
 {
 
-	public function getType(): string
+	public function getHandler(): string
 	{
 		return MixedRule::class;
 	}

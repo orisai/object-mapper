@@ -9,8 +9,7 @@ final class CtorPromotionChildVo extends CtorPromotionParentVo
 
 	public function __construct(
 		string $a,
-		public string $b,
-		#[StringValue]
+		string $b,
 		public string $c = 'overridden',
 		#[StringValue]
 		public string $d = 'baz',

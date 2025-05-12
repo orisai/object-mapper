@@ -6,16 +6,18 @@ use Generator;
 use Orisai\ObjectMapper\Args\EmptyArgs;
 use Orisai\ObjectMapper\Exception\ValueDoesNotMatch;
 use Orisai\ObjectMapper\Exception\WithTypeAndValue;
-use Orisai\ObjectMapper\Meta\Compile\RuleCompileMeta;
 use Orisai\ObjectMapper\Meta\Runtime\RuleRuntimeMeta;
 use Orisai\ObjectMapper\Meta\Shared\DefaultValueMeta;
 use Orisai\ObjectMapper\Rules\ArrayOfArgs;
 use Orisai\ObjectMapper\Rules\ArrayOfRule;
 use Orisai\ObjectMapper\Rules\IntRule;
 use Orisai\ObjectMapper\Rules\MixedRule;
+use Orisai\ObjectMapper\Rules\MixedValue;
 use Orisai\ObjectMapper\Rules\ScalarRule;
+use Orisai\ObjectMapper\Rules\ScalarValue;
 use Orisai\ObjectMapper\Rules\StringArgs;
 use Orisai\ObjectMapper\Rules\StringRule;
+use Orisai\ObjectMapper\Rules\StringValue;
 use Orisai\ObjectMapper\Types\GenericArrayType;
 use Orisai\ObjectMapper\Types\SimpleValueType;
 use Tests\Orisai\ObjectMapper\Doubles\Rules\AlwaysInvalidRule;
@@ -49,7 +51,7 @@ final class ArrayOfRuleTest extends ProcessingTestCase
 	{
 		yield [
 			[
-				ArrayOfRule::ItemRule => new RuleCompileMeta(MixedRule::class),
+				ArrayOfRule::ItemRule => new MixedValue(),
 			],
 			new ArrayOfArgs(
 				new RuleRuntimeMeta(MixedRule::class, new EmptyArgs()),
@@ -62,8 +64,8 @@ final class ArrayOfRuleTest extends ProcessingTestCase
 
 		yield [
 			[
-				ArrayOfRule::ItemRule => new RuleCompileMeta(ScalarRule::class),
-				ArrayOfRule::KeyRule => new RuleCompileMeta(StringRule::class),
+				ArrayOfRule::ItemRule => new ScalarValue(),
+				ArrayOfRule::KeyRule => new StringValue(),
 				ArrayOfRule::MinItems => 1,
 				ArrayOfRule::MaxItems => 10,
 				ArrayOfRule::MergeDefaults => true,

@@ -19,7 +19,7 @@ final class DefaultValueTest extends TestCase
 		$value = 'value';
 		$definition = new DefaultValue($value);
 
-		self::assertSame(DefaultValueModifier::class, $definition->getType());
+		self::assertSame(DefaultValueModifier::class, $definition->getHandler());
 		self::assertSame(
 			[
 				DefaultValueModifier::Value => $value,

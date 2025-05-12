@@ -26,7 +26,12 @@ final class DefaultValue implements ModifierDefinition
 		$this->value = $value;
 	}
 
-	public function getType(): string
+	public function getScope(): string
+	{
+		return $this->getHandler();
+	}
+
+	public function getHandler(): string
 	{
 		return DefaultValueModifier::class;
 	}

@@ -4,15 +4,17 @@ namespace Orisai\ObjectMapper\Meta\Compile;
 
 use Orisai\SourceMap\ClassSource;
 use Orisai\SourceMap\FileSource;
+use ReflectionClass;
+use function array_key_last;
 
 final class CompileMeta
 {
 
-	/** @var list<ClassCompileMeta> */
+	/** @var non-empty-list<ClassCompileMeta> */
 	private array $classes;
 
-	/** @var list<non-empty-list<FieldCompileMeta>> */
-	private array $fields;
+	/** @var array<string, non-empty-list<FieldCompileMeta>> */
+	private array $groupedProperties;
 
 	/** @var list<ClassSource|FileSource> */
 	private array $sources;
@@ -24,13 +26,13 @@ final class CompileMeta
 	private string $allOfSourceKey;
 
 	/**
-	 * @param list<ClassCompileMeta> $classes
-	 * @param list<non-empty-list<FieldCompileMeta>> $fields
+	 * @param non-empty-list<ClassCompileMeta> $classes
+	 * @param array<string, non-empty-list<FieldCompileMeta>> $groupedProperties
 	 * @param list<ClassSource|FileSource> $sources
 	 */
 	public function __construct(
 		array $classes,
-		array $fields,
+		array $groupedProperties,
 		array $sources,
 		string $sourceName,
 		string $anyOfSourceKey,
@@ -38,7 +40,7 @@ final class CompileMeta
 	)
 	{
 		$this->classes = $classes;
-		$this->fields = $fields;
+		$this->groupedProperties = $groupedProperties;
 		$this->sources = $sources;
 		$this->sourceName = $sourceName;
 		$this->anyOfSourceKey = $anyOfSourceKey;
@@ -46,7 +48,15 @@ final class CompileMeta
 	}
 
 	/**
-	 * @return list<ClassCompileMeta>
+	 * @return ReflectionClass<object>
+	 */
+	public function getRootClass(): ReflectionClass
+	{
+		return $this->classes[array_key_last($this->classes)]->getClass()->getSource()->getReflector();
+	}
+
+	/**
+	 * @return non-empty-list<ClassCompileMeta>
 	 */
 	public function getClasses(): array
 	{
@@ -54,11 +64,11 @@ final class CompileMeta
 	}
 
 	/**
-	 * @return list<non-empty-list<FieldCompileMeta>>
+	 * @return array<string, list<FieldCompileMeta>>
 	 */
-	public function getFields(): array
+	public function getGroupedProperties(): array
 	{
-		return $this->fields;
+		return $this->groupedProperties;
 	}
 
 	/**
@@ -69,14 +79,18 @@ final class CompileMeta
 		return $this->sources;
 	}
 
-	public function hasAnyMeta(): bool
+	public function hasAnyDefinitions(): bool
 	{
-		if ($this->fields !== []) {
-			return true;
+		foreach ($this->groupedProperties as $fieldMetas) {
+			foreach ($fieldMetas as $fieldMeta) {
+				if ($fieldMeta->getDefinitions() !== []) {
+					return true;
+				}
+			}
 		}
 
 		foreach ($this->classes as $class) {
-			if ($class->hasAnyMeta()) {
+			if ($class->getDefinitions() !== []) {
 				return true;
 			}
 		}
@@ -86,6 +100,7 @@ final class CompileMeta
 
 	public function getSourceName(): string
 	{
+		//TODO - vyřešit jinak, vyhodit source keys
 		return $this->sourceName;
 	}
 

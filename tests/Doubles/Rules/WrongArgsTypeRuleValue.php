@@ -12,10 +12,10 @@ use Orisai\ObjectMapper\Rules\RuleDefinition;
  * @Target({"PROPERTY"})
  */
 #[Attribute(Attribute::TARGET_PROPERTY)]
-final class WrongArgsTypeRuleValue implements RuleDefinition
+final class WrongArgsTypeRuleValue extends RuleDefinition
 {
 
-	public function getType(): string
+	public function getHandler(): string
 	{
 		return WrongArgsTypeRule::class;
 	}

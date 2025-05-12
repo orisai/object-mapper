@@ -2,15 +2,17 @@
 
 namespace Orisai\ObjectMapper\Docs;
 
+use Attribute;
 use Doctrine\Common\Annotations\Annotation\NamedArgumentConstructor;
 use Doctrine\Common\Annotations\Annotation\Target;
 
 /**
  * @Annotation
  * @NamedArgumentConstructor()
- * @Target({"ANNOTATION"})
+ * @Target({"CLASS", "PROPERTY"})
  */
-final class Link implements DocDefinition
+#[Attribute(Attribute::TARGET_CLASS | Attribute::TARGET_PROPERTY)]
+final class Link extends DocDefinition
 {
 
 	private string $url;
@@ -23,7 +25,12 @@ final class Link implements DocDefinition
 		$this->description = $description;
 	}
 
-	public function getType(): string
+	public function getScope(): string
+	{
+		return $this->getHandler();
+	}
+
+	public function getHandler(): string
 	{
 		return LinkDoc::class;
 	}

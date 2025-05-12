@@ -3,12 +3,16 @@
 namespace Tests\Orisai\ObjectMapper\Doubles\Invalid;
 
 use Orisai\ObjectMapper\MappedObject;
+use Orisai\ObjectMapper\Rules\StringValue;
 use Tests\Orisai\ObjectMapper\Doubles\Definition\UnsupportedDefinition;
 
 final class UnsupportedPropertyDefinitionVO implements MappedObject
 {
 
-	/** @UnsupportedDefinition() */
+	/**
+	 * @UnsupportedDefinition()
+	 * @StringValue()
+	 */
 	public string $field;
 
 }

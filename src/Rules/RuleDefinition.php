@@ -5,12 +5,17 @@ namespace Orisai\ObjectMapper\Rules;
 use Orisai\ObjectMapper\Args\Args;
 use Orisai\ObjectMapper\Meta\MetaDefinition;
 
-interface RuleDefinition extends MetaDefinition
+abstract class RuleDefinition implements MetaDefinition
 {
+
+	final public function getScope(): string
+	{
+		return Rule::class;
+	}
 
 	/**
 	 * @return class-string<Rule<Args>>
 	 */
-	public function getType(): string;
+	abstract public function getHandler(): string;
 
 }

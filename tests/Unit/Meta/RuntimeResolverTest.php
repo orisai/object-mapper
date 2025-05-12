@@ -20,7 +20,11 @@ use Tests\Orisai\ObjectMapper\Doubles\Invalid\FieldWithMultipleRulesVO;
 use Tests\Orisai\ObjectMapper\Doubles\Invalid\FieldWithNoRuleChildVO;
 use Tests\Orisai\ObjectMapper\Doubles\Invalid\FieldWithNoRuleVO;
 use Tests\Orisai\ObjectMapper\Doubles\Invalid\MultipleIdenticalFieldNamesVO;
+use Tests\Orisai\ObjectMapper\Doubles\Invalid\RuleAboveClassChildVO;
+use Tests\Orisai\ObjectMapper\Doubles\Invalid\RuleAboveClassVO;
 use Tests\Orisai\ObjectMapper\Doubles\Invalid\StaticMappedPropertyVO;
+use Tests\Orisai\ObjectMapper\Doubles\Invalid\UnsupportedClassDefinitionVO;
+use Tests\Orisai\ObjectMapper\Doubles\Invalid\UnsupportedPropertyDefinitionVO;
 use Tests\Orisai\ObjectMapper\Doubles\Invalid\VariantFieldChildVO;
 use Tests\Orisai\ObjectMapper\Doubles\Invalid\VariantFieldVO;
 use Tests\Orisai\ObjectMapper\Doubles\Invalid\WrongCallbackArgsTypeVO;
@@ -28,7 +32,7 @@ use Tests\Orisai\ObjectMapper\Doubles\Invalid\WrongRuleArgsTypeVO;
 use Tests\Orisai\ObjectMapper\Doubles\Rules\WrongArgsTypeRule;
 use Tests\Orisai\ObjectMapper\Toolkit\ProcessingTestCase;
 
-final class MetaResolverTest extends ProcessingTestCase
+final class RuntimeResolverTest extends ProcessingTestCase
 {
 
 	public function testStaticMappedProperty(): void
@@ -36,7 +40,7 @@ final class MetaResolverTest extends ProcessingTestCase
 		$this->expectException(InvalidArgument::class);
 		$this->expectExceptionMessage(
 			<<<'MSG'
-Context: Resolving metadata of mapped object
+Context: Resolving metadata of
          'Tests\Orisai\ObjectMapper\Doubles\Invalid\StaticMappedPropertyVO'.
 Problem: Mapped property
          Tests\Orisai\ObjectMapper\Doubles\Invalid\StaticMappedPropertyTraitVO::$field
@@ -66,7 +70,7 @@ MSG,
 		yield [
 			ClassMetaInvalidScopeRootVO::class,
 			<<<'MSG'
-Context: Resolving metadata of mapped object
+Context: Resolving metadata of
          'Tests\Orisai\ObjectMapper\Doubles\Invalid\ClassMetaInvalidScopeRootVO'.
 Problem: Class
          'Tests\Orisai\ObjectMapper\Doubles\Invalid\ClassMetaInvalidScopeVO'
@@ -78,7 +82,7 @@ MSG,
 		yield [
 			ClassInterfaceMetaInvalidScopeRootVO::class,
 			<<<'MSG'
-Context: Resolving metadata of mapped object
+Context: Resolving metadata of
          'Tests\Orisai\ObjectMapper\Doubles\Invalid\ClassInterfaceMetaInvalidScopeRootVO'.
 Problem: Interface
          'Tests\Orisai\ObjectMapper\Doubles\Invalid\ClassInterfaceMetaInvalidScopeInterfaceVO'
@@ -90,7 +94,7 @@ MSG,
 		yield [
 			ClassTraitMetaInvalidScopeRootVO::class,
 			<<<'MSG'
-Context: Resolving metadata of mapped object
+Context: Resolving metadata of
          'Tests\Orisai\ObjectMapper\Doubles\Invalid\ClassTraitMetaInvalidScopeRootVO'.
 Problem: Trait
          'Tests\Orisai\ObjectMapper\Doubles\Invalid\ClassTraitMetaInvalidScopeTraitVO'
@@ -104,7 +108,7 @@ MSG,
 		yield [
 			FieldMetaInvalidScopeRootVO::class,
 			<<<'MSG'
-Context: Resolving metadata of mapped object
+Context: Resolving metadata of
          'Tests\Orisai\ObjectMapper\Doubles\Invalid\FieldMetaInvalidScopeRootVO'.
 Problem: Property
          'Tests\Orisai\ObjectMapper\Doubles\Invalid\FieldMetaInvalidScopeVO->$field'
@@ -118,7 +122,7 @@ MSG,
 		yield [
 			FieldTraitMetaInvalidScopeRootVO::class,
 			<<<'MSG'
-Context: Resolving metadata of mapped object
+Context: Resolving metadata of
          'Tests\Orisai\ObjectMapper\Doubles\Invalid\FieldTraitMetaInvalidScopeRootVO'.
 Problem: Property
          'Tests\Orisai\ObjectMapper\Doubles\Invalid\FieldTraitMetaInvalidScopeTraitVO->$field'
@@ -130,12 +134,77 @@ MSG,
 		];
 	}
 
+	public function testRuleAboveClassRelativeName(): void
+	{
+		$this->expectException(InvalidArgument::class);
+		$this->expectExceptionMessage(
+			<<<'MSG'
+Context: Resolving metadata of
+         'Tests\Orisai\ObjectMapper\Doubles\Invalid\RuleAboveClassVO'.
+Problem: Rule definition
+         'Tests\Orisai\ObjectMapper\Doubles\Definition\TargetLessRuleDefinition'
+         cannot be used on class, it is only allowed on properties.
+MSG,
+		);
+
+		$this->metaLoader->load(RuleAboveClassVO::class);
+	}
+
+	public function testRuleAboveClassFullName(): void
+	{
+		$this->expectException(InvalidArgument::class);
+		$this->expectExceptionMessage(
+			<<<'MSG'
+Context: Resolving metadata of
+         'Tests\Orisai\ObjectMapper\Doubles\Invalid\RuleAboveClassChildVO'.
+Problem: Rule definition
+         'Tests\Orisai\ObjectMapper\Doubles\Definition\TargetLessRuleDefinition'
+         (used above class
+         'Tests\Orisai\ObjectMapper\Doubles\Invalid\RuleAboveClassVO') cannot be
+         used on class, it is only allowed on properties.
+MSG,
+		);
+
+		$this->metaLoader->load(RuleAboveClassChildVO::class);
+	}
+
+	/**
+	 * @param class-string<MappedObject> $class
+	 *
+	 * @dataProvider provideUnsupportedDefinitionType
+	 */
+	public function testUnsupportedDefinitionType(string $class): void
+	{
+		$this->expectException(InvalidArgument::class);
+		$this->expectExceptionMessage(
+			"Definition 'Tests\Orisai\ObjectMapper\Doubles\Definition\UnsupportedDefinition' "
+			. "(subtype of 'Orisai\ObjectMapper\Meta\MetaDefinition') should implement "
+			. "'Orisai\ObjectMapper\Callbacks\CallbackDefinition', "
+			. "'Orisai\ObjectMapper\Docs\DocDefinition', "
+			. "'Orisai\ObjectMapper\Modifiers\ModifierDefinition' or "
+			. "'Orisai\ObjectMapper\Rules\RuleDefinition'.",
+		);
+
+		$this->metaLoader->load($class);
+	}
+
+	public function provideUnsupportedDefinitionType(): Generator
+	{
+		yield [
+			UnsupportedClassDefinitionVO::class,
+		];
+
+		yield [
+			UnsupportedPropertyDefinitionVO::class,
+		];
+	}
+
 	public function testFieldInvarianceRelativeName(): void
 	{
 		$this->expectException(InvalidArgument::class);
 		$this->expectExceptionMessage(
 			<<<'MSG'
-Context: Resolving metadata of mapped object
+Context: Resolving metadata of
          'Tests\Orisai\ObjectMapper\Doubles\Invalid\VariantFieldVO'.
 Problem: Definition in annotation of property '$field' differs from definition
          in annotation of property
@@ -152,7 +221,7 @@ MSG,
 		$this->expectException(InvalidArgument::class);
 		$this->expectExceptionMessage(
 			<<<'MSG'
-Context: Resolving metadata of mapped object
+Context: Resolving metadata of
          'Tests\Orisai\ObjectMapper\Doubles\Invalid\VariantFieldChildVO'.
 Problem: Definition in annotation of property
          'Tests\Orisai\ObjectMapper\Doubles\Invalid\VariantFieldVO->$field'
@@ -170,7 +239,7 @@ MSG,
 		$this->expectException(InvalidArgument::class);
 		$this->expectExceptionMessage(
 			<<<'MSG'
-Context: Resolving metadata of mapped object
+Context: Resolving metadata of
          'Tests\Orisai\ObjectMapper\Doubles\Invalid\FieldWithNoRuleVO'.
 Problem: Property '$field' has some mapped object definition (in annotation),
          but no rule definition.
@@ -186,7 +255,7 @@ MSG,
 		$this->expectException(InvalidArgument::class);
 		$this->expectExceptionMessage(
 			<<<'MSG'
-Context: Resolving metadata of mapped object
+Context: Resolving metadata of
          'Tests\Orisai\ObjectMapper\Doubles\Invalid\FieldWithNoRuleChildVO'.
 Problem: Property
          'Tests\Orisai\ObjectMapper\Doubles\Invalid\FieldWithNoRuleVO->$field'
@@ -204,7 +273,7 @@ MSG,
 		$this->expectException(InvalidArgument::class);
 		$this->expectExceptionMessage(
 			<<<'MSG'
-Context: Resolving metadata of mapped object
+Context: Resolving metadata of
          'Tests\Orisai\ObjectMapper\Doubles\Invalid\FieldWithMultipleRulesVO'.
 Problem: Property '$field' has multiple rule definitions (in annotation), but
          only one is allowed.
@@ -221,7 +290,7 @@ MSG,
 		$this->expectException(InvalidArgument::class);
 		$this->expectExceptionMessage(
 			<<<'MSG'
-Context: Resolving metadata of mapped object
+Context: Resolving metadata of
          'Tests\Orisai\ObjectMapper\Doubles\Invalid\FieldWithMultipleRulesChildVO'.
 Problem: Property
          'Tests\Orisai\ObjectMapper\Doubles\Invalid\FieldWithMultipleRulesVO->$field'
@@ -239,7 +308,7 @@ MSG,
 		$this->expectException(InvalidState::class);
 		$this->expectExceptionMessage(
 			<<<'TXT'
-Context: Resolving metadata of mapped object
+Context: Resolving metadata of
          'Tests\Orisai\ObjectMapper\Doubles\Invalid\MultipleIdenticalFieldNamesVO'.
 Problem: Properties '$property2' and '$property1' have conflicting field name
          'field'.
@@ -255,7 +324,7 @@ TXT,
 		$this->expectException(InvalidState::class);
 		$this->expectExceptionMessage(
 			<<<'TXT'
-Context: Resolving metadata of mapped object
+Context: Resolving metadata of
          'Tests\Orisai\ObjectMapper\Doubles\Invalid\FieldNameIdenticalWithAnotherPropertyNameVO'.
 Problem: Properties '$property' and '$field' have conflicting field name
          'field'.
@@ -274,7 +343,7 @@ TXT,
 		$this->expectException(InvalidState::class);
 		$this->expectExceptionMessage(
 			<<<'TXT'
-Context: Resolving metadata of mapped object
+Context: Resolving metadata of
          'Tests\Orisai\ObjectMapper\Doubles\Invalid\ChildCollidingFieldVO'.
 Problem: Properties '$property' and
          'Tests\Orisai\ObjectMapper\Doubles\FieldNames\ParentFieldVO->$property'
@@ -291,7 +360,7 @@ TXT,
 		$this->expectException(InvalidState::class);
 		$this->expectExceptionMessage(
 			<<<'TXT'
-Context: Resolving metadata of mapped object
+Context: Resolving metadata of
          'Tests\Orisai\ObjectMapper\Doubles\Invalid\FieldNamesFromTraitVO'.
 Problem: Properties
          'Tests\Orisai\ObjectMapper\Doubles\Invalid\FieldNamesTrait2->$property2'
@@ -322,6 +391,7 @@ TXT,
 
 	public function testWrongCallbackArgsType(): void
 	{
+		//TODO - pro otestování je potřeba přidat typ callbacku do resolveru
 		$this->expectException(InvalidArgument::class);
 		$this->expectExceptionMessage(
 			"'Tests\Orisai\ObjectMapper\Doubles\Callbacks\WrongArgsTypeCallback::resolveArgs()'"

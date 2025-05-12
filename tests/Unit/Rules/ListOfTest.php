@@ -3,7 +3,6 @@
 namespace Tests\Orisai\ObjectMapper\Unit\Rules;
 
 use Generator;
-use Orisai\ObjectMapper\Meta\Compile\RuleCompileMeta;
 use Orisai\ObjectMapper\Rules\ListOf;
 use Orisai\ObjectMapper\Rules\ListOfRule;
 use Orisai\ObjectMapper\Rules\MixedValue;
@@ -22,10 +21,10 @@ final class ListOfTest extends TestCase
 		$item = new MixedValue();
 		$definition = new ListOf($item);
 
-		self::assertSame(ListOfRule::class, $definition->getType());
-		self::assertEquals(
+		self::assertSame(ListOfRule::class, $definition->getHandler());
+		self::assertSame(
 			[
-				ListOfRule::ItemRule => new RuleCompileMeta($item->getType(), $item->getArgs()),
+				ListOfRule::ItemRule => $item,
 				ListOfRule::MinItems => null,
 				ListOfRule::MaxItems => null,
 				ListOfRule::MergeDefaults => false,
@@ -46,9 +45,9 @@ final class ListOfTest extends TestCase
 	{
 		$definition = new ListOf($item, $minItems, $maxItems, $mergeDefaults);
 
-		self::assertEquals(
+		self::assertSame(
 			[
-				ListOfRule::ItemRule => new RuleCompileMeta($item->getType(), $item->getArgs()),
+				ListOfRule::ItemRule => $item,
 				ListOfRule::MinItems => $minItems,
 				ListOfRule::MaxItems => $maxItems,
 				ListOfRule::MergeDefaults => $mergeDefaults,

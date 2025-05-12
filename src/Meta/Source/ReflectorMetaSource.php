@@ -4,27 +4,17 @@ namespace Orisai\ObjectMapper\Meta\Source;
 
 use Orisai\Exceptions\Logic\InvalidArgument;
 use Orisai\Exceptions\Message;
-use Orisai\ObjectMapper\Callbacks\CallbackDefinition;
-use Orisai\ObjectMapper\Docs\DocDefinition;
 use Orisai\ObjectMapper\MappedObject;
-use Orisai\ObjectMapper\Meta\Compile\CallbackCompileMeta;
 use Orisai\ObjectMapper\Meta\Compile\ClassCompileMeta;
 use Orisai\ObjectMapper\Meta\Compile\CompileMeta;
 use Orisai\ObjectMapper\Meta\Compile\FieldCompileMeta;
-use Orisai\ObjectMapper\Meta\Compile\ModifierCompileMeta;
-use Orisai\ObjectMapper\Meta\Compile\RuleCompileMeta;
 use Orisai\ObjectMapper\Meta\MetaDefinition;
-use Orisai\ObjectMapper\Meta\Shared\DocMeta;
-use Orisai\ObjectMapper\Modifiers\ModifierDefinition;
-use Orisai\ObjectMapper\Rules\RuleDefinition;
 use Orisai\ReflectionMeta\Reader\MetaReader;
 use Orisai\ReflectionMeta\Structure\Structure;
 use Orisai\ReflectionMeta\Structure\StructureGroup;
 use Orisai\SourceMap\AboveReflectorSource;
 use Orisai\SourceMap\ReflectorSource;
 use ReflectionClass;
-use function get_class;
-use function sprintf;
 use const PHP_VERSION_ID;
 
 /**
@@ -50,8 +40,8 @@ abstract class ReflectorMetaSource implements MetaSource
 		}
 
 		return new CompileMeta(
-			$this->loadClassMeta($rootClass, $group),
-			$this->loadPropertiesMeta($group),
+			$this->loadClasses($group),
+			$this->loadGroupedProperties($group),
 			$sources,
 			$this->getSourceName(),
 			$this->getAnyOfSourceKey(),
@@ -108,7 +98,7 @@ abstract class ReflectorMetaSource implements MetaSource
 	private function throwUnsupportedReflector(ReflectionClass $rootClass, Structure $structure, string $type): void
 	{
 		$message = Message::create()
-			->withContext("Resolving metadata of mapped object '{$rootClass->getName()}'.")
+			->withContext("Resolving metadata of '{$rootClass->getName()}'.")
 			->withProblem("Definitions are not allowed on $type.")
 			->withSolution("Remove definition from '{$structure->getSource()->toString()}'.");
 
@@ -117,157 +107,43 @@ abstract class ReflectorMetaSource implements MetaSource
 	}
 
 	/**
-	 * @param ReflectionClass<covariant MappedObject> $rootClass
-	 * @return list<ClassCompileMeta>
+	 * @return non-empty-list<ClassCompileMeta>
 	 */
-	private function loadClassMeta(ReflectionClass $rootClass, StructureGroup $group): array
+	private function loadClasses(StructureGroup $group): array
 	{
 		$resolved = [];
 		foreach ($group->getClasses() as $class) {
 			$reflector = $class->getSource()->getReflector();
 			$definitions = $this->reader->readClass($reflector, MetaDefinition::class);
 
-			$callbacks = [];
-			$docs = [];
-			$modifiers = [];
-
-			foreach ($definitions as $definition) {
-				$definition = $this->checkDefinitionType($definition);
-
-				if ($definition instanceof RuleDefinition) {
-					$className = $reflector->getName();
-					$isRootClass = $rootClass->getName() === $className;
-
-					$message = Message::create()
-						->withContext("Resolving metadata of mapped object '{$rootClass->getName()}'.")
-						->withProblem(sprintf(
-							"Rule definition '%s'%s cannot be used on class, it is only allowed on properties.",
-							get_class($definition),
-							$isRootClass ? '' : " (used above class '$className')",
-						));
-
-					throw InvalidArgument::create()
-						->withMessage($message);
-				}
-
-				if ($definition instanceof CallbackDefinition) {
-					$callbacks[] = new CallbackCompileMeta(
-						$definition->getType(),
-						$definition->getArgs(),
-					);
-				} elseif ($definition instanceof DocDefinition) {
-					$docs[] = new DocMeta(
-						$definition->getType(),
-						$definition->getArgs(),
-					);
-				} else {
-					$modifiers[] = new ModifierCompileMeta(
-						$definition->getType(),
-						$definition->getArgs(),
-					);
-				}
-			}
-
-			if ($callbacks === [] && $docs === [] && $modifiers === []) {
-				continue;
-			}
-
-			$resolved[] = new ClassCompileMeta($callbacks, $docs, $modifiers, $class);
+			$resolved[] = new ClassCompileMeta($definitions, $class);
 		}
 
 		return $resolved;
 	}
 
 	/**
-	 * @return list<non-empty-list<FieldCompileMeta>>
+	 * @return array<string, non-empty-list<FieldCompileMeta>>
 	 */
-	private function loadPropertiesMeta(StructureGroup $group): array
+	private function loadGroupedProperties(StructureGroup $group): array
 	{
 		$resolved = [];
-		foreach ($group->getGroupedProperties() as $groupedProperty) {
+		foreach ($group->getGroupedProperties() as $propertyName => $groupedProperty) {
 			$resolvedGroup = [];
 			foreach ($groupedProperty as $propertyStructure) {
 				$reflector = $propertyStructure->getSource()->getReflector();
 				$definitions = $this->reader->readProperty($reflector, MetaDefinition::class);
-
-				$callbacks = [];
-				$docs = [];
-				$modifiers = [];
-				$rules = [];
-
-				foreach ($definitions as $definition) {
-					$definition = $this->checkDefinitionType($definition);
-
-					if ($definition instanceof RuleDefinition) {
-						$rules[] = new RuleCompileMeta(
-							$definition->getType(),
-							$definition->getArgs(),
-						);
-					} elseif ($definition instanceof CallbackDefinition) {
-						$callbacks[] = new CallbackCompileMeta(
-							$definition->getType(),
-							$definition->getArgs(),
-						);
-					} elseif ($definition instanceof DocDefinition) {
-						$docs[] = new DocMeta(
-							$definition->getType(),
-							$definition->getArgs(),
-						);
-					} else {
-						$modifiers[] = new ModifierCompileMeta(
-							$definition->getType(),
-							$definition->getArgs(),
-						);
-					}
-				}
-
-				if ($rules === [] && $callbacks === [] && $docs === [] && $modifiers === []) {
-					continue;
-				}
-
-				$resolvedGroup[] = new FieldCompileMeta(
-					$callbacks,
-					$docs,
-					$modifiers,
-					$rules,
-					$propertyStructure,
-				);
+				$resolvedGroup[] = new FieldCompileMeta($definitions, $propertyStructure);
 			}
 
 			if ($resolvedGroup === []) {
 				continue;
 			}
 
-			$resolved[] = $resolvedGroup;
+			$resolved[$propertyName] = $resolvedGroup;
 		}
 
 		return $resolved;
-	}
-
-	/**
-	 * @return CallbackDefinition|DocDefinition|ModifierDefinition|RuleDefinition
-	 */
-	private function checkDefinitionType(MetaDefinition $definition): MetaDefinition
-	{
-		if (
-			!$definition instanceof CallbackDefinition
-			&& !$definition instanceof DocDefinition
-			&& !$definition instanceof ModifierDefinition
-			&& !$definition instanceof RuleDefinition
-		) {
-			throw InvalidArgument::create()
-				->withMessage(sprintf(
-					"Definition '%s' (subtype of '%s') should implement '%s', '%s', '%s' or '%s'.",
-					get_class($definition),
-					MetaDefinition::class,
-					CallbackDefinition::class,
-					DocDefinition::class,
-					ModifierDefinition::class,
-					RuleDefinition::class,
-				));
-		}
-
-		return $definition;
 	}
 
 	/**

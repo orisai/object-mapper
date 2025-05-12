@@ -2,7 +2,6 @@
 
 namespace Tests\Orisai\ObjectMapper\Unit\Rules;
 
-use Orisai\ObjectMapper\Meta\Compile\RuleCompileMeta;
 use Orisai\ObjectMapper\Rules\AnyOf;
 use Orisai\ObjectMapper\Rules\AnyOfRule;
 use Orisai\ObjectMapper\Rules\IntValue;
@@ -21,12 +20,12 @@ final class AnyOfTest extends TestCase
 		$sub2 = new IntValue();
 		$definition = new AnyOf([$sub1, $sub2]);
 
-		self::assertSame(AnyOfRule::class, $definition->getType());
-		self::assertEquals(
+		self::assertSame(AnyOfRule::class, $definition->getHandler());
+		self::assertSame(
 			[
 				AnyOfRule::Rules => [
-					new RuleCompileMeta($sub1->getType(), $sub1->getArgs()),
-					new RuleCompileMeta($sub2->getType(), $sub2->getArgs()),
+					$sub1,
+					$sub2,
 				],
 			],
 			$definition->getArgs(),

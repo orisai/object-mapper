@@ -5,10 +5,10 @@ namespace Tests\Orisai\ObjectMapper\Doubles\Definition;
 use Orisai\ObjectMapper\Rules\MixedRule;
 use Orisai\ObjectMapper\Rules\RuleDefinition;
 
-final class AttributeLessRuleDefinition implements RuleDefinition
+final class AttributeLessRuleDefinition extends RuleDefinition
 {
 
-	public function getType(): string
+	public function getHandler(): string
 	{
 		return MixedRule::class;
 	}

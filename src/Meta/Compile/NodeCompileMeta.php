@@ -2,8 +2,7 @@
 
 namespace Orisai\ObjectMapper\Meta\Compile;
 
-use Orisai\ObjectMapper\Meta\Shared\DocMeta;
-use Orisai\ReflectionMeta\Structure\ClassStructure;
+use Orisai\ObjectMapper\Meta\MetaDefinition;
 
 /**
  * @internal
@@ -11,51 +10,23 @@ use Orisai\ReflectionMeta\Structure\ClassStructure;
 abstract class NodeCompileMeta
 {
 
-	/** @var list<CallbackCompileMeta> */
-	private array $callbacks;
-
-	/** @var list<DocMeta> */
-	private array $docs;
-
-	/** @var list<ModifierCompileMeta> */
-	private array $modifiers;
+	/** @var list<MetaDefinition> */
+	private array $definitions;
 
 	/**
-	 * @param list<CallbackCompileMeta> $callbacks
-	 * @param list<DocMeta> $docs
-	 * @param list<ModifierCompileMeta> $modifiers
+	 * @param list<MetaDefinition> $definitions
 	 */
-	public function __construct(array $callbacks, array $docs, array $modifiers)
+	public function __construct(array $definitions)
 	{
-		$this->callbacks = $callbacks;
-		$this->docs = $docs;
-		$this->modifiers = $modifiers;
+		$this->definitions = $definitions;
 	}
 
 	/**
-	 * @return list<CallbackCompileMeta>
+	 * @return list<MetaDefinition>
 	 */
-	public function getCallbacks(): array
+	public function getDefinitions(): array
 	{
-		return $this->callbacks;
+		return $this->definitions;
 	}
-
-	/**
-	 * @return list<DocMeta>
-	 */
-	public function getDocs(): array
-	{
-		return $this->docs;
-	}
-
-	/**
-	 * @return list<ModifierCompileMeta>
-	 */
-	public function getModifiers(): array
-	{
-		return $this->modifiers;
-	}
-
-	abstract public function getClass(): ClassStructure;
 
 }

@@ -14,7 +14,7 @@ use Doctrine\Common\Annotations\Annotation\Target;
  * @Target({"PROPERTY", "ANNOTATION"})
  */
 #[Attribute(Attribute::TARGET_PROPERTY)]
-final class DateTimeValue implements RuleDefinition
+final class DateTimeValue extends RuleDefinition
 {
 
 	/** @var class-string<DateTimeInterface> */
@@ -34,7 +34,7 @@ final class DateTimeValue implements RuleDefinition
 		$this->format = $format;
 	}
 
-	public function getType(): string
+	public function getHandler(): string
 	{
 		return DateTimeRule::class;
 	}

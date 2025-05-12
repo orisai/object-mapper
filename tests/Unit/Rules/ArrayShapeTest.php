@@ -2,7 +2,6 @@
 
 namespace Tests\Orisai\ObjectMapper\Unit\Rules;
 
-use Orisai\ObjectMapper\Meta\Compile\RuleCompileMeta;
 use Orisai\ObjectMapper\Rules\ArrayShape;
 use Orisai\ObjectMapper\Rules\ArrayShapeRule;
 use Orisai\ObjectMapper\Rules\MixedValue;
@@ -24,23 +23,10 @@ final class ArrayShapeTest extends TestCase
 
 		$definition = new ArrayShape($fields);
 
-		self::assertSame(ArrayShapeRule::class, $definition->getType());
-		self::assertEquals(
+		self::assertSame(ArrayShapeRule::class, $definition->getHandler());
+		self::assertSame(
 			[
-				ArrayShapeRule::Fields => [
-					'foo' => new RuleCompileMeta(
-						$fields['foo']->getType(),
-						$fields['foo']->getArgs(),
-					),
-					'bar' => new RuleCompileMeta(
-						$fields['bar']->getType(),
-						$fields['bar']->getArgs(),
-					),
-					123 => new RuleCompileMeta(
-						$fields[123]->getType(),
-						$fields[123]->getArgs(),
-					),
-				],
+				ArrayShapeRule::Fields => $fields,
 			],
 			$definition->getArgs(),
 		);

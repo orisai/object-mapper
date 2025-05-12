@@ -12,7 +12,7 @@ use Doctrine\Common\Annotations\Annotation\Target;
  * @Target({"PROPERTY", "ANNOTATION"})
  */
 #[Attribute(Attribute::TARGET_PROPERTY)]
-final class FloatValue implements RuleDefinition
+final class FloatValue extends RuleDefinition
 {
 
 	private ?float $min;
@@ -36,7 +36,7 @@ final class FloatValue implements RuleDefinition
 		$this->castNumericString = $castNumericString;
 	}
 
-	public function getType(): string
+	public function getHandler(): string
 	{
 		return FloatRule::class;
 	}

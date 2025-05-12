@@ -12,7 +12,7 @@ use Doctrine\Common\Annotations\Annotation\Target;
  * @Target({"PROPERTY", "ANNOTATION"})
  */
 #[Attribute(Attribute::TARGET_PROPERTY)]
-final class IntValue implements RuleDefinition
+final class IntValue extends RuleDefinition
 {
 
 	private ?int $min;
@@ -36,7 +36,7 @@ final class IntValue implements RuleDefinition
 		$this->castNumericString = $castNumericString;
 	}
 
-	public function getType(): string
+	public function getHandler(): string
 	{
 		return IntRule::class;
 	}

@@ -12,7 +12,7 @@ use Doctrine\Common\Annotations\Annotation\Target;
  * @Target({"CLASS", "PROPERTY"})
  */
 #[Attribute(Attribute::TARGET_CLASS | Attribute::TARGET_PROPERTY)]
-final class AfterValidation implements CallbackDefinition
+final class AfterValidation extends CallbackDefinition
 {
 
 	private string $method;
@@ -29,7 +29,12 @@ final class AfterValidation implements CallbackDefinition
 		$this->runtime = $runtime;
 	}
 
-	public function getType(): string
+	public function getScope(): string
+	{
+		return $this->getHandler();
+	}
+
+	public function getHandler(): string
 	{
 		return AfterValidationCallback::class;
 	}

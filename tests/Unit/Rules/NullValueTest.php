@@ -17,7 +17,7 @@ final class NullValueTest extends TestCase
 	{
 		$definition = new NullValue();
 
-		self::assertSame(NullRule::class, $definition->getType());
+		self::assertSame(NullRule::class, $definition->getHandler());
 		self::assertSame(
 			[
 				NullRule::CastEmptyString => false,
