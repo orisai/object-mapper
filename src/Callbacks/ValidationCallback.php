@@ -21,6 +21,7 @@ use ReflectionProperty;
 use ReflectionType;
 use Reflector;
 use function array_map;
+use function assert;
 use function in_array;
 use function is_a;
 use function sprintf;
@@ -307,12 +308,16 @@ abstract class ValidationCallback implements Callback
 		} else {
 			$instance = $holder->getInstance();
 
-			// phpcs:disable SlevomatCodingStandard.Functions.StaticClosure.ClosureNotStatic
-			$callbackOutput = $meta->isPublic
-				? $instance->$method($data, $context)
-				: (fn () => $instance->$method($data, $context))
-				->bindTo($instance, $meta->declaringClass)();
-			// phpcs:enable
+			if ($meta->isPublic) {
+				$callbackOutput = $instance->$method($data, $context);
+			} else {
+				// phpcs:disable SlevomatCodingStandard.Functions.StaticClosure.ClosureNotStatic
+				$bound = (fn () => $instance->$method($data, $context))
+					->bindTo($instance, $meta->declaringClass);
+				// phpcs:enable
+				assert($bound !== null);
+				$callbackOutput = $bound();
+			}
 		}
 
 		return $meta->returnsValue ? $callbackOutput : $data;

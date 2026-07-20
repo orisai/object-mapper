@@ -19,6 +19,7 @@ use ReflectionParameter;
 use ReflectionType;
 use Reflector;
 use function array_map;
+use function assert;
 use function in_array;
 use function is_a;
 use function sprintf;
@@ -223,12 +224,16 @@ final class AfterMappingCallback implements Callback
 
 		$instance = $holder->getInstance();
 
-		// phpcs:disable SlevomatCodingStandard.Functions.StaticClosure.ClosureNotStatic
-		$meta->isPublic
-			? $instance->$method($context)
-			: (fn () => $instance->$method($context))
-			->bindTo($instance, $meta->declaringClass)();
-		// phpcs:enable
+		if ($meta->isPublic) {
+			$instance->$method($context);
+		} else {
+			// phpcs:disable SlevomatCodingStandard.Functions.StaticClosure.ClosureNotStatic
+			$bound = (fn () => $instance->$method($context))
+				->bindTo($instance, $meta->declaringClass);
+			// phpcs:enable
+			assert($bound !== null);
+			$bound();
+		}
 
 		return [];
 	}

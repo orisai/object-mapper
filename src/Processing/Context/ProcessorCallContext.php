@@ -9,7 +9,7 @@ use Orisai\ObjectMapper\Processing\ObjectHolder;
 use Orisai\ObjectMapper\Types\MappedObjectType;
 
 /**
- * @template T of MappedObject
+ * @template-covariant T of MappedObject
  */
 final class ProcessorCallContext
 {

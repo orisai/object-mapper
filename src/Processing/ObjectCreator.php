@@ -8,7 +8,7 @@ use ReflectionClass;
 final class ObjectCreator
 {
 
-	/** @var array<class-string<MappedObject>, ReflectionClass<MappedObject>> */
+	/** @var array<class-string<MappedObject>, ReflectionClass<covariant MappedObject>> */
 	private array $reflectors = [];
 
 	private DependencyInjectorManager $injectorManager;

@@ -67,12 +67,18 @@ final class ArrayOfBench extends ProcessingTestCase
 		$this->processor->process($data, ArrayOfIntVO::class);
 	}
 
+	/**
+	 * @return Generator<string, array<string>>
+	 */
 	public function provideArrayOfString(): Generator
 	{
 		yield '10k' => array_fill(0, 10_000, 'string');
 		yield '100k' => array_fill(0, 100_000, 'string');
 	}
 
+	/**
+	 * @return Generator<string, array<int>>
+	 */
 	public function provideArrayOfInt(): Generator
 	{
 		yield '10k' => array_fill(0, 10_000, 42);

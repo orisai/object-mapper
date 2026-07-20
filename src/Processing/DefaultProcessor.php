@@ -586,9 +586,9 @@ final class DefaultProcessor implements Processor
 				if ($property->isPublicSet) {
 					unset($object->$name);
 				} else {
-					// phpcs:disable SlevomatCodingStandard.Functions.StaticClosure
-					$unsetter->bindTo($object, $property->declaringClass)($object, $name);
-					// phpcs:enable
+					$boundUnsetter = $unsetter->bindTo($object, $property->declaringClass);
+					assert($boundUnsetter !== null);
+					$boundUnsetter($object, $name);
 				}
 			}
 		}
@@ -603,10 +603,9 @@ final class DefaultProcessor implements Processor
 			if ($property->isPublicSet) {
 				$object->$name = $value;
 			} else {
-				$setter->bindTo(
-					$object,
-					$property->declaringClass,
-				)($object, $name, $value);
+				$boundSetter = $setter->bindTo($object, $property->declaringClass);
+				assert($boundSetter !== null);
+				$boundSetter($object, $name, $value);
 			}
 		}
 	}

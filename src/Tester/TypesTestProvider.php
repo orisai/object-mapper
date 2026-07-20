@@ -17,11 +17,17 @@ use Orisai\ObjectMapper\Types\SimpleValueType;
 final class TypesTestProvider
 {
 
+	/**
+	 * @return Generator<list<MessageType>>
+	 */
 	public static function provideMessageType(): Generator
 	{
 		yield [new MessageType('test')];
 	}
 
+	/**
+	 * @return Generator<list<SimpleValueType>>
+	 */
 	public static function provideSimpleType(): Generator
 	{
 		$type = new SimpleValueType('string');
@@ -29,6 +35,9 @@ final class TypesTestProvider
 		yield [$type];
 	}
 
+	/**
+	 * @return Generator<list<SimpleValueType>>
+	 */
 	public static function provideSimpleTypeWithParameters(): Generator
 	{
 		$type = new SimpleValueType('int');
@@ -38,6 +47,9 @@ final class TypesTestProvider
 		yield [$type];
 	}
 
+	/**
+	 * @return Generator<list<SimpleValueType>>
+	 */
 	public static function provideSimpleTypeWithInvalidParameters(): Generator
 	{
 		$type = new SimpleValueType('int');
@@ -49,6 +61,9 @@ final class TypesTestProvider
 		yield [$type];
 	}
 
+	/**
+	 * @return Generator<list<EnumType>>
+	 */
 	public static function provideEnumType(): Generator
 	{
 		$values = [
@@ -64,6 +79,9 @@ final class TypesTestProvider
 		yield [$type];
 	}
 
+	/**
+	 * @return Generator<list<GenericArrayType>>
+	 */
 	public static function provideArrayType(): Generator
 	{
 		$type = GenericArrayType::forArray(new SimpleValueType('string'), new SimpleValueType('test'));
@@ -71,6 +89,9 @@ final class TypesTestProvider
 		yield [$type];
 	}
 
+	/**
+	 * @return Generator<list<GenericArrayType>>
+	 */
 	public static function provideArrayTypeInvalid(): Generator
 	{
 		$typeValue = new SimpleValueType('test');
@@ -81,6 +102,9 @@ final class TypesTestProvider
 		yield [$type];
 	}
 
+	/**
+	 * @return Generator<list<GenericArrayType>>
+	 */
 	public static function provideArrayTypeSimpleInvalid(): Generator
 	{
 		$type = GenericArrayType::forArray(new SimpleValueType('string'), new SimpleValueType('test'));
@@ -89,6 +113,9 @@ final class TypesTestProvider
 		yield [$type];
 	}
 
+	/**
+	 * @return Generator<list<GenericArrayType>>
+	 */
 	public static function provideArrayTypeSimpleInvalidWithParameters(): Generator
 	{
 		$type = GenericArrayType::forArray(new SimpleValueType('string'), new SimpleValueType('test'));
@@ -99,6 +126,9 @@ final class TypesTestProvider
 		yield [$type];
 	}
 
+	/**
+	 * @return Generator<list<GenericArrayType>>
+	 */
 	public static function provideArrayTypeSimpleInvalidWithInvalidParameters(): Generator
 	{
 		$type = GenericArrayType::forArray(new SimpleValueType('string'), new SimpleValueType('int'));
@@ -111,6 +141,9 @@ final class TypesTestProvider
 		yield [$type];
 	}
 
+	/**
+	 * @return Generator<list<GenericArrayType>>
+	 */
 	public static function provideArrayTypeCompoundInvalid(): Generator
 	{
 		$typeKey = new CompoundType(CompoundTypeOperator::or());
@@ -125,6 +158,9 @@ final class TypesTestProvider
 		yield [$type];
 	}
 
+	/**
+	 * @return Generator<list<GenericArrayType>>
+	 */
 	public static function provideArrayTypeInvalidPairs(): Generator
 	{
 		$type = GenericArrayType::forArray(new SimpleValueType('string'), new SimpleValueType('int'));
@@ -163,6 +199,9 @@ final class TypesTestProvider
 		yield [$type];
 	}
 
+	/**
+	 * @return Generator<list<GenericArrayType>>
+	 */
 	public static function provideListType(): Generator
 	{
 		$type = GenericArrayType::forList(null, new SimpleValueType('string'));
@@ -170,6 +209,9 @@ final class TypesTestProvider
 		yield [$type];
 	}
 
+	/**
+	 * @return Generator<list<GenericArrayType>>
+	 */
 	public static function provideListTypeInvalid(): Generator
 	{
 		$type = GenericArrayType::forList(null, new SimpleValueType('string'));
@@ -178,6 +220,9 @@ final class TypesTestProvider
 		yield [$type];
 	}
 
+	/**
+	 * @return Generator<list<GenericArrayType>>
+	 */
 	public static function provideListTypeInvalidWithParameter(): Generator
 	{
 		$type = GenericArrayType::forList(null, new SimpleValueType('string'));
@@ -187,6 +232,9 @@ final class TypesTestProvider
 		yield [$type];
 	}
 
+	/**
+	 * @return Generator<list<GenericArrayType>>
+	 */
 	public static function provideListTypeInvalidWithInvalidParameter(): Generator
 	{
 		$type = GenericArrayType::forList(null, new SimpleValueType('string'));
@@ -196,6 +244,9 @@ final class TypesTestProvider
 		yield [$type];
 	}
 
+	/**
+	 * @return Generator<list<GenericArrayType>>
+	 */
 	public static function provideListTypeWithInvalidValues(): Generator
 	{
 		$type = GenericArrayType::forList(null, new SimpleValueType('string'));
@@ -215,6 +266,9 @@ final class TypesTestProvider
 		yield [$type];
 	}
 
+	/**
+	 * @return Generator<list<CompoundType>>
+	 */
 	public static function provideCompoundTypeOverwriteSubtype(): Generator
 	{
 		$type = new CompoundType(CompoundTypeOperator::or());
@@ -233,6 +287,9 @@ final class TypesTestProvider
 		yield [$type];
 	}
 
+	/**
+	 * @return Generator<list<CompoundType>>
+	 */
 	public static function provideCompoundTypeOverwriteSubtypeComplex(): Generator
 	{
 		$subtype1 = new CompoundType(CompoundTypeOperator::and());
@@ -274,6 +331,9 @@ final class TypesTestProvider
 		yield [$type];
 	}
 
+	/**
+	 * @return Generator<list<MappedObjectType>>
+	 */
 	public static function provideMappedObjectType(): Generator
 	{
 		$type = new MappedObjectType(MappedObject::class);
@@ -283,6 +343,9 @@ final class TypesTestProvider
 		yield [$type];
 	}
 
+	/**
+	 * @return Generator<list<MappedObjectType>>
+	 */
 	public static function provideMappedObjectTypeInvalid(): Generator
 	{
 		$fieldType1 = new MappedObjectType(MappedObject::class);
@@ -302,6 +365,9 @@ final class TypesTestProvider
 		yield [$type];
 	}
 
+	/**
+	 * @return Generator<list<MappedObjectType>>
+	 */
 	public static function provideMappedObjectTypeInvalidWithInvalidFields(): Generator
 	{
 		$fieldType1 = new MappedObjectType(MappedObject::class);

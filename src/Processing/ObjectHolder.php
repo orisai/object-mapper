@@ -7,7 +7,7 @@ use Orisai\ObjectMapper\Meta\Runtime\ClassRuntimeMeta;
 use Orisai\ObjectMapper\Modifiers\RequiresDependenciesModifier;
 
 /**
- * @template T of MappedObject
+ * @template-covariant T of MappedObject
  */
 final class ObjectHolder
 {

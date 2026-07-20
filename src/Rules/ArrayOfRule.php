@@ -153,7 +153,7 @@ final class ArrayOfRule extends MultiValueRule
 		}
 
 		foreach ($value as $key => $item) {
-			if ($keyRule !== null && $keyArgs !== null) {
+			if ($keyRule !== null) {
 				try {
 					$key = $keyRule->processValue(
 						$key,

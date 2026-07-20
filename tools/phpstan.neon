@@ -100,7 +100,7 @@ parameters:
 
 		# Non-strict comparison, intentional
 		-
-			message: '#^Loose comparison via "!=" is not allowed\.$#'
+			message: '#^Loose comparison via "!=" between list\<(.+)Meta\> and list\<(.+)Meta\> is not allowed\.$#'
 			path: ../src/Meta/Compile/FieldCompileMeta.php
 
 		# Dunno, seems to be all fine
